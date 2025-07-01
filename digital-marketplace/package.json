@@ -1,0 +1,47 @@
+{
+  "name": "digital-marketplace",
+  "version": "1.0.0",
+  "description": "Digital product marketplace for creators to sell ebooks, templates, and courses",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "next": "^14.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "@prisma/client": "^5.6.0",
+    "stripe": "^14.7.0",
+    "@stripe/stripe-js": "^2.1.11",
+    "next-auth": "^4.24.5",
+    "aws-sdk": "^2.1489.0",
+    "multer": "^1.4.5-lts.1",
+    "react-dropzone": "^14.2.3",
+    "react-markdown": "^8.0.7",
+    "lucide-react": "^0.263.1",
+    "tailwindcss": "^3.3.2",
+    "autoprefixer": "^10.4.14",
+    "postcss": "^8.4.24",
+    "framer-motion": "^10.16.4",
+    "react-hot-toast": "^2.4.1",
+    "zod": "^3.22.4",
+    "react-hook-form": "^7.47.0",
+    "@hookform/resolvers": "^3.3.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.8.7",
+    "@types/react": "^18.2.31",
+    "@types/react-dom": "^18.2.14",
+    "typescript": "^5.2.2",
+    "eslint": "^8.51.0",
+    "eslint-config-next": "^14.0.0",
+    "prisma": "^5.6.0"
+  },
+  "keywords": ["marketplace", "digital-products", "nextjs", "stripe", "aws"],
+  "author": "Your Name",
+  "license": "MIT"
+} 
