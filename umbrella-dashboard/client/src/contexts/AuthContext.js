@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { useQuery, useQueryClient } from 'react-query';
 import { toast } from 'react-hot-toast';
 import api from '../utils/api';
 
@@ -17,7 +16,6 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [token, setToken] = useState(localStorage.getItem('token'));
-  const queryClient = useQueryClient();
 
   // Check if user is authenticated on mount
   useEffect(() => {
@@ -64,7 +62,7 @@ export const AuthProvider = ({ children }) => {
   const register = async (userData) => {
     try {
       const response = await api.post('/auth/register', userData);
-      const { token: newToken, user: userData: newUser } = response.data;
+      const { token: newToken, user: newUser } = response.data;
       
       localStorage.setItem('token', newToken);
       setToken(newToken);
@@ -88,9 +86,6 @@ export const AuthProvider = ({ children }) => {
     setToken(null);
     setUser(null);
     delete api.defaults.headers.common['Authorization'];
-    
-    // Clear all queries
-    queryClient.clear();
     
     toast.success('Logged out successfully');
   };

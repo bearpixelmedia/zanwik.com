@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useQuery } from 'react-query';
 import { 
   TrendingUp, 
@@ -10,7 +10,10 @@ import {
   AlertTriangle,
   CheckCircle,
   Clock,
-  Eye
+  Eye,
+  FolderOpen,
+  BarChart3,
+  Settings
 } from 'lucide-react';
 import { apiHelpers } from '../utils/api';
 import { useAuth } from '../contexts/AuthContext';

@@ -147,9 +147,9 @@ const Login = () => {
             </div>
 
             <div className="text-sm">
-              <a href="#" className="font-medium text-blue-600 hover:text-blue-500">
+              <button type="button" className="font-medium text-blue-600 hover:text-blue-500">
                 Forgot your password?
-              </a>
+              </button>
             </div>
           </div>
 
@@ -173,9 +173,9 @@ const Login = () => {
           <div className="text-center">
             <p className="text-sm text-gray-600">
               Don't have an account?{' '}
-              <a href="#" className="font-medium text-blue-600 hover:text-blue-500">
+              <button type="button" className="font-medium text-blue-600 hover:text-blue-500">
                 Contact administrator
-              </a>
+              </button>
             </p>
           </div>
         </form>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import {
@@ -8,25 +8,12 @@ import {
   Activity,
   Server,
   Users,
-  Settings,
-  ChevronRight,
-  ChevronDown
+  Settings
 } from 'lucide-react';
 
 const Sidebar = () => {
   const { hasPermission } = useAuth();
   const location = useLocation();
-  const [expandedItems, setExpandedItems] = useState(new Set());
-
-  const toggleExpanded = (item) => {
-    const newExpanded = new Set(expandedItems);
-    if (newExpanded.has(item)) {
-      newExpanded.delete(item);
-    } else {
-      newExpanded.add(item);
-    }
-    setExpandedItems(newExpanded);
-  };
 
   const navigation = [
     {
