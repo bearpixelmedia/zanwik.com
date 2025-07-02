@@ -1,1 +1,5 @@
 .vercel
+
+projects/
+projects/*
+projects/ai-content-generator/
