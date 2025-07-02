@@ -7,15 +7,15 @@
 
 ## Step 2: Run the Database Schema
 1. Click **"New Query"**
-2. Copy and paste the entire contents of `supabase-setup.sql`
+2. Copy and paste the entire contents of `supabase-setup-simple.sql`
 3. Click **"Run"** to execute the SQL
 
 ## Step 3: Verify Setup
 After running the SQL, you should see:
 - ✅ Tables created: `projects`, `analytics_overview`, `analytics_revenue`, `users`
-- ✅ Sample data inserted
+- ✅ Sample data inserted (5 sample projects, analytics data)
 - ✅ RLS policies created
-- ✅ Triggers and functions created
+- ✅ No permission errors
 
 ## Step 4: Configure Authentication
 1. Go to **Authentication → Settings**
@@ -30,6 +30,7 @@ After running the SQL, you should see:
 4. Verify dashboard loads with sample data
 
 ## Troubleshooting
-- If you get errors, check the SQL Editor console
+- If you get permission errors, use `supabase-setup-simple.sql` instead
 - Make sure all SQL commands executed successfully
-- Verify environment variables are set in Vercel 
+- Verify environment variables are set in Vercel
+- Check that authentication settings are configured correctly 
