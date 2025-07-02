@@ -81,19 +81,26 @@ The Umbrella Dashboard provides centralized management for:
 ## Project Structure
 
 ```
-umbrella-dashboard/
-├── src/
-│   ├── models/           # Database models
-│   ├── routes/           # API routes
-│   ├── services/         # Business logic
-│   ├── middleware/       # Express middleware
-│   ├── utils/            # Utility functions
-│   └── index.js          # Main server file
-├── client/               # React frontend
-├── config/               # Configuration files
-├── scripts/              # Deployment scripts
-├── docs/                 # Documentation
-└── monitoring/           # Monitoring tools
+/ (root)
+├── client/                # Umbrella Dashboard frontend
+├── server/                # Umbrella Dashboard backend
+├── config/                # Configuration files
+├── scripts/               # Deployment scripts
+├── docs/                  # Documentation
+├── uploads/               # File uploads
+├── logs/                  # Log files
+├── projects/              # All business projects
+│   ├── ai-content-generator/
+│   ├── digital-marketplace/
+│   ├── freelance-platform/
+│   ├── subscription-box/
+│   ├── course-platform/
+│   ├── affiliate-dashboard/
+│   ├── dropshipping-builder/
+│   ├── social-media-tool/
+│   ├── survey-platform/
+│   └── crypto-trading-bot/
+└── ... (other root files)
 ```
 
 ## Quick Start
@@ -110,7 +117,7 @@ umbrella-dashboard/
 1. **Clone the repository**
    ```bash
    git clone <repository-url>
-   cd umbrella-dashboard
+   cd <repo-root>
    ```
 
 2. **Install dependencies**
@@ -147,7 +154,7 @@ JWT_SECRET=your_jwt_secret_key
 JWT_EXPIRE=7d
 
 # Projects Configuration
-PROJECTS_PATH=../projects
+PROJECTS_PATH=./projects
 DOCKER_ENABLED=true
 PM2_ENABLED=true
 
