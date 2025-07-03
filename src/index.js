@@ -297,18 +297,8 @@ app.get('/api/health/detailed', (req, res) => {
 });
 console.log('Detailed health check endpoint setup completed');
 
-// Dashboard overview endpoint
-console.log('Setting up dashboard overview endpoint...');
-app.get('/api/dashboard/overview', auth, async (req, res) => {
-  try {
-    const overview = await analyticsService.getDashboardOverview(req.user.id);
-    res.json(overview);
-  } catch (error) {
-    logger.error('Dashboard overview error:', error);
-    res.status(500).json({ message: 'Failed to get dashboard overview' });
-  }
-});
-console.log('Dashboard overview endpoint setup completed');
+// Dashboard overview endpoint will be set up after services are initialized
+console.log('Dashboard overview endpoint will be set up after service initialization');
 
 // Error handling middleware
 console.log('Setting up error handling middleware...');
@@ -437,6 +427,19 @@ const startServer = async () => {
     console.log('Setting up payment routes...');
     app.use('/api/payments', auth, paymentRoutes);
     console.log('Payment routes setup completed');
+
+    // Set up dashboard overview endpoint after services are available
+    console.log('Setting up dashboard overview endpoint...');
+    app.get('/api/dashboard/overview', auth, async (req, res) => {
+      try {
+        const overview = await analyticsService.getDashboardOverview(req.user.id);
+        res.json(overview);
+      } catch (error) {
+        logger.error('Dashboard overview error:', error);
+        res.status(500).json({ message: 'Failed to get dashboard overview' });
+      }
+    });
+    console.log('Dashboard overview endpoint setup completed');
 
     console.log('Routes setup completed');
     
