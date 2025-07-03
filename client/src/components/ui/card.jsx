@@ -31,7 +31,7 @@ const CardTitle = React.forwardRef(({ className, ...props }, ref) => (
     )}
     {...props}
   />
-))
+)) // eslint-disable-line jsx-a11y/heading-has-content
 CardTitle.displayName = "CardTitle"
 
 const CardDescription = React.forwardRef(({ className, ...props }, ref) => (
