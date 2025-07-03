@@ -15,6 +15,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../co
 import { Button } from '../components/ui/button';
 import { projectsAPI } from '../utils/api';
 import { useAuth } from '../contexts/AuthContext';
+import { debugApiConnection } from '../utils/testConnection';
 
 const Projects = () => {
   const { user: _user } = useAuth(); // eslint-disable-line no-unused-vars
@@ -39,16 +40,35 @@ const Projects = () => {
   const fetchProjects = async () => {
     try {
       setLoading(true);
+      setError(null);
+      
       const params = {};
       if (searchTerm) params.search = searchTerm;
       if (filterStatus !== 'all') params.status = filterStatus;
       
+      console.log('Fetching projects with params:', params);
       const response = await projectsAPI.getProjects(params);
+      console.log('Projects response:', response);
+      
       setProjects(response.projects || []);
-      setError(null);
     } catch (err) {
       console.error('Error fetching projects:', err);
-      setError('Failed to load projects. Please try again.');
+      
+      // Provide more specific error messages
+      let errorMessage = 'Failed to load projects. Please try again.';
+      
+      if (err.message.includes('Failed to fetch')) {
+        errorMessage = 'Unable to connect to the server. Please check your internet connection and try again.';
+      } else if (err.message.includes('401')) {
+        errorMessage = 'Authentication required. Please log in again.';
+      } else if (err.message.includes('403')) {
+        errorMessage = 'You don\'t have permission to view projects.';
+      } else if (err.message.includes('500')) {
+        errorMessage = 'Server error. Please try again later.';
+      }
+      
+      setError(errorMessage);
+      
       // Fallback to mock data for demo
       setProjects([
         {
@@ -180,7 +200,19 @@ const Projects = () => {
       {/* Error Message */}
       {error && (
         <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-          <p className="text-red-800">{error}</p>
+          <div className="flex items-center justify-between">
+            <p className="text-red-800">{error}</p>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={() => {
+                debugApiConnection();
+                console.log('🔍 Check the browser console for debug information');
+              }}
+            >
+              Debug Connection
+            </Button>
+          </div>
         </div>
       )}
 

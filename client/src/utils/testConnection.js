@@ -30,4 +30,21 @@ export const testAllEndpoints = async () => {
   }
 
   return results;
+};
+
+export const debugApiConnection = () => {
+  console.log('🔍 API Connection Debug Info:');
+  console.log('API Base URL:', process.env.REACT_APP_API_URL || 'http://localhost:3000/api');
+  console.log('Environment:', process.env.NODE_ENV);
+  console.log('Current URL:', window.location.href);
+  
+  // Test the connection
+  testBackendConnection().then(result => {
+    if (result.success) {
+      console.log('✅ API connection is working!');
+    } else {
+      console.log('❌ API connection failed:', result.error);
+      console.log('💡 Make sure to set REACT_APP_API_URL in your environment variables');
+    }
+  });
 }; 
