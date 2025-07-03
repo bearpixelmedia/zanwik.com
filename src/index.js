@@ -215,7 +215,7 @@ const initializeServices = async () => {
   }
 };
 
-// Socket.io connection handling
+// Socket.io connection handling - basic setup
 io.on('connection', (socket) => {
   logger.info('New client connected:', socket.id);
   
@@ -229,34 +229,6 @@ io.on('connection', (socket) => {
   socket.on('join-project', (projectId) => {
     socket.join(`project-${projectId}`);
     logger.info(`Client joined project room for ${projectId}`);
-  });
-  
-  // Handle project commands
-  socket.on('deploy-project', async (data) => {
-    try {
-      const result = await deploymentService.deployProject(data);
-      socket.emit('deployment-started', result);
-    } catch (error) {
-      socket.emit('deployment-error', { error: error.message });
-    }
-  });
-  
-  socket.on('restart-project', async (data) => {
-    try {
-      const result = await deploymentService.restartProject(data);
-      socket.emit('restart-completed', result);
-    } catch (error) {
-      socket.emit('restart-error', { error: error.message });
-    }
-  });
-  
-  socket.on('get-project-logs', async (data) => {
-    try {
-      const logs = await projectService.getProjectLogs(data.projectId);
-      socket.emit('project-logs', logs);
-    } catch (error) {
-      socket.emit('logs-error', { error: error.message });
-    }
   });
   
   socket.on('disconnect', () => {
@@ -364,6 +336,39 @@ const startServer = async () => {
     app.set('deploymentService', deploymentService);
     app.set('analyticsService', analyticsService);
     console.log('Services setup completed');
+    
+    // Set up service-dependent Socket.io handlers
+    console.log('Setting up Socket.io service handlers...');
+    io.on('connection', (socket) => {
+      // Handle project commands
+      socket.on('deploy-project', async (data) => {
+        try {
+          const result = await deploymentService.deployProject(data);
+          socket.emit('deployment-started', result);
+        } catch (error) {
+          socket.emit('deployment-error', { error: error.message });
+        }
+      });
+      
+      socket.on('restart-project', async (data) => {
+        try {
+          const result = await deploymentService.restartProject(data);
+          socket.emit('restart-completed', result);
+        } catch (error) {
+          socket.emit('restart-error', { error: error.message });
+        }
+      });
+      
+      socket.on('get-project-logs', async (data) => {
+        try {
+          const logs = await projectService.getProjectLogs(data.projectId);
+          socket.emit('project-logs', logs);
+        } catch (error) {
+          socket.emit('logs-error', { error: error.message });
+        }
+      });
+    });
+    console.log('Socket.io service handlers setup completed');
     
     // Set up routes after services are available
     console.log('Setting up routes...');
