@@ -238,8 +238,10 @@ io.on('connection', (socket) => {
 
 // Routes will be set up after services are initialized
 console.log('Routes setup will be completed after service initialization');
+console.log('About to set up Express app...');
 
 // Root endpoint for basic connectivity
+console.log('Setting up root endpoint...');
 app.get('/', (req, res) => {
   res.json({ 
     message: 'Umbrella Dashboard API',
@@ -248,8 +250,10 @@ app.get('/', (req, res) => {
     timestamp: new Date().toISOString()
   });
 });
+console.log('Root endpoint setup completed');
 
 // Health check endpoint
+console.log('Setting up health check endpoint...');
 app.get('/api/health', (req, res) => {
   res.json({ 
     status: 'healthy',
@@ -277,8 +281,10 @@ app.get('/api/health', (req, res) => {
     environment: process.env.NODE_ENV || 'development'
   });
 });
+console.log('Health check endpoint setup completed');
 
 // Dashboard overview endpoint
+console.log('Setting up dashboard overview endpoint...');
 app.get('/api/dashboard/overview', auth, async (req, res) => {
   try {
     const overview = await analyticsService.getDashboardOverview(req.user.id);
@@ -288,8 +294,10 @@ app.get('/api/dashboard/overview', auth, async (req, res) => {
     res.status(500).json({ message: 'Failed to get dashboard overview' });
   }
 });
+console.log('Dashboard overview endpoint setup completed');
 
 // Error handling middleware
+console.log('Setting up error handling middleware...');
 app.use((err, req, res, next) => {
   logger.error('Express error:', err);
   res.status(500).json({ 
@@ -299,9 +307,11 @@ app.use((err, req, res, next) => {
 });
 
 // 404 handler
+console.log('Setting up 404 handler...');
 app.use('*', (req, res) => {
   res.status(404).json({ message: 'Route not found' });
 });
+console.log('404 handler setup completed');
 
 console.log('Express app setup completed');
 
