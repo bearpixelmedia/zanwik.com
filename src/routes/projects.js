@@ -446,4 +446,12 @@ router.delete('/:id/team/:userId', async (req, res) => {
   }
 });
 
-module.exports = router; 
+try {
+  module.exports = router;
+} catch (e) {
+  // Print fatal import errors to the console
+  // so they show up in Railway logs
+  // eslint-disable-next-line no-console
+  console.error('FATAL ERROR in projects.js:', e);
+  throw e;
+} 
