@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
-import { TrendingUp, Eye, EyeOff, Loader2 } from 'lucide-react';
+import { TrendingUp, Eye, EyeOff, Loader2, AlertCircle } from 'lucide-react';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -15,19 +15,60 @@ const Login = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
 
+  // Check if environment variables are set
+  const checkEnvironment = () => {
+    if (!process.env.REACT_APP_SUPABASE_URL || !process.env.REACT_APP_SUPABASE_ANON_KEY) {
+      return {
+        error: true,
+        message: 'Supabase configuration is missing. Please check your environment variables.'
+      };
+    }
+    return { error: false };
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setIsLoading(true);
 
+    // Check environment first
+    const envCheck = checkEnvironment();
+    if (envCheck.error) {
+      setError(envCheck.message);
+      setIsLoading(false);
+      return;
+    }
+
     try {
       await login(email, password);
       navigate('/dashboard');
     } catch (err) {
-      setError(err.message || 'Failed to login. Please check your credentials.');
+      console.error('Login error:', err);
+      
+      // Provide more helpful error messages
+      let errorMessage = 'Failed to login. Please check your credentials.';
+      
+      if (err.message) {
+        if (err.message.includes('Invalid login credentials')) {
+          errorMessage = 'Invalid email or password. Please try again.';
+        } else if (err.message.includes('Email not confirmed')) {
+          errorMessage = 'Please check your email and confirm your account before logging in.';
+        } else if (err.message.includes('Too many requests')) {
+          errorMessage = 'Too many login attempts. Please wait a moment and try again.';
+        } else {
+          errorMessage = err.message;
+        }
+      }
+      
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleDemoLogin = () => {
+    setEmail('demo@example.com');
+    setPassword('demo123');
   };
 
   return (
@@ -41,6 +82,19 @@ const Login = () => {
           <h1 className="text-3xl font-bold text-foreground mb-2">Welcome back</h1>
           <p className="text-muted-foreground">Sign in to your Umbrella account</p>
         </div>
+
+        {/* Environment Check */}
+        {checkEnvironment().error && (
+          <div className="mb-6 p-4 bg-destructive/10 border border-destructive/20 rounded-lg">
+            <div className="flex items-center space-x-2">
+              <AlertCircle className="h-4 w-4 text-destructive" />
+              <p className="text-sm text-destructive font-medium">Configuration Error</p>
+            </div>
+            <p className="text-sm text-destructive mt-1">
+              {checkEnvironment().message}
+            </p>
+          </div>
+        )}
 
         {/* Login Card */}
         <Card className="shadow-xl border-border/50">
@@ -65,6 +119,7 @@ const Login = () => {
                   className="w-full px-3 py-2 bg-background border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent transition-colors"
                   placeholder="Enter your email"
                   required
+                  disabled={isLoading}
                 />
               </div>
 
@@ -82,11 +137,13 @@ const Login = () => {
                     className="w-full px-3 py-2 pr-10 bg-background border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent transition-colors"
                     placeholder="Enter your password"
                     required
+                    disabled={isLoading}
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                    disabled={isLoading}
                   >
                     {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>
@@ -96,7 +153,10 @@ const Login = () => {
               {/* Error Message */}
               {error && (
                 <div className="p-3 bg-destructive/10 border border-destructive/20 rounded-lg">
-                  <p className="text-sm text-destructive">{error}</p>
+                  <div className="flex items-start space-x-2">
+                    <AlertCircle className="h-4 w-4 text-destructive mt-0.5 flex-shrink-0" />
+                    <p className="text-sm text-destructive">{error}</p>
+                  </div>
                 </div>
               )}
 
@@ -104,7 +164,7 @@ const Login = () => {
               <Button
                 type="submit"
                 className="w-full"
-                disabled={isLoading}
+                disabled={isLoading || checkEnvironment().error}
               >
                 {isLoading ? (
                   <>
@@ -132,13 +192,18 @@ const Login = () => {
               <Button
                 variant="outline"
                 className="w-full"
-                onClick={() => {
-                  setEmail('demo@example.com');
-                  setPassword('demo123');
-                }}
+                onClick={handleDemoLogin}
+                disabled={isLoading}
               >
                 Use Demo Account
               </Button>
+            </div>
+
+            {/* Demo Info */}
+            <div className="mt-4 p-3 bg-muted/50 rounded-lg">
+              <p className="text-xs text-muted-foreground text-center">
+                <strong>Demo Account:</strong> demo@example.com / demo123
+              </p>
             </div>
           </CardContent>
         </Card>

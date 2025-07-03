@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { toast } from 'react-hot-toast';
-import { auth, supabase } from '../utils/supabase';
+import { supabase } from '../utils/supabase';
 
 const AuthContext = createContext();
 
@@ -20,7 +19,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const user = await auth.getCurrentUser();
+        const { data: { user } } = await supabase.auth.getUser();
         setUser(user);
       } catch (error) {
         console.error('Auth check failed:', error);
@@ -32,7 +31,8 @@ export const AuthProvider = ({ children }) => {
     checkAuth();
 
     // Listen for auth state changes
-    const { data: { subscription } } = auth.onAuthStateChange((event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log('Auth state changed:', event, session);
       setUser(session?.user || null);
       setLoading(false);
     });
@@ -43,39 +43,53 @@ export const AuthProvider = ({ children }) => {
   // Login function
   const login = async (email, password) => {
     try {
-      const { user: userData } = await auth.signIn(email, password);
-      setUser(userData);
-      toast.success('Login successful!');
+      console.log('Attempting login with:', email);
+      
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password
+      });
+
+      if (error) {
+        console.error('Login error:', error);
+        throw new Error(error.message);
+      }
+
+      console.log('Login successful:', data);
+      setUser(data.user);
       return { success: true };
     } catch (error) {
-      const message = error.message || 'Login failed';
-      toast.error(message);
-      return { success: false, error: message };
+      console.error('Login failed:', error);
+      throw error;
     }
   };
 
   // Register function
   const register = async (userData) => {
     try {
-      const { user: newUser } = await auth.signUp(userData.email, userData.password);
-      setUser(newUser);
-      toast.success('Registration successful! Please check your email to verify your account.');
+      const { data, error } = await supabase.auth.signUp({
+        email: userData.email,
+        password: userData.password
+      });
+
+      if (error) throw error;
+
+      setUser(data.user);
       return { success: true };
     } catch (error) {
-      const message = error.message || 'Registration failed';
-      toast.error(message);
-      return { success: false, error: message };
+      throw error;
     }
   };
 
   // Logout function
   const logout = async () => {
     try {
-      await auth.signOut();
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
       setUser(null);
-      toast.success('Logged out successfully');
     } catch (error) {
-      toast.error('Logout failed');
+      console.error('Logout failed:', error);
+      throw error;
     }
   };
 
@@ -85,12 +99,9 @@ export const AuthProvider = ({ children }) => {
       const { data, error } = await supabase.auth.updateUser(profileData);
       if (error) throw error;
       setUser(data.user);
-      toast.success('Profile updated successfully!');
       return { success: true };
     } catch (error) {
-      const message = error.message || 'Failed to update profile';
-      toast.error(message);
-      return { success: false, error: message };
+      throw error;
     }
   };
 
@@ -99,12 +110,9 @@ export const AuthProvider = ({ children }) => {
     try {
       const { error } = await supabase.auth.updateUser({ password: newPassword });
       if (error) throw error;
-      toast.success('Password changed successfully!');
       return { success: true };
     } catch (error) {
-      const message = error.message || 'Failed to change password';
-      toast.error(message);
-      return { success: false, error: message };
+      throw error;
     }
   };
 
@@ -112,7 +120,6 @@ export const AuthProvider = ({ children }) => {
   const hasPermission = (resource, action) => {
     if (!user) return false;
     // For demo purposes, return true for all permissions
-    // In production, you'd check user metadata or roles
     return true;
   };
 
@@ -145,12 +152,9 @@ export const AuthProvider = ({ children }) => {
       });
       if (error) throw error;
       setUser(data.user);
-      toast.success('Preferences updated successfully!');
       return { success: true };
     } catch (error) {
-      const message = error.message || 'Failed to update preferences';
-      toast.error(message);
-      return { success: false, error: message };
+      throw error;
     }
   };
 
