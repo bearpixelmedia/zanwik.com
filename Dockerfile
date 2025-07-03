@@ -4,12 +4,30 @@ FROM node:18-alpine
 # Set working directory
 WORKDIR /app
 
-# Copy only backend files
+# Copy only backend package files
 COPY package*.json ./
-COPY . .
 
 # Install backend dependencies
 RUN npm install
+
+# Copy backend source code and config (exclude client/ and frontend files)
+COPY src/ ./src/
+COPY .env ./
+COPY README.md ./
+COPY railway.json ./
+COPY env.example ./
+COPY env.production.example ./
+COPY supabase-setup.sql ./
+COPY supabase-setup-simple.sql ./
+COPY create-demo-user.js ./
+COPY create-test-user.sql ./
+COPY setup.sh ./
+COPY deploy.sh ./
+COPY deploy-railway.sh ./
+COPY deploy-railway-simple.sh ./
+COPY generate-env.js ./
+COPY Dockerfile ./
+COPY .dockerignore ./
 
 # Expose port
 EXPOSE 3000
