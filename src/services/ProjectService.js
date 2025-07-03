@@ -18,6 +18,15 @@ class ProjectService {
     try {
       logger.info('Initializing ProjectService...');
       
+      // Check if database is connected
+      const mongoose = require('mongoose');
+      if (mongoose.connection.readyState !== 1) {
+        logger.warn('Database not connected, ProjectService will start without loading projects');
+        this.isRunning = true;
+        logger.info('ProjectService initialized without database connection');
+        return;
+      }
+      
       // Load all projects from database
       const projects = await Project.find({});
       projects.forEach(project => {
@@ -31,7 +40,9 @@ class ProjectService {
       logger.info(`ProjectService initialized with ${projects.length} projects`);
     } catch (error) {
       logger.error('Failed to initialize ProjectService:', error);
-      throw error;
+      // Don't throw error, just log it and continue
+      this.isRunning = true;
+      logger.info('ProjectService initialized with errors (continuing anyway)');
     }
   }
 
@@ -65,14 +76,25 @@ class ProjectService {
   }
 
   async checkAllProjects() {
-    const projects = await Project.find({ 'monitoring.enabled': true });
-    
-    for (const project of projects) {
-      try {
-        await this.checkProjectHealth(project);
-      } catch (error) {
-        logger.error(`Error checking project ${project.name}:`, error);
+    try {
+      // Check if database is connected
+      const mongoose = require('mongoose');
+      if (mongoose.connection.readyState !== 1) {
+        logger.warn('Database not connected, skipping project health checks');
+        return;
       }
+      
+      const projects = await Project.find({ 'monitoring.enabled': true });
+      
+      for (const project of projects) {
+        try {
+          await this.checkProjectHealth(project);
+        } catch (error) {
+          logger.error(`Error checking project ${project.name}:`, error);
+        }
+      }
+    } catch (error) {
+      logger.error('Error during project health checks:', error);
     }
   }
 
