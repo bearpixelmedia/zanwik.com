@@ -147,33 +147,61 @@ const initializeServices = async () => {
     console.log('Starting services initialization...');
     
     // Initialize project service
-    console.log('Initializing ProjectService...');
-    projectService = new ProjectService(io, redis);
+    console.log('Creating ProjectService instance...');
+    try {
+      projectService = new ProjectService(io, redis);
+      console.log('ProjectService instance created, initializing...');
+    } catch (error) {
+      console.error('Failed to create ProjectService instance:', error);
+      throw error;
+    }
     await projectService.initialize().catch(err => {
+      console.error('Project service initialization failed:', err);
       logger.warn('Project service initialization failed:', err.message);
     });
     console.log('ProjectService initialized');
     
     // Initialize monitoring service
-    console.log('Initializing MonitoringService...');
-    monitoringService = new MonitoringService(io, redis);
+    console.log('Creating MonitoringService instance...');
+    try {
+      monitoringService = new MonitoringService(io, redis);
+      console.log('MonitoringService instance created, initializing...');
+    } catch (error) {
+      console.error('Failed to create MonitoringService instance:', error);
+      throw error;
+    }
     await monitoringService.initialize().catch(err => {
+      console.error('Monitoring service initialization failed:', err);
       logger.warn('Monitoring service initialization failed:', err.message);
     });
     console.log('MonitoringService initialized');
     
     // Initialize deployment service
-    console.log('Initializing DeploymentService...');
-    deploymentService = new DeploymentService(io, redis);
+    console.log('Creating DeploymentService instance...');
+    try {
+      deploymentService = new DeploymentService(io, redis);
+      console.log('DeploymentService instance created, initializing...');
+    } catch (error) {
+      console.error('Failed to create DeploymentService instance:', error);
+      throw error;
+    }
     await deploymentService.initialize().catch(err => {
+      console.error('Deployment service initialization failed:', err);
       logger.warn('Deployment service initialization failed:', err.message);
     });
     console.log('DeploymentService initialized');
     
     // Initialize analytics service
-    console.log('Initializing AnalyticsService...');
-    analyticsService = new AnalyticsService(io, redis);
+    console.log('Creating AnalyticsService instance...');
+    try {
+      analyticsService = new AnalyticsService(io, redis);
+      console.log('AnalyticsService instance created, initializing...');
+    } catch (error) {
+      console.error('Failed to create AnalyticsService instance:', error);
+      throw error;
+    }
     await analyticsService.initialize().catch(err => {
+      console.error('Analytics service initialization failed:', err);
       logger.warn('Analytics service initialization failed:', err.message);
     });
     console.log('AnalyticsService initialized');
@@ -323,7 +351,7 @@ const startServer = async () => {
     console.log('Database connection completed');
     
     // Initialize services
-    console.log('Initializing services...');
+    console.log('About to call initializeServices()...');
     await initializeServices();
     console.log('Services initialization completed');
     
