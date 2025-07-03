@@ -255,6 +255,20 @@ console.log('Root endpoint setup completed');
 // Health check endpoint
 console.log('Setting up health check endpoint...');
 app.get('/api/health', (req, res) => {
+  // Simple health check that responds immediately
+  res.json({ 
+    status: 'healthy',
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+    version: '2.0.0',
+    environment: process.env.NODE_ENV || 'development'
+  });
+});
+console.log('Health check endpoint setup completed');
+
+// Detailed health check endpoint for monitoring
+console.log('Setting up detailed health check endpoint...');
+app.get('/api/health/detailed', (req, res) => {
   res.json({ 
     status: 'healthy',
     timestamp: new Date().toISOString(),
@@ -281,7 +295,7 @@ app.get('/api/health', (req, res) => {
     environment: process.env.NODE_ENV || 'development'
   });
 });
-console.log('Health check endpoint setup completed');
+console.log('Detailed health check endpoint setup completed');
 
 // Dashboard overview endpoint
 console.log('Setting up dashboard overview endpoint...');
