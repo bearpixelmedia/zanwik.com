@@ -1,3 +1,4 @@
+console.log('Loaded projects.js');
 const express = require('express');
 const Project = require('../models/Project');
 const { requirePermission } = require('../middleware/auth');
