@@ -52,13 +52,7 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
-    origin: [
-      'http://localhost:3001',
-      'https://www.zanwik.com',
-      'https://zanwik.com',
-      'https://client-5nvqqc0nj-byronmccluney.vercel.app',
-      'https://client-h7ro2jnm6-byronmccluney.vercel.app'
-    ],
+    origin: true, // Allow all origins for now
     methods: ["GET", "POST"],
     credentials: true
   }
@@ -108,31 +102,7 @@ const initializeRedis = () => {
 // Middleware
 app.use(helmet());
 app.use(cors({
-  origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl requests)
-    if (!origin) return callback(null, true);
-    
-    const allowedOrigins = [
-      'http://localhost:3001',
-      'https://www.zanwik.com',
-      'https://zanwik.com',
-      'https://client-5nvqqc0nj-byronmccluney.vercel.app',
-      'https://client-h7ro2jnm6-byronmccluney.vercel.app'
-    ];
-    
-    // Add any additional origins from environment variable
-    if (process.env.CORS_ORIGIN) {
-      const envOrigins = process.env.CORS_ORIGIN.split(',').map(o => o.trim());
-      allowedOrigins.push(...envOrigins);
-    }
-    
-    if (allowedOrigins.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      console.log('CORS blocked origin:', origin);
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
+  origin: true, // Allow all origins for now
   credentials: true
 }));
 
