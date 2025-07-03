@@ -144,32 +144,44 @@ let projectService, monitoringService, deploymentService, analyticsService;
 
 const initializeServices = async () => {
   try {
+    console.log('Starting services initialization...');
+    
     // Initialize project service
+    console.log('Initializing ProjectService...');
     projectService = new ProjectService(io, redis);
     await projectService.initialize().catch(err => {
       logger.warn('Project service initialization failed:', err.message);
     });
+    console.log('ProjectService initialized');
     
     // Initialize monitoring service
+    console.log('Initializing MonitoringService...');
     monitoringService = new MonitoringService(io, redis);
     await monitoringService.initialize().catch(err => {
       logger.warn('Monitoring service initialization failed:', err.message);
     });
+    console.log('MonitoringService initialized');
     
     // Initialize deployment service
+    console.log('Initializing DeploymentService...');
     deploymentService = new DeploymentService(io, redis);
     await deploymentService.initialize().catch(err => {
       logger.warn('Deployment service initialization failed:', err.message);
     });
+    console.log('DeploymentService initialized');
     
     // Initialize analytics service
+    console.log('Initializing AnalyticsService...');
     analyticsService = new AnalyticsService(io, redis);
     await analyticsService.initialize().catch(err => {
       logger.warn('Analytics service initialization failed:', err.message);
     });
+    console.log('AnalyticsService initialized');
     
     logger.info('Services initialization completed');
+    console.log('All services initialized successfully');
   } catch (error) {
+    console.error('Failed to initialize services:', error);
     logger.error('Failed to initialize services:', error);
     // Don't exit process, continue with basic functionality
   }
@@ -334,6 +346,8 @@ const startServer = async () => {
       logger.info(`Environment: ${process.env.NODE_ENV}`);
       console.log(`Server started successfully on port ${PORT}`);
     });
+    
+    console.log('Server startup process completed');
   } catch (error) {
     console.error('Failed to start server:', error);
     logger.error('Failed to start server:', error);
