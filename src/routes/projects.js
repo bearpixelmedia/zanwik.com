@@ -7,6 +7,9 @@ const router = express.Router();
 
 // Get all projects with pagination and filtering
 router.get('/', async (req, res) => {
+  if (!req.user) {
+    return res.status(401).json({ message: 'Unauthorized' });
+  }
   try {
     const { 
       page = 1, 
@@ -63,6 +66,9 @@ router.get('/', async (req, res) => {
 
 // Get single project
 router.get('/:id', async (req, res) => {
+  if (!req.user) {
+    return res.status(401).json({ message: 'Unauthorized' });
+  }
   try {
     const project = await Project.findOne({ 
       _id: req.params.id, 
@@ -82,6 +88,9 @@ router.get('/:id', async (req, res) => {
 
 // Create new project
 router.post('/', async (req, res) => {
+  if (!req.user) {
+    return res.status(401).json({ message: 'Unauthorized' });
+  }
   try {
     const { name, description, category, status = 'planning', revenue = 0, users = 0 } = req.body;
     
@@ -112,6 +121,9 @@ router.post('/', async (req, res) => {
 
 // Update project
 router.put('/:id', async (req, res) => {
+  if (!req.user) {
+    return res.status(401).json({ message: 'Unauthorized' });
+  }
   try {
     const { name, description, category, status, revenue, users } = req.body;
     
@@ -146,6 +158,9 @@ router.put('/:id', async (req, res) => {
 
 // Delete project
 router.delete('/:id', async (req, res) => {
+  if (!req.user) {
+    return res.status(401).json({ message: 'Unauthorized' });
+  }
   try {
     const project = await Project.findOneAndDelete({ 
       _id: req.params.id, 
@@ -169,6 +184,9 @@ router.delete('/:id', async (req, res) => {
 
 // Deploy project
 router.post('/:id/deploy', async (req, res) => {
+  if (!req.user) {
+    return res.status(401).json({ message: 'Unauthorized' });
+  }
   try {
     const project = await Project.findById(req.params.id);
     
