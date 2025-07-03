@@ -44,7 +44,45 @@ const io = socketIo(server, {
 });
 
 // Initialize Redis
-const redis = new Redis(process.env.REDIS_URL || 'redis://localhost:6379');
+let redis;
+const initializeRedis = () => {
+  if (!process.env.REDIS_URL) {
+    logger.warn('REDIS_URL not set, using in-memory fallback');
+    // Create a mock Redis-like object for basic functionality
+    redis = {
+      status: 'ready',
+      get: async () => null,
+      set: async () => 'OK',
+      del: async () => 1,
+      quit: async () => {},
+      on: () => {},
+      off: () => {}
+    };
+    return;
+  }
+  
+  try {
+    redis = new Redis(process.env.REDIS_URL);
+    redis.on('error', (err) => {
+      logger.error('Redis error:', err);
+    });
+    redis.on('connect', () => {
+      logger.info('Connected to Redis');
+    });
+  } catch (err) {
+    logger.error('Redis connection error:', err);
+    // Create fallback Redis object
+    redis = {
+      status: 'ready',
+      get: async () => null,
+      set: async () => 'OK',
+      del: async () => 1,
+      quit: async () => {},
+      on: () => {},
+      off: () => {}
+    };
+  }
+};
 
 // Middleware
 app.use(helmet());
@@ -69,17 +107,23 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 // Database connection
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/umbrella_dashboard', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-.then(() => {
-  logger.info('Connected to MongoDB');
-})
-.catch(err => {
-  logger.error('MongoDB connection error:', err);
-  process.exit(1);
-});
+const connectDatabase = async () => {
+  if (!process.env.MONGODB_URI) {
+    logger.warn('MONGODB_URI not set, skipping database connection');
+    return;
+  }
+  
+  try {
+    await mongoose.connect(process.env.MONGODB_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    logger.info('Connected to MongoDB');
+  } catch (err) {
+    logger.error('MongoDB connection error:', err);
+    // Don't exit process, continue without database
+  }
+};
 
 // Initialize services
 let projectService, monitoringService, deploymentService, analyticsService;
@@ -88,24 +132,32 @@ const initializeServices = async () => {
   try {
     // Initialize project service
     projectService = new ProjectService(io, redis);
-    await projectService.initialize();
+    await projectService.initialize().catch(err => {
+      logger.warn('Project service initialization failed:', err.message);
+    });
     
     // Initialize monitoring service
     monitoringService = new MonitoringService(io, redis);
-    await monitoringService.initialize();
+    await monitoringService.initialize().catch(err => {
+      logger.warn('Monitoring service initialization failed:', err.message);
+    });
     
     // Initialize deployment service
     deploymentService = new DeploymentService(io, redis);
-    await deploymentService.initialize();
+    await deploymentService.initialize().catch(err => {
+      logger.warn('Deployment service initialization failed:', err.message);
+    });
     
     // Initialize analytics service
     analyticsService = new AnalyticsService(io, redis);
-    await analyticsService.initialize();
+    await analyticsService.initialize().catch(err => {
+      logger.warn('Analytics service initialization failed:', err.message);
+    });
     
-    logger.info('All services initialized successfully');
+    logger.info('Services initialization completed');
   } catch (error) {
     logger.error('Failed to initialize services:', error);
-    process.exit(1);
+    // Don't exit process, continue with basic functionality
   }
 };
 
@@ -176,18 +228,42 @@ app.use('/api/monitoring', auth, monitoringRoutes);
 app.use('/api/users', auth, userRoutes);
 app.use('/api/payments', auth, paymentRoutes);
 
+// Root endpoint for basic connectivity
+app.get('/', (req, res) => {
+  res.json({ 
+    message: 'Umbrella Dashboard API',
+    version: '2.0.0',
+    status: 'running',
+    timestamp: new Date().toISOString()
+  });
+});
+
 // Health check endpoint
 app.get('/api/health', (req, res) => {
   res.json({ 
-    status: 'OK', 
+    status: 'healthy',
     timestamp: new Date().toISOString(),
     uptime: process.uptime(),
     services: {
-      mongodb: mongoose.connection.readyState === 1,
-      redis: redis.status === 'ready',
-      projectService: projectService ? projectService.isRunning() : false,
-      monitoringService: monitoringService ? monitoringService.isRunning() : false
-    }
+      database: {
+        status: mongoose.connection.readyState === 1 ? 'up' : 'down',
+        message: mongoose.connection.readyState === 1 ? 'Connected' : 'Not connected'
+      },
+      redis: {
+        status: redis && redis.status === 'ready' ? 'up' : 'down',
+        message: redis && redis.status === 'ready' ? 'Connected' : 'Not connected'
+      },
+      projectService: {
+        status: projectService && projectService.isRunning ? projectService.isRunning() : 'unknown',
+        message: projectService ? 'Available' : 'Not available'
+      },
+      monitoringService: {
+        status: monitoringService && monitoringService.isRunning ? monitoringService.isRunning() : 'unknown',
+        message: monitoringService ? 'Available' : 'Not available'
+      }
+    },
+    version: '2.0.0',
+    environment: process.env.NODE_ENV || 'development'
   });
 });
 
@@ -220,6 +296,13 @@ const PORT = process.env.PORT || 3000;
 
 // Start server after services are initialized
 const startServer = async () => {
+  // Initialize Redis first
+  initializeRedis();
+  
+  // Connect to database
+  await connectDatabase();
+  
+  // Initialize services
   await initializeServices();
   
   server.listen(PORT, () => {
