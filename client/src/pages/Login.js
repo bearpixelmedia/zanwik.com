@@ -67,7 +67,7 @@ const Login = () => {
   };
 
   const handleDemoLogin = () => {
-    setEmail('demo@example.com');
+    setEmail('demo@zanwik.com');
     setPassword('demo123');
   };
 
@@ -202,7 +202,7 @@ const Login = () => {
             {/* Demo Info */}
             <div className="mt-4 p-3 bg-muted/50 rounded-lg">
               <p className="text-xs text-muted-foreground text-center">
-                <strong>Demo Account:</strong> demo@example.com / demo123
+                <strong>Demo Account:</strong> demo@zanwik.com / demo123
               </p>
             </div>
           </CardContent>
