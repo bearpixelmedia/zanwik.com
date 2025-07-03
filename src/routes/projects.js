@@ -21,7 +21,7 @@ router.get('/', async (req, res) => {
       sortOrder = 'desc'
     } = req.query;
 
-    const query = { userId: req.user.id };
+    const query = { owner: req.user.id };
     
     // Search functionality
     if (search) {
@@ -72,7 +72,7 @@ router.get('/:id', async (req, res) => {
   try {
     const project = await Project.findOne({ 
       _id: req.params.id, 
-      userId: req.user.id 
+      owner: req.user.id 
     });
     
     if (!project) {
@@ -95,7 +95,7 @@ router.post('/', async (req, res) => {
     const { name, description, category, status = 'planning', revenue = 0, users = 0 } = req.body;
     
     const project = new Project({
-      userId: req.user.id,
+      owner: req.user.id,
       name,
       description,
       category,
@@ -128,7 +128,7 @@ router.put('/:id', async (req, res) => {
     const { name, description, category, status, revenue, users } = req.body;
     
     const project = await Project.findOneAndUpdate(
-      { _id: req.params.id, userId: req.user.id },
+      { _id: req.params.id, owner: req.user.id },
       {
         name,
         description,
@@ -164,7 +164,7 @@ router.delete('/:id', async (req, res) => {
   try {
     const project = await Project.findOneAndDelete({ 
       _id: req.params.id, 
-      userId: req.user.id 
+      owner: req.user.id 
     });
     
     if (!project) {
@@ -273,7 +273,7 @@ router.get('/:id/analytics', async (req, res) => {
   try {
     const project = await Project.findOne({ 
       _id: req.params.id, 
-      userId: req.user.id 
+      owner: req.user.id 
     });
     
     if (!project) {
@@ -309,7 +309,7 @@ router.get('/:id/analytics', async (req, res) => {
 // Get project categories
 router.get('/categories/list', async (req, res) => {
   try {
-    const categories = await Project.distinct('category', { userId: req.user.id });
+    const categories = await Project.distinct('category', { owner: req.user.id });
     res.json(categories);
   } catch (error) {
     logger.error('Error fetching categories:', error);
@@ -321,7 +321,7 @@ router.get('/categories/list', async (req, res) => {
 router.get('/stats/overview', async (req, res) => {
   try {
     const stats = await Project.aggregate([
-      { $match: { userId: req.user.id } },
+      { $match: { owner: req.user.id } },
       {
         $group: {
           _id: null,
