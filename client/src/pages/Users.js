@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  Users, 
+  Users as UsersIcon, 
   UserPlus, 
   Search, 
   MoreVertical, 
@@ -188,7 +188,7 @@ const Users = () => {
             <CardTitle className="text-sm font-medium text-muted-foreground">
               Total Users
             </CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
+            <UsersIcon className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-foreground">{users.length}</div>
@@ -341,7 +341,7 @@ const Users = () => {
             </div>
           ) : (
             <div className="text-center py-8 text-muted-foreground">
-              <Users className="h-8 w-8 mx-auto mb-2 opacity-50" />
+                             <UsersIcon className="h-8 w-8 mx-auto mb-2 opacity-50" />
               <p>No users found</p>
             </div>
           )}
