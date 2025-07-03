@@ -307,6 +307,16 @@ console.log('Express app setup completed');
 
 const PORT = process.env.PORT || 3000;
 
+// Add global error handlers at the very top
+process.on('uncaughtException', (err) => {
+  // eslint-disable-next-line no-console
+  console.error('Uncaught Exception:', err);
+});
+process.on('unhandledRejection', (reason, promise) => {
+  // eslint-disable-next-line no-console
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+});
+
 // Start server after services are initialized
 const startServer = async () => {
   try {
@@ -474,7 +484,8 @@ process.on('unhandledRejection', (reason, promise) => {
   gracefulShutdown('unhandledRejection');
 });
 
-// Start the server
+// At the very bottom, before calling startServer()
+console.log('About to call startServer()');
 startServer().catch(error => {
   logger.error('Failed to start server:', error);
   process.exit(1);
