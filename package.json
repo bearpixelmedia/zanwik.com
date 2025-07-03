@@ -6,7 +6,9 @@
   "scripts": {
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
-    "build": "cd client && npm run build",
+    "build": "echo 'Backend build complete'",
+    "build:client": "cd client && npm install && npm run build",
+    "build:all": "npm install && cd client && npm install && npm run build",
     "client": "cd client && npm start",
     "install-all": "npm install && cd client && npm install",
     "setup": "node src/setup.js",
