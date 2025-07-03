@@ -262,7 +262,7 @@ export const initializeWebSocket = (userId) => {
 // Health check
 export const healthCheck = () => apiCall('/health');
 
-export default {
+const api = {
   projects: projectsAPI,
   analytics: analyticsAPI,
   payments: paymentsAPI,
@@ -271,4 +271,6 @@ export default {
   users: usersAPI,
   healthCheck,
   initializeWebSocket,
-}; 
+};
+
+export default api; 

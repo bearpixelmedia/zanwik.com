@@ -11,8 +11,7 @@ import {
   X,
   Building2,
   Monitor,
-  FolderOpen,
-  TrendingUp
+  FolderOpen
 } from 'lucide-react';
 import { Button } from './ui/button';
 import { cn } from '../utils/cn';

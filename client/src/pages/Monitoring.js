@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import { 
   AlertTriangle, 
-  CheckCircle, 
   Clock, 
   Activity,
   Eye,
-  Filter,
   RefreshCw,
   Bell,
   Zap,

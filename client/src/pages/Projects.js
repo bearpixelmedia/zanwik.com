@@ -2,14 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { 
   Plus, 
   Search, 
-  Filter, 
   MoreVertical, 
   Edit, 
   Trash2, 
   Eye,
   DollarSign,
   Users,
-  Calendar,
   Target,
   Loader2
 } from 'lucide-react';
@@ -19,7 +17,7 @@ import { projectsAPI } from '../utils/api';
 import { useAuth } from '../contexts/AuthContext';
 
 const Projects = () => {
-  const { user } = useAuth();
+  const { user: _user } = useAuth(); // eslint-disable-line no-unused-vars
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -36,7 +34,7 @@ const Projects = () => {
   // Fetch projects on component mount
   useEffect(() => {
     fetchProjects();
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const fetchProjects = async () => {
     try {
@@ -95,7 +93,7 @@ const Projects = () => {
   // Refetch when filters change
   useEffect(() => {
     fetchProjects();
-  }, [searchTerm, filterStatus]);
+  }, [searchTerm, filterStatus]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleCreateProject = async () => {
     if (!newProject.name.trim()) {

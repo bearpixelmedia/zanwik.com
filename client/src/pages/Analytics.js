@@ -5,11 +5,7 @@ import {
   DollarSign, 
   Users, 
   ShoppingCart,
-  BarChart3,
-  PieChart,
-  Calendar,
-  Download,
-  Filter
+  Download
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { Button } from '../components/ui/button';
