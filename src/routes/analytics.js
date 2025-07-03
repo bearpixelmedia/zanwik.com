@@ -17,6 +17,47 @@ router.get('/overview', requirePermission('analytics', 'read'), async (req, res)
   }
 });
 
+// Get dashboard overview analytics (alias for frontend compatibility)
+router.get('/dashboard', requirePermission('analytics', 'read'), async (req, res) => {
+  try {
+    const analyticsService = req.app.get('analyticsService');
+    const overview = await analyticsService.getDashboardOverview(req.user.id);
+    
+    res.json({ overview });
+  } catch (error) {
+    logger.logError(error, { action: 'get_dashboard_overview', userId: req.user.id });
+    res.status(500).json({ message: 'Failed to get dashboard overview.' });
+  }
+});
+
+// Simple dashboard endpoint for testing (no auth required)
+router.get('/dashboard/public', async (req, res) => {
+  try {
+    // Return mock data for testing
+    res.json({
+      overview: {
+        totalRevenue: 45600,
+        monthlyGrowth: 15.2,
+        activeUsers: 1890,
+        totalProjects: 12,
+        recentActivity: [
+          { type: 'project_created', title: 'AI Content Generator', time: '2 hours ago' },
+          { type: 'revenue_milestone', title: 'Reached $45K monthly revenue', time: '1 day ago' },
+          { type: 'user_signup', title: 'New user joined', time: '3 hours ago' }
+        ],
+        topProjects: [
+          { name: 'AI Content Generator', revenue: 2450, growth: 18 },
+          { name: 'Digital Marketplace', revenue: 1890, growth: 12 },
+          { name: 'Freelance Hub', revenue: 1200, growth: 8 }
+        ]
+      }
+    });
+  } catch (error) {
+    logger.logError(error, { action: 'get_dashboard_public' });
+    res.status(500).json({ message: 'Failed to get dashboard data.' });
+  }
+});
+
 // Get revenue analytics
 router.get('/revenue', requirePermission('analytics', 'read'), async (req, res) => {
   try {
