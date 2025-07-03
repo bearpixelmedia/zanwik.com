@@ -236,41 +236,8 @@ io.on('connection', (socket) => {
   });
 });
 
-// Routes
-console.log('Setting up routes...');
-console.log('Setting up auth routes...');
-app.use('/api/auth', authRoutes);
-console.log('Auth routes setup completed');
-
-console.log('Setting up project routes...');
-app.use('/api/projects', auth, projectRoutes);
-console.log('Project routes setup completed');
-
-console.log('Setting up analytics routes...');
-app.use('/api/analytics', auth, analyticsRoutes);
-console.log('Analytics routes setup completed');
-
-console.log('Setting up infrastructure routes...');
-app.use('/api/infrastructure', auth, infrastructureRoutes);
-console.log('Infrastructure routes setup completed');
-
-console.log('Setting up deployment routes...');
-app.use('/api/deployment', auth, deploymentRoutes);
-console.log('Deployment routes setup completed');
-
-console.log('Setting up monitoring routes...');
-app.use('/api/monitoring', auth, monitoringRoutes);
-console.log('Monitoring routes setup completed');
-
-console.log('Setting up user routes...');
-app.use('/api/users', auth, userRoutes);
-console.log('User routes setup completed');
-
-console.log('Setting up payment routes...');
-app.use('/api/payments', auth, paymentRoutes);
-console.log('Payment routes setup completed');
-
-console.log('Routes setup completed');
+// Routes will be set up after services are initialized
+console.log('Routes setup will be completed after service initialization');
 
 // Root endpoint for basic connectivity
 app.get('/', (req, res) => {
@@ -369,6 +336,42 @@ const startServer = async () => {
     app.set('deploymentService', deploymentService);
     app.set('analyticsService', analyticsService);
     console.log('Services setup completed');
+    
+    // Set up routes after services are available
+    console.log('Setting up routes...');
+    console.log('Setting up auth routes...');
+    app.use('/api/auth', authRoutes);
+    console.log('Auth routes setup completed');
+
+    console.log('Setting up project routes...');
+    app.use('/api/projects', auth, projectRoutes);
+    console.log('Project routes setup completed');
+
+    console.log('Setting up analytics routes...');
+    app.use('/api/analytics', auth, analyticsRoutes);
+    console.log('Analytics routes setup completed');
+
+    console.log('Setting up infrastructure routes...');
+    app.use('/api/infrastructure', auth, infrastructureRoutes);
+    console.log('Infrastructure routes setup completed');
+
+    console.log('Setting up deployment routes...');
+    app.use('/api/deployment', auth, deploymentRoutes);
+    console.log('Deployment routes setup completed');
+
+    console.log('Setting up monitoring routes...');
+    app.use('/api/monitoring', auth, monitoringRoutes);
+    console.log('Monitoring routes setup completed');
+
+    console.log('Setting up user routes...');
+    app.use('/api/users', auth, userRoutes);
+    console.log('User routes setup completed');
+
+    console.log('Setting up payment routes...');
+    app.use('/api/payments', auth, paymentRoutes);
+    console.log('Payment routes setup completed');
+
+    console.log('Routes setup completed');
     
     console.log(`Starting server on port ${PORT}...`);
     server.listen(PORT, '0.0.0.0', () => {
