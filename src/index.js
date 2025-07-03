@@ -236,15 +236,8 @@ io.on('connection', (socket) => {
   });
 });
 
-// Make services available to routes
-app.set('io', io);
-app.set('redis', redis);
-app.set('projectService', projectService);
-app.set('monitoringService', monitoringService);
-app.set('deploymentService', deploymentService);
-app.set('analyticsService', analyticsService);
-
 // Routes
+console.log('Setting up routes...');
 app.use('/api/auth', authRoutes);
 app.use('/api/projects', auth, projectRoutes);
 app.use('/api/analytics', auth, analyticsRoutes);
@@ -253,6 +246,7 @@ app.use('/api/deployment', auth, deploymentRoutes);
 app.use('/api/monitoring', auth, monitoringRoutes);
 app.use('/api/users', auth, userRoutes);
 app.use('/api/payments', auth, paymentRoutes);
+console.log('Routes setup completed');
 
 // Root endpoint for basic connectivity
 app.get('/', (req, res) => {
@@ -318,6 +312,8 @@ app.use('*', (req, res) => {
   res.status(404).json({ message: 'Route not found' });
 });
 
+console.log('Express app setup completed');
+
 const PORT = process.env.PORT || 3000;
 
 // Start server after services are initialized
@@ -339,6 +335,16 @@ const startServer = async () => {
     console.log('Initializing services...');
     await initializeServices();
     console.log('Services initialization completed');
+    
+    // Make services available to routes
+    console.log('Setting up services for routes...');
+    app.set('io', io);
+    app.set('redis', redis);
+    app.set('projectService', projectService);
+    app.set('monitoringService', monitoringService);
+    app.set('deploymentService', deploymentService);
+    app.set('analyticsService', analyticsService);
+    console.log('Services setup completed');
     
     console.log(`Starting server on port ${PORT}...`);
     server.listen(PORT, '0.0.0.0', () => {
