@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   TrendingUp, 
   Users, 
@@ -6,77 +6,144 @@ import {
   Activity, 
   Target,
   ArrowUpRight,
-  ArrowDownRight
+  ArrowDownRight,
+  Loader2
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { Button } from '../components/ui/button';
+import { analyticsAPI, projectsAPI } from '../utils/api';
+import { useAuth } from '../contexts/AuthContext';
 
 const Dashboard = () => {
-  const stats = [
-    {
-      title: "Total Revenue",
-      value: "$45,231.89",
-      change: "+20.1%",
-      changeType: "positive",
-      icon: DollarSign,
-      description: "from last month"
-    },
-    {
-      title: "Active Users",
-      value: "2,350",
-      change: "+180.1%",
-      changeType: "positive",
-      icon: Users,
-      description: "from last month"
-    },
-    {
-      title: "Projects",
-      value: "12",
-      change: "+2",
-      changeType: "positive",
-      icon: Target,
-      description: "active projects"
-    },
-    {
-      title: "System Health",
-      value: "98.2%",
-      change: "-1.2%",
-      changeType: "negative",
-      icon: Activity,
-      description: "uptime this month"
-    }
-  ];
+  const { user } = useAuth();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [dashboardData, setDashboardData] = useState({
+    stats: [],
+    recentActivity: [],
+    overview: {}
+  });
 
-  const recentActivity = [
-    {
-      id: 1,
-      title: "AI Content Generator deployed",
-      description: "Successfully deployed to production",
-      time: "2 minutes ago",
-      type: "deployment"
-    },
-    {
-      id: 2,
-      title: "New user registered",
-      description: "john.doe@example.com joined",
-      time: "5 minutes ago",
-      type: "user"
-    },
-    {
-      id: 3,
-      title: "Payment received",
-      description: "$299.00 from Premium subscription",
-      time: "10 minutes ago",
-      type: "payment"
-    },
-    {
-      id: 4,
-      title: "System backup completed",
-      description: "Daily backup completed successfully",
-      time: "1 hour ago",
-      type: "system"
-    }
-  ];
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        // Fetch dashboard overview
+        const overview = await analyticsAPI.getDashboardOverview();
+        
+        // Fetch project stats
+        const projectStats = await projectsAPI.getStats();
+        
+        // Transform data for display
+        const stats = [
+          {
+            title: "Total Revenue",
+            value: `$${overview.revenue?.total?.toLocaleString() || '0'}`,
+            change: `${overview.revenue?.change || 0}%`,
+            changeType: overview.revenue?.change >= 0 ? "positive" : "negative",
+            icon: DollarSign,
+            description: "from last month"
+          },
+          {
+            title: "Active Users",
+            value: overview.users?.active?.toLocaleString() || '0',
+            change: `${overview.users?.change || 0}%`,
+            changeType: overview.users?.change >= 0 ? "positive" : "negative",
+            icon: Users,
+            description: "from last month"
+          },
+          {
+            title: "Projects",
+            value: projectStats.total?.toString() || '0',
+            change: `+${projectStats.active || 0}`,
+            changeType: "positive",
+            icon: Target,
+            description: "active projects"
+          },
+          {
+            title: "System Health",
+            value: `${overview.system?.health || 0}%`,
+            change: `${overview.system?.change || 0}%`,
+            changeType: overview.system?.change >= 0 ? "positive" : "negative",
+            icon: Activity,
+            description: "uptime this month"
+          }
+        ];
+
+        // Recent activity from overview
+        const recentActivity = overview.recentActivity?.map((activity, index) => ({
+          id: index + 1,
+          title: activity.title,
+          description: activity.description,
+          time: activity.timestamp,
+          type: activity.type
+        })) || [];
+
+        setDashboardData({
+          stats,
+          recentActivity,
+          overview
+        });
+      } catch (err) {
+        console.error('Failed to fetch dashboard data:', err);
+        setError('Failed to load dashboard data');
+        
+        // Fallback to static data if API fails
+        setDashboardData({
+          stats: [
+            {
+              title: "Total Revenue",
+              value: "$0",
+              change: "0%",
+              changeType: "positive",
+              icon: DollarSign,
+              description: "from last month"
+            },
+            {
+              title: "Active Users",
+              value: "0",
+              change: "0%",
+              changeType: "positive",
+              icon: Users,
+              description: "from last month"
+            },
+            {
+              title: "Projects",
+              value: "0",
+              change: "+0",
+              changeType: "positive",
+              icon: Target,
+              description: "active projects"
+            },
+            {
+              title: "System Health",
+              value: "100%",
+              change: "0%",
+              changeType: "positive",
+              icon: Activity,
+              description: "uptime this month"
+            }
+          ],
+          recentActivity: [
+            {
+              id: 1,
+              title: "Dashboard loaded",
+              description: "Welcome to your dashboard",
+              time: "Just now",
+              type: "system"
+            }
+          ],
+          overview: {}
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDashboardData();
+  }, []);
 
   const getActivityIcon = (type) => {
     switch (type) {
@@ -93,13 +160,26 @@ const Dashboard = () => {
     }
   };
 
+  if (loading) {
+    return (
+      <div className="p-6 flex items-center justify-center min-h-[400px]">
+        <div className="text-center">
+          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
+          <p className="text-muted-foreground">Loading dashboard...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="p-6 space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-foreground">Dashboard</h1>
-          <p className="text-muted-foreground">Welcome back! Here's what's happening with your projects.</p>
+          <p className="text-muted-foreground">
+            Welcome back, {user?.email}! Here's what's happening with your projects.
+          </p>
         </div>
         <Button>
           <TrendingUp className="h-4 w-4 mr-2" />
@@ -107,9 +187,15 @@ const Dashboard = () => {
         </Button>
       </div>
 
+      {error && (
+        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+          {error}
+        </div>
+      )}
+
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {stats.map((stat, index) => {
+        {dashboardData.stats.map((stat, index) => {
           const Icon = stat.icon;
           return (
             <Card key={index} className="hover:shadow-md transition-shadow">
@@ -150,24 +236,31 @@ const Dashboard = () => {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {recentActivity.map((activity) => (
-                <div key={activity.id} className="flex items-start space-x-4 p-3 rounded-lg hover:bg-accent transition-colors">
-                  <div className="flex-shrink-0 mt-1">
-                    {getActivityIcon(activity.type)}
+              {dashboardData.recentActivity.length > 0 ? (
+                dashboardData.recentActivity.map((activity) => (
+                  <div key={activity.id} className="flex items-start space-x-4 p-3 rounded-lg hover:bg-accent transition-colors">
+                    <div className="flex-shrink-0 mt-1">
+                      {getActivityIcon(activity.type)}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-foreground">
+                        {activity.title}
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        {activity.description}
+                      </p>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        {activity.time}
+                      </p>
+                    </div>
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-foreground">
-                      {activity.title}
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      {activity.description}
-                    </p>
-                    <p className="text-xs text-muted-foreground mt-1">
-                      {activity.time}
-                    </p>
-                  </div>
+                ))
+              ) : (
+                <div className="text-center py-8 text-muted-foreground">
+                  <Activity className="h-8 w-8 mx-auto mb-2 opacity-50" />
+                  <p>No recent activity</p>
                 </div>
-              ))}
+              )}
             </div>
           </CardContent>
         </Card>

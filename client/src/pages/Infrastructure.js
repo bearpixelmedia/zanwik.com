@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Server, 
   Database, 
@@ -11,60 +11,133 @@ import {
   Clock,
   Settings,
   TrendingUp,
-  TrendingDown
+  TrendingDown,
+  Loader2
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { Button } from '../components/ui/button';
+import { infrastructureAPI } from '../utils/api';
 
 const Infrastructure = () => {
   const [selectedService, setSelectedService] = useState('all');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [infrastructureData, setInfrastructureData] = useState({
+    services: [],
+    systemStatus: {},
+    resourceUsage: {},
+    metrics: {}
+  });
 
-  const services = [
-    {
-      id: 1,
-      name: 'Web Server',
-      type: 'server',
-      status: 'healthy',
-      uptime: '99.9%',
-      cpu: 45,
-      memory: 67,
-      disk: 23,
-      lastDeploy: '2 hours ago'
-    },
-    {
-      id: 2,
-      name: 'Database',
-      type: 'database',
-      status: 'healthy',
-      uptime: '99.8%',
-      cpu: 32,
-      memory: 89,
-      disk: 45,
-      lastDeploy: '1 day ago'
-    },
-    {
-      id: 3,
-      name: 'CDN',
-      type: 'cdn',
-      status: 'warning',
-      uptime: '98.5%',
-      cpu: 12,
-      memory: 34,
-      disk: 8,
-      lastDeploy: '3 days ago'
-    },
-    {
-      id: 4,
-      name: 'API Gateway',
-      type: 'api',
-      status: 'healthy',
-      uptime: '99.7%',
-      cpu: 28,
-      memory: 56,
-      disk: 15,
-      lastDeploy: '6 hours ago'
+  useEffect(() => {
+    fetchInfrastructureData();
+  }, []);
+
+  const fetchInfrastructureData = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      // Fetch system status
+      const systemStatus = await infrastructureAPI.getSystemStatus();
+      
+      // Fetch service metrics
+      const serviceMetrics = await infrastructureAPI.getServiceMetrics();
+      
+      // Fetch resource usage
+      const resourceUsage = await infrastructureAPI.getResourceUsage();
+
+      setInfrastructureData({
+        services: serviceMetrics.services || [],
+        systemStatus: systemStatus.status || {},
+        resourceUsage: resourceUsage.usage || {},
+        metrics: serviceMetrics.metrics || {}
+      });
+    } catch (err) {
+      console.error('Failed to fetch infrastructure data:', err);
+      setError('Failed to load infrastructure data');
+      
+      // Fallback to mock data
+      setInfrastructureData({
+        services: [
+          {
+            id: 1,
+            name: 'Web Server',
+            type: 'server',
+            status: 'healthy',
+            uptime: '99.9%',
+            cpu: 45,
+            memory: 67,
+            disk: 23,
+            lastDeploy: '2 hours ago'
+          },
+          {
+            id: 2,
+            name: 'Database',
+            type: 'database',
+            status: 'healthy',
+            uptime: '99.8%',
+            cpu: 32,
+            memory: 89,
+            disk: 45,
+            lastDeploy: '1 day ago'
+          },
+          {
+            id: 3,
+            name: 'CDN',
+            type: 'cdn',
+            status: 'warning',
+            uptime: '98.5%',
+            cpu: 12,
+            memory: 34,
+            disk: 8,
+            lastDeploy: '3 days ago'
+          },
+          {
+            id: 4,
+            name: 'API Gateway',
+            type: 'api',
+            status: 'healthy',
+            uptime: '99.7%',
+            cpu: 28,
+            memory: 56,
+            disk: 15,
+            lastDeploy: '6 hours ago'
+          }
+        ],
+        systemStatus: {
+          totalServices: 4,
+          averageUptime: '99.5%',
+          cpuUsage: 29,
+          memoryUsage: 61
+        },
+        resourceUsage: {
+          cpu: 29,
+          memory: 61,
+          disk: 23,
+          network: 45
+        },
+        metrics: {
+          uptimeChange: 0.2,
+          cpuChange: -5,
+          memoryChange: 3
+        }
+      });
+    } finally {
+      setLoading(false);
     }
-  ];
+  };
+
+  const handleRestartService = async (serviceId) => {
+    try {
+      await infrastructureAPI.restartService(serviceId);
+      // Refresh data after restart
+      fetchInfrastructureData();
+    } catch (err) {
+      console.error('Failed to restart service:', err);
+      alert('Failed to restart service');
+    }
+  };
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -95,8 +168,19 @@ const Infrastructure = () => {
   };
 
   const filteredServices = selectedService === 'all' 
-    ? services 
-    : services.filter(service => service.status === selectedService);
+    ? infrastructureData.services 
+    : infrastructureData.services.filter(service => service.status === selectedService);
+
+  if (loading) {
+    return (
+      <div className="p-6 flex items-center justify-center min-h-[400px]">
+        <div className="text-center">
+          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
+          <p className="text-muted-foreground">Loading infrastructure data...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-6 space-y-6">
@@ -112,6 +196,12 @@ const Infrastructure = () => {
         </Button>
       </div>
 
+      {error && (
+        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+          {error}
+        </div>
+      )}
+
       {/* System Overview */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <Card>
@@ -122,7 +212,9 @@ const Infrastructure = () => {
             <Server className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-foreground">{services.length}</div>
+            <div className="text-2xl font-bold text-foreground">
+              {infrastructureData.systemStatus.totalServices || infrastructureData.services.length}
+            </div>
             <div className="flex items-center space-x-2 text-xs text-muted-foreground">
               <CheckCircle className="h-3 w-3 text-green-500" />
               <span className="text-green-500">All operational</span>
@@ -138,10 +230,14 @@ const Infrastructure = () => {
             <Activity className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-foreground">99.5%</div>
+            <div className="text-2xl font-bold text-foreground">
+              {infrastructureData.systemStatus.averageUptime || '99.5%'}
+            </div>
             <div className="flex items-center space-x-2 text-xs text-muted-foreground">
               <TrendingUp className="h-3 w-3 text-green-500" />
-              <span className="text-green-500">+0.2%</span>
+              <span className="text-green-500">
+                +{infrastructureData.metrics.uptimeChange || 0}%
+              </span>
               <span>from last month</span>
             </div>
           </CardContent>
@@ -155,10 +251,14 @@ const Infrastructure = () => {
             <Cpu className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-foreground">29%</div>
+            <div className="text-2xl font-bold text-foreground">
+              {infrastructureData.systemStatus.cpuUsage || infrastructureData.resourceUsage.cpu || 0}%
+            </div>
             <div className="flex items-center space-x-2 text-xs text-muted-foreground">
               <TrendingDown className="h-3 w-3 text-green-500" />
-              <span className="text-green-500">-5%</span>
+              <span className="text-green-500">
+                {infrastructureData.metrics.cpuChange || 0}%
+              </span>
               <span>from last week</span>
             </div>
           </CardContent>
@@ -172,10 +272,14 @@ const Infrastructure = () => {
             <HardDrive className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-foreground">61%</div>
+            <div className="text-2xl font-bold text-foreground">
+              {infrastructureData.systemStatus.memoryUsage || infrastructureData.resourceUsage.memory || 0}%
+            </div>
             <div className="flex items-center space-x-2 text-xs text-muted-foreground">
               <TrendingUp className="h-3 w-3 text-yellow-500" />
-              <span className="text-yellow-500">+3%</span>
+              <span className="text-yellow-500">
+                +{infrastructureData.metrics.memoryChange || 0}%
+              </span>
               <span>from last week</span>
             </div>
           </CardContent>
@@ -212,101 +316,64 @@ const Infrastructure = () => {
               >
                 Warning
               </Button>
+              <Button
+                variant={selectedService === 'error' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setSelectedService('error')}
+              >
+                Error
+              </Button>
             </div>
           </div>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
-            {filteredServices.map((service) => (
-              <div key={service.id} className="flex items-center justify-between p-4 border border-border rounded-lg hover:bg-accent transition-colors">
-                <div className="flex items-center space-x-4">
-                  <div className="flex items-center space-x-2">
-                    {getTypeIcon(service.type)}
+          {filteredServices.length > 0 ? (
+            <div className="space-y-4">
+              {filteredServices.map((service) => (
+                <div key={service.id} className="flex items-center justify-between p-4 border rounded-lg">
+                  <div className="flex items-center space-x-4">
+                    <div className="flex-shrink-0">
+                      {getTypeIcon(service.type)}
+                    </div>
                     <div>
-                      <h3 className="font-medium text-foreground">{service.name}</h3>
-                      <p className="text-sm text-muted-foreground">Last deployed {service.lastDeploy}</p>
+                      <h3 className="text-sm font-medium text-foreground">{service.name}</h3>
+                      <p className="text-xs text-muted-foreground">Last deploy: {service.lastDeploy}</p>
                     </div>
                   </div>
-                </div>
-                
-                <div className="flex items-center space-x-6">
-                  <div className="text-center">
-                    <p className="text-sm font-medium text-foreground">{service.uptime}</p>
-                    <p className="text-xs text-muted-foreground">Uptime</p>
-                  </div>
-                  
-                  <div className="text-center">
-                    <p className="text-sm font-medium text-foreground">{service.cpu}%</p>
-                    <p className="text-xs text-muted-foreground">CPU</p>
-                  </div>
-                  
-                  <div className="text-center">
-                    <p className="text-sm font-medium text-foreground">{service.memory}%</p>
-                    <p className="text-xs text-muted-foreground">Memory</p>
-                  </div>
-                  
-                  <div className="text-center">
-                    <p className="text-sm font-medium text-foreground">{service.disk}%</p>
-                    <p className="text-xs text-muted-foreground">Disk</p>
-                  </div>
-                  
-                  <div className="flex items-center space-x-2">
-                    {getStatusIcon(service.status)}
-                    <span className={`text-sm font-medium ${getStatusColor(service.status)}`}>
-                      {service.status.charAt(0).toUpperCase() + service.status.slice(1)}
-                    </span>
+                  <div className="flex items-center space-x-4">
+                    <div className="text-right">
+                      <div className="flex items-center space-x-2">
+                        {getStatusIcon(service.status)}
+                        <span className={`text-sm font-medium ${getStatusColor(service.status)}`}>
+                          {service.status}
+                        </span>
+                      </div>
+                      <p className="text-xs text-muted-foreground">Uptime: {service.uptime}</p>
+                    </div>
+                    <div className="flex items-center space-x-4 text-xs text-muted-foreground">
+                      <span>CPU: {service.cpu}%</span>
+                      <span>RAM: {service.memory}%</span>
+                      <span>Disk: {service.disk}%</span>
+                    </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleRestartService(service.id)}
+                    >
+                      Restart
+                    </Button>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-8 text-muted-foreground">
+              <Server className="h-8 w-8 mx-auto mb-2 opacity-50" />
+              <p>No services found</p>
+            </div>
+          )}
         </CardContent>
       </Card>
-
-      {/* Resource Usage Charts */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>CPU Usage Over Time</CardTitle>
-            <CardDescription>24-hour CPU utilization across all services</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="h-48 flex items-end justify-between space-x-1">
-              {Array.from({ length: 24 }, (_, i) => (
-                <div key={i} className="flex-1 bg-primary/20 rounded-t-sm" 
-                     style={{ height: `${Math.random() * 60 + 20}%` }}>
-                </div>
-              ))}
-            </div>
-            <div className="flex justify-between text-xs text-muted-foreground mt-2">
-              <span>00:00</span>
-              <span>12:00</span>
-              <span>24:00</span>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Memory Usage Over Time</CardTitle>
-            <CardDescription>24-hour memory utilization across all services</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="h-48 flex items-end justify-between space-x-1">
-              {Array.from({ length: 24 }, (_, i) => (
-                <div key={i} className="flex-1 bg-blue-500/20 rounded-t-sm" 
-                     style={{ height: `${Math.random() * 40 + 40}%` }}>
-                </div>
-              ))}
-            </div>
-            <div className="flex justify-between text-xs text-muted-foreground mt-2">
-              <span>00:00</span>
-              <span>12:00</span>
-              <span>24:00</span>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
     </div>
   );
 };
