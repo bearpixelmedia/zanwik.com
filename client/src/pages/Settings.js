@@ -631,7 +631,7 @@ const Settings = () => {
               </div>
             </CardContent>
           </Card>
-        </div>
+      </div>
       )}
     </div>
   );
