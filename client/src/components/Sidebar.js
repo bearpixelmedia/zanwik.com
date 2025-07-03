@@ -78,10 +78,13 @@ const Sidebar = () => {
       <div className="flex items-center justify-between p-4 border-b border-border">
         {!isCollapsed && (
           <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gradient-to-br from-primary to-primary/80 rounded-lg flex items-center justify-center">
-              <TrendingUp className="w-5 h-5 text-primary-foreground" />
-            </div>
+            <img src="/logo.svg" alt="Umbrella" className="w-8 h-8" />
             <span className="font-semibold text-lg text-foreground">Umbrella</span>
+          </div>
+        )}
+        {isCollapsed && (
+          <div className="flex items-center justify-center w-full">
+            <img src="/logo.svg" alt="Umbrella" className="w-8 h-8" />
           </div>
         )}
         <Button

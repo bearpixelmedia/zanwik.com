@@ -25,8 +25,12 @@ const Navbar = () => {
   return (
     <div className="bg-card border-b border-border px-4 py-3">
       <div className="flex items-center justify-between">
-        {/* Left side - Search */}
+        {/* Left side - Logo and Search */}
         <div className="flex items-center space-x-4 flex-1">
+          <div className="flex items-center space-x-2">
+            <img src="/logo.svg" alt="Umbrella" className="w-8 h-8" />
+            <span className="font-semibold text-lg text-foreground hidden sm:block">Umbrella</span>
+          </div>
           <div className="relative max-w-md w-full">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <input

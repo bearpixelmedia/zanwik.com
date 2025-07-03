@@ -5,154 +5,165 @@ const logger = require('../utils/logger');
 
 const router = express.Router();
 
-// Get all projects
+// Get all projects with pagination and filtering
 router.get('/', async (req, res) => {
   try {
-    const { page = 1, limit = 10, status, health, type, search } = req.query;
+    const { 
+      page = 1, 
+      limit = 10, 
+      search, 
+      status, 
+      category,
+      sortBy = 'createdAt',
+      sortOrder = 'desc'
+    } = req.query;
+
+    const query = { userId: req.user.id };
     
-    const query = {
-      $or: [
-        { owner: req.user.id },
-        { 'team.user': req.user.id }
-      ]
-    };
-    
-    if (status) query.status = status;
-    if (health) query.health = health;
-    if (type) query.type = type;
+    // Search functionality
     if (search) {
-      query.$and = [{
-        $or: [
-          { name: { $regex: search, $options: 'i' } },
-          { description: { $regex: search, $options: 'i' } }
-        ]
-      }];
+      query.$or = [
+        { name: { $regex: search, $options: 'i' } },
+        { description: { $regex: search, $options: 'i' } }
+      ];
     }
     
+    // Status filter
+    if (status && status !== 'all') {
+      query.status = status;
+    }
+    
+    // Category filter
+    if (category && category !== 'all') {
+      query.category = category;
+    }
+
+    const sortOptions = {};
+    sortOptions[sortBy] = sortOrder === 'desc' ? -1 : 1;
+
     const projects = await Project.find(query)
-      .populate('owner', 'firstName lastName email')
-      .populate('team.user', 'firstName lastName email')
-      .sort({ createdAt: -1 })
+      .sort(sortOptions)
       .limit(limit * 1)
-      .skip((page - 1) * limit);
-    
+      .skip((page - 1) * limit)
+      .exec();
+
     const total = await Project.countDocuments(query);
-    
+
     res.json({
       projects,
       totalPages: Math.ceil(total / limit),
-      currentPage: parseInt(page),
+      currentPage: page,
       total
     });
   } catch (error) {
-    logger.logError(error, { action: 'get_projects', userId: req.user.id });
-    res.status(500).json({ message: 'Failed to get projects.' });
+    logger.error('Error fetching projects:', error);
+    res.status(500).json({ message: 'Failed to fetch projects' });
   }
 });
 
 // Get single project
 router.get('/:id', async (req, res) => {
   try {
-    const project = await Project.findById(req.params.id)
-      .populate('owner', 'firstName lastName email')
-      .populate('team.user', 'firstName lastName email');
+    const project = await Project.findOne({ 
+      _id: req.params.id, 
+      userId: req.user.id 
+    });
     
     if (!project) {
-      return res.status(404).json({ message: 'Project not found.' });
+      return res.status(404).json({ message: 'Project not found' });
     }
     
-    // Check permissions
-    if (!project.hasPermission(req.user.id, 'read')) {
-      return res.status(403).json({ message: 'Access denied.' });
-    }
-    
-    res.json({ project });
+    res.json(project);
   } catch (error) {
-    logger.logError(error, { action: 'get_project', userId: req.user.id, projectId: req.params.id });
-    res.status(500).json({ message: 'Failed to get project.' });
+    logger.error('Error fetching project:', error);
+    res.status(500).json({ message: 'Failed to fetch project' });
   }
 });
 
 // Create new project
-router.post('/', requirePermission('projects', 'create'), async (req, res) => {
+router.post('/', async (req, res) => {
   try {
-    const projectData = {
-      ...req.body,
-      owner: req.user.id
-    };
+    const { name, description, category, status = 'planning', revenue = 0, users = 0 } = req.body;
     
-    const project = new Project(projectData);
+    const project = new Project({
+      userId: req.user.id,
+      name,
+      description,
+      category,
+      status,
+      revenue,
+      users,
+      created: new Date(),
+      lastUpdated: new Date()
+    });
+    
     await project.save();
     
-    // Populate owner and team data
-    await project.populate('owner', 'firstName lastName email');
+    // Emit real-time update
+    const io = req.app.get('io');
+    io.to(`user-${req.user.id}`).emit('project-created', project);
     
-    logger.logProjectEvent(project._id, 'created', { userId: req.user.id });
-    
-    res.status(201).json({
-      message: 'Project created successfully',
-      project
-    });
+    res.status(201).json(project);
   } catch (error) {
-    logger.logError(error, { action: 'create_project', userId: req.user.id });
-    res.status(500).json({ message: 'Failed to create project.' });
+    logger.error('Error creating project:', error);
+    res.status(500).json({ message: 'Failed to create project' });
   }
 });
 
 // Update project
 router.put('/:id', async (req, res) => {
   try {
-    const project = await Project.findById(req.params.id);
+    const { name, description, category, status, revenue, users } = req.body;
+    
+    const project = await Project.findOneAndUpdate(
+      { _id: req.params.id, userId: req.user.id },
+      {
+        name,
+        description,
+        category,
+        status,
+        revenue,
+        users,
+        lastUpdated: new Date()
+      },
+      { new: true }
+    );
     
     if (!project) {
-      return res.status(404).json({ message: 'Project not found.' });
+      return res.status(404).json({ message: 'Project not found' });
     }
     
-    if (!project.hasPermission(req.user.id, 'write')) {
-      return res.status(403).json({ message: 'Access denied.' });
-    }
+    // Emit real-time update
+    const io = req.app.get('io');
+    io.to(`user-${req.user.id}`).emit('project-updated', project);
     
-    // Update project fields
-    Object.assign(project, req.body);
-    await project.save();
-    
-    // Populate owner and team data
-    await project.populate('owner', 'firstName lastName email');
-    await project.populate('team.user', 'firstName lastName email');
-    
-    logger.logProjectEvent(project._id, 'updated', { userId: req.user.id });
-    
-    res.json({
-      message: 'Project updated successfully',
-      project
-    });
+    res.json(project);
   } catch (error) {
-    logger.logError(error, { action: 'update_project', userId: req.user.id, projectId: req.params.id });
-    res.status(500).json({ message: 'Failed to update project.' });
+    logger.error('Error updating project:', error);
+    res.status(500).json({ message: 'Failed to update project' });
   }
 });
 
 // Delete project
 router.delete('/:id', async (req, res) => {
   try {
-    const project = await Project.findById(req.params.id);
+    const project = await Project.findOneAndDelete({ 
+      _id: req.params.id, 
+      userId: req.user.id 
+    });
     
     if (!project) {
-      return res.status(404).json({ message: 'Project not found.' });
+      return res.status(404).json({ message: 'Project not found' });
     }
     
-    if (!project.hasPermission(req.user.id, 'admin')) {
-      return res.status(403).json({ message: 'Access denied.' });
-    }
+    // Emit real-time update
+    const io = req.app.get('io');
+    io.to(`user-${req.user.id}`).emit('project-deleted', { id: req.params.id });
     
-    await Project.findByIdAndDelete(req.params.id);
-    
-    logger.logProjectEvent(project._id, 'deleted', { userId: req.user.id });
-    
-    res.json({ message: 'Project deleted successfully.' });
+    res.json({ message: 'Project deleted successfully' });
   } catch (error) {
-    logger.logError(error, { action: 'delete_project', userId: req.user.id, projectId: req.params.id });
-    res.status(500).json({ message: 'Failed to delete project.' });
+    logger.error('Error deleting project:', error);
+    res.status(500).json({ message: 'Failed to delete project' });
   }
 });
 
@@ -242,7 +253,92 @@ router.get('/:id/logs', async (req, res) => {
 // Get project analytics
 router.get('/:id/analytics', async (req, res) => {
   try {
-    const { period = '30d' } = req.query;
+    const project = await Project.findOne({ 
+      _id: req.params.id, 
+      userId: req.user.id 
+    });
+    
+    if (!project) {
+      return res.status(404).json({ message: 'Project not found' });
+    }
+    
+    // Mock analytics data - in real app, this would come from analytics service
+    const analytics = {
+      revenue: {
+        current: project.revenue,
+        growth: Math.random() * 20 - 5, // Random growth between -5% and 15%
+        trend: 'up'
+      },
+      users: {
+        current: project.users,
+        growth: Math.random() * 30 - 10,
+        trend: 'up'
+      },
+      performance: {
+        uptime: 99.5 + Math.random() * 0.5,
+        responseTime: 200 + Math.random() * 100,
+        errorRate: Math.random() * 2
+      }
+    };
+    
+    res.json(analytics);
+  } catch (error) {
+    logger.error('Error fetching project analytics:', error);
+    res.status(500).json({ message: 'Failed to fetch project analytics' });
+  }
+});
+
+// Get project categories
+router.get('/categories/list', async (req, res) => {
+  try {
+    const categories = await Project.distinct('category', { userId: req.user.id });
+    res.json(categories);
+  } catch (error) {
+    logger.error('Error fetching categories:', error);
+    res.status(500).json({ message: 'Failed to fetch categories' });
+  }
+});
+
+// Get project statistics
+router.get('/stats/overview', async (req, res) => {
+  try {
+    const stats = await Project.aggregate([
+      { $match: { userId: req.user.id } },
+      {
+        $group: {
+          _id: null,
+          totalProjects: { $sum: 1 },
+          totalRevenue: { $sum: '$revenue' },
+          totalUsers: { $sum: '$users' },
+          activeProjects: {
+            $sum: { $cond: [{ $eq: ['$status', 'active'] }, 1, 0] }
+          },
+          developmentProjects: {
+            $sum: { $cond: [{ $eq: ['$status', 'development'] }, 1, 0] }
+          }
+        }
+      }
+    ]);
+    
+    const result = stats[0] || {
+      totalProjects: 0,
+      totalRevenue: 0,
+      totalUsers: 0,
+      activeProjects: 0,
+      developmentProjects: 0
+    };
+    
+    res.json(result);
+  } catch (error) {
+    logger.error('Error fetching project stats:', error);
+    res.status(500).json({ message: 'Failed to fetch project statistics' });
+  }
+});
+
+// Get recent alerts
+router.get('/:id/alerts', async (req, res) => {
+  try {
+    const { limit = 10 } = req.query;
     const project = await Project.findById(req.params.id);
     
     if (!project) {
@@ -253,13 +349,13 @@ router.get('/:id/analytics', async (req, res) => {
       return res.status(403).json({ message: 'Access denied.' });
     }
     
-    const analyticsService = req.app.get('analyticsService');
-    const analytics = await analyticsService.getProjectAnalytics(project._id, period);
+    const projectService = req.app.get('projectService');
+    const alerts = await projectService.getRecentAlerts(project._id, parseInt(limit));
     
-    res.json({ analytics });
+    res.json({ alerts });
   } catch (error) {
-    logger.logError(error, { action: 'get_project_analytics', userId: req.user.id, projectId: req.params.id });
-    res.status(500).json({ message: 'Failed to get project analytics.' });
+    logger.logError(error, { action: 'get_project_alerts', userId: req.user.id, projectId: req.params.id });
+    res.status(500).json({ message: 'Failed to get project alerts.' });
   }
 });
 
@@ -329,43 +425,6 @@ router.delete('/:id/team/:userId', async (req, res) => {
   } catch (error) {
     logger.logError(error, { action: 'remove_team_member', userId: req.user.id, projectId: req.params.id });
     res.status(500).json({ message: 'Failed to remove team member.' });
-  }
-});
-
-// Get project statistics
-router.get('/stats/overview', async (req, res) => {
-  try {
-    const projectService = req.app.get('projectService');
-    const stats = await projectService.getProjectStatistics();
-    
-    res.json({ stats });
-  } catch (error) {
-    logger.logError(error, { action: 'get_project_stats', userId: req.user.id });
-    res.status(500).json({ message: 'Failed to get project statistics.' });
-  }
-});
-
-// Get recent alerts
-router.get('/:id/alerts', async (req, res) => {
-  try {
-    const { limit = 10 } = req.query;
-    const project = await Project.findById(req.params.id);
-    
-    if (!project) {
-      return res.status(404).json({ message: 'Project not found.' });
-    }
-    
-    if (!project.hasPermission(req.user.id, 'read')) {
-      return res.status(403).json({ message: 'Access denied.' });
-    }
-    
-    const projectService = req.app.get('projectService');
-    const alerts = await projectService.getRecentAlerts(project._id, parseInt(limit));
-    
-    res.json({ alerts });
-  } catch (error) {
-    logger.logError(error, { action: 'get_project_alerts', userId: req.user.id, projectId: req.params.id });
-    res.status(500).json({ message: 'Failed to get project alerts.' });
   }
 });
 

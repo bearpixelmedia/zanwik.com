@@ -1,8 +1,27 @@
 {
-  "rewrites": [
+  "version": 2,
+  "builds": [
     {
-      "source": "/(.*)",
-      "destination": "/index.html"
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "build"
+      }
     }
-  ]
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "http://localhost:3000/api/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ],
+  "env": {
+    "REACT_APP_API_URL": "https://your-backend-domain.com/api",
+    "REACT_APP_SUPABASE_URL": "@supabase_url",
+    "REACT_APP_SUPABASE_ANON_KEY": "@supabase_anon_key"
+  }
 } 

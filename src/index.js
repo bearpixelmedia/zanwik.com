@@ -20,6 +20,7 @@ const infrastructureRoutes = require('./routes/infrastructure');
 const deploymentRoutes = require('./routes/deployment');
 const monitoringRoutes = require('./routes/monitoring');
 const userRoutes = require('./routes/users');
+const paymentRoutes = require('./routes/payments');
 
 // Import middleware
 const auth = require('./middleware/auth');
@@ -173,6 +174,7 @@ app.use('/api/infrastructure', auth, infrastructureRoutes);
 app.use('/api/deployment', auth, deploymentRoutes);
 app.use('/api/monitoring', auth, monitoringRoutes);
 app.use('/api/users', auth, userRoutes);
+app.use('/api/payments', auth, paymentRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
