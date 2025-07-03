@@ -305,7 +305,7 @@ const startServer = async () => {
   // Initialize services
   await initializeServices();
   
-  server.listen(PORT, () => {
+  server.listen(PORT, '0.0.0.0', () => {
     logger.info(`Umbrella Dashboard running on port ${PORT}`);
     logger.info(`Environment: ${process.env.NODE_ENV}`);
   });
