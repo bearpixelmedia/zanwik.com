@@ -19,6 +19,7 @@ dotenv.config();
 console.log('Environment variables loaded');
 
 // Import routes
+console.log('Importing routes...');
 const authRoutes = require('./routes/auth');
 const projectRoutes = require('./routes/projects');
 const analyticsRoutes = require('./routes/analytics');
@@ -27,18 +28,25 @@ const deploymentRoutes = require('./routes/deployment');
 const monitoringRoutes = require('./routes/monitoring');
 const userRoutes = require('./routes/users');
 const paymentRoutes = require('./routes/payments');
+console.log('Routes imported successfully');
 
 // Import middleware
+console.log('Importing middleware...');
 const auth = require('./middleware/auth');
+console.log('Middleware imported successfully');
 
 // Import services
+console.log('Importing services...');
 const ProjectService = require('./services/ProjectService');
 const MonitoringService = require('./services/MonitoringService');
 const DeploymentService = require('./services/DeploymentService');
 const AnalyticsService = require('./services/AnalyticsService');
+console.log('Services imported successfully');
 
 // Import logger
+console.log('Importing logger...');
 const logger = require('./utils/logger');
+console.log('Logger imported successfully');
 
 const app = express();
 const server = http.createServer(app);
