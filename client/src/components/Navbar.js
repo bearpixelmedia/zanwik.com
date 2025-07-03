@@ -3,243 +3,131 @@ import { useAuth } from '../contexts/AuthContext';
 import { 
   Bell, 
   Search, 
-  Settings, 
-  LogOut, 
   User, 
+  Settings, 
+  LogOut,
   ChevronDown,
-  Menu,
-  X
+  Sun,
+  Moon
 } from 'lucide-react';
+import { Button } from './ui/button';
 
 const Navbar = () => {
   const { user, logout } = useAuth();
-  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
-  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
-  const handleLogout = () => {
-    logout();
-    setIsUserMenuOpen(false);
-  };
-
-  const notifications = [
-    {
-      id: 1,
-      title: 'Project Deployed',
-      message: 'AI Content Generator has been successfully deployed',
-      time: '2 minutes ago',
-      type: 'success'
-    },
-    {
-      id: 2,
-      title: 'System Alert',
-      message: 'High CPU usage detected on server-01',
-      time: '5 minutes ago',
-      type: 'warning'
-    },
-    {
-      id: 3,
-      title: 'New User',
-      message: 'John Doe has joined the team',
-      time: '10 minutes ago',
-      type: 'info'
-    }
-  ];
-
-  const getNotificationIcon = (type) => {
-    switch (type) {
-      case 'success':
-        return '🟢';
-      case 'warning':
-        return '🟡';
-      case 'error':
-        return '🔴';
-      default:
-        return '🔵';
-    }
+  const toggleDarkMode = () => {
+    setIsDarkMode(!isDarkMode);
+    document.documentElement.classList.toggle('dark');
   };
 
   return (
-    <nav className="bg-white shadow-sm border-b border-gray-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
-          {/* Left side */}
-          <div className="flex items-center">
-            <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="lg:hidden p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100"
-            >
-              {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
-            </button>
-            
-            <div className="flex-shrink-0 flex items-center">
-              <h1 className="text-xl font-semibold text-gray-900">
-                Umbrella Dashboard
-              </h1>
-            </div>
+    <div className="bg-card border-b border-border px-4 py-3">
+      <div className="flex items-center justify-between">
+        {/* Left side - Search */}
+        <div className="flex items-center space-x-4 flex-1">
+          <div className="relative max-w-md w-full">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <input
+              type="text"
+              placeholder="Search..."
+              className="w-full pl-10 pr-4 py-2 bg-background border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
+            />
           </div>
+        </div>
 
-          {/* Right side */}
-          <div className="flex items-center space-x-4">
-            {/* Search */}
-            <div className="hidden md:block">
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Search className="h-5 w-5 text-gray-400" />
-                </div>
-                <input
-                  type="text"
-                  placeholder="Search..."
-                  className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                />
+        {/* Right side - Actions */}
+        <div className="flex items-center space-x-3">
+          {/* Dark mode toggle */}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={toggleDarkMode}
+            className="h-9 w-9"
+          >
+            {isDarkMode ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+          </Button>
+
+          {/* Notifications */}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-9 w-9 relative"
+          >
+            <Bell className="h-4 w-4" />
+            <span className="absolute -top-1 -right-1 h-3 w-3 bg-destructive rounded-full"></span>
+          </Button>
+
+          {/* User profile */}
+          <div className="relative">
+            <Button
+              variant="ghost"
+              onClick={() => setIsProfileOpen(!isProfileOpen)}
+              className="flex items-center space-x-2 h-9 px-3"
+            >
+              <div className="w-6 h-6 bg-gradient-to-br from-primary to-primary/80 rounded-full flex items-center justify-center">
+                <span className="text-xs font-medium text-primary-foreground">
+                  {user?.email?.charAt(0).toUpperCase() || 'U'}
+                </span>
               </div>
-            </div>
+              <span className="text-sm font-medium hidden sm:block">
+                {user?.email || 'User'}
+              </span>
+              <ChevronDown className="h-4 w-4" />
+            </Button>
 
-            {/* Notifications */}
-            <div className="relative">
-              <button
-                onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
-                className="p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 relative"
-              >
-                <Bell size={20} />
-                {notifications.length > 0 && (
-                  <span className="absolute top-0 right-0 block h-2 w-2 rounded-full bg-red-400 ring-2 ring-white"></span>
-                )}
-              </button>
-
-              {/* Notifications dropdown */}
-              {isNotificationsOpen && (
-                <div className="origin-top-right absolute right-0 mt-2 w-80 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
-                  <div className="py-1">
-                    <div className="px-4 py-2 border-b border-gray-200">
-                      <h3 className="text-sm font-medium text-gray-900">Notifications</h3>
-                    </div>
-                    {notifications.length > 0 ? (
-                      notifications.map((notification) => (
-                        <div
-                          key={notification.id}
-                          className="px-4 py-3 hover:bg-gray-50 border-b border-gray-100 last:border-b-0"
-                        >
-                          <div className="flex items-start">
-                            <span className="text-lg mr-3">
-                              {getNotificationIcon(notification.type)}
-                            </span>
-                            <div className="flex-1 min-w-0">
-                              <p className="text-sm font-medium text-gray-900">
-                                {notification.title}
-                              </p>
-                              <p className="text-sm text-gray-500">
-                                {notification.message}
-                              </p>
-                              <p className="text-xs text-gray-400 mt-1">
-                                {notification.time}
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                      ))
-                    ) : (
-                      <div className="px-4 py-3 text-sm text-gray-500">
-                        No new notifications
-                      </div>
-                    )}
-                  </div>
+            {/* Profile dropdown */}
+            {isProfileOpen && (
+              <div className="absolute right-0 mt-2 w-56 bg-card border border-border rounded-lg shadow-lg z-50">
+                <div className="p-4 border-b border-border">
+                  <p className="text-sm font-medium text-foreground">
+                    {user?.email || 'User'}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    {user?.role || 'User'}
+                  </p>
                 </div>
-              )}
-            </div>
-
-            {/* User menu */}
-            <div className="relative">
-              <button
-                onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                className="flex items-center space-x-2 p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100"
-              >
-                <div className="flex items-center space-x-2">
-                  <div className="h-8 w-8 rounded-full bg-blue-500 flex items-center justify-center">
-                    <span className="text-sm font-medium text-white">
-                      {user?.firstName?.charAt(0) || user?.email?.charAt(0) || 'U'}
-                    </span>
-                  </div>
-                  <div className="hidden md:block text-left">
-                    <p className="text-sm font-medium text-gray-900">
-                      {user?.firstName} {user?.lastName}
-                    </p>
-                    <p className="text-xs text-gray-500 capitalize">
-                      {user?.role}
-                    </p>
-                  </div>
-                  <ChevronDown size={16} />
+                <div className="p-2">
+                  <Button
+                    variant="ghost"
+                    className="w-full justify-start text-sm"
+                    onClick={() => {/* Navigate to profile */}}
+                  >
+                    <User className="h-4 w-4 mr-2" />
+                    Profile
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    className="w-full justify-start text-sm"
+                    onClick={() => {/* Navigate to settings */}}
+                  >
+                    <Settings className="h-4 w-4 mr-2" />
+                    Settings
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    className="w-full justify-start text-sm text-destructive hover:text-destructive"
+                    onClick={logout}
+                  >
+                    <LogOut className="h-4 w-4 mr-2" />
+                    Sign Out
+                  </Button>
                 </div>
-              </button>
-
-              {/* User dropdown */}
-              {isUserMenuOpen && (
-                <div className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
-                  <div className="py-1">
-                    <div className="px-4 py-2 border-b border-gray-200">
-                      <p className="text-sm text-gray-900">
-                        Signed in as
-                      </p>
-                      <p className="text-sm font-medium text-gray-900 truncate">
-                        {user?.email}
-                      </p>
-                    </div>
-                    
-                    <a
-                      href="/settings"
-                      className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                      onClick={() => setIsUserMenuOpen(false)}
-                    >
-                      <User size={16} className="mr-3" />
-                      Profile
-                    </a>
-                    
-                    <a
-                      href="/settings"
-                      className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                      onClick={() => setIsUserMenuOpen(false)}
-                    >
-                      <Settings size={16} className="mr-3" />
-                      Settings
-                    </a>
-                    
-                    <div className="border-t border-gray-200">
-                      <button
-                        onClick={handleLogout}
-                        className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                      >
-                        <LogOut size={16} className="mr-3" />
-                        Sign out
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
 
-      {/* Mobile menu */}
-      {isMobileMenuOpen && (
-        <div className="lg:hidden">
-          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white border-t border-gray-200">
-            <div className="px-3 py-2">
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Search className="h-5 w-5 text-gray-400" />
-                </div>
-                <input
-                  type="text"
-                  placeholder="Search..."
-                  className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
+      {/* Click outside to close dropdown */}
+      {isProfileOpen && (
+        <div
+          className="fixed inset-0 z-40"
+          onClick={() => setIsProfileOpen(false)}
+        />
       )}
-    </nav>
+    </div>
   );
 };
 

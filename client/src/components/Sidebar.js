@@ -1,144 +1,144 @@
-import React from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import {
-  LayoutDashboard,
+import { 
+  LayoutDashboard, 
+  BarChart3, 
+  Users, 
+  Settings, 
+  LogOut,
+  Menu,
+  X,
+  Building2,
+  Monitor,
   FolderOpen,
-  BarChart3,
-  Activity,
-  Server,
-  Users,
-  Settings
+  TrendingUp
 } from 'lucide-react';
+import { Button } from './ui/button';
+import { cn } from '../utils/cn';
 
 const Sidebar = () => {
-  const { hasPermission } = useAuth();
+  const { logout } = useAuth();
   const location = useLocation();
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   const navigation = [
     {
       name: 'Dashboard',
-      href: '/',
+      href: '/dashboard',
       icon: LayoutDashboard,
-      current: location.pathname === '/',
+      description: 'Overview and analytics'
     },
     {
       name: 'Projects',
       href: '/projects',
       icon: FolderOpen,
-      current: location.pathname === '/projects',
-      permission: 'projects.read',
+      description: 'Manage your projects'
     },
     {
       name: 'Analytics',
       href: '/analytics',
       icon: BarChart3,
-      current: location.pathname === '/analytics',
-      permission: 'analytics.read',
-    },
-    {
-      name: 'Monitoring',
-      href: '/monitoring',
-      icon: Activity,
-      current: location.pathname === '/monitoring',
-      permission: 'infrastructure.read',
+      description: 'Detailed insights'
     },
     {
       name: 'Infrastructure',
       href: '/infrastructure',
-      icon: Server,
-      current: location.pathname === '/infrastructure',
-      permission: 'infrastructure.read',
+      icon: Building2,
+      description: 'System resources'
+    },
+    {
+      name: 'Monitoring',
+      href: '/monitoring',
+      icon: Monitor,
+      description: 'Real-time monitoring'
     },
     {
       name: 'Users',
       href: '/users',
       icon: Users,
-      current: location.pathname === '/users',
-      permission: 'users.read',
+      description: 'User management'
     },
     {
       name: 'Settings',
       href: '/settings',
       icon: Settings,
-      current: location.pathname === '/settings',
-    },
+      description: 'Account settings'
+    }
   ];
 
-  const filteredNavigation = navigation.filter(item => {
-    if (!item.permission) return true;
-    return hasPermission(item.permission.split('.')[0], item.permission.split('.')[1]);
-  });
+  const isActive = (path) => location.pathname === path;
 
   return (
-    <div className="hidden lg:flex lg:flex-shrink-0">
-      <div className="flex flex-col w-64">
-        <div className="flex flex-col h-0 flex-1 bg-gray-800">
-          <div className="flex-1 flex flex-col pt-5 pb-4 overflow-y-auto">
-            <div className="flex items-center flex-shrink-0 px-4">
-              <div className="flex items-center">
-                <div className="flex-shrink-0">
-                  <div className="h-8 w-8 bg-blue-600 rounded-lg flex items-center justify-center">
-                    <span className="text-white font-bold text-lg">U</span>
-                  </div>
-                </div>
-                <div className="ml-3">
-                  <h1 className="text-white text-lg font-semibold">Umbrella</h1>
-                  <p className="text-gray-300 text-xs">Dashboard</p>
-                </div>
-              </div>
+    <div className={cn(
+      "flex flex-col h-screen bg-card border-r border-border transition-all duration-300 ease-in-out",
+      isCollapsed ? "w-16" : "w-64"
+    )}>
+      {/* Header */}
+      <div className="flex items-center justify-between p-4 border-b border-border">
+        {!isCollapsed && (
+          <div className="flex items-center space-x-2">
+            <div className="w-8 h-8 bg-gradient-to-br from-primary to-primary/80 rounded-lg flex items-center justify-center">
+              <TrendingUp className="w-5 h-5 text-primary-foreground" />
             </div>
-            
-            <nav className="mt-5 flex-1 px-2 space-y-1">
-              {filteredNavigation.map((item) => {
-                const Icon = item.icon;
-                return (
-                  <NavLink
-                    key={item.name}
-                    to={item.href}
-                    className={({ isActive }) =>
-                      `group flex items-center px-2 py-2 text-sm font-medium rounded-md transition-colors duration-200 ${
-                        isActive
-                          ? 'bg-gray-900 text-white'
-                          : 'text-gray-300 hover:bg-gray-700 hover:text-white'
-                      }`
-                    }
-                  >
-                    <Icon
-                      className={`mr-3 flex-shrink-0 h-6 w-6 ${
-                        item.current ? 'text-white' : 'text-gray-400 group-hover:text-gray-300'
-                      }`}
-                    />
-                    {item.name}
-                  </NavLink>
-                );
-              })}
-            </nav>
+            <span className="font-semibold text-lg text-foreground">Umbrella</span>
           </div>
-          
-          {/* Quick Stats */}
-          <div className="flex-shrink-0 flex bg-gray-700 p-4">
-            <div className="flex-shrink-0 w-full group block">
-              <div className="flex items-center">
-                <div>
-                  <div className="text-sm font-medium text-white">
-                    Quick Stats
-                  </div>
-                  <div className="text-xs text-gray-300">
-                    <div className="flex justify-between mt-1">
-                      <span>Projects: 10</span>
-                      <span>Healthy: 8</span>
-                    </div>
-                    <div className="flex justify-between mt-1">
-                      <span>Revenue: $12.5K</span>
-                      <span>Users: 1.2K</span>
-                    </div>
-                  </div>
+        )}
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => setIsCollapsed(!isCollapsed)}
+          className="h-8 w-8"
+        >
+          {isCollapsed ? <Menu className="h-4 w-4" /> : <X className="h-4 w-4" />}
+        </Button>
+      </div>
+
+      {/* Navigation */}
+      <nav className="flex-1 p-4 space-y-2">
+        {navigation.map((item) => {
+          const Icon = item.icon;
+          return (
+            <Link
+              key={item.name}
+              to={item.href}
+              className={cn(
+                "flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 group",
+                isActive(item.href)
+                  ? "bg-primary text-primary-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground hover:bg-accent"
+              )}
+            >
+              <Icon className={cn(
+                "h-5 w-5 transition-colors",
+                isActive(item.href) ? "text-primary-foreground" : "text-muted-foreground group-hover:text-foreground"
+              )} />
+              {!isCollapsed && (
+                <div className="flex-1">
+                  <span>{item.name}</span>
+                  {isActive(item.href) && (
+                    <p className="text-xs opacity-80 mt-0.5">{item.description}</p>
+                  )}
                 </div>
-              </div>
-            </div>
-          </div>
-        </div>
+              )}
+            </Link>
+          );
+        })}
+      </nav>
+
+      {/* Footer */}
+      <div className="p-4 border-t border-border">
+        <Button
+          variant="ghost"
+          onClick={logout}
+          className={cn(
+            "w-full justify-start text-muted-foreground hover:text-foreground hover:bg-accent",
+            isCollapsed && "justify-center"
+          )}
+        >
+          <LogOut className="h-5 w-5" />
+          {!isCollapsed && <span className="ml-3">Sign Out</span>}
+        </Button>
       </div>
     </div>
   );
