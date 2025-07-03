@@ -32,7 +32,7 @@ console.log('Routes imported successfully');
 
 // Import middleware
 console.log('Importing middleware...');
-const auth = require('./middleware/auth');
+const { auth } = require('./middleware/auth');
 console.log('Middleware imported successfully');
 
 // Import services
@@ -396,37 +396,43 @@ const startServer = async () => {
     
     // Set up routes after services are available
     console.log('Setting up routes...');
-    console.log('Setting up auth routes...');
-    app.use('/api/auth', authRoutes);
-    console.log('Auth routes setup completed');
+    
+    try {
+      console.log('Setting up auth routes...');
+      app.use('/api/auth', authRoutes);
+      console.log('Auth routes setup completed');
 
-    console.log('Setting up project routes...');
-    app.use('/api/projects', auth, projectRoutes);
-    console.log('Project routes setup completed');
+      console.log('Setting up project routes...');
+      app.use('/api/projects', auth, projectRoutes);
+      console.log('Project routes setup completed');
 
-    console.log('Setting up analytics routes...');
-    app.use('/api/analytics', auth, analyticsRoutes);
-    console.log('Analytics routes setup completed');
+      console.log('Setting up analytics routes...');
+      app.use('/api/analytics', auth, analyticsRoutes);
+      console.log('Analytics routes setup completed');
 
-    console.log('Setting up infrastructure routes...');
-    app.use('/api/infrastructure', auth, infrastructureRoutes);
-    console.log('Infrastructure routes setup completed');
+      console.log('Setting up infrastructure routes...');
+      app.use('/api/infrastructure', auth, infrastructureRoutes);
+      console.log('Infrastructure routes setup completed');
 
-    console.log('Setting up deployment routes...');
-    app.use('/api/deployment', auth, deploymentRoutes);
-    console.log('Deployment routes setup completed');
+      console.log('Setting up deployment routes...');
+      app.use('/api/deployment', auth, deploymentRoutes);
+      console.log('Deployment routes setup completed');
 
-    console.log('Setting up monitoring routes...');
-    app.use('/api/monitoring', auth, monitoringRoutes);
-    console.log('Monitoring routes setup completed');
+      console.log('Setting up monitoring routes...');
+      app.use('/api/monitoring', auth, monitoringRoutes);
+      console.log('Monitoring routes setup completed');
 
-    console.log('Setting up user routes...');
-    app.use('/api/users', auth, userRoutes);
-    console.log('User routes setup completed');
+      console.log('Setting up user routes...');
+      app.use('/api/users', auth, userRoutes);
+      console.log('User routes setup completed');
 
-    console.log('Setting up payment routes...');
-    app.use('/api/payments', auth, paymentRoutes);
-    console.log('Payment routes setup completed');
+      console.log('Setting up payment routes...');
+      app.use('/api/payments', auth, paymentRoutes);
+      console.log('Payment routes setup completed');
+    } catch (error) {
+      console.error('Error setting up routes:', error);
+      throw error;
+    }
 
     // Set up dashboard overview endpoint after services are available
     console.log('Setting up dashboard overview endpoint...');
