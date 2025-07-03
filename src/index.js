@@ -1,3 +1,5 @@
+console.log('Starting Umbrella Dashboard...');
+
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -9,8 +11,12 @@ const socketIo = require('socket.io');
 const Redis = require('ioredis');
 const path = require('path');
 
+console.log('Dependencies loaded successfully');
+
 // Load environment variables
 dotenv.config();
+
+console.log('Environment variables loaded');
 
 // Import routes
 const authRoutes = require('./routes/auth');
@@ -296,19 +302,35 @@ const PORT = process.env.PORT || 3000;
 
 // Start server after services are initialized
 const startServer = async () => {
-  // Initialize Redis first
-  initializeRedis();
-  
-  // Connect to database
-  await connectDatabase();
-  
-  // Initialize services
-  await initializeServices();
-  
-  server.listen(PORT, '0.0.0.0', () => {
-    logger.info(`Umbrella Dashboard running on port ${PORT}`);
-    logger.info(`Environment: ${process.env.NODE_ENV}`);
-  });
+  try {
+    console.log('Starting server initialization...');
+    
+    // Initialize Redis first
+    console.log('Initializing Redis...');
+    initializeRedis();
+    console.log('Redis initialized');
+    
+    // Connect to database
+    console.log('Connecting to database...');
+    await connectDatabase();
+    console.log('Database connection completed');
+    
+    // Initialize services
+    console.log('Initializing services...');
+    await initializeServices();
+    console.log('Services initialization completed');
+    
+    console.log(`Starting server on port ${PORT}...`);
+    server.listen(PORT, '0.0.0.0', () => {
+      logger.info(`Umbrella Dashboard running on port ${PORT}`);
+      logger.info(`Environment: ${process.env.NODE_ENV}`);
+      console.log(`Server started successfully on port ${PORT}`);
+    });
+  } catch (error) {
+    console.error('Failed to start server:', error);
+    logger.error('Failed to start server:', error);
+    process.exit(1);
+  }
 };
 
 // Graceful shutdown
