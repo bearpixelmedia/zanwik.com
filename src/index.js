@@ -895,6 +895,81 @@ const startServer = async () => {
         }
       });
 
+      // Public infrastructure resources endpoint
+      app.get('/api/infrastructure/resources', async (req, res) => {
+        try {
+          const mockResources = {
+            resources: {
+              servers: {
+                total: 3,
+                active: 3,
+                available: 1,
+                utilization: 67
+              },
+              databases: {
+                total: 2,
+                active: 2,
+                connections: 68,
+                maxConnections: 100
+              },
+              storage: {
+                total: '500GB',
+                used: '189GB',
+                available: '311GB',
+                utilization: 37.8
+              },
+              memory: {
+                total: '32GB',
+                used: '19.8GB',
+                available: '12.2GB',
+                utilization: 61.9
+              },
+              cpu: {
+                cores: 8,
+                utilization: 45.2,
+                load: 3.6
+              },
+              network: {
+                bandwidth: '1Gbps',
+                utilization: 23.4,
+                connections: 1250
+              },
+              containers: {
+                total: 12,
+                running: 10,
+                stopped: 2,
+                utilization: 83.3
+              },
+              loadBalancers: {
+                total: 2,
+                active: 2,
+                health: 'healthy'
+              },
+              cdn: {
+                total: 1,
+                active: 1,
+                cacheHitRate: 94.2
+              }
+            },
+            summary: {
+              overallHealth: 'healthy',
+              criticalAlerts: 0,
+              warnings: 1,
+              recommendations: [
+                'Consider scaling up CPU resources during peak hours',
+                'Monitor database connection pool usage',
+                'Review storage growth trends'
+              ]
+            }
+          };
+          
+          res.json(mockResources);
+        } catch (error) {
+          logger.error('Public infrastructure resources error:', error);
+          res.status(500).json({ message: 'Failed to get infrastructure resources' });
+        }
+      });
+
       console.log('Public infrastructure endpoints setup completed');
 
       console.log('Setting up analytics routes...');
