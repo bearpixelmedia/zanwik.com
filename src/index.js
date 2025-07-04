@@ -611,11 +611,10 @@ const startServer = async () => {
             overall: 'healthy',
             timestamp: new Date().toISOString(),
             services: {
-              servers: { status: 'healthy', uptime: 99.8, count: 3 },
-              databases: { status: 'healthy', uptime: 99.9, count: 2 },
-              ssl: { status: 'healthy', valid: 5, expiring: 0 },
-              network: { status: 'healthy', latency: 45, bandwidth: '1Gbps' },
-              security: { status: 'healthy', threats: 0, lastScan: '2 hours ago' }
+              api: { status: 'healthy', uptime: 99.9, responseTime: 45 },
+              database: { status: 'healthy', uptime: 99.8, connections: 68 },
+              redis: { status: 'healthy', uptime: 99.9, memory: '2.1GB' },
+              storage: { status: 'healthy', uptime: 99.7, usage: 37.8 }
             },
             alerts: {
               critical: 0,
