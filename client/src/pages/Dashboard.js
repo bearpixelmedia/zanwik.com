@@ -33,8 +33,11 @@ const Dashboard = () => {
         // Fetch dashboard overview
         const overview = await analyticsAPI.getDashboardOverview();
         
-        // Fetch project stats
-        const projectStats = await projectsAPI.getStats();
+        // Use overview data for project stats instead of separate API call
+        const projectStats = {
+          total: overview.overview?.totalProjects || 0,
+          active: overview.overview?.topProjects?.length || 0
+        };
         
         // Transform data for display
         const stats = [
