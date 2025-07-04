@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Instagram Template Generator</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .container { max-width: 500px; margin: auto; padding: 30px; border: 1px solid #eee; border-radius: 8px; }
+        label { display: block; margin-top: 20px; }
+        input, select, textarea { width: 100%; padding: 8px; margin-top: 5px; }
+        button { margin-top: 20px; padding: 10px 20px; background: #4f8cff; color: #fff; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #2563eb; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Instagram Template Generator</h2>
+        <form method="post">
+            <label for="prompt">Template Prompt</label>
+            <textarea id="prompt" name="prompt" rows="3" placeholder="e.g. Modern Instagram story template, gradient background, space for quote" required></textarea>
+
+            <label for="template_type">Template Type</label>
+            <select id="template_type" name="template_type" required>
+                <option value="stories">Instagram Story (9:16)</option>
+                <option value="posts">Instagram Post (1:1)</option>
+                <option value="reels">Instagram Reel (9:16)</option>
+            </select>
+
+            <button type="submit">Generate Templates</button>
+        </form>
+    </div>
+</body>
+</html> 
