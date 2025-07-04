@@ -804,6 +804,97 @@ const startServer = async () => {
         }
       });
 
+      // Public infrastructure metrics endpoint
+      app.get('/api/infrastructure/metrics', async (req, res) => {
+        try {
+          const { period = '24h' } = req.query;
+          
+          const mockMetrics = {
+            metrics: {
+              period: period,
+              timestamp: new Date().toISOString(),
+              cpu: {
+                average: 45.2,
+                peak: 78.5,
+                current: 42.1,
+                data: [
+                  { time: '2024-01-01T00:00:00Z', value: 42 },
+                  { time: '2024-01-01T01:00:00Z', value: 45 },
+                  { time: '2024-01-01T02:00:00Z', value: 48 },
+                  { time: '2024-01-01T03:00:00Z', value: 43 },
+                  { time: '2024-01-01T04:00:00Z', value: 46 }
+                ]
+              },
+              memory: {
+                average: 62.3,
+                peak: 89.2,
+                current: 58.7,
+                data: [
+                  { time: '2024-01-01T00:00:00Z', value: 58 },
+                  { time: '2024-01-01T01:00:00Z', value: 62 },
+                  { time: '2024-01-01T02:00:00Z', value: 65 },
+                  { time: '2024-01-01T03:00:00Z', value: 61 },
+                  { time: '2024-01-01T04:00:00Z', value: 64 }
+                ]
+              },
+              disk: {
+                average: 38.1,
+                peak: 52.8,
+                current: 35.9,
+                data: [
+                  { time: '2024-01-01T00:00:00Z', value: 36 },
+                  { time: '2024-01-01T01:00:00Z', value: 38 },
+                  { time: '2024-01-01T02:00:00Z', value: 41 },
+                  { time: '2024-01-01T03:00:00Z', value: 37 },
+                  { time: '2024-01-01T04:00:00Z', value: 39 }
+                ]
+              },
+              network: {
+                average: 23.4,
+                peak: 67.1,
+                current: 21.8,
+                data: [
+                  { time: '2024-01-01T00:00:00Z', value: 22 },
+                  { time: '2024-01-01T01:00:00Z', value: 24 },
+                  { time: '2024-01-01T02:00:00Z', value: 27 },
+                  { time: '2024-01-01T03:00:00Z', value: 23 },
+                  { time: '2024-01-01T04:00:00Z', value: 25 }
+                ]
+              },
+              responseTime: {
+                average: 245,
+                peak: 892,
+                current: 238,
+                data: [
+                  { time: '2024-01-01T00:00:00Z', value: 240 },
+                  { time: '2024-01-01T01:00:00Z', value: 245 },
+                  { time: '2024-01-01T02:00:00Z', value: 250 },
+                  { time: '2024-01-01T03:00:00Z', value: 235 },
+                  { time: '2024-01-01T04:00:00Z', value: 242 }
+                ]
+              },
+              errorRate: {
+                average: 0.2,
+                peak: 1.8,
+                current: 0.1,
+                data: [
+                  { time: '2024-01-01T00:00:00Z', value: 0.1 },
+                  { time: '2024-01-01T01:00:00Z', value: 0.2 },
+                  { time: '2024-01-01T02:00:00Z', value: 0.3 },
+                  { time: '2024-01-01T03:00:00Z', value: 0.1 },
+                  { time: '2024-01-01T04:00:00Z', value: 0.2 }
+                ]
+              }
+            }
+          };
+          
+          res.json(mockMetrics);
+        } catch (error) {
+          logger.error('Public infrastructure metrics error:', error);
+          res.status(500).json({ message: 'Failed to get infrastructure metrics' });
+        }
+      });
+
       console.log('Public infrastructure endpoints setup completed');
 
       console.log('Setting up analytics routes...');
