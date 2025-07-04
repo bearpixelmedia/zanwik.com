@@ -6,8 +6,128 @@ const logger = require('../utils/logger');
 
 const router = express.Router();
 
-// Get all projects with pagination and filtering
+// Get all projects with pagination and filtering (public demo version)
 router.get('/', async (req, res) => {
+  try {
+    const { 
+      page = 1, 
+      limit = 10, 
+      search, 
+      status, 
+      category,
+      sortBy = 'createdAt',
+      sortOrder = 'desc'
+    } = req.query;
+
+    // Mock projects data for demo
+    const mockProjects = [
+      {
+        id: 1,
+        name: "AI Content Generator",
+        description: "Automated content creation tool with AI",
+        status: "active",
+        revenue: 2450,
+        users: 156,
+        category: "SaaS",
+        created: "2024-01-15",
+        lastUpdated: "2024-01-20"
+      },
+      {
+        id: 2,
+        name: "Digital Product Marketplace",
+        description: "Platform for selling digital products",
+        status: "development",
+        revenue: 890,
+        users: 89,
+        category: "Marketplace",
+        created: "2024-01-10",
+        lastUpdated: "2024-01-18"
+      },
+      {
+        id: 3,
+        name: "Freelance Service Hub",
+        description: "Connecting freelancers with clients",
+        status: "planning",
+        revenue: 0,
+        users: 0,
+        category: "Platform",
+        created: "2024-01-25",
+        lastUpdated: "2024-01-25"
+      },
+      {
+        id: 4,
+        name: "E-commerce Analytics",
+        description: "Advanced analytics for online stores",
+        status: "active",
+        revenue: 3200,
+        users: 234,
+        category: "Analytics",
+        created: "2024-01-05",
+        lastUpdated: "2024-01-22"
+      },
+      {
+        id: 5,
+        name: "Social Media Manager",
+        description: "Automated social media posting and analytics",
+        status: "development",
+        revenue: 1200,
+        users: 67,
+        category: "SaaS",
+        created: "2024-01-12",
+        lastUpdated: "2024-01-19"
+      }
+    ];
+
+    // Apply search filter
+    let filteredProjects = mockProjects;
+    if (search) {
+      filteredProjects = mockProjects.filter(project => 
+        project.name.toLowerCase().includes(search.toLowerCase()) ||
+        project.description.toLowerCase().includes(search.toLowerCase())
+      );
+    }
+
+    // Apply status filter
+    if (status && status !== 'all') {
+      filteredProjects = filteredProjects.filter(project => project.status === status);
+    }
+
+    // Apply category filter
+    if (category && category !== 'all') {
+      filteredProjects = filteredProjects.filter(project => project.category === category);
+    }
+
+    // Apply sorting
+    filteredProjects.sort((a, b) => {
+      const aValue = a[sortBy] || a.created;
+      const bValue = b[sortBy] || b.created;
+      
+      if (sortOrder === 'desc') {
+        return new Date(bValue) - new Date(aValue);
+      } else {
+        return new Date(aValue) - new Date(bValue);
+      }
+    });
+
+    // Apply pagination
+    const startIndex = (page - 1) * limit;
+    const endIndex = startIndex + limit;
+    const paginatedProjects = filteredProjects.slice(startIndex, endIndex);
+
+    res.json({
+      projects: paginatedProjects,
+      totalPages: Math.ceil(filteredProjects.length / limit),
+      currentPage: parseInt(page),
+      total: filteredProjects.length
+    });
+  } catch (error) {
+    logger.error('Error fetching projects:', error);
+    res.status(500).json({ message: 'Failed to fetch projects' });
+  }
+});
+
+// Get all projects with pagination and filtering (authenticated version)
+router.get('/auth', async (req, res) => {
   if (!req.user) {
     return res.status(401).json({ message: 'Unauthorized' });
   }
