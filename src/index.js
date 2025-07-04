@@ -271,31 +271,39 @@ console.log('Health check endpoint setup completed');
 // Detailed health check endpoint for monitoring
 console.log('Setting up detailed health check endpoint...');
 app.get('/api/health/detailed', (req, res) => {
-  res.json({ 
-    status: 'healthy',
-    timestamp: new Date().toISOString(),
-    uptime: process.uptime(),
-    services: {
-      database: {
-        status: mongoose.connection.readyState === 1 ? 'up' : 'down',
-        message: mongoose.connection.readyState === 1 ? 'Connected' : 'Not connected'
+  try {
+    res.json({ 
+      status: 'healthy',
+      timestamp: new Date().toISOString(),
+      uptime: process.uptime(),
+      services: {
+        database: {
+          status: mongoose.connection.readyState === 1 ? 'up' : 'down',
+          message: mongoose.connection.readyState === 1 ? 'Connected' : 'Not connected'
+        },
+        redis: {
+          status: redis && redis.status === 'ready' ? 'up' : 'down',
+          message: redis && redis.status === 'ready' ? 'Connected' : 'Not connected'
+        },
+        projectService: {
+          status: projectService ? 'available' : 'not_available',
+          message: projectService ? 'Available' : 'Not available'
+        },
+        monitoringService: {
+          status: monitoringService ? 'available' : 'not_available',
+          message: monitoringService ? 'Available' : 'Not available'
+        }
       },
-      redis: {
-        status: redis && redis.status === 'ready' ? 'up' : 'down',
-        message: redis && redis.status === 'ready' ? 'Connected' : 'Not connected'
-      },
-      projectService: {
-        status: projectService && projectService.isRunning ? projectService.isRunning() : 'unknown',
-        message: projectService ? 'Available' : 'Not available'
-      },
-      monitoringService: {
-        status: monitoringService && monitoringService.isRunning ? monitoringService.isRunning() : 'unknown',
-        message: monitoringService ? 'Available' : 'Not available'
-      }
-    },
-    version: '2.0.0',
-    environment: process.env.NODE_ENV || 'development'
-  });
+      version: '2.0.0',
+      environment: process.env.NODE_ENV || 'development'
+    });
+  } catch (error) {
+    logger.error('Detailed health check error:', error);
+    res.status(500).json({ 
+      message: 'Health check failed',
+      error: process.env.NODE_ENV === 'development' ? error.message : {}
+    });
+  }
 });
 console.log('Detailed health check endpoint setup completed');
 
