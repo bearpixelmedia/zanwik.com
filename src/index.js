@@ -972,6 +972,222 @@ const startServer = async () => {
 
       console.log('Public infrastructure endpoints setup completed');
 
+      // Set up public monitoring endpoints (no auth required)
+      console.log('Setting up public monitoring endpoints...');
+      
+      // Public monitoring alerts endpoint
+      app.get('/api/monitoring/alerts', async (req, res) => {
+        try {
+          const { page = 1, limit = 10, status, severity = 'all' } = req.query;
+          
+          const mockAlerts = {
+            alerts: [
+              {
+                id: 'alert-1',
+                title: 'High CPU Usage',
+                description: 'CPU usage exceeded 80% threshold',
+                severity: 'warning',
+                status: 'active',
+                timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+                service: 'production-server-1',
+                metric: 'cpu_usage',
+                value: 85.2,
+                threshold: 80
+              },
+              {
+                id: 'alert-2',
+                title: 'Database Connection Pool Full',
+                description: 'Database connection pool reached maximum capacity',
+                severity: 'critical',
+                status: 'active',
+                timestamp: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString(),
+                service: 'primary-database',
+                metric: 'connection_pool',
+                value: 100,
+                threshold: 95
+              },
+              {
+                id: 'alert-3',
+                title: 'SSL Certificate Expiring Soon',
+                description: 'SSL certificate will expire in 30 days',
+                severity: 'info',
+                status: 'acknowledged',
+                timestamp: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString(),
+                service: 'zanwik.com',
+                metric: 'ssl_expiry',
+                value: 30,
+                threshold: 60
+              },
+              {
+                id: 'alert-4',
+                title: 'High Memory Usage',
+                description: 'Memory usage exceeded 90% threshold',
+                severity: 'warning',
+                status: 'resolved',
+                timestamp: new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString(),
+                service: 'production-server-2',
+                metric: 'memory_usage',
+                value: 92.1,
+                threshold: 90
+              },
+              {
+                id: 'alert-5',
+                title: 'Network Latency Increased',
+                description: 'Network latency increased by 50%',
+                severity: 'info',
+                status: 'active',
+                timestamp: new Date(Date.now() - 30 * 60 * 1000).toISOString(),
+                service: 'load-balancer-1',
+                metric: 'network_latency',
+                value: 75,
+                threshold: 50
+              }
+            ],
+            pagination: {
+              page: parseInt(page),
+              limit: parseInt(limit),
+              total: 5,
+              pages: 1
+            }
+          };
+          
+          res.json(mockAlerts);
+        } catch (error) {
+          logger.error('Public monitoring alerts error:', error);
+          res.status(500).json({ message: 'Failed to get monitoring alerts' });
+        }
+      });
+
+      // Public monitoring dashboard endpoint
+      app.get('/api/monitoring/dashboard', async (req, res) => {
+        try {
+          const mockDashboard = {
+            dashboard: {
+              overview: {
+                totalAlerts: 5,
+                criticalAlerts: 1,
+                warningAlerts: 2,
+                infoAlerts: 2,
+                resolvedAlerts: 1,
+                uptime: 99.8,
+                responseTime: 245
+              },
+              recentAlerts: [
+                {
+                  id: 'alert-1',
+                  title: 'High CPU Usage',
+                  severity: 'warning',
+                  timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString()
+                },
+                {
+                  id: 'alert-2',
+                  title: 'Database Connection Pool Full',
+                  severity: 'critical',
+                  timestamp: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString()
+                }
+              ],
+              systemHealth: {
+                servers: { status: 'healthy', count: 3 },
+                databases: { status: 'warning', count: 2 },
+                loadBalancers: { status: 'healthy', count: 2 },
+                cdn: { status: 'healthy', count: 1 }
+              }
+            }
+          };
+          
+          res.json(mockDashboard);
+        } catch (error) {
+          logger.error('Public monitoring dashboard error:', error);
+          res.status(500).json({ message: 'Failed to get monitoring dashboard' });
+        }
+      });
+
+      // Public monitoring health endpoint
+      app.get('/api/monitoring/health', async (req, res) => {
+        try {
+          const mockHealth = {
+            health: {
+              overall: 'healthy',
+              timestamp: new Date().toISOString(),
+              services: {
+                api: { status: 'healthy', responseTime: 45, uptime: 99.9 },
+                database: { status: 'warning', responseTime: 120, uptime: 99.8 },
+                redis: { status: 'healthy', responseTime: 12, uptime: 99.9 },
+                storage: { status: 'healthy', responseTime: 89, uptime: 99.7 }
+              },
+              checks: [
+                { name: 'API Health Check', status: 'passed', duration: 45 },
+                { name: 'Database Connection', status: 'passed', duration: 120 },
+                { name: 'Redis Connection', status: 'passed', duration: 12 },
+                { name: 'Storage Access', status: 'passed', duration: 89 }
+              ]
+            }
+          };
+          
+          res.json(mockHealth);
+        } catch (error) {
+          logger.error('Public monitoring health error:', error);
+          res.status(500).json({ message: 'Failed to get monitoring health' });
+        }
+      });
+
+      // Public monitoring performance endpoint
+      app.get('/api/monitoring/performance', async (req, res) => {
+        try {
+          const { period = '24h', metric } = req.query;
+          
+          const mockPerformance = {
+            performance: {
+              period: period,
+              timestamp: new Date().toISOString(),
+              metrics: {
+                responseTime: {
+                  average: 245,
+                  p95: 450,
+                  p99: 890,
+                  data: [
+                    { time: '2024-01-01T00:00:00Z', value: 240 },
+                    { time: '2024-01-01T01:00:00Z', value: 245 },
+                    { time: '2024-01-01T02:00:00Z', value: 250 },
+                    { time: '2024-01-01T03:00:00Z', value: 235 },
+                    { time: '2024-01-01T04:00:00Z', value: 242 }
+                  ]
+                },
+                throughput: {
+                  average: 1250,
+                  peak: 2100,
+                  data: [
+                    { time: '2024-01-01T00:00:00Z', value: 1200 },
+                    { time: '2024-01-01T01:00:00Z', value: 1250 },
+                    { time: '2024-01-01T02:00:00Z', value: 1300 },
+                    { time: '2024-01-01T03:00:00Z', value: 1180 },
+                    { time: '2024-01-01T04:00:00Z', value: 1220 }
+                  ]
+                },
+                errorRate: {
+                  average: 0.2,
+                  peak: 1.8,
+                  data: [
+                    { time: '2024-01-01T00:00:00Z', value: 0.1 },
+                    { time: '2024-01-01T01:00:00Z', value: 0.2 },
+                    { time: '2024-01-01T02:00:00Z', value: 0.3 },
+                    { time: '2024-01-01T03:00:00Z', value: 0.1 },
+                    { time: '2024-01-01T04:00:00Z', value: 0.2 }
+                  ]
+                }
+              }
+            }
+          };
+          
+          res.json(mockPerformance);
+        } catch (error) {
+          logger.error('Public monitoring performance error:', error);
+          res.status(500).json({ message: 'Failed to get monitoring performance' });
+        }
+      });
+
+      console.log('Public monitoring endpoints setup completed');
+
       console.log('Setting up analytics routes...');
       app.use('/api/analytics', analyticsRoutes);
       console.log('Analytics routes setup completed');
