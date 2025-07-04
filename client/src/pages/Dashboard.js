@@ -11,7 +11,7 @@ import {
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { Button } from '../components/ui/button';
-import { analyticsAPI, projectsAPI } from '../utils/api';
+import { analyticsAPI } from '../utils/api';
 import { useAuth } from '../contexts/AuthContext';
 
 const Dashboard = () => {
