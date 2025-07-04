@@ -407,11 +407,7 @@ const startServer = async () => {
       app.use('/api/projects', auth, projectRoutes);
       console.log('Project routes setup completed');
 
-      console.log('Setting up analytics routes...');
-      app.use('/api/analytics', auth, analyticsRoutes);
-      console.log('Analytics routes setup completed');
-
-      // Add public analytics endpoint before auth middleware
+      // Add public analytics endpoint BEFORE auth middleware
       console.log('Setting up public analytics endpoint...');
       app.get('/api/analytics/dashboard/public', async (req, res) => {
         try {
@@ -440,6 +436,10 @@ const startServer = async () => {
         }
       });
       console.log('Public analytics endpoint setup completed');
+
+      console.log('Setting up analytics routes...');
+      app.use('/api/analytics', auth, analyticsRoutes);
+      console.log('Analytics routes setup completed');
 
       console.log('Setting up infrastructure routes...');
       app.use('/api/infrastructure', auth, infrastructureRoutes);
