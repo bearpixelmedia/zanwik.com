@@ -562,6 +562,43 @@ const startServer = async () => {
         }
       });
 
+      // Public projects analytics endpoint
+      app.get('/api/analytics/projects', async (req, res) => {
+        try {
+          const { period = '30d' } = req.query;
+          
+          const mockProjects = {
+            total: 12,
+            period: period,
+            data: [
+              { date: '2024-01-01', projects: 2 },
+              { date: '2024-01-02', projects: 1 },
+              { date: '2024-01-03', projects: 3 },
+              { date: '2024-01-04', projects: 2 },
+              { date: '2024-01-05', projects: 1 }
+            ],
+            growth: 8.5,
+            topProjects: [
+              { name: 'AI Content Generator', revenue: 2450, growth: 18, status: 'active' },
+              { name: 'Digital Marketplace', revenue: 1890, growth: 12, status: 'active' },
+              { name: 'Freelance Hub', revenue: 1200, growth: 8, status: 'active' },
+              { name: 'E-commerce Platform', revenue: 980, growth: 15, status: 'active' },
+              { name: 'Social Media App', revenue: 750, growth: 22, status: 'active' }
+            ],
+            statusBreakdown: {
+              active: 8,
+              paused: 2,
+              completed: 2
+            }
+          };
+          
+          res.json({ projects: mockProjects });
+        } catch (error) {
+          logger.error('Public projects analytics error:', error);
+          res.status(500).json({ message: 'Failed to get projects analytics' });
+        }
+      });
+
       console.log('Public analytics endpoints setup completed');
 
       console.log('Setting up analytics routes...');
