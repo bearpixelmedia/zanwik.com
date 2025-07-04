@@ -3,14 +3,14 @@ import { supabase } from './supabase';
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://money-production-55af.up.railway.app/api';
 
 // Helper function to get auth token
-const getAuthToken = () => {
-  const session = supabase.auth.getSession();
+const getAuthToken = async () => {
+  const { data: { session } } = await supabase.auth.getSession();
   return session?.access_token;
 };
 
 // Helper function for API calls
 const apiCall = async (endpoint, options = {}) => {
-  const token = getAuthToken();
+  const token = await getAuthToken();
   
   const config = {
     headers: {
