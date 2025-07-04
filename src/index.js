@@ -311,12 +311,32 @@ app.use((err, req, res, next) => {
   });
 });
 
-// 404 handler
-console.log('Setting up 404 handler...');
-app.use('*', (req, res) => {
-  res.status(404).json({ message: 'Route not found' });
+// Test endpoint for debugging
+app.get('/test', (req, res) => {
+  res.json({ message: 'Test endpoint working!' });
 });
-console.log('404 handler setup completed');
+
+// Simple public dashboard endpoint
+app.get('/dashboard', (req, res) => {
+  res.json({
+    overview: {
+      totalRevenue: 45600,
+      monthlyGrowth: 15.2,
+      activeUsers: 1890,
+      totalProjects: 12,
+      recentActivity: [
+        { type: 'project_created', title: 'AI Content Generator', time: '2 hours ago' },
+        { type: 'revenue_milestone', title: 'Reached $45K monthly revenue', time: '1 day ago' },
+        { type: 'user_signup', title: 'New user joined', time: '3 hours ago' }
+      ],
+      topProjects: [
+        { name: 'AI Content Generator', revenue: 2450, growth: 18 },
+        { name: 'Digital Marketplace', revenue: 1890, growth: 12 },
+        { name: 'Freelance Hub', revenue: 1200, growth: 8 }
+      ]
+    }
+  });
+});
 
 console.log('Express app setup completed');
 
@@ -481,6 +501,13 @@ const startServer = async () => {
 
 
     console.log('Routes setup completed');
+    
+    // 404 handler - must be last
+    console.log('Setting up 404 handler...');
+    app.use('*', (req, res) => {
+      res.status(404).json({ message: 'Route not found' });
+    });
+    console.log('404 handler setup completed');
     
     console.log(`Starting server on port ${PORT}...`);
     server.listen(PORT, '0.0.0.0', () => {

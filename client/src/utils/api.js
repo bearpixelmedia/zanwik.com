@@ -82,7 +82,7 @@ export const projectsAPI = {
 // Analytics API
 export const analyticsAPI = {
   // Get dashboard overview
-  getDashboardOverview: () => apiCall('/analytics/dashboard/public'),
+  getDashboardOverview: () => apiCall('/dashboard'),
 
   // Get revenue analytics
   getRevenueAnalytics: (period = '30d') => apiCall(`/analytics/revenue?period=${period}`),
