@@ -306,10 +306,26 @@ console.log('Dashboard overview endpoint will be set up after service initializa
 app.get('/api/projects', async (req, res) => {
   try {
     const projectsDir = path.join(__dirname, '../projects');
+    console.log('Looking for projects in:', projectsDir);
+    
+    // Check if directory exists
+    if (!fs.existsSync(projectsDir)) {
+      console.log('Projects directory does not exist:', projectsDir);
+      return res.status(500).json({ 
+        message: 'Projects directory not found',
+        path: projectsDir,
+        cwd: process.cwd(),
+        __dirname: __dirname
+      });
+    }
+    
     const projectFolders = fs.readdirSync(projectsDir).filter(f => {
       const fullPath = path.join(projectsDir, f);
       return fs.statSync(fullPath).isDirectory();
     });
+    
+    console.log('Found project folders:', projectFolders);
+    
     const projects = projectFolders.map(folder => {
       const projectPath = path.join(projectsDir, folder);
       let meta = {};
@@ -323,7 +339,9 @@ app.get('/api/projects', async (req, res) => {
         if (fs.existsSync(readmePath)) {
           readme = fs.readFileSync(readmePath, 'utf-8').split('\n').slice(0, 10).join('\n');
         }
-      } catch (e) {}
+      } catch (e) {
+        console.log('Error reading project:', folder, e.message);
+      }
       return {
         id: folder,
         name: meta.name || folder,
@@ -334,6 +352,9 @@ app.get('/api/projects', async (req, res) => {
         readmePreview: readme
       };
     });
+    
+    console.log('Processed projects:', projects.length);
+    
     res.json({
       projects,
       total: projects.length,
@@ -341,7 +362,13 @@ app.get('/api/projects', async (req, res) => {
       currentPage: 1
     });
   } catch (error) {
-    res.status(500).json({ message: 'Failed to load projects from directory.' });
+    console.error('Error in /api/projects:', error);
+    res.status(500).json({ 
+      message: 'Failed to load projects from directory.',
+      error: error.message,
+      path: path.join(__dirname, '../projects'),
+      cwd: process.cwd()
+    });
   }
 });
 
