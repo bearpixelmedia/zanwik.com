@@ -455,6 +455,115 @@ const startServer = async () => {
       app.use('/api/auth', authRoutes);
       console.log('Auth routes setup completed');
 
+      // Set up public analytics endpoints (no auth required)
+      console.log('Setting up public analytics endpoints...');
+      
+      // Public revenue analytics endpoint
+      app.get('/api/analytics/revenue', async (req, res) => {
+        try {
+          const { period = '30d', groupBy = 'day' } = req.query;
+          
+          // Return mock data for now
+          const mockRevenue = {
+            total: 45600,
+            period: period,
+            data: [
+              { date: '2024-01-01', revenue: 1200 },
+              { date: '2024-01-02', revenue: 1350 },
+              { date: '2024-01-03', revenue: 1100 },
+              { date: '2024-01-04', revenue: 1400 },
+              { date: '2024-01-05', revenue: 1600 }
+            ],
+            growth: 15.2
+          };
+          
+          res.json({ revenue: mockRevenue });
+        } catch (error) {
+          logger.error('Public revenue analytics error:', error);
+          res.status(500).json({ message: 'Failed to get revenue analytics' });
+        }
+      });
+
+      // Public dashboard overview endpoint
+      app.get('/api/analytics/dashboard', async (req, res) => {
+        try {
+          const mockOverview = {
+            totalRevenue: 45600,
+            monthlyGrowth: 15.2,
+            activeUsers: 1890,
+            totalProjects: 12,
+            recentActivity: [
+              { type: 'project_created', title: 'AI Content Generator', time: '2 hours ago' },
+              { type: 'revenue_milestone', title: 'Reached $45K monthly revenue', time: '1 day ago' },
+              { type: 'user_signup', title: 'New user joined', time: '3 hours ago' }
+            ],
+            topProjects: [
+              { name: 'AI Content Generator', revenue: 2450, growth: 18 },
+              { name: 'Digital Marketplace', revenue: 1890, growth: 12 },
+              { name: 'Freelance Hub', revenue: 1200, growth: 8 }
+            ]
+          };
+          
+          res.json({ overview: mockOverview });
+        } catch (error) {
+          logger.error('Public dashboard analytics error:', error);
+          res.status(500).json({ message: 'Failed to get dashboard overview' });
+        }
+      });
+
+      // Public users analytics endpoint
+      app.get('/api/analytics/users', async (req, res) => {
+        try {
+          const { period = '30d', groupBy = 'day' } = req.query;
+          
+          const mockUsers = {
+            total: 1890,
+            period: period,
+            data: [
+              { date: '2024-01-01', users: 45 },
+              { date: '2024-01-02', users: 52 },
+              { date: '2024-01-03', users: 48 },
+              { date: '2024-01-04', users: 61 },
+              { date: '2024-01-05', users: 58 }
+            ],
+            growth: 12.5
+          };
+          
+          res.json({ users: mockUsers });
+        } catch (error) {
+          logger.error('Public users analytics error:', error);
+          res.status(500).json({ message: 'Failed to get user analytics' });
+        }
+      });
+
+      // Public performance analytics endpoint
+      app.get('/api/analytics/performance', async (req, res) => {
+        try {
+          const { period = '30d' } = req.query;
+          
+          const mockPerformance = {
+            uptime: 99.8,
+            responseTime: 245,
+            errorRate: 0.2,
+            period: period,
+            data: [
+              { date: '2024-01-01', uptime: 99.9, responseTime: 240, errorRate: 0.1 },
+              { date: '2024-01-02', uptime: 99.8, responseTime: 245, errorRate: 0.2 },
+              { date: '2024-01-03', uptime: 99.7, responseTime: 250, errorRate: 0.3 },
+              { date: '2024-01-04', uptime: 99.9, responseTime: 235, errorRate: 0.1 },
+              { date: '2024-01-05', uptime: 99.8, responseTime: 240, errorRate: 0.2 }
+            ]
+          };
+          
+          res.json({ performance: mockPerformance });
+        } catch (error) {
+          logger.error('Public performance analytics error:', error);
+          res.status(500).json({ message: 'Failed to get performance analytics' });
+        }
+      });
+
+      console.log('Public analytics endpoints setup completed');
+
       console.log('Setting up analytics routes...');
       app.use('/api/analytics', analyticsRoutes);
       console.log('Analytics routes setup completed');
