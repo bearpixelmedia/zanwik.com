@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Backend Integration Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .loading { background-color: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        pre {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Umbrella Dashboard - Backend Integration Test</h1>
+        
+        <h2>Backend Status</h2>
+        <div id="healthStatus" class="status loading">Checking backend health...</div>
+        
+        <h2>Analytics Data</h2>
+        <div id="analyticsStatus" class="status loading">Loading analytics data...</div>
+        <div id="analyticsData"></div>
+        
+        <h2>Test Actions</h2>
+        <button onclick="testHealth()">Test Health Check</button>
+        <button onclick="testAnalytics()">Test Analytics</button>
+        <button onclick="testAll()">Test All Endpoints</button>
+        
+        <h2>Backend URL</h2>
+        <p><strong>API Base:</strong> <span id="apiUrl">Loading...</span></p>
+        
+        <h2>Environment Variables</h2>
+        <div id="envVars"></div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'https://money-production-55af.up.railway.app/api';
+        
+        // Display API URL
+        document.getElementById('apiUrl').textContent = API_BASE_URL;
+        
+        // Test health endpoint
+        async function testHealth() {
+            const statusDiv = document.getElementById('healthStatus');
+            statusDiv.className = 'status loading';
+            statusDiv.textContent = 'Testing health endpoint...';
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/health`);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    statusDiv.className = 'status success';
+                    statusDiv.innerHTML = `✅ Backend is healthy!<br>
+                        <strong>Status:</strong> ${data.status}<br>
+                        <strong>Uptime:</strong> ${Math.round(data.uptime)}s<br>
+                        <strong>Version:</strong> ${data.version}`;
+                } else {
+                    throw new Error(`HTTP ${response.status}: ${data.message || 'Unknown error'}`);
+                }
+            } catch (error) {
+                statusDiv.className = 'status error';
+                statusDiv.textContent = `❌ Health check failed: ${error.message}`;
+            }
+        }
+        
+        // Test analytics endpoint
+        async function testAnalytics() {
+            const statusDiv = document.getElementById('analyticsStatus');
+            const dataDiv = document.getElementById('analyticsData');
+            
+            statusDiv.className = 'status loading';
+            statusDiv.textContent = 'Loading analytics data...';
+            dataDiv.innerHTML = '';
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/analytics/dashboard/public`);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    statusDiv.className = 'status success';
+                    statusDiv.textContent = '✅ Analytics data loaded successfully!';
+                    
+                    dataDiv.innerHTML = `
+                        <h3>Dashboard Overview</h3>
+                        <p><strong>Total Revenue:</strong> $${data.overview.totalRevenue.toLocaleString()}</p>
+                        <p><strong>Monthly Growth:</strong> ${data.overview.monthlyGrowth}%</p>
+                        <p><strong>Active Users:</strong> ${data.overview.activeUsers.toLocaleString()}</p>
+                        <p><strong>Total Projects:</strong> ${data.overview.totalProjects}</p>
+                        
+                        <h3>Top Projects</h3>
+                        <ul>
+                            ${data.overview.topProjects.map(project => 
+                                `<li><strong>${project.name}:</strong> $${project.revenue} (${project.growth}% growth)</li>`
+                            ).join('')}
+                        </ul>
+                        
+                        <h3>Recent Activity</h3>
+                        <ul>
+                            ${data.overview.recentActivity.map(activity => 
+                                `<li><strong>${activity.type}:</strong> ${activity.title} - ${activity.time}</li>`
+                            ).join('')}
+                        </ul>
+                        
+                        <h3>Raw Data</h3>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                } else {
+                    throw new Error(`HTTP ${response.status}: ${data.message || 'Unknown error'}`);
+                }
+            } catch (error) {
+                statusDiv.className = 'status error';
+                statusDiv.textContent = `❌ Analytics test failed: ${error.message}`;
+                dataDiv.innerHTML = `<pre>Error: ${error.message}</pre>`;
+            }
+        }
+        
+        // Test all endpoints
+        async function testAll() {
+            await testHealth();
+            await testAnalytics();
+        }
+        
+        // Display environment variables (client-side only)
+        function displayEnvVars() {
+            const envDiv = document.getElementById('envVars');
+            const envVars = {
+                'API_BASE_URL': API_BASE_URL,
+                'REACT_APP_API_URL': 'Set in Vercel',
+                'REACT_APP_SUPABASE_URL': 'Set in Vercel',
+                'REACT_APP_SUPABASE_ANON_KEY': 'Set in Vercel'
+            };
+            
+            envDiv.innerHTML = `
+                <ul>
+                    ${Object.entries(envVars).map(([key, value]) => 
+                        `<li><strong>${key}:</strong> ${value}</li>`
+                    ).join('')}
+                </ul>
+            `;
+        }
+        
+        // Initialize page
+        window.onload = function() {
+            displayEnvVars();
+            testAll();
+        };
+    </script>
+</body>
+</html> 
