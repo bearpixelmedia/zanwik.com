@@ -10,6 +10,7 @@ const http = require('http');
 const socketIo = require('socket.io');
 const Redis = require('ioredis');
 const path = require('path');
+const fs = require('fs');
 
 console.log('Dependencies loaded successfully');
 
@@ -301,6 +302,52 @@ console.log('Detailed health check endpoint setup completed');
 // Dashboard overview endpoint will be set up after services are initialized
 console.log('Dashboard overview endpoint will be set up after service initialization');
 
+// Register public GET /api/projects route before auth middleware
+app.get('/api/projects', async (req, res) => {
+  try {
+    const projectsDir = path.join(__dirname, '../projects');
+    const projectFolders = fs.readdirSync(projectsDir).filter(f => {
+      const fullPath = path.join(projectsDir, f);
+      return fs.statSync(fullPath).isDirectory();
+    });
+    const projects = projectFolders.map(folder => {
+      const projectPath = path.join(projectsDir, folder);
+      let meta = {};
+      let readme = '';
+      try {
+        const pkgPath = path.join(projectPath, 'package.json');
+        if (fs.existsSync(pkgPath)) {
+          meta = JSON.parse(fs.readFileSync(pkgPath, 'utf-8'));
+        }
+        const readmePath = path.join(projectPath, 'README.md');
+        if (fs.existsSync(readmePath)) {
+          readme = fs.readFileSync(readmePath, 'utf-8').split('\n').slice(0, 10).join('\n');
+        }
+      } catch (e) {}
+      return {
+        id: folder,
+        name: meta.name || folder,
+        description: meta.description || '',
+        version: meta.version || '',
+        author: meta.author || '',
+        keywords: meta.keywords || [],
+        readmePreview: readme
+      };
+    });
+    res.json({
+      projects,
+      total: projects.length,
+      totalPages: 1,
+      currentPage: 1
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to load projects from directory.' });
+  }
+});
+
+// Register the rest of the project routes with auth
+app.use('/api/projects', auth, projectRoutes);
+
 // Error handling middleware
 console.log('Setting up error handling middleware...');
 app.use((err, req, res, next) => {
@@ -337,8 +384,6 @@ app.get('/dashboard', (req, res) => {
     }
   });
 });
-
-
 
 console.log('Express app setup completed');
 
@@ -425,70 +470,6 @@ const startServer = async () => {
       app.use('/api/auth', authRoutes);
       console.log('Auth routes setup completed');
 
-      console.log('Setting up project routes...');
-      app.use('/api/projects', auth, projectRoutes);
-      console.log('Project routes setup completed');
-
-      // Add public analytics endpoint BEFORE auth middleware
-      console.log('Setting up public analytics endpoint...');
-      app.get('/api/analytics/dashboard/public', async (req, res) => {
-        try {
-          // Return mock data for testing
-          res.json({
-            overview: {
-              totalRevenue: 45600,
-              monthlyGrowth: 15.2,
-              activeUsers: 1890,
-              totalProjects: 12,
-              recentActivity: [
-                { type: 'project_created', title: 'AI Content Generator', time: '2 hours ago' },
-                { type: 'revenue_milestone', title: 'Reached $45K monthly revenue', time: '1 day ago' },
-                { type: 'user_signup', title: 'New user joined', time: '3 hours ago' }
-              ],
-              topProjects: [
-                { name: 'AI Content Generator', revenue: 2450, growth: 18 },
-                { name: 'Digital Marketplace', revenue: 1890, growth: 12 },
-                { name: 'Freelance Hub', revenue: 1200, growth: 8 }
-              ]
-            }
-          });
-        } catch (error) {
-          logger.error('Public dashboard error:', error);
-          res.status(500).json({ message: 'Failed to get dashboard data' });
-        }
-      });
-      console.log('Public analytics endpoint setup completed');
-
-      // Add public dashboard endpoint BEFORE auth middleware
-      console.log('Setting up public dashboard endpoint...');
-      app.get('/api/dashboard', async (req, res) => {
-        try {
-          // Return mock data for testing
-          res.json({
-            overview: {
-              totalRevenue: 45600,
-              monthlyGrowth: 15.2,
-              activeUsers: 1890,
-              totalProjects: 12,
-              recentActivity: [
-                { type: 'project_created', title: 'AI Content Generator', time: '2 hours ago' },
-                { type: 'revenue_milestone', title: 'Reached $45K monthly revenue', time: '1 day ago' },
-                { type: 'user_signup', title: 'New user joined', time: '3 hours ago' }
-              ],
-              topProjects: [
-                { name: 'AI Content Generator', revenue: 2450, growth: 18 },
-                { name: 'Digital Marketplace', revenue: 1890, growth: 12 },
-                { name: 'Freelance Hub', revenue: 1200, growth: 8 }
-              ]
-            }
-          });
-        } catch (error) {
-          logger.error('Public dashboard error:', error);
-          res.status(500).json({ message: 'Failed to get dashboard data' });
-        }
-      });
-      console.log('Public dashboard endpoint setup completed');
-
       console.log('Setting up analytics routes...');
       app.use('/api/analytics', analyticsRoutes);
       console.log('Analytics routes setup completed');
@@ -529,8 +510,6 @@ const startServer = async () => {
       }
     });
     console.log('Dashboard overview endpoint setup completed');
-
-
 
     console.log('Routes setup completed');
     
