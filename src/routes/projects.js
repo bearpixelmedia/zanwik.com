@@ -3,126 +3,56 @@ const express = require('express');
 const Project = require('../models/Project');
 const { requirePermission } = require('../middleware/auth');
 const logger = require('../utils/logger');
+const fs = require('fs');
+const path = require('path');
 
 const router = express.Router();
 
 // Get all projects with pagination and filtering (public demo version)
 router.get('/', async (req, res) => {
   try {
-    const { 
-      page = 1, 
-      limit = 10, 
-      search, 
-      status, 
-      category,
-      sortBy = 'createdAt',
-      sortOrder = 'desc'
-    } = req.query;
-
-    // Mock projects data for demo
-    const mockProjects = [
-      {
-        id: 1,
-        name: "AI Content Generator",
-        description: "Automated content creation tool with AI",
-        status: "active",
-        revenue: 2450,
-        users: 156,
-        category: "SaaS",
-        created: "2024-01-15",
-        lastUpdated: "2024-01-20"
-      },
-      {
-        id: 2,
-        name: "Digital Product Marketplace",
-        description: "Platform for selling digital products",
-        status: "development",
-        revenue: 890,
-        users: 89,
-        category: "Marketplace",
-        created: "2024-01-10",
-        lastUpdated: "2024-01-18"
-      },
-      {
-        id: 3,
-        name: "Freelance Service Hub",
-        description: "Connecting freelancers with clients",
-        status: "planning",
-        revenue: 0,
-        users: 0,
-        category: "Platform",
-        created: "2024-01-25",
-        lastUpdated: "2024-01-25"
-      },
-      {
-        id: 4,
-        name: "E-commerce Analytics",
-        description: "Advanced analytics for online stores",
-        status: "active",
-        revenue: 3200,
-        users: 234,
-        category: "Analytics",
-        created: "2024-01-05",
-        lastUpdated: "2024-01-22"
-      },
-      {
-        id: 5,
-        name: "Social Media Manager",
-        description: "Automated social media posting and analytics",
-        status: "development",
-        revenue: 1200,
-        users: 67,
-        category: "SaaS",
-        created: "2024-01-12",
-        lastUpdated: "2024-01-19"
-      }
-    ];
-
-    // Apply search filter
-    let filteredProjects = mockProjects;
-    if (search) {
-      filteredProjects = mockProjects.filter(project => 
-        project.name.toLowerCase().includes(search.toLowerCase()) ||
-        project.description.toLowerCase().includes(search.toLowerCase())
-      );
-    }
-
-    // Apply status filter
-    if (status && status !== 'all') {
-      filteredProjects = filteredProjects.filter(project => project.status === status);
-    }
-
-    // Apply category filter
-    if (category && category !== 'all') {
-      filteredProjects = filteredProjects.filter(project => project.category === category);
-    }
-
-    // Apply sorting
-    filteredProjects.sort((a, b) => {
-      const aValue = a[sortBy] || a.created;
-      const bValue = b[sortBy] || b.created;
-      
-      if (sortOrder === 'desc') {
-        return new Date(bValue) - new Date(aValue);
-      } else {
-        return new Date(aValue) - new Date(bValue);
-      }
+    const projectsDir = path.join(__dirname, '../../projects');
+    const projectFolders = fs.readdirSync(projectsDir).filter(f => {
+      const fullPath = path.join(projectsDir, f);
+      return fs.statSync(fullPath).isDirectory();
     });
 
-    // Apply pagination
-    const startIndex = (page - 1) * limit;
-    const endIndex = startIndex + limit;
-    const paginatedProjects = filteredProjects.slice(startIndex, endIndex);
+    const projects = projectFolders.map(folder => {
+      const projectPath = path.join(projectsDir, folder);
+      let meta = {};
+      let readme = '';
+      try {
+        const pkgPath = path.join(projectPath, 'package.json');
+        if (fs.existsSync(pkgPath)) {
+          meta = JSON.parse(fs.readFileSync(pkgPath, 'utf-8'));
+        }
+        const readmePath = path.join(projectPath, 'README.md');
+        if (fs.existsSync(readmePath)) {
+          readme = fs.readFileSync(readmePath, 'utf-8').split('\n').slice(0, 10).join('\n');
+        }
+      } catch (e) {
+        // ignore errors for individual projects
+      }
+      return {
+        id: folder,
+        name: meta.name || folder,
+        description: meta.description || '',
+        version: meta.version || '',
+        author: meta.author || '',
+        keywords: meta.keywords || [],
+        readmePreview: readme
+      };
+    });
 
     res.json({
-      projects: paginatedProjects,
-      totalPages: Math.ceil(filteredProjects.length / limit),
-      currentPage: parseInt(page),
-      total: filteredProjects.length
+      projects,
+      total: projects.length,
+      totalPages: 1,
+      currentPage: 1
     });
   } catch (error) {
-    logger.error('Error fetching projects:', error);
-    res.status(500).json({ message: 'Failed to fetch projects' });
+    logger.error('Error reading projects from directory:', error);
+    res.status(500).json({ message: 'Failed to load projects from directory.' });
   }
 });
 
