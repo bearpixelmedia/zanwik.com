@@ -305,69 +305,27 @@ console.log('Dashboard overview endpoint will be set up after service initializa
 // Register public GET /api/projects route before auth middleware
 app.get('/api/projects', async (req, res) => {
   try {
-    const projectsDir = path.join(__dirname, '../projects');
-    console.log('Looking for projects in:', projectsDir);
+    const projectsDataPath = path.join(__dirname, 'data/projects.json');
+    console.log('Loading projects from:', projectsDataPath);
     
-    // Check if directory exists
-    if (!fs.existsSync(projectsDir)) {
-      console.log('Projects directory does not exist:', projectsDir);
+    // Check if file exists
+    if (!fs.existsSync(projectsDataPath)) {
+      console.log('Projects data file does not exist:', projectsDataPath);
       return res.status(500).json({ 
-        message: 'Projects directory not found',
-        path: projectsDir,
-        cwd: process.cwd(),
-        __dirname: __dirname
+        message: 'Projects data file not found',
+        path: projectsDataPath
       });
     }
     
-    const projectFolders = fs.readdirSync(projectsDir).filter(f => {
-      const fullPath = path.join(projectsDir, f);
-      return fs.statSync(fullPath).isDirectory();
-    });
+    const projectsData = JSON.parse(fs.readFileSync(projectsDataPath, 'utf-8'));
+    console.log('Loaded projects:', projectsData.projects.length);
     
-    console.log('Found project folders:', projectFolders);
-    
-    const projects = projectFolders.map(folder => {
-      const projectPath = path.join(projectsDir, folder);
-      let meta = {};
-      let readme = '';
-      try {
-        const pkgPath = path.join(projectPath, 'package.json');
-        if (fs.existsSync(pkgPath)) {
-          meta = JSON.parse(fs.readFileSync(pkgPath, 'utf-8'));
-        }
-        const readmePath = path.join(projectPath, 'README.md');
-        if (fs.existsSync(readmePath)) {
-          readme = fs.readFileSync(readmePath, 'utf-8').split('\n').slice(0, 10).join('\n');
-        }
-      } catch (e) {
-        console.log('Error reading project:', folder, e.message);
-      }
-      return {
-        id: folder,
-        name: meta.name || folder,
-        description: meta.description || '',
-        version: meta.version || '',
-        author: meta.author || '',
-        keywords: meta.keywords || [],
-        readmePreview: readme
-      };
-    });
-    
-    console.log('Processed projects:', projects.length);
-    
-    res.json({
-      projects,
-      total: projects.length,
-      totalPages: 1,
-      currentPage: 1
-    });
+    res.json(projectsData);
   } catch (error) {
     console.error('Error in /api/projects:', error);
     res.status(500).json({ 
-      message: 'Failed to load projects from directory.',
-      error: error.message,
-      path: path.join(__dirname, '../projects'),
-      cwd: process.cwd()
+      message: 'Failed to load projects data.',
+      error: error.message
     });
   }
 });
