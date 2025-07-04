@@ -601,6 +601,211 @@ const startServer = async () => {
 
       console.log('Public analytics endpoints setup completed');
 
+      // Set up public infrastructure endpoints (no auth required)
+      console.log('Setting up public infrastructure endpoints...');
+      
+      // Public infrastructure status endpoint (general overview)
+      app.get('/api/infrastructure/status', async (req, res) => {
+        try {
+          const mockStatus = {
+            overall: 'healthy',
+            timestamp: new Date().toISOString(),
+            services: {
+              servers: { status: 'healthy', uptime: 99.8, count: 3 },
+              databases: { status: 'healthy', uptime: 99.9, count: 2 },
+              ssl: { status: 'healthy', valid: 5, expiring: 0 },
+              network: { status: 'healthy', latency: 45, bandwidth: '1Gbps' },
+              security: { status: 'healthy', threats: 0, lastScan: '2 hours ago' }
+            },
+            alerts: {
+              critical: 0,
+              warning: 1,
+              info: 3
+            },
+            performance: {
+              cpu: 45,
+              memory: 62,
+              disk: 38,
+              network: 23
+            }
+          };
+          
+          res.json({ status: mockStatus });
+        } catch (error) {
+          logger.error('Public infrastructure status error:', error);
+          res.status(500).json({ message: 'Failed to get infrastructure status' });
+        }
+      });
+
+      // Public servers status endpoint
+      app.get('/api/infrastructure/servers', async (req, res) => {
+        try {
+          const mockServers = {
+            servers: [
+              {
+                id: 'server-1',
+                name: 'Production Server 1',
+                status: 'healthy',
+                uptime: 99.8,
+                cpu: 45,
+                memory: 62,
+                disk: 38,
+                location: 'us-west1',
+                ip: '192.168.1.100'
+              },
+              {
+                id: 'server-2',
+                name: 'Production Server 2',
+                status: 'healthy',
+                uptime: 99.9,
+                cpu: 38,
+                memory: 58,
+                disk: 42,
+                location: 'us-west1',
+                ip: '192.168.1.101'
+              },
+              {
+                id: 'server-3',
+                name: 'Backup Server',
+                status: 'healthy',
+                uptime: 99.7,
+                cpu: 25,
+                memory: 45,
+                disk: 65,
+                location: 'us-east1',
+                ip: '192.168.1.102'
+              }
+            ]
+          };
+          
+          res.json(mockServers);
+        } catch (error) {
+          logger.error('Public servers status error:', error);
+          res.status(500).json({ message: 'Failed to get servers status' });
+        }
+      });
+
+      // Public databases status endpoint
+      app.get('/api/infrastructure/databases', async (req, res) => {
+        try {
+          const mockDatabases = {
+            databases: [
+              {
+                id: 'db-1',
+                name: 'Primary Database',
+                type: 'PostgreSQL',
+                status: 'healthy',
+                uptime: 99.9,
+                connections: 45,
+                size: '2.3GB',
+                location: 'us-west1'
+              },
+              {
+                id: 'db-2',
+                name: 'Analytics Database',
+                type: 'MongoDB',
+                status: 'healthy',
+                uptime: 99.8,
+                connections: 23,
+                size: '1.8GB',
+                location: 'us-west1'
+              }
+            ]
+          };
+          
+          res.json(mockDatabases);
+        } catch (error) {
+          logger.error('Public databases status error:', error);
+          res.status(500).json({ message: 'Failed to get databases status' });
+        }
+      });
+
+      // Public SSL status endpoint
+      app.get('/api/infrastructure/ssl', async (req, res) => {
+        try {
+          const mockSSL = {
+            ssl: [
+              {
+                domain: 'zanwik.com',
+                status: 'valid',
+                issuer: 'Let\'s Encrypt',
+                expiresAt: '2025-10-15T00:00:00Z',
+                daysRemaining: 103
+              },
+              {
+                domain: 'api.zanwik.com',
+                status: 'valid',
+                issuer: 'Let\'s Encrypt',
+                expiresAt: '2025-10-15T00:00:00Z',
+                daysRemaining: 103
+              },
+              {
+                domain: 'dashboard.zanwik.com',
+                status: 'valid',
+                issuer: 'Let\'s Encrypt',
+                expiresAt: '2025-10-15T00:00:00Z',
+                daysRemaining: 103
+              }
+            ]
+          };
+          
+          res.json(mockSSL);
+        } catch (error) {
+          logger.error('Public SSL status error:', error);
+          res.status(500).json({ message: 'Failed to get SSL status' });
+        }
+      });
+
+      // Public storage usage endpoint
+      app.get('/api/infrastructure/storage', async (req, res) => {
+        try {
+          const mockStorage = {
+            storage: {
+              total: '500GB',
+              used: '189GB',
+              available: '311GB',
+              usage: 37.8,
+              breakdown: {
+                databases: '45GB',
+                logs: '23GB',
+                backups: '67GB',
+                uploads: '34GB',
+                system: '20GB'
+              }
+            }
+          };
+          
+          res.json(mockStorage);
+        } catch (error) {
+          logger.error('Public storage usage error:', error);
+          res.status(500).json({ message: 'Failed to get storage usage' });
+        }
+      });
+
+      // Public network status endpoint
+      app.get('/api/infrastructure/network', async (req, res) => {
+        try {
+          const mockNetwork = {
+            network: {
+              status: 'healthy',
+              latency: 45,
+              bandwidth: '1Gbps',
+              uptime: 99.9,
+              connections: 1250,
+              dataTransferred: '2.3TB',
+              errors: 0
+            }
+          };
+          
+          res.json(mockNetwork);
+        } catch (error) {
+          logger.error('Public network status error:', error);
+          res.status(500).json({ message: 'Failed to get network status' });
+        }
+      });
+
+      console.log('Public infrastructure endpoints setup completed');
+
       console.log('Setting up analytics routes...');
       app.use('/api/analytics', analyticsRoutes);
       console.log('Analytics routes setup completed');
