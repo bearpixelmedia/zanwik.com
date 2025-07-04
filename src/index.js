@@ -411,6 +411,36 @@ const startServer = async () => {
       app.use('/api/analytics', auth, analyticsRoutes);
       console.log('Analytics routes setup completed');
 
+      // Add public analytics endpoint before auth middleware
+      console.log('Setting up public analytics endpoint...');
+      app.get('/api/analytics/dashboard/public', async (req, res) => {
+        try {
+          // Return mock data for testing
+          res.json({
+            overview: {
+              totalRevenue: 45600,
+              monthlyGrowth: 15.2,
+              activeUsers: 1890,
+              totalProjects: 12,
+              recentActivity: [
+                { type: 'project_created', title: 'AI Content Generator', time: '2 hours ago' },
+                { type: 'revenue_milestone', title: 'Reached $45K monthly revenue', time: '1 day ago' },
+                { type: 'user_signup', title: 'New user joined', time: '3 hours ago' }
+              ],
+              topProjects: [
+                { name: 'AI Content Generator', revenue: 2450, growth: 18 },
+                { name: 'Digital Marketplace', revenue: 1890, growth: 12 },
+                { name: 'Freelance Hub', revenue: 1200, growth: 8 }
+              ]
+            }
+          });
+        } catch (error) {
+          logger.error('Public dashboard error:', error);
+          res.status(500).json({ message: 'Failed to get dashboard data' });
+        }
+      });
+      console.log('Public analytics endpoint setup completed');
+
       console.log('Setting up infrastructure routes...');
       app.use('/api/infrastructure', auth, infrastructureRoutes);
       console.log('Infrastructure routes setup completed');
@@ -447,6 +477,8 @@ const startServer = async () => {
       }
     });
     console.log('Dashboard overview endpoint setup completed');
+
+
 
     console.log('Routes setup completed');
     
