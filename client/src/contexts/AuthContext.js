@@ -32,12 +32,16 @@ export const AuthProvider = ({ children }) => {
 
     // Listen for auth state changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      console.log('Auth state changed:', event, session);
+      // console.log('Auth state changed:', event, session);
       setUser(session?.user || null);
       setLoading(false);
     });
 
-    return () => subscription.unsubscribe();
+    // TEMPORARILY DISABLED TO DEBUG REACT ERROR
+    // return () => subscription.unsubscribe();
+    return () => {
+      // subscription.unsubscribe();
+    };
   }, []);
 
   // Login function
