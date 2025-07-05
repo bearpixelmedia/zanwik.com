@@ -747,7 +747,7 @@ const Users = () => {
                     </div>
 
                     {currentUser?.role === 'admin' &&
-                      user.id !== currentUser.id && (
+                      user.id !== currentUser?.id && (
                         <div className='flex items-center space-x-2'>
                           <select
                             value={user.role}
@@ -1017,7 +1017,7 @@ const Users = () => {
 
             {/* Actions */}
             {currentUser?.role === 'admin' &&
-              selectedUser.id !== currentUser.id && (
+              selectedUser.id !== currentUser?.id && (
                 <div className='mt-6 pt-6 border-t'>
                   <h3 className='font-medium text-foreground mb-3'>Actions</h3>
                   <div className='flex space-x-2'>

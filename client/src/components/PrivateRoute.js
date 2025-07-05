@@ -270,7 +270,7 @@ const PrivateRoute = ({
   const hasRequiredRole = () => {
     if (!requiredRole) return true;
     if (!user?.role) return false;
-    return user.role === requiredRole || user.role === 'admin';
+    return user?.role === requiredRole || user?.role === 'admin';
   };
 
   // Check if user has required permissions
@@ -278,7 +278,7 @@ const PrivateRoute = ({
     if (requiredPermissions.length === 0) return true;
     if (!user?.permissions) return false;
     return requiredPermissions.every(permission =>
-      user.permissions.includes(permission)
+      user?.permissions?.includes(permission)
     );
   };
 
