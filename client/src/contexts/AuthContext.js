@@ -178,69 +178,133 @@ export const AuthProvider = ({ children }) => {
     [user?.id]
   );
 
-  // Initialize auth - only runs once
+  // Memoize context value
+  const contextValue = React.useMemo(
+    () => ({
+      user,
+      session,
+      userProfile,
+      loading,
+      isAuthenticated,
+      loginHistory,
+      securityEvents,
+      login,
+      register,
+      logout,
+      updateProfile,
+      changePassword,
+      hasPermission,
+      hasRole,
+      getProjectPermissions,
+      updatePreferences,
+      getUserRoleInfo,
+      getSecurityEvents,
+      refreshSession,
+      getSessionInfo,
+      lastActivity,
+      sessionTimeout,
+    }),
+    [
+      user,
+      session,
+      userProfile,
+      loading,
+      isAuthenticated,
+      loginHistory,
+      securityEvents,
+      login,
+      register,
+      logout,
+      updateProfile,
+      changePassword,
+      hasPermission,
+      hasRole,
+      getProjectPermissions,
+      updatePreferences,
+      getUserRoleInfo,
+      getSecurityEvents,
+      refreshSession,
+      getSessionInfo,
+      lastActivity,
+      sessionTimeout,
+    ],
+  );
+
+  // Initialize auth state and set up listeners
   useEffect(() => {
     if (initializingRef.current) return;
     initializingRef.current = true;
 
-    console.log('AuthContext: Starting initialization');
-
     const initAuth = async () => {
       try {
-        console.log('AuthContext: Getting initial session');
-
-        // Get initial session with timeout
-        const sessionPromise = supabase.auth.getSession();
-        const timeoutPromise = new Promise((_, reject) =>
-          setTimeout(() => reject(new Error('Session timeout')), 3000),
-        );
-
-        const {
-          data: { session },
-        } = await Promise.race([sessionPromise, timeoutPromise]);
-
-        console.log('AuthContext: Session check completed', !!session);
-
-        if (session?.user && mountedRef.current) {
-          console.log('AuthContext: User found, initializing');
-          await initializeUser(session.user, session);
-        } else if (mountedRef.current) {
-          console.log(
-            'AuthContext: No user found, setting unauthenticated state',
-          );
-          setUser(null);
-          setSession(null);
-          setUserProfile(null);
-          setIsAuthenticated(false);
-        }
-      } catch (error) {
-        console.error('Auth initialization failed:', error);
-        if (mountedRef.current) {
-          setUser(null);
-          setSession(null);
-          setUserProfile(null);
-          setIsAuthenticated(false);
-        }
-      } finally {
-        if (mountedRef.current) {
-          console.log('AuthContext: Setting loading to false');
+        console.log('AuthContext: Initializing auth state');
+        
+        // Get current session
+        const { data: { session: currentSession } } = await supabase.auth.getSession();
+        
+        if (currentSession?.user) {
+          console.log('AuthContext: Found existing session for user:', currentSession.user.email);
+          await initializeUser(currentSession.user, currentSession);
+        } else {
+          console.log('AuthContext: No existing session found');
           setLoading(false);
         }
+      } catch (error) {
+        console.error('AuthContext: Error initializing auth:', error);
+        setLoading(false);
       }
     };
 
-    // Add a fallback timeout to ensure loading is always set to false
+    // Set up auth listener - only once
+    console.log('AuthContext: Setting up auth listener');
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (!mountedRef.current) return;
+
+      console.log('AuthContext: Auth state changed:', event);
+
+      if (event === 'SIGNED_IN' && session?.user) {
+        await initializeUser(session.user, session);
+        addSecurityEvent('SIGNED_IN', 'User signed in successfully');
+      } else if (event === 'SIGNED_OUT') {
+        setUser(null);
+        setSession(null);
+        setUserProfile(null);
+        setIsAuthenticated(false);
+        addSecurityEvent('SIGNED_OUT', 'User signed out');
+      } else if (event === 'TOKEN_REFRESHED' && session?.user) {
+        setSession(session);
+        setLastActivity(Date.now());
+        addSecurityEvent('TOKEN_REFRESHED', 'Session token refreshed');
+      }
+
+      if (mountedRef.current) {
+        setLoading(false);
+      }
+    });
+
+    // Store subscription reference
+    authListenerRef.current = subscription;
+
+    // Initialize auth state
+    initAuth();
+
+    // Set up fallback timeout
     const fallbackTimeout = setTimeout(() => {
       if (mountedRef.current && loading) {
-        console.log('AuthContext: Fallback timeout - setting loading to false');
+        console.log('AuthContext: Fallback timeout reached, stopping loading');
         setLoading(false);
       }
     }, 5000);
 
-    initAuth();
-
     return () => {
+      if (authListenerRef.current) {
+        authListenerRef.current.unsubscribe();
+        authListenerRef.current = null;
+      }
       clearTimeout(fallbackTimeout);
+      mountedRef.current = false;
     };
   }, [initializeUser, addSecurityEvent]);
 
@@ -533,87 +597,6 @@ export const AuthProvider = ({ children }) => {
       willExpireSoon: timeLeft <= 5 * 60 * 1000, // 5 minutes
     };
   }, [session]);
-
-  // Memoize context value
-  const contextValue = React.useMemo(
-    () => ({
-      user,
-      session,
-      userProfile,
-      loading,
-      isAuthenticated,
-      loginHistory,
-      securityEvents,
-      login,
-      register,
-      logout,
-      updateProfile,
-      changePassword,
-      hasPermission,
-      hasRole,
-      getProjectPermissions,
-      updatePreferences,
-      getUserRoleInfo,
-      getSecurityEvents,
-      refreshSession,
-      getSessionInfo,
-      lastActivity,
-      sessionTimeout,
-    }),
-    [
-      user,
-      session,
-      userProfile,
-      loading,
-      isAuthenticated,
-      loginHistory,
-      securityEvents,
-      login,
-      register,
-      logout,
-      updateProfile,
-      changePassword,
-      hasPermission,
-      hasRole,
-      getProjectPermissions,
-      updatePreferences,
-      getUserRoleInfo,
-      getSecurityEvents,
-      refreshSession,
-      getSessionInfo,
-      lastActivity,
-      sessionTimeout,
-    ],
-  );
-
-  // Set up auth listener - only once
-  console.log('AuthContext: Setting up auth listener');
-  const {
-    data: { subscription },
-  } = supabase.auth.onAuthStateChange(async (event, session) => {
-    if (!mountedRef.current) return;
-
-    console.log('AuthContext: Auth state changed:', event);
-
-    if (event === 'SIGNED_IN' && session?.user) {
-      await initializeUser(session.user, session);
-      addSecurityEvent('SIGNED_IN', 'User signed in successfully');
-    } else if (event === 'SIGNED_OUT') {
-      setUser(null);
-      setSession(null);
-      setUserProfile(null);
-      setIsAuthenticated(false);
-      addSecurityEvent('SIGNED_OUT', 'User signed out');
-    } else if (event === 'TOKEN_REFRESHED' && session?.user) {
-      setSession(session);
-      setLastActivity(Date.now());
-      addSecurityEvent('TOKEN_REFRESHED', 'Session token refreshed');
-    }
-
-    if (mountedRef.current) {
-      setLoading(false);
-    }
-  });
 
   return (
     <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
