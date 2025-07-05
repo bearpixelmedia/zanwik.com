@@ -59,7 +59,13 @@
     "build": "react-scripts build",
     "vercel-build": "CI=false GENERATE_SOURCEMAP=false react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint": "eslint src --ext .js,.jsx,.ts,.tsx",
+    "lint:fix": "eslint src --ext .js,.jsx,.ts,.tsx --fix",
+    "format": "prettier --write src/**/*.{js,jsx,ts,tsx,css,md,json}",
+    "format:check": "prettier --check src/**/*.{js,jsx,ts,tsx,css,md,json}",
+    "type-check": "tsc --noEmit",
+    "prepare": "husky install"
   },
   "eslintConfig": {
     "extends": [
@@ -83,9 +89,25 @@
     "@tailwindcss/aspect-ratio": "^0.4.2",
     "@tailwindcss/forms": "^0.5.3",
     "@tailwindcss/typography": "^0.5.9",
+    "@types/lodash": "^4.14.202",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
     "autoprefixer": "^10.4.14",
+    "eslint": "^8.45.0",
+    "eslint-config-prettier": "^8.10.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-jsx-a11y": "^6.7.1",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-react": "^7.33.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.2.3",
     "postcss": "^8.4.24",
-    "tailwindcss": "^3.3.0"
+    "prettier": "^2.8.8",
+    "tailwindcss": "^3.3.0",
+    "typescript": "^5.1.6"
   },
   "proxy": "http://localhost:3000"
 }

@@ -2,13 +2,133 @@ import { supabase } from './supabase';
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://money-production-55af.up.railway.app/api';
 
-// Helper function to get auth token
-const getAuthToken = async () => {
-  const { data: { session } } = await supabase.auth.getSession();
-  return session?.access_token;
+// Enhanced error handling
+class APIError extends Error {
+  constructor(message, status, code, details) {
+    super(message);
+    this.name = 'APIError';
+    this.status = status;
+    this.code = code;
+    this.details = details;
+    this.timestamp = new Date().toISOString();
+  }
+}
+
+// Request/Response cache
+const cache = new Map();
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+
+// Request queue for rate limiting
+const requestQueue = [];
+let isProcessingQueue = false;
+const RATE_LIMIT_DELAY = 100; // 100ms between requests
+
+// Performance monitoring
+const performanceMetrics = {
+  requests: 0,
+  errors: 0,
+  averageResponseTime: 0,
+  totalResponseTime: 0,
 };
 
-// Helper function for API calls
+// Enhanced auth token management
+const getAuthToken = async () => {
+  try {
+    const { data: { session } } = await supabase.auth.getSession();
+    return session?.access_token;
+  } catch (error) {
+    console.error('Failed to get auth token:', error);
+    return null;
+  }
+};
+
+// Request interceptor
+const requestInterceptor = async (config) => {
+  // Add request ID for tracking
+  config.requestId = `req_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  
+  // Add performance tracking
+  config.startTime = performance.now();
+  
+  // Add retry count
+  config.retryCount = config.retryCount || 0;
+  
+  return config;
+};
+
+// Response interceptor
+const responseInterceptor = async (response, config) => {
+  const endTime = performance.now();
+  const responseTime = endTime - config.startTime;
+  
+  // Update performance metrics
+  performanceMetrics.requests++;
+  performanceMetrics.totalResponseTime += responseTime;
+  performanceMetrics.averageResponseTime = performanceMetrics.totalResponseTime / performanceMetrics.requests;
+  
+  // Log performance data
+  if (responseTime > 1000) {
+    console.warn(`Slow API request: ${config.requestId} took ${responseTime.toFixed(2)}ms`);
+  }
+  
+  return response;
+};
+
+// Retry logic
+const shouldRetry = (error, retryCount) => {
+  const retryableStatuses = [408, 429, 500, 502, 503, 504];
+  const maxRetries = 3;
+  
+  return retryCount < maxRetries && (
+    retryableStatuses.includes(error.status) ||
+    error.message.includes('network') ||
+    error.message.includes('timeout')
+  );
+};
+
+// Cache management
+const getCachedResponse = (key) => {
+  const cached = cache.get(key);
+  if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
+    return cached.data;
+  }
+  cache.delete(key);
+  return null;
+};
+
+const setCachedResponse = (key, data) => {
+  cache.set(key, {
+    data,
+    timestamp: Date.now(),
+  });
+};
+
+// Request queue processing
+const processQueue = async () => {
+  if (isProcessingQueue || requestQueue.length === 0) return;
+  
+  isProcessingQueue = true;
+  
+  while (requestQueue.length > 0) {
+    const { resolve, reject, requestFn } = requestQueue.shift();
+    
+    try {
+      const result = await requestFn();
+      resolve(result);
+    } catch (error) {
+      reject(error);
+    }
+    
+    // Rate limiting delay
+    if (requestQueue.length > 0) {
+      await new Promise(resolve => setTimeout(resolve, RATE_LIMIT_DELAY));
+    }
+  }
+  
+  isProcessingQueue = false;
+};
+
+// Enhanced API call with all features
 const apiCall = async (endpoint, options = {}) => {
   const token = await getAuthToken();
   
@@ -21,22 +141,94 @@ const apiCall = async (endpoint, options = {}) => {
     ...options,
   };
 
-  try {
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
-    
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+  // Apply request interceptor
+  await requestInterceptor(config);
+
+  // Check cache for GET requests
+  if (options.method === 'GET' || !options.method) {
+    const cacheKey = `${endpoint}_${JSON.stringify(options)}`;
+    const cached = getCachedResponse(cacheKey);
+    if (cached) {
+      return cached;
     }
-    
-    return await response.json();
-  } catch (error) {
-    console.error('API call failed:', error);
-    throw error;
   }
+
+  const makeRequest = async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
+      
+      // Apply response interceptor
+      await responseInterceptor(response, config);
+      
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new APIError(
+          errorData.message || `HTTP error! status: ${response.status}`,
+          response.status,
+          errorData.code,
+          errorData.details
+        );
+      }
+      
+      const data = await response.json();
+      
+      // Cache successful GET responses
+      if (options.method === 'GET' || !options.method) {
+        const cacheKey = `${endpoint}_${JSON.stringify(options)}`;
+        setCachedResponse(cacheKey, data);
+      }
+      
+      return data;
+    } catch (error) {
+      performanceMetrics.errors++;
+      
+      // Retry logic
+      if (shouldRetry(error, config.retryCount)) {
+        config.retryCount++;
+        console.warn(`Retrying request (${config.retryCount}/3):`, endpoint);
+        
+        // Exponential backoff
+        const delay = Math.pow(2, config.retryCount) * 1000;
+        await new Promise(resolve => setTimeout(resolve, delay));
+        
+        return makeRequest();
+      }
+      
+      // Enhanced error logging
+      console.error('API call failed:', {
+        endpoint,
+        requestId: config.requestId,
+        error: error.message,
+        status: error.status,
+        retryCount: config.retryCount,
+      });
+      
+      throw error;
+    }
+  };
+
+  // Queue the request for rate limiting
+  return new Promise((resolve, reject) => {
+    requestQueue.push({
+      resolve,
+      reject,
+      requestFn: makeRequest,
+    });
+    processQueue();
+  });
 };
 
-// Projects API
+// Cache management utilities
+export const clearCache = () => cache.clear();
+
+export const getCacheStats = () => ({
+  size: cache.size,
+  keys: Array.from(cache.keys()),
+});
+
+export const getPerformanceMetrics = () => ({ ...performanceMetrics });
+
+// Enhanced API modules with better error handling and features
 export const projectsAPI = {
   // Get all projects with filtering and pagination
   getProjects: (params = {}) => {
@@ -220,51 +412,101 @@ export const usersAPI = {
   }),
 };
 
-// Real-time WebSocket connection
+// WebSocket connection management
+let wsConnection = null;
+let reconnectAttempts = 0;
+const MAX_RECONNECT_ATTEMPTS = 5;
+
 export const initializeWebSocket = (userId) => {
-  const socket = new WebSocket(`ws://localhost:3000`);
-  
-  socket.onopen = () => {
-    console.log('WebSocket connected');
-    socket.send(JSON.stringify({ type: 'join-user', userId }));
-  };
-  
-  socket.onmessage = (event) => {
-    const data = JSON.parse(event.data);
-    console.log('WebSocket message:', data);
-    
-    // Handle different types of real-time updates
-    switch (data.type) {
-      case 'project-created':
-        // Handle project creation
-        break;
-      case 'project-updated':
-        // Handle project update
-        break;
-      case 'project-deleted':
-        // Handle project deletion
-        break;
-      case 'alert-created':
-        // Handle new alert
-        break;
-      default:
-        console.log('Unknown message type:', data.type);
+  if (wsConnection) {
+    wsConnection.close();
+  }
+
+  const connect = () => {
+    try {
+      wsConnection = new WebSocket(`${API_BASE_URL.replace('http', 'ws')}/ws?userId=${userId}`);
+      
+      wsConnection.onopen = () => {
+        console.log('WebSocket connected');
+        reconnectAttempts = 0;
+      };
+      
+      wsConnection.onmessage = (event) => {
+        try {
+          const data = JSON.parse(event.data);
+          // Handle different message types
+          switch (data.type) {
+            case 'alert':
+              // Handle real-time alerts
+              break;
+            case 'metric':
+              // Handle real-time metrics
+              break;
+            case 'notification':
+              // Handle notifications
+              break;
+            default:
+              console.log('WebSocket message:', data);
+          }
+        } catch (error) {
+          console.error('Failed to parse WebSocket message:', error);
+        }
+      };
+      
+      wsConnection.onclose = () => {
+        console.log('WebSocket disconnected');
+        if (reconnectAttempts < MAX_RECONNECT_ATTEMPTS) {
+          reconnectAttempts++;
+          const delay = Math.pow(2, reconnectAttempts) * 1000;
+          setTimeout(() => connect(), delay);
+        }
+      };
+      
+      wsConnection.onerror = (error) => {
+        console.error('WebSocket error:', error);
+      };
+    } catch (error) {
+      console.error('Failed to initialize WebSocket:', error);
     }
   };
-  
-  socket.onerror = (error) => {
-    console.error('WebSocket error:', error);
-  };
-  
-  socket.onclose = () => {
-    console.log('WebSocket disconnected');
-  };
-  
-  return socket;
+
+  connect();
+  return wsConnection;
 };
 
-// Health check
-export const healthCheck = () => apiCall('/health');
+export const closeWebSocket = () => {
+  if (wsConnection) {
+    wsConnection.close();
+    wsConnection = null;
+  }
+};
+
+export const sendWebSocketMessage = (message) => {
+  if (wsConnection && wsConnection.readyState === WebSocket.OPEN) {
+    wsConnection.send(JSON.stringify(message));
+  }
+};
+
+// Health check with timeout
+export const healthCheck = () => {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 5000);
+  
+  return fetch(`${API_BASE_URL}/health`, {
+    signal: controller.signal,
+  })
+    .then(response => {
+      clearTimeout(timeoutId);
+      return response.json();
+    })
+    .catch(error => {
+      clearTimeout(timeoutId);
+      throw new APIError('Health check failed', 0, 'HEALTH_CHECK_FAILED', { error: error.message });
+    });
+};
+
+// Export error class for use in components
+export { APIError };
 
 const api = {
   projects: projectsAPI,
