@@ -1,21 +1,51 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { RefreshCw, Bell, Activity, Zap, Shield } from 'lucide-react';
+import { monitoringAPI } from '../utils/api';
 
 const Monitoring = () => {
-  // Static mock data for safe layout rendering
-  const metrics = [
+  // Dynamic metrics state
+  const [metrics, setMetrics] = useState([
     { name: 'Response Time', value: '245ms', change: '+12ms', trend: 'up' },
     { name: 'Error Rate', value: '0.2%', change: '-0.1%', trend: 'down' },
     { name: 'Throughput', value: '1.2k req/s', change: '+150', trend: 'up' },
     { name: 'Uptime', value: '99.9%', change: '+0.1%', trend: 'up' },
-  ];
+  ]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Alerts and system health remain static for now
   const alerts = [
     { id: 1, title: 'High CPU Usage', description: 'CPU usage exceeded 80% threshold', time: '2 minutes ago', service: 'Web Server', status: 'active', severity: 'warning' },
     { id: 2, title: 'Database Connection Slow', description: 'Database response time increased by 200%', time: '5 minutes ago', service: 'Database', status: 'resolved', severity: 'error' },
   ];
   const systemHealth = { overall: 'healthy', services: 4, issues: 1 };
+
+  useEffect(() => {
+    const fetchMetrics = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        // Fetch performance metrics from API
+        const performance = await monitoringAPI.getPerformanceMetrics();
+        // Example: performance.metrics = { responseTime, errorRate, throughput, uptime }
+        if (performance && performance.metrics) {
+          setMetrics([
+            { name: 'Response Time', value: performance.metrics.responseTime || 'N/A', change: '+12ms', trend: 'up' },
+            { name: 'Error Rate', value: performance.metrics.errorRate || 'N/A', change: '-0.1%', trend: 'down' },
+            { name: 'Throughput', value: performance.metrics.throughput || 'N/A', change: '+150', trend: 'up' },
+            { name: 'Uptime', value: performance.metrics.uptime || 'N/A', change: '+0.1%', trend: 'up' },
+          ]);
+        }
+      } catch (err) {
+        setError('Failed to load metrics');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchMetrics();
+  }, []);
 
   return (
     <div className="p-6 space-y-6">
@@ -26,7 +56,7 @@ const Monitoring = () => {
           <p className="text-muted-foreground">Real-time system monitoring and alert management.</p>
         </div>
         <div className="flex items-center space-x-2">
-          <Button variant="outline" disabled>
+          <Button variant="outline" disabled={loading} onClick={() => window.location.reload()}>
             <RefreshCw className="h-4 w-4 mr-2" />
             Refresh
           </Button>
@@ -36,6 +66,12 @@ const Monitoring = () => {
           </Button>
         </div>
       </div>
+
+      {error && (
+        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+          {typeof error === 'string' ? error : JSON.stringify(error)}
+        </div>
+      )}
 
       {/* Key Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
