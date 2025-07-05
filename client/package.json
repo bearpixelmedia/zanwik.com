@@ -56,8 +56,8 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "DISABLE_ESLINT_PLUGIN=true GENERATE_SOURCEMAP=false react-scripts build",
-    "vercel-build": "CI=false GENERATE_SOURCEMAP=false react-scripts build",
+    "build": "DISABLE_ESLINT_PLUGIN=true GENERATE_SOURCEMAP=false CI=false react-scripts build",
+    "vercel-build": "DISABLE_ESLINT_PLUGIN=true GENERATE_SOURCEMAP=false CI=false react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint src --ext .js,.jsx,.ts,.tsx",
