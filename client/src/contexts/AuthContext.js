@@ -18,6 +18,8 @@ export const useAuth = () => {
 };
 
 export const AuthProvider = ({ children }) => {
+  console.log('AuthProvider: Initializing');
+  
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState(null);
@@ -27,6 +29,8 @@ export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [lastActivity, setLastActivity] = useState(Date.now());
   const [sessionTimeout, setSessionTimeout] = useState(30 * 60 * 1000); // 30 minutes
+
+  console.log('AuthProvider: State initialized');
 
   // User roles and permissions mapping
   const userRoles = {
@@ -66,8 +70,11 @@ export const AuthProvider = ({ children }) => {
     },
   };
 
+  console.log('AuthProvider: User roles defined');
+
   // Update last activity on user interaction
   useEffect(() => {
+    console.log('AuthProvider: Setting up activity listeners');
     const updateActivity = () => setLastActivity(Date.now());
 
     const events = [
@@ -88,6 +95,7 @@ export const AuthProvider = ({ children }) => {
 
   // Check session timeout
   useEffect(() => {
+    console.log('AuthProvider: Setting up session timeout check');
     if (!isAuthenticated) return;
 
     const checkSession = () => {
@@ -103,8 +111,10 @@ export const AuthProvider = ({ children }) => {
 
   // Check if user is authenticated on mount
   useEffect(() => {
+    console.log('AuthProvider: Starting auth check');
     const checkAuth = async () => {
       try {
+        console.log('AuthProvider: Getting user and session');
         const {
           data: { user },
         } = await supabase.auth.getUser();
@@ -112,9 +122,13 @@ export const AuthProvider = ({ children }) => {
           data: { session },
         } = await supabase.auth.getSession();
 
+        console.log('AuthProvider: User and session retrieved', { user: !!user, session: !!session });
+
         if (user && session) {
+          console.log('AuthProvider: Initializing user');
           await initializeUser(user, session);
         } else {
+          console.log('AuthProvider: No user or session found');
           setUser(null);
           setSession(null);
           setUserProfile(null);
@@ -133,6 +147,7 @@ export const AuthProvider = ({ children }) => {
     checkAuth();
 
     // Listen for auth state changes
+    console.log('AuthProvider: Setting up auth state listener');
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {

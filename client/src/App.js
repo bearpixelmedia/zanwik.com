@@ -298,7 +298,9 @@ const AppLayout = ({ children }) => {
 
 // Performance monitoring hook
 const usePerformanceMonitoring = () => {
+  console.log('usePerformanceMonitoring: Starting');
   useEffect(() => {
+    console.log('usePerformanceMonitoring: Setting up observer');
     // Monitor page load performance
     if ('performance' in window) {
       const observer = new PerformanceObserver(list => {
@@ -322,9 +324,11 @@ const usePerformanceMonitoring = () => {
 
 // Analytics tracking hook
 const useAnalytics = () => {
+  console.log('useAnalytics: Starting');
   const location = useLocation();
 
   useEffect(() => {
+    console.log('useAnalytics: Setting up analytics');
     // Track page views
     if (process.env.NODE_ENV === 'production') {
       // Example: Google Analytics
@@ -336,8 +340,12 @@ const useAnalytics = () => {
 
 // Main App Component
 const App = () => {
+  console.log('App: Component starting');
+  
   usePerformanceMonitoring();
   useAnalytics();
+
+  console.log('App: About to render');
 
   return (
     <ErrorBoundary>
