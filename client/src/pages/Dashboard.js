@@ -62,7 +62,7 @@ const Dashboard = () => {
       setError(null);
 
       // Fetch dashboard overview
-      const overview = await api.getDashboardOverview();
+      const overview = await api.analytics.getDashboardOverview();
 
       // Use overview data for project stats instead of separate API call
       const projectStats = {

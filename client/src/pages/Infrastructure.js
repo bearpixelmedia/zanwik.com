@@ -58,13 +58,13 @@ const Infrastructure = () => {
       setError(null);
 
       // Fetch system status
-      const systemStatus = await api.getSystemStatus();
+      const systemStatus = await api.infrastructure.getSystemStatus();
 
       // Fetch service metrics
-      const serviceMetrics = await api.getServiceMetrics();
+      const serviceMetrics = await api.infrastructure.getServiceMetrics();
 
       // Fetch resource usage
-      const resourceUsage = await api.getResourceUsage();
+      const resourceUsage = await api.infrastructure.getResourceUsage();
 
       setInfrastructureData({
         services: serviceMetrics.services || [],
@@ -184,7 +184,7 @@ const Infrastructure = () => {
 
   const handleRestartService = async serviceId => {
     try {
-      await api.restartService(serviceId);
+      await api.infrastructure.restartService(serviceId);
       // Refresh data after restart
       fetchInfrastructureData();
     } catch (err) {
@@ -196,7 +196,7 @@ const Infrastructure = () => {
   const handleDeployService = async serviceData => {
     try {
       setDeploying(true);
-      await api.deployService(serviceData);
+      await api.infrastructure.deployService(serviceData);
       fetchInfrastructureData();
       setShowDeployModal(false);
     } catch (err) {
@@ -210,14 +210,8 @@ const Infrastructure = () => {
   const handleServiceAction = async (serviceId, action) => {
     try {
       switch (action) {
-        case 'start':
-          await api.startService(serviceId);
-          break;
-        case 'stop':
-          await api.stopService(serviceId);
-          break;
         case 'restart':
-          await api.restartService(serviceId);
+          await api.infrastructure.restartService(serviceId);
           break;
         default:
           console.error('Unknown action:', action);

@@ -87,7 +87,7 @@ const Projects = () => {
       if (sortBy) params.sortBy = sortBy;
 
       console.log('Fetching projects with params:', params);
-      const response = await api.getProjects(params);
+      const response = await api.projects.getProjects(params);
       console.log('Projects response:', response);
 
       setProjects(response.projects || []);
@@ -211,7 +211,7 @@ const Projects = () => {
 
   const handleViewAnalytics = async projectId => {
     try {
-      const analytics = await api.getProjectAnalytics(projectId);
+      const analytics = await api.projects.getProjectAnalytics(projectId);
       setSelectedProject({ id: projectId, analytics });
       setShowAnalyticsModal(true);
     } catch (err) {
