@@ -9,7 +9,16 @@ import {
   DollarSign,
   Users,
   Target,
-  Loader2
+  Loader2,
+  TrendingUp,
+  Calendar,
+  BarChart3,
+  RefreshCw,
+  Filter,
+  Star,
+  Clock,
+  CheckCircle,
+  AlertCircle
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { Button } from '../components/ui/button';
@@ -23,9 +32,17 @@ const Projects = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showAnalyticsModal, setShowAnalyticsModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
+  const [filterCategory, setFilterCategory] = useState('all');
+  const [sortBy, setSortBy] = useState('created');
+  const [autoRefresh, setAutoRefresh] = useState(false);
+  const [refreshInterval, setRefreshInterval] = useState(60); // seconds
   const [creatingProject, setCreatingProject] = useState(false);
+  const [editingProject, setEditingProject] = useState(null);
+  const [selectedProject, setSelectedProject] = useState(null);
   const [newProject, setNewProject] = useState({
     name: '',
     description: '',
@@ -37,6 +54,22 @@ const Projects = () => {
     fetchProjects();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // Auto-refresh functionality
+  useEffect(() => {
+    if (!autoRefresh) return;
+
+    const interval = setInterval(() => {
+      fetchProjects();
+    }, refreshInterval * 1000);
+
+    return () => clearInterval(interval);
+  }, [autoRefresh, refreshInterval]);
+
+  // Refetch when filters change
+  useEffect(() => {
+    fetchProjects();
+  }, [searchTerm, filterStatus, filterCategory, sortBy]); // eslint-disable-line react-hooks/exhaustive-deps
+
   const fetchProjects = async () => {
     try {
       setLoading(true);
@@ -45,6 +78,8 @@ const Projects = () => {
       const params = {};
       if (searchTerm) params.search = searchTerm;
       if (filterStatus !== 'all') params.status = filterStatus;
+      if (filterCategory !== 'all') params.category = filterCategory;
+      if (sortBy) params.sortBy = sortBy;
       
       console.log('Fetching projects with params:', params);
       const response = await projectsAPI.getProjects(params);
@@ -80,7 +115,9 @@ const Projects = () => {
           users: 156,
           category: "SaaS",
           created: "2024-01-15",
-          lastUpdated: "2024-01-20"
+          lastUpdated: "2024-01-20",
+          priority: "high",
+          progress: 85
         },
         {
           id: 2,
@@ -91,7 +128,9 @@ const Projects = () => {
           users: 89,
           category: "Marketplace",
           created: "2024-01-10",
-          lastUpdated: "2024-01-18"
+          lastUpdated: "2024-01-18",
+          priority: "medium",
+          progress: 60
         },
         {
           id: 3,
@@ -102,18 +141,15 @@ const Projects = () => {
           users: 0,
           category: "Platform",
           created: "2024-01-25",
-          lastUpdated: "2024-01-25"
+          lastUpdated: "2024-01-25",
+          priority: "low",
+          progress: 20
         }
       ]);
     } finally {
       setLoading(false);
     }
   };
-
-  // Refetch when filters change
-  useEffect(() => {
-    fetchProjects();
-  }, [searchTerm, filterStatus]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleCreateProject = async () => {
     if (!newProject.name.trim()) {
@@ -141,6 +177,19 @@ const Projects = () => {
     }
   };
 
+  const handleEditProject = async (projectId, updatedData) => {
+    try {
+      setEditingProject(projectId);
+      const updatedProject = await projectsAPI.updateProject(projectId, updatedData);
+      setProjects(prev => prev.map(p => p.id === projectId ? updatedProject : p));
+      setShowEditModal(false);
+      setEditingProject(null);
+    } catch (err) {
+      console.error('Error updating project:', err);
+      alert('Failed to update project. Please try again.');
+    }
+  };
+
   const handleDeleteProject = async (projectId) => {
     if (!window.confirm('Are you sure you want to delete this project?')) {
       return;
@@ -155,6 +204,17 @@ const Projects = () => {
     }
   };
 
+  const handleViewAnalytics = async (projectId) => {
+    try {
+      const analytics = await projectsAPI.getProjectAnalytics(projectId);
+      setSelectedProject({ id: projectId, analytics });
+      setShowAnalyticsModal(true);
+    } catch (err) {
+      console.error('Error fetching project analytics:', err);
+      alert('Failed to load project analytics. Please try again.');
+    }
+  };
+
   const getStatusColor = (status) => {
     switch (status) {
       case 'active': return 'bg-green-100 text-green-800';
@@ -165,11 +225,28 @@ const Projects = () => {
     }
   };
 
+  const getPriorityIcon = (priority) => {
+    switch (priority) {
+      case 'high': return <Star className="h-4 w-4 text-red-500" />;
+      case 'medium': return <Star className="h-4 w-4 text-yellow-500" />;
+      case 'low': return <Star className="h-4 w-4 text-gray-400" />;
+      default: return <Star className="h-4 w-4 text-gray-400" />;
+    }
+  };
+
+  const getProgressColor = (progress) => {
+    if (progress >= 80) return 'bg-green-500';
+    if (progress >= 60) return 'bg-blue-500';
+    if (progress >= 40) return 'bg-yellow-500';
+    return 'bg-red-500';
+  };
+
   const filteredProjects = projects.filter(project => {
     const matchesSearch = project.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          project.description.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesFilter = filterStatus === 'all' || project.status === filterStatus;
-    return matchesSearch && matchesFilter;
+    const matchesStatus = filterStatus === 'all' || project.status === filterStatus;
+    const matchesCategory = filterCategory === 'all' || project.category === filterCategory;
+    return matchesSearch && matchesStatus && matchesCategory;
   });
 
   if (loading) {
@@ -191,10 +268,36 @@ const Projects = () => {
           <h1 className="text-3xl font-bold text-foreground">Projects</h1>
           <p className="text-muted-foreground">Manage your money-making projects and track their performance.</p>
         </div>
-        <Button onClick={() => setShowCreateModal(true)}>
-          <Plus className="h-4 w-4 mr-2" />
-          Create Project
-        </Button>
+        <div className="flex items-center space-x-2">
+          {/* Auto-refresh controls */}
+          <div className="flex items-center space-x-2 mr-4">
+            <Button 
+              variant={autoRefresh ? "default" : "outline"} 
+              size="sm"
+              onClick={() => setAutoRefresh(!autoRefresh)}
+            >
+              <RefreshCw className={`h-4 w-4 mr-2 ${autoRefresh ? 'animate-spin' : ''}`} />
+              {autoRefresh ? 'Auto-refresh ON' : 'Auto-refresh OFF'}
+            </Button>
+            {autoRefresh && (
+              <select
+                value={refreshInterval}
+                onChange={(e) => setRefreshInterval(Number(e.target.value))}
+                className="px-2 py-1 text-sm border border-border rounded bg-background"
+              >
+                <option value={30}>30s</option>
+                <option value={60}>1m</option>
+                <option value={300}>5m</option>
+                <option value={900}>15m</option>
+              </select>
+            )}
+          </div>
+          
+          <Button onClick={() => setShowCreateModal(true)}>
+            <Plus className="h-4 w-4 mr-2" />
+            Create Project
+          </Button>
+        </div>
       </div>
 
       {/* Error Message */}
@@ -239,6 +342,29 @@ const Projects = () => {
           <option value="planning">Planning</option>
           <option value="paused">Paused</option>
         </select>
+        <select
+          value={filterCategory}
+          onChange={(e) => setFilterCategory(e.target.value)}
+          className="px-4 py-2 border border-input rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+        >
+          <option value="all">All Categories</option>
+          <option value="SaaS">SaaS</option>
+          <option value="Marketplace">Marketplace</option>
+          <option value="Platform">Platform</option>
+          <option value="Service">Service</option>
+          <option value="Product">Product</option>
+        </select>
+        <select
+          value={sortBy}
+          onChange={(e) => setSortBy(e.target.value)}
+          className="px-4 py-2 border border-input rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+        >
+          <option value="created">Date Created</option>
+          <option value="updated">Last Updated</option>
+          <option value="revenue">Revenue</option>
+          <option value="users">Users</option>
+          <option value="name">Name</option>
+        </select>
       </div>
 
       {/* Projects Grid */}
@@ -248,7 +374,10 @@ const Projects = () => {
             <CardHeader>
               <div className="flex items-start justify-between">
                 <div className="flex-1">
-                  <CardTitle className="text-lg">{project.name}</CardTitle>
+                  <div className="flex items-center space-x-2 mb-2">
+                    <CardTitle className="text-lg">{project.name}</CardTitle>
+                    {getPriorityIcon(project.priority)}
+                  </div>
                   <CardDescription className="mt-2">{project.description}</CardDescription>
                 </div>
                 <div className="relative">
@@ -260,12 +389,26 @@ const Projects = () => {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {/* Status */}
+                {/* Status and Progress */}
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-muted-foreground">Status</span>
                   <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(project.status)}`}>
                     {project.status.charAt(0).toUpperCase() + project.status.slice(1)}
                   </span>
+                </div>
+                
+                {/* Progress Bar */}
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Progress</span>
+                    <span className="font-medium">{project.progress || 0}%</span>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div 
+                      className={`h-2 rounded-full transition-all duration-300 ${getProgressColor(project.progress || 0)}`}
+                      style={{ width: `${project.progress || 0}%` }}
+                    ></div>
+                  </div>
                 </div>
 
                 {/* Stats */}
@@ -293,13 +436,32 @@ const Projects = () => {
                   </div>
                 </div>
 
+                {/* Last Updated */}
+                <div className="flex items-center text-xs text-muted-foreground">
+                  <Clock className="h-3 w-3 mr-1" />
+                  Updated {new Date(project.lastUpdated).toLocaleDateString()}
+                </div>
+
                 {/* Actions */}
                 <div className="flex space-x-2 pt-2">
-                  <Button variant="outline" size="sm" className="flex-1">
-                    <Eye className="h-4 w-4 mr-1" />
-                    View
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="flex-1"
+                    onClick={() => handleViewAnalytics(project.id)}
+                  >
+                    <BarChart3 className="h-4 w-4 mr-1" />
+                    Analytics
                   </Button>
-                  <Button variant="outline" size="sm" className="flex-1">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="flex-1"
+                    onClick={() => {
+                      setEditingProject(project);
+                      setShowEditModal(true);
+                    }}
+                  >
                     <Edit className="h-4 w-4 mr-1" />
                     Edit
                   </Button>
@@ -407,6 +569,179 @@ const Projects = () => {
                     'Create Project'
                   )}
                 </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      {/* Edit Project Modal */}
+      {showEditModal && editingProject && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <Card className="w-full max-w-md mx-4">
+            <CardHeader>
+              <CardTitle>Edit Project</CardTitle>
+              <CardDescription>Update project details and settings</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <label className="text-sm font-medium text-foreground">Project Name</label>
+                <input
+                  type="text"
+                  placeholder="Enter project name"
+                  value={editingProject.name}
+                  onChange={(e) => setEditingProject(prev => ({ ...prev, name: e.target.value }))}
+                  className="w-full mt-1 px-3 py-2 border border-input rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                />
+              </div>
+              <div>
+                <label className="text-sm font-medium text-foreground">Description</label>
+                <textarea
+                  placeholder="Describe your project"
+                  rows={3}
+                  value={editingProject.description}
+                  onChange={(e) => setEditingProject(prev => ({ ...prev, description: e.target.value }))}
+                  className="w-full mt-1 px-3 py-2 border border-input rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="text-sm font-medium text-foreground">Category</label>
+                  <select 
+                    value={editingProject.category}
+                    onChange={(e) => setEditingProject(prev => ({ ...prev, category: e.target.value }))}
+                    className="w-full mt-1 px-3 py-2 border border-input rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                  >
+                    <option value="SaaS">SaaS</option>
+                    <option value="Marketplace">Marketplace</option>
+                    <option value="Platform">Platform</option>
+                    <option value="Service">Service</option>
+                    <option value="Product">Product</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-foreground">Status</label>
+                  <select 
+                    value={editingProject.status}
+                    onChange={(e) => setEditingProject(prev => ({ ...prev, status: e.target.value }))}
+                    className="w-full mt-1 px-3 py-2 border border-input rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                  >
+                    <option value="planning">Planning</option>
+                    <option value="development">Development</option>
+                    <option value="active">Active</option>
+                    <option value="paused">Paused</option>
+                  </select>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="text-sm font-medium text-foreground">Progress (%)</label>
+                  <input
+                    type="number"
+                    min="0"
+                    max="100"
+                    value={editingProject.progress || 0}
+                    onChange={(e) => setEditingProject(prev => ({ ...prev, progress: parseInt(e.target.value) || 0 }))}
+                    className="w-full mt-1 px-3 py-2 border border-input rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-foreground">Priority</label>
+                  <select 
+                    value={editingProject.priority || 'medium'}
+                    onChange={(e) => setEditingProject(prev => ({ ...prev, priority: e.target.value }))}
+                    className="w-full mt-1 px-3 py-2 border border-input rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                  >
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                  </select>
+                </div>
+              </div>
+              <div className="flex space-x-2 pt-4">
+                <Button 
+                  variant="outline" 
+                  className="flex-1" 
+                  onClick={() => {
+                    setShowEditModal(false);
+                    setEditingProject(null);
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button 
+                  className="flex-1" 
+                  onClick={() => handleEditProject(editingProject.id, editingProject)}
+                >
+                  Update Project
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      {/* Analytics Modal */}
+      {showAnalyticsModal && selectedProject && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <Card className="w-full max-w-4xl mx-4 max-h-[90vh] overflow-y-auto">
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle>Project Analytics</CardTitle>
+                  <CardDescription>Detailed performance metrics and insights</CardDescription>
+                </div>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => {
+                    setShowAnalyticsModal(false);
+                    setSelectedProject(null);
+                  }}
+                >
+                  ×
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              {/* Analytics content would go here */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <Card>
+                  <CardContent className="p-4">
+                    <div className="flex items-center space-x-2">
+                      <TrendingUp className="h-5 w-5 text-green-500" />
+                      <span className="font-medium">Revenue Growth</span>
+                    </div>
+                    <p className="text-2xl font-bold mt-2">+15.2%</p>
+                    <p className="text-sm text-muted-foreground">vs last month</p>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardContent className="p-4">
+                    <div className="flex items-center space-x-2">
+                      <Users className="h-5 w-5 text-blue-500" />
+                      <span className="font-medium">User Growth</span>
+                    </div>
+                    <p className="text-2xl font-bold mt-2">+8.7%</p>
+                    <p className="text-sm text-muted-foreground">vs last month</p>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardContent className="p-4">
+                    <div className="flex items-center space-x-2">
+                      <Target className="h-5 w-5 text-purple-500" />
+                      <span className="font-medium">Conversion</span>
+                    </div>
+                    <p className="text-2xl font-bold mt-2">3.2%</p>
+                    <p className="text-sm text-muted-foreground">current rate</p>
+                  </CardContent>
+                </Card>
+              </div>
+              
+              <div className="text-center py-8 text-muted-foreground">
+                <BarChart3 className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                <p>Detailed analytics coming soon...</p>
+                <p className="text-sm">This will include charts, trends, and actionable insights.</p>
               </div>
             </CardContent>
           </Card>

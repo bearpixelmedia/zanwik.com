@@ -6,7 +6,12 @@ import {
   Users, 
   ShoppingCart,
   Download,
-  Loader2
+  Loader2,
+  Calendar,
+  BarChart3,
+  PieChart,
+  RefreshCw,
+  Filter
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { Button } from '../components/ui/button';
@@ -16,16 +21,31 @@ const Analytics = () => {
   const [timeRange, setTimeRange] = useState('30d');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [autoRefresh, setAutoRefresh] = useState(false);
+  const [refreshInterval, setRefreshInterval] = useState(60); // seconds
+  const [selectedMetric, setSelectedMetric] = useState('revenue');
   const [analyticsData, setAnalyticsData] = useState({
     revenue: [],
     topProjects: [],
     userMetrics: {},
-    financialMetrics: {}
+    financialMetrics: {},
+    chartData: []
   });
 
   useEffect(() => {
     fetchAnalyticsData();
   }, [timeRange]);
+
+  // Auto-refresh functionality
+  useEffect(() => {
+    if (!autoRefresh) return;
+
+    const interval = setInterval(() => {
+      fetchAnalyticsData();
+    }, refreshInterval * 1000);
+
+    return () => clearInterval(interval);
+  }, [autoRefresh, refreshInterval]);
 
   const fetchAnalyticsData = async () => {
     try {
@@ -41,17 +61,30 @@ const Analytics = () => {
       // Fetch project performance
       const projectData = await analyticsAPI.getProjectPerformance(timeRange);
 
+      // Generate chart data for visualization
+      const chartData = generateChartData(revenueData.revenue || [], timeRange);
+
       setAnalyticsData({
         revenue: revenueData.revenue || [],
         topProjects: projectData.projects || [],
         userMetrics: userData.metrics || {},
-        financialMetrics: revenueData.metrics || {}
+        financialMetrics: revenueData.metrics || {},
+        chartData: chartData
       });
     } catch (err) {
       console.error('Failed to fetch analytics data:', err);
       setError('Failed to load analytics data');
       
       // Fallback to mock data
+      const mockChartData = generateChartData([
+        { month: 'Jan', revenue: 4500, growth: 12 },
+        { month: 'Feb', revenue: 5200, growth: 15 },
+        { month: 'Mar', revenue: 4800, growth: -8 },
+        { month: 'Apr', revenue: 6100, growth: 27 },
+        { month: 'May', revenue: 5800, growth: -5 },
+        { month: 'Jun', revenue: 7200, growth: 24 }
+      ], timeRange);
+
       setAnalyticsData({
         revenue: [
           { month: 'Jan', revenue: 4500, growth: 12 },
@@ -78,11 +111,32 @@ const Analytics = () => {
           monthlyGrowth: 15.2,
           averageOrder: 89.50,
           conversionRate: 3.2
-        }
+        },
+        chartData: mockChartData
       });
     } finally {
       setLoading(false);
     }
+  };
+
+  // Generate chart data for visualization
+  const generateChartData = (revenueData, range) => {
+    if (!revenueData || revenueData.length === 0) return [];
+    
+    return revenueData.map(item => ({
+      name: item.month || item.period,
+      revenue: item.revenue || 0,
+      growth: item.growth || 0,
+      users: item.users || 0
+    }));
+  };
+
+  // Calculate growth trend
+  const calculateGrowthTrend = (data) => {
+    if (!data || data.length < 2) return 0;
+    const recent = data[data.length - 1];
+    const previous = data[data.length - 2];
+    return ((recent.revenue - previous.revenue) / previous.revenue) * 100;
   };
 
   const handleExport = async () => {
@@ -97,8 +151,72 @@ const Analytics = () => {
       document.body.removeChild(link);
     } catch (err) {
       console.error('Export failed:', err);
-      alert('Failed to export data');
+      // Fallback: Create CSV from current data
+      const csvContent = generateCSVFromData(analyticsData, timeRange);
+      downloadCSV(csvContent, `analytics-${timeRange}.csv`);
     }
+  };
+
+  const handleExportAll = async () => {
+    try {
+      // Export multiple formats
+      const formats = ['csv', 'json', 'xlsx'];
+      for (const format of formats) {
+        const exportData = await analyticsAPI.exportAnalytics('all', timeRange, format);
+        const link = document.createElement('a');
+        link.href = exportData.downloadUrl;
+        link.download = `analytics-${timeRange}.${format}`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+    } catch (err) {
+      console.error('Export failed:', err);
+      // Fallback: Export available formats
+      const csvContent = generateCSVFromData(analyticsData, timeRange);
+      const jsonContent = JSON.stringify(analyticsData, null, 2);
+      
+      downloadCSV(csvContent, `analytics-${timeRange}.csv`);
+      downloadJSON(jsonContent, `analytics-${timeRange}.json`);
+    }
+  };
+
+  // Fallback export functions
+  const generateCSVFromData = (data, period) => {
+    const headers = ['Metric', 'Value', 'Period'];
+    const rows = [
+      ['Total Revenue', `$${data.financialMetrics.totalRevenue || 0}`, period],
+      ['Active Users', data.userMetrics.active || 0, period],
+      ['Conversion Rate', `${data.financialMetrics.conversionRate || 0}%`, period],
+      ['Average Order', `$${data.financialMetrics.averageOrder || 0}`, period],
+      ['Monthly Growth', `${data.financialMetrics.monthlyGrowth || 0}%`, period],
+    ];
+    
+    return [headers, ...rows].map(row => row.join(',')).join('\n');
+  };
+
+  const downloadCSV = (content, filename) => {
+    const blob = new Blob([content], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+  };
+
+  const downloadJSON = (content, filename) => {
+    const blob = new Blob([content], { type: 'application/json' });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
   };
 
   if (loading) {
@@ -121,6 +239,30 @@ const Analytics = () => {
           <p className="text-muted-foreground">Track your business performance and revenue growth.</p>
         </div>
         <div className="flex items-center space-x-2">
+          {/* Auto-refresh controls */}
+          <div className="flex items-center space-x-2 mr-4">
+            <Button 
+              variant={autoRefresh ? "default" : "outline"} 
+              size="sm"
+              onClick={() => setAutoRefresh(!autoRefresh)}
+            >
+              <RefreshCw className={`h-4 w-4 mr-2 ${autoRefresh ? 'animate-spin' : ''}`} />
+              {autoRefresh ? 'Auto-refresh ON' : 'Auto-refresh OFF'}
+            </Button>
+            {autoRefresh && (
+              <select
+                value={refreshInterval}
+                onChange={(e) => setRefreshInterval(Number(e.target.value))}
+                className="px-2 py-1 text-sm border border-border rounded bg-background"
+              >
+                <option value={30}>30s</option>
+                <option value={60}>1m</option>
+                <option value={300}>5m</option>
+                <option value={900}>15m</option>
+              </select>
+            )}
+          </div>
+
           <select
             value={timeRange}
             onChange={(e) => setTimeRange(e.target.value)}
@@ -131,9 +273,15 @@ const Analytics = () => {
             <option value="90d">Last 90 days</option>
             <option value="1y">Last year</option>
           </select>
+          
           <Button variant="outline" onClick={handleExport}>
             <Download className="h-4 w-4 mr-2" />
-            Export
+            Export CSV
+          </Button>
+          
+          <Button variant="outline" onClick={handleExportAll}>
+            <Download className="h-4 w-4 mr-2" />
+            Export All
           </Button>
         </div>
       </div>
@@ -232,24 +380,63 @@ const Analytics = () => {
         {/* Revenue Chart */}
         <Card className="lg:col-span-2">
           <CardHeader>
-            <CardTitle>Revenue Trend</CardTitle>
-            <CardDescription>Monthly revenue performance over time</CardDescription>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle>Revenue Trend</CardTitle>
+                <CardDescription>Monthly revenue performance over time</CardDescription>
+              </div>
+              <div className="flex items-center space-x-2">
+                <select
+                  value={selectedMetric}
+                  onChange={(e) => setSelectedMetric(e.target.value)}
+                  className="px-2 py-1 text-sm border border-border rounded bg-background"
+                >
+                  <option value="revenue">Revenue</option>
+                  <option value="users">Users</option>
+                  <option value="growth">Growth</option>
+                </select>
+              </div>
+            </div>
           </CardHeader>
           <CardContent>
             {analyticsData.revenue.length > 0 ? (
               <div className="h-64 flex items-end justify-between space-x-2">
-                {analyticsData.revenue.map((data, index) => (
-                  <div key={index} className="flex-1 flex flex-col items-center">
-                    <div className="w-full bg-primary/20 rounded-t-sm" 
-                         style={{ height: `${(data.revenue / 8000) * 200}px` }}>
+                {analyticsData.revenue.map((data, index) => {
+                  const maxValue = Math.max(...analyticsData.revenue.map(d => 
+                    selectedMetric === 'revenue' ? d.revenue : 
+                    selectedMetric === 'users' ? (d.users || 0) : 
+                    Math.abs(d.growth || 0)
+                  ));
+                  const currentValue = selectedMetric === 'revenue' ? data.revenue : 
+                                     selectedMetric === 'users' ? (data.users || 0) : 
+                                     Math.abs(data.growth || 0);
+                  const height = maxValue > 0 ? (currentValue / maxValue) * 200 : 0;
+                  
+                  return (
+                    <div key={index} className="flex-1 flex flex-col items-center group cursor-pointer">
+                      <div 
+                        className={`w-full rounded-t-sm transition-all duration-200 group-hover:opacity-80 ${
+                          selectedMetric === 'revenue' ? 'bg-primary/20' :
+                          selectedMetric === 'users' ? 'bg-blue-500/20' :
+                          'bg-green-500/20'
+                        }`}
+                        style={{ height: `${height}px` }}
+                      >
+                      </div>
+                      <div className="text-xs text-muted-foreground mt-2">{data.month}</div>
+                      <div className="text-xs font-medium">
+                        {selectedMetric === 'revenue' ? `$${data.revenue}` :
+                         selectedMetric === 'users' ? data.users || 0 :
+                         `${data.growth > 0 ? '+' : ''}${data.growth}%`}
+                      </div>
+                      {selectedMetric === 'revenue' && (
+                        <div className={`text-xs ${data.growth > 0 ? 'text-green-500' : 'text-red-500'}`}>
+                          {data.growth > 0 ? '+' : ''}{data.growth}%
+                        </div>
+                      )}
                     </div>
-                    <div className="text-xs text-muted-foreground mt-2">{data.month}</div>
-                    <div className="text-xs font-medium">${data.revenue}</div>
-                    <div className={`text-xs ${data.growth > 0 ? 'text-green-500' : 'text-red-500'}`}>
-                      {data.growth > 0 ? '+' : ''}{data.growth}%
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             ) : (
               <div className="h-64 flex items-center justify-center text-muted-foreground">
@@ -269,7 +456,7 @@ const Analytics = () => {
             {analyticsData.topProjects.length > 0 ? (
               <div className="space-y-4">
                 {analyticsData.topProjects.map((project, index) => (
-                  <div key={index} className="flex items-center justify-between">
+                  <div key={index} className="flex items-center justify-between p-2 rounded hover:bg-muted/50 transition-colors">
                     <div className="flex-1">
                       <p className="text-sm font-medium text-foreground">{project.name}</p>
                       <p className="text-xs text-muted-foreground">{project.users} users</p>
@@ -350,6 +537,80 @@ const Analytics = () => {
           </CardContent>
         </Card>
       </div>
+
+      {/* Insights & Summary */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Analytics Insights</CardTitle>
+          <CardDescription>Key insights and recommendations based on your data</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Growth Insights */}
+            <div className="space-y-3">
+              <h4 className="font-medium text-foreground">Growth Trends</h4>
+              <div className="space-y-2">
+                <div className="flex items-center space-x-2">
+                  <TrendingUp className="h-4 w-4 text-green-500" />
+                  <span className="text-sm text-muted-foreground">
+                    Revenue growth: +{analyticsData.financialMetrics.monthlyGrowth || 0}% this month
+                  </span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Users className="h-4 w-4 text-blue-500" />
+                  <span className="text-sm text-muted-foreground">
+                    User acquisition: +{analyticsData.userMetrics.new || 0} new users
+                  </span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <ShoppingCart className="h-4 w-4 text-purple-500" />
+                  <span className="text-sm text-muted-foreground">
+                    Conversion rate: {analyticsData.financialMetrics.conversionRate || 0}%
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Top Performers */}
+            <div className="space-y-3">
+              <h4 className="font-medium text-foreground">Top Performers</h4>
+              <div className="space-y-2">
+                {analyticsData.topProjects.slice(0, 3).map((project, index) => (
+                  <div key={index} className="flex items-center justify-between">
+                    <span className="text-sm text-muted-foreground truncate">{project.name}</span>
+                    <span className="text-sm font-medium text-green-500">+{project.growth}%</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Recommendations */}
+            <div className="space-y-3">
+              <h4 className="font-medium text-foreground">Recommendations</h4>
+              <div className="space-y-2">
+                <div className="text-sm text-muted-foreground">
+                  {analyticsData.financialMetrics.monthlyGrowth > 10 ? 
+                    "Strong growth! Consider scaling successful projects." :
+                    "Focus on improving conversion rates and user engagement."
+                  }
+                </div>
+                <div className="text-sm text-muted-foreground">
+                  {analyticsData.userMetrics.churn > 5 ? 
+                    "High churn rate detected. Review user retention strategies." :
+                    "Good user retention. Continue with current strategies."
+                  }
+                </div>
+                <div className="text-sm text-muted-foreground">
+                  {analyticsData.financialMetrics.averageOrder < 50 ? 
+                    "Consider upselling strategies to increase average order value." :
+                    "Strong average order value. Focus on volume growth."
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };

@@ -96,6 +96,10 @@ export const analyticsAPI = {
   // Get custom date range analytics
   getCustomAnalytics: (startDate, endDate) => 
     apiCall(`/analytics/custom?startDate=${startDate}&endDate=${endDate}`),
+
+  // Export analytics data
+  exportAnalytics: (type = 'all', period = '30d', format = 'csv') => 
+    apiCall(`/analytics/export?type=${type}&period=${period}&format=${format}`),
 };
 
 // Payments API
