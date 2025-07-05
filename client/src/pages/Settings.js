@@ -23,6 +23,7 @@ import { cn } from '../utils/cn';
 import { usersAPI, paymentsAPI } from '../utils/api';
 
 const Settings = () => {
+  console.log('Rendering Settings');
   const { user, updateUser } = useAuth();
   const [activeTab, setActiveTab] = useState('profile');
   const [loading, setLoading] = useState(false);

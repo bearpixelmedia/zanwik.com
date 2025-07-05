@@ -30,6 +30,7 @@ import {
 
 
 const Projects = () => {
+  console.log('Rendering Projects');
   const { user: _user } = useAuth(); // eslint-disable-line no-unused-vars
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);

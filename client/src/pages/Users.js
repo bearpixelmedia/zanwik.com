@@ -23,6 +23,7 @@ import api from '../utils/api';
 import { cn } from '../utils/cn';
 
 const Users = () => {
+  console.log('Rendering Users');
   const { user: currentUser } = useAuth();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);

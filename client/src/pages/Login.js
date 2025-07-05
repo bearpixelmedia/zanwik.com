@@ -21,6 +21,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { cn } from '../utils/cn';
 
 const Login = () => {
+  console.log('Rendering Login');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);

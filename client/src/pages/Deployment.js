@@ -27,6 +27,7 @@ import api from '../utils/api';
 import { cn } from '../utils/cn';
 
 const Deployment = () => {
+  console.log('Rendering Deployment');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [autoRefresh, setAutoRefresh] = useState(true);

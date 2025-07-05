@@ -24,6 +24,7 @@ import { Button } from '../components/ui/button';
 import { analyticsAPI } from '../utils/api';
 
 const Analytics = () => {
+  console.log('Rendering Analytics');
   const [timeRange, setTimeRange] = useState('30d');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);

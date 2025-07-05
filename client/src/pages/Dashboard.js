@@ -26,6 +26,7 @@ import api from '../utils/api';
 import { cn } from '../utils/cn';
 
 const Dashboard = () => {
+  console.log('Rendering Dashboard');
   const { user } = useAuth();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);

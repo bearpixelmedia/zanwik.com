@@ -38,11 +38,11 @@ const Deployment = lazy(() => import('./pages/Deployment'));
 class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { hasError: false, error: null, errorInfo: null };
+    this.state = { error: null, errorInfo: null };
   }
 
   static getDerivedStateFromError(error) {
-    return { hasError: true };
+    return { error };
   }
 
   componentDidCatch(error, errorInfo) {
@@ -51,66 +51,43 @@ class ErrorBoundary extends React.Component {
       errorInfo: errorInfo,
     });
 
-    // Log error to console in development
-    if (process.env.NODE_ENV === 'development') {
-      console.error('Error caught by boundary:', error, errorInfo);
-    }
+    // Log error to console in all environments
+    console.error('Error caught by boundary:', error, errorInfo);
 
-    // In production, you would send this to an error reporting service
-    // Example: Sentry.captureException(error, { extra: errorInfo });
+    // Optionally send error to a remote logging service
+    if (window && window.fetch) {
+      try {
+        fetch('/error-log', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            error: error.toString(),
+            errorInfo: errorInfo?.componentStack,
+            url: window.location.href,
+            userAgent: navigator.userAgent,
+            timestamp: new Date().toISOString(),
+          }),
+        });
+      } catch (e) {
+        // Ignore logging errors
+      }
+    }
   }
 
   render() {
-    if (this.state.hasError) {
+    if (this.state.error) {
       return (
-        <div className='min-h-screen bg-background flex items-center justify-center p-4'>
-          <div className='text-center space-y-6 max-w-md'>
-            <div className='space-y-4'>
-              <div className='inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-red-500 to-red-600 rounded-2xl'>
-                <AlertTriangle className='w-8 h-8 text-white' />
-              </div>
-              <h2 className='text-2xl font-bold text-foreground'>
-                Something went wrong
-              </h2>
-              <p className='text-muted-foreground'>
-                We're sorry, but something unexpected happened. Please try
-                refreshing the page or contact support if the problem persists.
-              </p>
-            </div>
-
-            <div className='space-y-3'>
-              <button
-                onClick={() => window.location.reload()}
-                className='w-full bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors flex items-center justify-center space-x-2'
-              >
-                <RefreshCw className='h-4 w-4' />
-                <span>Refresh Page</span>
-              </button>
-              <button
-                onClick={() => (window.location.href = '/dashboard')}
-                className='w-full bg-muted text-muted-foreground px-4 py-2 rounded-lg hover:bg-muted/80 transition-colors flex items-center justify-center space-x-2'
-              >
-                <Home className='h-4 w-4' />
-                <span>Go to Dashboard</span>
-              </button>
-            </div>
-
-            {process.env.NODE_ENV === 'development' && this.state.error && (
-              <details className='text-left bg-muted/50 rounded-lg p-4'>
-                <summary className='cursor-pointer font-medium text-sm'>
-                  Error Details (Development)
-                </summary>
-                <pre className='mt-2 text-xs text-muted-foreground overflow-auto'>
-                  {this.state.error && this.state.error.toString()}
-                  {this.state.errorInfo && this.state.errorInfo.componentStack}
-                </pre>
-              </details>
-            )}
-          </div>
+        <div style={{ padding: 32, color: 'red', background: '#fff0f0' }}>
+          <h2>Something went wrong.</h2>
+          <pre style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}>
+            {this.state.error && this.state.error.toString()}
+            {'\n'}
+            {this.state.errorInfo && this.state.errorInfo.componentStack}
+          </pre>
+          <p>Please contact support with the above error message.</p>
         </div>
       );
     }
-
     return this.props.children;
   }
 }

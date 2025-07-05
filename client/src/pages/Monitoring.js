@@ -22,6 +22,7 @@ import {
 import { monitoringAPI } from '../utils/api';
 
 const Monitoring = () => {
+  console.log('Rendering Monitoring');
   // Dynamic metrics state
   const [metrics, setMetrics] = useState([
     { name: 'Response Time', value: '245ms', change: '+12ms', trend: 'up' },

@@ -19,6 +19,7 @@ import api from '../utils/api';
 import { cn } from '../utils/cn';
 
 const Infrastructure = () => {
+  console.log('Rendering Infrastructure');
   const [selectedService, setSelectedService] = useState('all');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
