@@ -28,7 +28,8 @@ const Navbar = () => {
         {/* Left side - Logo and Search */}
         <div className="flex items-center space-x-4 flex-1">
           <div className="flex items-center space-x-2">
-            <img src="/zanwik-logo.png" alt="Zanwik Logo" className="w-8 h-8" />
+            <img src="/zanwik-icon.svg" alt="Zanwik" className="w-8 h-8" />
+            <span className="font-semibold text-lg text-foreground">Zanwik</span>
           </div>
           <div className="relative max-w-md w-full">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />

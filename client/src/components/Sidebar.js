@@ -77,13 +77,13 @@ const Sidebar = () => {
       <div className="flex items-center justify-between p-4 border-b border-border">
         {!isCollapsed && (
           <div className="flex items-center space-x-2">
-            <img src="/logo.svg" alt="Umbrella" className="w-8 h-8" />
-            <span className="font-semibold text-lg text-foreground">Umbrella</span>
+            <img src="/zanwik-icon.svg" alt="Zanwik" className="w-8 h-8" />
+            <span className="font-semibold text-lg text-foreground">Zanwik</span>
           </div>
         )}
         {isCollapsed && (
           <div className="flex items-center justify-center w-full">
-            <img src="/logo.svg" alt="Umbrella" className="w-8 h-8" />
+            <img src="/zanwik-icon.svg" alt="Zanwik" className="w-8 h-8" />
           </div>
         )}
         <Button
