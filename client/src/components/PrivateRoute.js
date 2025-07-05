@@ -257,7 +257,7 @@ const PrivateRoute = ({
             </p>
             {user?.role && (
               <p className='text-sm text-muted-foreground'>
-                <strong>Your Role:</strong> {user.role}
+                <strong>Your Role:</strong> {user?.role || 'Unknown'}
               </p>
             )}
           </div>

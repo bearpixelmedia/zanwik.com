@@ -252,7 +252,7 @@ export const AuthProvider = ({ children }) => {
   // Add security event
   const addSecurityEvent = async (eventType, description) => {
     const event = {
-      user_id: user?.id,
+      user_id: user?.id || null,
       event_type: eventType,
       description,
       ip_address: '127.0.0.1', // In real app, get from request
@@ -419,7 +419,7 @@ export const AuthProvider = ({ children }) => {
     try {
       // Verify current password first
       const { error: verifyError } = await supabase.auth.signInWithPassword({
-        email: user.email,
+        email: user?.email || '',
         password: currentPassword,
       });
 
