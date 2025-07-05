@@ -338,12 +338,17 @@ const useAnalytics = () => {
   }, [location.pathname]);
 };
 
+// Analytics wrapper component
+const AnalyticsWrapper = () => {
+  useAnalytics();
+  return null;
+};
+
 // Main App Component
 const App = () => {
   console.log('App: Component starting');
   
   usePerformanceMonitoring();
-  useAnalytics();
 
   console.log('App: About to render');
 
@@ -351,6 +356,7 @@ const App = () => {
     <ErrorBoundary>
       <AuthProvider>
         <Router>
+          <AnalyticsWrapper />
           <div className='App'>
             <Routes>
               {/* Public Routes */}
