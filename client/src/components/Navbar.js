@@ -25,11 +25,8 @@ const Navbar = () => {
   return (
     <div className="bg-card border-b border-border px-4 py-3">
       <div className="flex items-center justify-between">
-        {/* Left side - Logo only */}
-        <div className="flex items-center space-x-2">
-          <img src="/zanwik-icon.svg" alt="Zanwik" className="w-8 h-8" />
-          <span className="font-semibold text-lg text-foreground">Zanwik</span>
-        </div>
+        {/* Left side - Empty space where logo was */}
+        <div className="flex-1"></div>
 
         {/* Center - Search */}
         <div className="relative max-w-md w-full mx-4">
