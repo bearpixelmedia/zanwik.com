@@ -11,7 +11,6 @@ import Sidebar from './components/Sidebar';
 import Navbar from './components/Navbar';
 import Login from './pages/Login';
 import {
-  Loader2,
   AlertTriangle,
   RefreshCw,
   Home,
@@ -107,7 +106,7 @@ const LoadingScreen = ({ message = 'Loading...' }) => (
       {/* Loading Animation */}
       <div className='space-y-4'>
         <div className='relative'>
-          <Loader2 className='h-12 w-12 animate-spin text-primary mx-auto' />
+          <div className='h-12 w-12 animate-spin text-primary mx-auto border-4 border-primary border-t-transparent rounded-full'></div>
           <div className='absolute inset-0 flex items-center justify-center'>
             <div className='w-8 h-8 bg-background rounded-full'></div>
           </div>
