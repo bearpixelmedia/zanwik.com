@@ -25,20 +25,20 @@ const Navbar = () => {
   return (
     <div className="bg-card border-b border-border px-4 py-3">
       <div className="flex items-center justify-between">
-        {/* Left side - Logo and Search */}
-        <div className="flex items-center space-x-4 flex-1">
-          <div className="flex items-center space-x-2">
-            <img src="/zanwik-icon.svg" alt="Zanwik" className="w-8 h-8" />
-            <span className="font-semibold text-lg text-foreground">Zanwik</span>
-          </div>
-          <div className="relative max-w-md w-full">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <input
-              type="text"
-              placeholder="Search..."
-              className="w-full pl-10 pr-4 py-2 bg-background border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
-            />
-          </div>
+        {/* Left side - Logo only */}
+        <div className="flex items-center space-x-2">
+          <img src="/zanwik-icon.svg" alt="Zanwik" className="w-8 h-8" />
+          <span className="font-semibold text-lg text-foreground">Zanwik</span>
+        </div>
+
+        {/* Center - Search */}
+        <div className="relative max-w-md w-full mx-4">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <input
+            type="text"
+            placeholder="Search..."
+            className="w-full pl-10 pr-4 py-2 bg-background border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
+          />
         </div>
 
         {/* Right side - Actions */}
