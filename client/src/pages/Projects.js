@@ -201,7 +201,7 @@ const Projects = () => {
       {error && (
         <div className="bg-red-50 border border-red-200 rounded-lg p-4">
           <div className="flex items-center justify-between">
-            <p className="text-red-800">{error}</p>
+            <p className="text-red-800">{typeof error === 'string' ? error : JSON.stringify(error)}</p>
             <Button 
               variant="outline" 
               size="sm" 
