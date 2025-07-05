@@ -27,7 +27,7 @@ import {
   Star,
   Clock,
 } from 'lucide-react';
-import { debugApiConnection } from '../utils/testConnection';
+
 
 const Projects = () => {
   const { user: _user } = useAuth(); // eslint-disable-line no-unused-vars
@@ -328,18 +328,7 @@ const Projects = () => {
             <p className='text-red-800'>
               {typeof error === 'string' ? error : JSON.stringify(error)}
             </p>
-            <Button
-              variant='outline'
-              size='sm'
-              onClick={() => {
-                debugApiConnection();
-                console.log(
-                  '🔍 Check the browser console for debug information'
-                );
-              }}
-            >
-              Debug Connection
-            </Button>
+
           </div>
         </div>
       )}

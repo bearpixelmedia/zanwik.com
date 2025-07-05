@@ -520,7 +520,4 @@ export const db = {
   },
 };
 
-// Initialize connection test
-testConnection();
-
 export default supabase;

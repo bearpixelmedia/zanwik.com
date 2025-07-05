@@ -1,17 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
   Eye,
   EyeOff,
   Lock,
   Mail,
-  User,
-  Smartphone,
-  CheckCircle,
-  X,
-  RefreshCw,
+  TrendingUp,
+  AlertCircle,
+  ArrowLeft,
+  Globe,
+  Users,
+  Zap,
+  Shield,
+  Key,
+  BarChart3,
 } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { useAuth } from '../contexts/AuthContext';
 import { cn } from '../utils/cn';
