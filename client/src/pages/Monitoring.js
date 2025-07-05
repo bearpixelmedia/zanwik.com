@@ -17,6 +17,22 @@ import { Button } from '../components/ui/button';
 import { monitoringAPI } from '../utils/api';
 
 const Monitoring = () => {
+  // TEMPORARY SIMPLE COMPONENT TO DEBUG REACT ERROR
+  return (
+    <div className="p-6 space-y-6">
+      <div>
+        <h1 className="text-3xl font-bold text-foreground">Monitoring (Debug)</h1>
+        <p className="text-muted-foreground">Testing if this page causes the React error.</p>
+      </div>
+      <Card>
+        <CardContent>
+          <p>If you can see this, the Monitoring component is not causing the React error.</p>
+        </CardContent>
+      </Card>
+    </div>
+  );
+
+  /* ORIGINAL MONITORING COMPONENT CODE (COMMENTED OUT FOR DEBUGGING)
   const [selectedSeverity, setSelectedSeverity] = useState('all');
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -373,6 +389,7 @@ const Monitoring = () => {
       </div>
     </div>
   );
+  */
 };
 
 export default Monitoring; 
