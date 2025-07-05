@@ -183,13 +183,19 @@ const PrivateRoute = ({
 }) => {
   const { user, loading, userProfile, hasPermission, hasRole } = useAuth();
 
+  console.log('PrivateRoute: Checking auth', { user: !!user, loading, hasUser: !!user });
+
   if (loading) {
+    console.log('PrivateRoute: Still loading, showing loading screen');
     return <LoadingScreen message='Authenticating...' />;
   }
 
   if (!user) {
+    console.log('PrivateRoute: No user found, redirecting to login');
     return <Navigate to='/login' replace />;
   }
+
+  console.log('PrivateRoute: User authenticated, checking permissions');
 
   // Check role requirements
   if (requiredRole && !hasRole(requiredRole)) {
@@ -249,6 +255,7 @@ const PrivateRoute = ({
     );
   }
 
+  console.log('PrivateRoute: All checks passed, rendering children');
   return children;
 };
 
@@ -465,28 +472,7 @@ const App = () => {
               <Route
                 path='*'
                 element={
-                  <div className='min-h-screen bg-background flex items-center justify-center p-4'>
-                    <div className='text-center space-y-6 max-w-md'>
-                      <div className='space-y-4'>
-                        <div className='inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-gray-500 to-gray-600 rounded-2xl'>
-                          <Globe className='w-8 h-8 text-white' />
-                        </div>
-                        <h2 className='text-2xl font-bold text-foreground'>
-                          Page Not Found
-                        </h2>
-                        <p className='text-muted-foreground'>
-                          The page you're looking for doesn't exist or has been
-                          moved.
-                        </p>
-                      </div>
-                      <button
-                        onClick={() => (window.location.href = '/dashboard')}
-                        className='w-full bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors'
-                      >
-                        Go to Dashboard
-                      </button>
-                    </div>
-                  </div>
+                  <Navigate to='/login' replace />
                 }
               />
             </Routes>
