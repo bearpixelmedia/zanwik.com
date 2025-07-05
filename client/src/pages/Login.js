@@ -15,7 +15,13 @@ import {
   Key,
   BarChart3,
 } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { useAuth } from '../contexts/AuthContext';
 import { cn } from '../utils/cn';
@@ -319,10 +325,10 @@ const Login = () => {
                   disabled={isLoading || twoFactorCode.length !== 6}
                 >
                   {isLoading ? (
-                                          <>
-                        <div className='h-4 w-4 mr-2 animate-spin border-2 border-current border-t-transparent rounded-full'></div>
-                        Verifying...
-                      </>
+                    <>
+                      <div className='h-4 w-4 mr-2 animate-spin border-2 border-current border-t-transparent rounded-full' />
+                      Verifying...
+                    </>
                   ) : (
                     'Verify'
                   )}
@@ -382,10 +388,10 @@ const Login = () => {
 
                 <Button type='submit' className='w-full' disabled={isLoading}>
                   {isLoading ? (
-                                          <>
-                        <div className='h-4 w-4 mr-2 animate-spin border-2 border-current border-t-transparent rounded-full'></div>
-                        Sending...
-                      </>
+                    <>
+                      <div className='h-4 w-4 mr-2 animate-spin border-2 border-current border-t-transparent rounded-full' />
+                      Sending...
+                    </>
                   ) : (
                     'Send Reset Link'
                   )}
@@ -507,10 +513,10 @@ const Login = () => {
                   disabled={isLoading || checkEnvironment().error || isLocked}
                 >
                   {isLoading ? (
-                                          <>
-                        <div className='h-4 w-4 mr-2 animate-spin border-2 border-current border-t-transparent rounded-full'></div>
-                        Signing in...
-                      </>
+                    <>
+                      <div className='h-4 w-4 mr-2 animate-spin border-2 border-current border-t-transparent rounded-full' />
+                      Signing in...
+                    </>
                   ) : (
                     'Sign in'
                   )}

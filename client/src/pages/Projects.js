@@ -8,7 +8,12 @@ import {
   CheckCircle,
   AlertCircle,
 } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { useAuth } from '../contexts/AuthContext';
 import api from '../utils/api';
@@ -26,7 +31,6 @@ import {
   Star,
   Clock,
 } from 'lucide-react';
-
 
 const Projects = () => {
   console.log('Rendering Projects');
@@ -270,7 +274,7 @@ const Projects = () => {
     return (
       <div className='p-6 flex items-center justify-center min-h-[400px]'>
         <div className='text-center'>
-                      <div className='h-8 w-8 mx-auto mb-4 animate-spin border-4 border-primary border-t-transparent rounded-full'></div>
+          <div className='h-8 w-8 mx-auto mb-4 animate-spin border-4 border-primary border-t-transparent rounded-full' />
           <p className='text-muted-foreground'>Loading projects...</p>
         </div>
       </div>
@@ -295,9 +299,9 @@ const Projects = () => {
               size='sm'
               onClick={() => setAutoRefresh(!autoRefresh)}
             >
-                              <RefreshCw
-                  className={`h-4 w-4 mr-2 ${autoRefresh ? 'animate-spin' : ''}`}
-                />
+              <RefreshCw
+                className={`h-4 w-4 mr-2 ${autoRefresh ? 'animate-spin' : ''}`}
+              />
               {autoRefresh ? 'Auto-refresh ON' : 'Auto-refresh OFF'}
             </Button>
             {autoRefresh && (
@@ -328,7 +332,6 @@ const Projects = () => {
             <p className='text-red-800'>
               {typeof error === 'string' ? error : JSON.stringify(error)}
             </p>
-
           </div>
         </div>
       )}
@@ -612,7 +615,7 @@ const Projects = () => {
                 >
                   {creatingProject ? (
                     <>
-                      <div className='h-4 w-4 mr-2 animate-spin border-2 border-current border-t-transparent rounded-full'></div>
+                      <div className='h-4 w-4 mr-2 animate-spin border-2 border-current border-t-transparent rounded-full' />
                       Creating...
                     </>
                   ) : (

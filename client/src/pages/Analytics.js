@@ -446,7 +446,7 @@ const Analytics = () => {
                       selectedMetric === 'revenue'
                         ? d.revenue
                         : selectedMetric === 'users'
-                        ? (d.users || 0)
+                        ? d.users || 0
                         : Math.abs(d.growth || 0)
                     )
                   );
@@ -713,20 +713,17 @@ const Analytics = () => {
                 <div className='text-sm text-muted-foreground'>
                   {analyticsData.financialMetrics.monthlyGrowth > 10
                     ? 'Strong growth! Consider scaling successful projects.'
-                    : 'Focus on improving conversion rates and user engagement.'
-                  }
+                    : 'Focus on improving conversion rates and user engagement.'}
                 </div>
                 <div className='text-sm text-muted-foreground'>
                   {analyticsData.userMetrics.churn > 5
                     ? 'High churn rate detected. Review user retention strategies.'
-                    : 'Good user retention. Continue with current strategies.'
-                  }
+                    : 'Good user retention. Continue with current strategies.'}
                 </div>
                 <div className='text-sm text-muted-foreground'>
                   {analyticsData.financialMetrics.averageOrder < 50
                     ? 'Consider upselling strategies to increase average order value.'
-                    : 'Strong average order value. Focus on volume growth.'
-                  }
+                    : 'Strong average order value. Focus on volume growth.'}
                 </div>
               </div>
             </div>

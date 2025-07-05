@@ -106,28 +106,28 @@ const LoadingScreen = ({ message = 'Loading...' }) => (
       {/* Loading Animation */}
       <div className='space-y-4'>
         <div className='relative'>
-          <div className='h-12 w-12 animate-spin text-primary mx-auto border-4 border-primary border-t-transparent rounded-full'></div>
+          <div className='h-12 w-12 animate-spin text-primary mx-auto border-4 border-primary border-t-transparent rounded-full' />
           <div className='absolute inset-0 flex items-center justify-center'>
-            <div className='w-8 h-8 bg-background rounded-full'></div>
+            <div className='w-8 h-8 bg-background rounded-full' />
           </div>
         </div>
 
         {/* Loading Steps */}
         <div className='space-y-2'>
           <div className='flex items-center justify-center space-x-2'>
-            <div className='h-2 w-2 bg-green-500 rounded-full animate-pulse'></div>
+            <div className='h-2 w-2 bg-green-500 rounded-full animate-pulse' />
             <span className='text-sm text-muted-foreground'>
               Initializing...
             </span>
           </div>
           <div className='flex items-center justify-center space-x-2'>
-            <div className='h-2 w-2 bg-blue-500 rounded-full animate-pulse'></div>
+            <div className='h-2 w-2 bg-blue-500 rounded-full animate-pulse' />
             <span className='text-sm text-muted-foreground'>
               Loading components...
             </span>
           </div>
           <div className='flex items-center justify-center space-x-2'>
-            <div className='h-2 w-2 bg-purple-500 rounded-full animate-pulse'></div>
+            <div className='h-2 w-2 bg-purple-500 rounded-full animate-pulse' />
             <span className='text-sm text-muted-foreground'>{message}</span>
           </div>
         </div>
@@ -183,7 +183,11 @@ const PrivateRoute = ({
 }) => {
   const { user, loading, userProfile, hasPermission, hasRole } = useAuth();
 
-  console.log('PrivateRoute: Checking auth', { user: !!user, loading, hasUser: !!user });
+  console.log('PrivateRoute: Checking auth', {
+    user: !!user,
+    loading,
+    hasUser: !!user,
+  });
 
   if (loading) {
     console.log('PrivateRoute: Still loading, showing loading screen');
@@ -353,7 +357,7 @@ const AnalyticsWrapper = () => {
 // Main App Component
 const App = () => {
   console.log('App: Component starting');
-  
+
   usePerformanceMonitoring();
 
   console.log('App: About to render');
@@ -469,12 +473,7 @@ const App = () => {
               />
 
               {/* 404 Route */}
-              <Route
-                path='*'
-                element={
-                  <Navigate to='/login' replace />
-                }
-              />
+              <Route path='*' element={<Navigate to='/login' replace />} />
             </Routes>
           </div>
         </Router>

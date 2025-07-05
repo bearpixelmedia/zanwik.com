@@ -44,13 +44,23 @@ export const AuthProvider = ({ children }) => {
     },
     manager: {
       name: 'Manager',
-      permissions: ['manage_projects', 'view_analytics', 'manage_users', 'deploy'],
+      permissions: [
+        'manage_projects',
+        'view_analytics',
+        'manage_users',
+        'deploy',
+      ],
       color: 'blue',
       icon: '👔',
     },
     developer: {
       name: 'Developer',
-      permissions: ['view_projects', 'edit_projects', 'deploy', 'view_analytics'],
+      permissions: [
+        'view_projects',
+        'edit_projects',
+        'deploy',
+        'view_analytics',
+      ],
       color: 'green',
       icon: '💻',
     },
@@ -65,7 +75,7 @@ export const AuthProvider = ({ children }) => {
   // Initialize user data
   const initializeUser = useCallback(async (user, session) => {
     if (!mountedRef.current) return;
-    
+
     try {
       setUser(user);
       setSession(session);
@@ -102,7 +112,7 @@ export const AuthProvider = ({ children }) => {
       // Load additional data in background (non-blocking)
       setTimeout(() => {
         if (!mountedRef.current) return;
-        
+
         // Load login history
         supabase
           .from('login_history')
@@ -131,7 +141,6 @@ export const AuthProvider = ({ children }) => {
           })
           .catch(err => console.warn('Security events load failed:', err));
       }, 100);
-
     } catch (error) {
       console.error('User initialization failed:', error);
       if (mountedRef.current) {
@@ -144,26 +153,29 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   // Add security event
-  const addSecurityEvent = useCallback(async (eventType, description) => {
-    if (!mountedRef.current) return;
-    
-    const event = {
-      user_id: user?.id || null,
-      event_type: eventType,
-      description,
-      ip_address: '127.0.0.1',
-      user_agent: navigator.userAgent,
-      timestamp: new Date().toISOString(),
-    };
+  const addSecurityEvent = useCallback(
+    async (eventType, description) => {
+      if (!mountedRef.current) return;
 
-    setSecurityEvents(prev => [event, ...prev.slice(0, 49)]);
+      const event = {
+        user_id: user?.id || null,
+        event_type: eventType,
+        description,
+        ip_address: '127.0.0.1',
+        user_agent: navigator.userAgent,
+        timestamp: new Date().toISOString(),
+      };
 
-    try {
-      await supabase.from('security_events').insert([event]);
-    } catch (error) {
-      console.error('Security event logging failed:', error);
-    }
-  }, [user?.id]);
+      setSecurityEvents(prev => [event, ...prev.slice(0, 49)]);
+
+      try {
+        await supabase.from('security_events').insert([event]);
+      } catch (error) {
+        console.error('Security event logging failed:', error);
+      }
+    },
+    [user?.id],
+  );
 
   // Initialize auth - only runs once
   useEffect(() => {
@@ -174,12 +186,14 @@ export const AuthProvider = ({ children }) => {
       try {
         // Get initial session with timeout
         const sessionPromise = supabase.auth.getSession();
-        const timeoutPromise = new Promise((_, reject) => 
+        const timeoutPromise = new Promise((_, reject) =>
           setTimeout(() => reject(new Error('Session timeout')), 5000)
         );
 
-        const { data: { session } } = await Promise.race([sessionPromise, timeoutPromise]);
-        
+        const {
+          data: { session },
+        } = await Promise.race([sessionPromise, timeoutPromise]);
+
         if (session?.user && mountedRef.current) {
           await initializeUser(session.user, session);
         } else if (mountedRef.current) {
@@ -207,32 +221,32 @@ export const AuthProvider = ({ children }) => {
 
     // Set up auth listener - only once
     if (!authListenerRef.current) {
-      const { data: { subscription } } = supabase.auth.onAuthStateChange(
-        async (event, session) => {
-          if (!mountedRef.current) return;
+      const {
+        data: { subscription },
+      } = supabase.auth.onAuthStateChange(async (event, session) => {
+        if (!mountedRef.current) return;
 
-          console.log('Auth state changed:', event);
+        console.log('Auth state changed:', event);
 
-          if (event === 'SIGNED_IN' && session?.user) {
-            await initializeUser(session.user, session);
-            addSecurityEvent('SIGNED_IN', 'User signed in successfully');
-          } else if (event === 'SIGNED_OUT') {
-            setUser(null);
-            setSession(null);
-            setUserProfile(null);
-            setIsAuthenticated(false);
-            addSecurityEvent('SIGNED_OUT', 'User signed out');
-          } else if (event === 'TOKEN_REFRESHED' && session?.user) {
-            setSession(session);
-            setLastActivity(Date.now());
-            addSecurityEvent('TOKEN_REFRESHED', 'Session token refreshed');
-          }
-
-          if (mountedRef.current) {
-            setLoading(false);
-          }
+        if (event === 'SIGNED_IN' && session?.user) {
+          await initializeUser(session.user, session);
+          addSecurityEvent('SIGNED_IN', 'User signed in successfully');
+        } else if (event === 'SIGNED_OUT') {
+          setUser(null);
+          setSession(null);
+          setUserProfile(null);
+          setIsAuthenticated(false);
+          addSecurityEvent('SIGNED_OUT', 'User signed out');
+        } else if (event === 'TOKEN_REFRESHED' && session?.user) {
+          setSession(session);
+          setLastActivity(Date.now());
+          addSecurityEvent('TOKEN_REFRESHED', 'Session token refreshed');
         }
-      );
+
+        if (mountedRef.current) {
+          setLoading(false);
+        }
+      });
 
       authListenerRef.current = subscription;
     }
@@ -254,11 +268,19 @@ export const AuthProvider = ({ children }) => {
       }
     };
 
-    const events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'];
+    const events = [
+      'mousedown',
+      'mousemove',
+      'keypress',
+      'scroll',
+      'touchstart',
+    ];
     events.forEach(event => document.addEventListener(event, updateActivity));
 
     return () => {
-      events.forEach(event => document.removeEventListener(event, updateActivity));
+      events.forEach(event =>
+        document.removeEventListener(event, updateActivity),
+      );
     };
   }, []);
 
@@ -268,7 +290,7 @@ export const AuthProvider = ({ children }) => {
 
     const checkSession = () => {
       if (!mountedRef.current) return;
-      
+
       const timeSinceActivity = Date.now() - lastActivity;
       if (timeSinceActivity >= sessionTimeout) {
         handleSessionTimeout();
@@ -282,9 +304,12 @@ export const AuthProvider = ({ children }) => {
   // Session timeout handler
   const handleSessionTimeout = useCallback(async () => {
     if (!mountedRef.current) return;
-    
+
     try {
-      await addSecurityEvent('SESSION_TIMEOUT', 'Session expired due to inactivity');
+      await addSecurityEvent(
+        'SESSION_TIMEOUT',
+        'Session expired due to inactivity',
+      );
       await supabase.auth.signOut();
     } catch (error) {
       console.error('Session timeout handling failed:', error);
@@ -292,23 +317,29 @@ export const AuthProvider = ({ children }) => {
   }, [addSecurityEvent]);
 
   // Login function
-  const login = useCallback(async (email, password) => {
-    try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
+  const login = useCallback(
+    async (email, password) => {
+      try {
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
 
-      if (error) throw error;
+        if (error) throw error;
 
-      await addSecurityEvent('LOGIN_SUCCESS', 'User logged in successfully');
-      return { success: true };
-    } catch (error) {
-      console.error('Login failed:', error);
-      await addSecurityEvent('LOGIN_FAILED', `Login failed: ${error.message}`);
-      throw error;
-    }
-  }, [addSecurityEvent]);
+        await addSecurityEvent('LOGIN_SUCCESS', 'User logged in successfully');
+        return { success: true };
+      } catch (error) {
+        console.error('Login failed:', error);
+        await addSecurityEvent(
+          'LOGIN_FAILED',
+          `Login failed: ${error.message}`,
+        );
+        throw error;
+      }
+    },
+    [addSecurityEvent],
+  );
 
   // Logout function
   const logout = useCallback(async () => {
@@ -332,112 +363,151 @@ export const AuthProvider = ({ children }) => {
   }, [addSecurityEvent]);
 
   // Register function
-  const register = useCallback(async (userData) => {
-    try {
-      const { data, error } = await supabase.auth.signUp({
-        email: userData.email,
-        password: userData.password,
-        options: {
-          data: {
-            full_name: userData.fullName,
-            role: userData.role || 'developer',
+  const register = useCallback(
+    async userData => {
+      try {
+        const { data, error } = await supabase.auth.signUp({
+          email: userData.email,
+          password: userData.password,
+          options: {
+            data: {
+              full_name: userData.fullName,
+              role: userData.role || 'developer',
+            },
           },
-        },
-      });
+        });
 
-      if (error) throw error;
+        if (error) throw error;
 
-      await addSecurityEvent('REGISTRATION_SUCCESS', 'New user registered');
-      return { success: true };
-    } catch (error) {
-      await addSecurityEvent('REGISTRATION_FAILED', `Registration failed: ${error.message}`);
-      throw error;
-    }
-  }, [addSecurityEvent]);
+        await addSecurityEvent('REGISTRATION_SUCCESS', 'New user registered');
+        return { success: true };
+      } catch (error) {
+        await addSecurityEvent(
+          'REGISTRATION_FAILED',
+          `Registration failed: ${error.message}`,
+        );
+        throw error;
+      }
+    },
+    [addSecurityEvent],
+  );
 
   // Update profile
-  const updateProfile = useCallback(async (profileData) => {
-    try {
-      const { data, error } = await supabase.auth.updateUser(profileData);
-      if (error) throw error;
+  const updateProfile = useCallback(
+    async profileData => {
+      try {
+        const { data, error } = await supabase.auth.updateUser(profileData);
+        if (error) throw error;
 
-      if (mountedRef.current) {
-        setUser(data.user);
+        if (mountedRef.current) {
+          setUser(data.user);
+        }
+        await addSecurityEvent('PROFILE_UPDATED', 'User profile updated');
+        return { success: true };
+      } catch (error) {
+        throw error;
       }
-      await addSecurityEvent('PROFILE_UPDATED', 'User profile updated');
-      return { success: true };
-    } catch (error) {
-      throw error;
-    }
-  }, [addSecurityEvent]);
+    },
+    [addSecurityEvent],
+  );
 
   // Change password
-  const changePassword = useCallback(async (currentPassword, newPassword) => {
-    try {
-      const { error } = await supabase.auth.updateUser({
-        password: newPassword,
-      });
-      if (error) throw error;
+  const changePassword = useCallback(
+    async (currentPassword, newPassword) => {
+      try {
+        const { error } = await supabase.auth.updateUser({
+          password: newPassword,
+        });
+        if (error) throw error;
 
-      await addSecurityEvent('PASSWORD_CHANGED', 'User password changed');
-      return { success: true };
-    } catch (error) {
-      throw error;
-    }
-  }, [addSecurityEvent]);
+        await addSecurityEvent('PASSWORD_CHANGED', 'User password changed');
+        return { success: true };
+      } catch (error) {
+        throw error;
+      }
+    },
+    [addSecurityEvent],
+  );
 
   // Permission checks
-  const hasPermission = useCallback((permission) => {
-    if (!userProfile) return false;
-    return userProfile.permissions?.includes('*') || userProfile.permissions?.includes(permission);
-  }, [userProfile]);
+  const hasPermission = useCallback(
+    permission => {
+      if (!userProfile) return false;
+      return (
+        userProfile.permissions?.includes('*') ||
+        userProfile.permissions?.includes(permission)
+      );
+    },
+    [userProfile],
+  );
 
-  const hasRole = useCallback((roles) => {
-    if (!userProfile) return false;
-    const allowedRoles = Array.isArray(roles) ? roles : [roles];
-    return allowedRoles.includes(userProfile.role) || userProfile.role === 'admin';
-  }, [userProfile]);
+  const hasRole = useCallback(
+    roles => {
+      if (!userProfile) return false;
+      const allowedRoles = Array.isArray(roles) ? roles : [roles];
+      return (
+        allowedRoles.includes(userProfile.role) || userProfile.role === 'admin'
+      );
+    },
+    [userProfile],
+  );
 
   // Get project permissions
-  const getProjectPermissions = useCallback((projectId) => {
-    if (!userProfile) return { read: false, write: false, deploy: false, admin: false };
+  const getProjectPermissions = useCallback(
+    projectId => {
+      if (!userProfile)
+        return { read: false, write: false, deploy: false, admin: false };
 
-    if (userProfile.role === 'admin') {
-      return { read: true, write: true, deploy: true, admin: true };
-    }
+      if (userProfile.role === 'admin') {
+        return { read: true, write: true, deploy: true, admin: true };
+      }
 
-    return {
-      read: hasPermission('view_projects'),
-      write: hasPermission('edit_projects'),
-      deploy: hasPermission('deploy'),
-      admin: hasPermission('manage_projects'),
-    };
-  }, [userProfile, hasPermission]);
+      return {
+        read: hasPermission('view_projects'),
+        write: hasPermission('edit_projects'),
+        deploy: hasPermission('deploy'),
+        admin: hasPermission('manage_projects'),
+      };
+    },
+    [userProfile, hasPermission],
+  );
 
   // Update preferences
-  const updatePreferences = useCallback(async (preferences) => {
-    try {
-      const updatedPreferences = { ...userProfile?.preferences, ...preferences };
+  const updatePreferences = useCallback(
+    async preferences => {
+      try {
+        const updatedPreferences = {
+          ...userProfile?.preferences,
+          ...preferences,
+        };
 
-      const { data, error } = await supabase
-        .from('profiles')
-        .update({ preferences: updatedPreferences })
-        .eq('id', user?.id)
-        .select()
-        .single();
+        const { data, error } = await supabase
+          .from('profiles')
+          .update({ preferences: updatedPreferences })
+          .eq('id', user?.id)
+          .select()
+          .single();
 
-      if (error) throw error;
+        if (error) throw error;
 
-      if (mountedRef.current) {
-        setUserProfile(data);
+        if (mountedRef.current) {
+          setUserProfile(data);
+        }
+        localStorage.setItem(
+          'user_preferences',
+          JSON.stringify(updatedPreferences),
+        );
+        await addSecurityEvent(
+          'PREFERENCES_UPDATED',
+          'User preferences updated',
+        );
+        return { success: true };
+      } catch (error) {
+        throw error;
       }
-      localStorage.setItem('user_preferences', JSON.stringify(updatedPreferences));
-      await addSecurityEvent('PREFERENCES_UPDATED', 'User preferences updated');
-      return { success: true };
-    } catch (error) {
-      throw error;
-    }
-  }, [userProfile, user?.id, addSecurityEvent]);
+    },
+    [userProfile, user?.id, addSecurityEvent],
+  );
 
   // Get user role info
   const getUserRoleInfo = useCallback(() => {
@@ -484,57 +554,58 @@ export const AuthProvider = ({ children }) => {
   }, [session]);
 
   // Memoize context value
-  const contextValue = React.useMemo(() => ({
-    user,
-    session,
-    userProfile,
-    loading,
-    isAuthenticated,
-    loginHistory,
-    securityEvents,
-    login,
-    register,
-    logout,
-    updateProfile,
-    changePassword,
-    hasPermission,
-    hasRole,
-    getProjectPermissions,
-    updatePreferences,
-    getUserRoleInfo,
-    getSecurityEvents,
-    refreshSession,
-    getSessionInfo,
-    lastActivity,
-    sessionTimeout,
-  }), [
-    user,
-    session,
-    userProfile,
-    loading,
-    isAuthenticated,
-    loginHistory,
-    securityEvents,
-    login,
-    register,
-    logout,
-    updateProfile,
-    changePassword,
-    hasPermission,
-    hasRole,
-    getProjectPermissions,
-    updatePreferences,
-    getUserRoleInfo,
-    getSecurityEvents,
-    refreshSession,
-    getSessionInfo,
-    lastActivity,
-    sessionTimeout,
-  ]);
+  const contextValue = React.useMemo(
+    () => ({
+      user,
+      session,
+      userProfile,
+      loading,
+      isAuthenticated,
+      loginHistory,
+      securityEvents,
+      login,
+      register,
+      logout,
+      updateProfile,
+      changePassword,
+      hasPermission,
+      hasRole,
+      getProjectPermissions,
+      updatePreferences,
+      getUserRoleInfo,
+      getSecurityEvents,
+      refreshSession,
+      getSessionInfo,
+      lastActivity,
+      sessionTimeout,
+    }),
+    [
+      user,
+      session,
+      userProfile,
+      loading,
+      isAuthenticated,
+      loginHistory,
+      securityEvents,
+      login,
+      register,
+      logout,
+      updateProfile,
+      changePassword,
+      hasPermission,
+      hasRole,
+      getProjectPermissions,
+      updatePreferences,
+      getUserRoleInfo,
+      getSecurityEvents,
+      refreshSession,
+      getSessionInfo,
+      lastActivity,
+      sessionTimeout,
+    ],
+  );
 
   return (
-    <AuthContext.Provider value={contextValue}>
-      {children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
   );
 };
