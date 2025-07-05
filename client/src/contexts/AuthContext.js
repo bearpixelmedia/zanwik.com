@@ -115,12 +115,24 @@ export const AuthProvider = ({ children }) => {
     const checkAuth = async () => {
       try {
         console.log('AuthProvider: Getting user and session');
-        const {
-          data: { user },
-        } = await supabase.auth.getUser();
-        const {
-          data: { session },
-        } = await supabase.auth.getSession();
+        
+        // Add timeout to prevent hanging
+        const timeoutPromise = new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Auth check timeout')), 10000)
+        );
+        
+        const authPromise = Promise.all([
+          supabase.auth.getUser(),
+          supabase.auth.getSession()
+        ]);
+        
+        const [userResult, sessionResult] = await Promise.race([
+          authPromise,
+          timeoutPromise
+        ]);
+        
+        const { data: { user } } = userResult;
+        const { data: { session } } = sessionResult;
 
         console.log('AuthProvider: User and session retrieved', { user: !!user, session: !!session });
 
@@ -140,8 +152,10 @@ export const AuthProvider = ({ children }) => {
         setSession(null);
         setUserProfile(null);
         setIsAuthenticated(false);
+      } finally {
+        console.log('AuthProvider: Setting loading to false');
+        setLoading(false);
       }
-      setLoading(false);
     };
 
     checkAuth();
@@ -176,19 +190,36 @@ export const AuthProvider = ({ children }) => {
 
   // Initialize user data
   const initializeUser = async (user, session) => {
-    setUser(user);
-    setSession(session);
-    setIsAuthenticated(true);
-    setLastActivity(Date.now());
+    try {
+      console.log('AuthProvider: Initializing user data');
+      setUser(user);
+      setSession(session);
+      setIsAuthenticated(true);
+      setLastActivity(Date.now());
 
-    // Load user profile
-    await loadUserProfile(user.id);
+      // Load user profile (don't block on this)
+      loadUserProfile(user.id).catch(error => {
+        console.error('Profile loading failed:', error);
+      });
 
-    // Load login history
-    await loadLoginHistory(user.id);
+      // Load login history (don't block on this)
+      loadLoginHistory(user.id).catch(error => {
+        console.error('Login history loading failed:', error);
+      });
 
-    // Add login event
-    addSecurityEvent('SESSION_STARTED', 'User session started');
+      // Add login event (don't block on this)
+      addSecurityEvent('SESSION_STARTED', 'User session started').catch(error => {
+        console.error('Security event logging failed:', error);
+      });
+
+      console.log('AuthProvider: User initialization completed');
+    } catch (error) {
+      console.error('User initialization failed:', error);
+      // Even if initialization fails, we still have a user and session
+      setUser(user);
+      setSession(session);
+      setIsAuthenticated(true);
+    }
   };
 
   // Load user profile from database
