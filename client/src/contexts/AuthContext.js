@@ -4,6 +4,7 @@ import React, {
   useState,
   useEffect,
   useCallback,
+  useRef,
 } from 'react';
 import { supabase } from '../utils/supabase';
 
@@ -29,6 +30,11 @@ export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [lastActivity, setLastActivity] = useState(Date.now());
   const [sessionTimeout, setSessionTimeout] = useState(30 * 60 * 1000); // 30 minutes
+
+  // Use refs to prevent infinite loops
+  const initializedRef = useRef(false);
+  const authListenerRef = useRef(null);
+  const mountedRef = useRef(false);
 
   console.log('AuthProvider: State initialized');
 
@@ -109,9 +115,112 @@ export const AuthProvider = ({ children }) => {
     return () => clearInterval(interval);
   }, [isAuthenticated, lastActivity, sessionTimeout]);
 
-  // Check if user is authenticated on mount
+  // Initialize user data - memoized to prevent recreation
+  const initializeUser = useCallback(async (user, session) => {
+    try {
+      console.log('AuthProvider: Initializing user data');
+      
+      // Check if component is still mounted
+      if (!mountedRef.current) {
+        console.log('AuthProvider: Component unmounted, skipping user initialization');
+        return;
+      }
+      
+      setUser(user);
+      setSession(session);
+      setIsAuthenticated(true);
+      setLastActivity(Date.now());
+
+      // Load user profile (don't block on this)
+      try {
+        const { data: profile, error: profileError } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', user.id)
+          .single();
+
+        if (profileError) {
+          console.warn('Profile load failed:', profileError);
+          // Set default profile
+          setUserProfile({
+            id: user.id,
+            email: user.email,
+            role: 'viewer',
+            permissions: ['view_projects', 'view_analytics'],
+            preferences: {},
+          });
+        } else {
+          setUserProfile(profile);
+        }
+      } catch (profileError) {
+        console.warn('Profile load error:', profileError);
+        // Set default profile
+        setUserProfile({
+          id: user.id,
+          email: user.email,
+          role: 'viewer',
+          permissions: ['view_projects', 'view_analytics'],
+          preferences: {},
+        });
+      }
+
+      // Load login history (don't block on this)
+      try {
+        const { data: history, error: historyError } = await supabase
+          .from('login_history')
+          .select('*')
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: false })
+          .limit(10);
+
+        if (!historyError && history) {
+          setLoginHistory(history);
+        }
+      } catch (historyError) {
+        console.warn('Login history load error:', historyError);
+      }
+
+      // Load security events (don't block on this)
+      try {
+        const { data: events, error: eventsError } = await supabase
+          .from('security_events')
+          .select('*')
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: false })
+          .limit(20);
+
+        if (!eventsError && events) {
+          setSecurityEvents(events);
+        }
+      } catch (eventsError) {
+        console.warn('Security events load error:', eventsError);
+      }
+
+      console.log('AuthProvider: User initialization complete');
+    } catch (error) {
+      console.error('User initialization failed:', error);
+      
+      // Check if component is still mounted before updating state
+      if (mountedRef.current) {
+        setUser(null);
+        setSession(null);
+        setUserProfile(null);
+        setIsAuthenticated(false);
+      }
+    }
+  }, []);
+
+  // Check if user is authenticated on mount - only run once
   useEffect(() => {
+    if (initializedRef.current || mountedRef.current) {
+      console.log('AuthProvider: Already initialized or mounted, skipping');
+      return;
+    }
+
     console.log('AuthProvider: Starting auth check');
+    initializedRef.current = true;
+    mountedRef.current = true;
+
     const checkAuth = async () => {
       try {
         console.log('AuthProvider: Getting user and session');
@@ -141,159 +250,92 @@ export const AuthProvider = ({ children }) => {
           await initializeUser(user, session);
         } else {
           console.log('AuthProvider: No user or session found');
+          if (mountedRef.current) {
+            setUser(null);
+            setSession(null);
+            setUserProfile(null);
+            setIsAuthenticated(false);
+          }
+        }
+      } catch (error) {
+        console.error('Auth check failed:', error);
+        if (mountedRef.current) {
           setUser(null);
           setSession(null);
           setUserProfile(null);
           setIsAuthenticated(false);
         }
-      } catch (error) {
-        console.error('Auth check failed:', error);
-        setUser(null);
-        setSession(null);
-        setUserProfile(null);
-        setIsAuthenticated(false);
       } finally {
         console.log('AuthProvider: Setting loading to false');
-        setLoading(false);
+        if (mountedRef.current) {
+          setLoading(false);
+        }
       }
     };
 
     checkAuth();
 
-    // Listen for auth state changes
-    console.log('AuthProvider: Setting up auth state listener');
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (event, session) => {
-      console.log('Auth state changed:', event, session);
+    // Listen for auth state changes - only set up once
+    if (!authListenerRef.current) {
+      console.log('AuthProvider: Setting up auth state listener');
+      const {
+        data: { subscription },
+      } = supabase.auth.onAuthStateChange(async (event, session) => {
+        // Check if component is still mounted
+        if (!mountedRef.current) {
+          console.log('AuthProvider: Component unmounted, ignoring auth state change');
+          return;
+        }
 
-      if (event === 'SIGNED_IN' && session?.user) {
-        await initializeUser(session.user, session);
-        addSecurityEvent('SIGNED_IN', 'User signed in successfully');
-      } else if (event === 'SIGNED_OUT') {
-        setUser(null);
-        setSession(null);
-        setUserProfile(null);
-        setIsAuthenticated(false);
-        addSecurityEvent('SIGNED_OUT', 'User signed out');
-      } else if (event === 'TOKEN_REFRESHED' && session?.user) {
-        setSession(session);
-        setLastActivity(Date.now());
-        addSecurityEvent('TOKEN_REFRESHED', 'Session token refreshed');
+        console.log('Auth state changed:', event, session);
+
+        if (event === 'SIGNED_IN' && session?.user) {
+          await initializeUser(session.user, session);
+          addSecurityEvent('SIGNED_IN', 'User signed in successfully');
+        } else if (event === 'SIGNED_OUT') {
+          if (mountedRef.current) {
+            setUser(null);
+            setSession(null);
+            setUserProfile(null);
+            setIsAuthenticated(false);
+          }
+          addSecurityEvent('SIGNED_OUT', 'User signed out');
+        } else if (event === 'TOKEN_REFRESHED' && session?.user) {
+          if (mountedRef.current) {
+            setSession(session);
+            setLastActivity(Date.now());
+          }
+          addSecurityEvent('TOKEN_REFRESHED', 'Session token refreshed');
+        }
+
+        if (mountedRef.current) {
+          setLoading(false);
+        }
+      });
+
+      authListenerRef.current = subscription;
+    }
+
+    // Cleanup function
+    return () => {
+      if (authListenerRef.current) {
+        authListenerRef.current.unsubscribe();
+        authListenerRef.current = null;
       }
+    };
+  }, [initializeUser]);
 
-      setLoading(false);
-    });
-
-    return () => subscription.unsubscribe();
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (authListenerRef.current) {
+        authListenerRef.current.unsubscribe();
+        authListenerRef.current = null;
+      }
+      initializedRef.current = false;
+      mountedRef.current = false;
+    };
   }, []);
-
-  // Initialize user data
-  const initializeUser = async (user, session) => {
-    try {
-      console.log('AuthProvider: Initializing user data');
-      setUser(user);
-      setSession(session);
-      setIsAuthenticated(true);
-      setLastActivity(Date.now());
-
-      // Load user profile (don't block on this)
-      loadUserProfile(user.id).catch(error => {
-        console.error('Profile loading failed:', error);
-      });
-
-      // Load login history (don't block on this)
-      loadLoginHistory(user.id).catch(error => {
-        console.error('Login history loading failed:', error);
-      });
-
-      // Add login event (don't block on this)
-      addSecurityEvent('SESSION_STARTED', 'User session started').catch(error => {
-        console.error('Security event logging failed:', error);
-      });
-
-      console.log('AuthProvider: User initialization completed');
-    } catch (error) {
-      console.error('User initialization failed:', error);
-      // Even if initialization fails, we still have a user and session
-      setUser(user);
-      setSession(session);
-      setIsAuthenticated(true);
-    }
-  };
-
-  // Load user profile from database
-  const loadUserProfile = async userId => {
-    try {
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', userId)
-        .single();
-
-      if (error && error.code !== 'PGRST116') {
-        console.error('Error loading profile:', error);
-        // Create default profile if not exists
-        await createDefaultProfile(userId);
-      } else if (data) {
-        setUserProfile(data);
-      }
-    } catch (error) {
-      console.error('Profile loading failed:', error);
-    }
-  };
-
-  // Create default user profile
-  const createDefaultProfile = async userId => {
-    try {
-      const defaultProfile = {
-        id: userId,
-        role: 'developer',
-        permissions: userRoles.developer.permissions,
-        preferences: {
-          theme: 'system',
-          language: 'en',
-          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-          notifications: {
-            email: true,
-            push: true,
-            security: true,
-          },
-        },
-        last_login: new Date().toISOString(),
-        login_count: 1,
-      };
-
-      const { data, error } = await supabase
-        .from('profiles')
-        .insert([defaultProfile])
-        .select()
-        .single();
-
-      if (error) throw error;
-      setUserProfile(data);
-    } catch (error) {
-      console.error('Profile creation failed:', error);
-    }
-  };
-
-  // Load login history
-  const loadLoginHistory = async userId => {
-    try {
-      const { data, error } = await supabase
-        .from('login_history')
-        .select('*')
-        .eq('user_id', userId)
-        .order('created_at', { ascending: false })
-        .limit(10);
-
-      if (error) throw error;
-      setLoginHistory(data || []);
-    } catch (error) {
-      console.error('Login history loading failed:', error);
-      setLoginHistory([]);
-    }
-  };
 
   // Add security event
   const addSecurityEvent = async (eventType, description) => {
@@ -391,6 +433,40 @@ export const AuthProvider = ({ children }) => {
       if (error) throw error;
     } catch (error) {
       console.error('Login count update failed:', error);
+    }
+  };
+
+  // Create default user profile
+  const createDefaultProfile = async userId => {
+    try {
+      const defaultProfile = {
+        id: userId,
+        role: 'developer',
+        permissions: userRoles.developer.permissions,
+        preferences: {
+          theme: 'system',
+          language: 'en',
+          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+          notifications: {
+            email: true,
+            push: true,
+            security: true,
+          },
+        },
+        last_login: new Date().toISOString(),
+        login_count: 1,
+      };
+
+      const { data, error } = await supabase
+        .from('profiles')
+        .insert([defaultProfile])
+        .select()
+        .single();
+
+      if (error) throw error;
+      setUserProfile(data);
+    } catch (error) {
+      console.error('Profile creation failed:', error);
     }
   };
 
@@ -592,7 +668,8 @@ export const AuthProvider = ({ children }) => {
     };
   };
 
-  const value = {
+  // Memoize the context value to prevent unnecessary re-renders
+  const value = React.useMemo(() => ({
     user,
     session,
     userProfile,
@@ -615,7 +692,30 @@ export const AuthProvider = ({ children }) => {
     getSessionInfo,
     lastActivity,
     sessionTimeout,
-  };
+  }), [
+    user,
+    session,
+    userProfile,
+    loading,
+    isAuthenticated,
+    loginHistory,
+    securityEvents,
+    login,
+    register,
+    logout,
+    updateProfile,
+    changePassword,
+    hasPermission,
+    hasRole,
+    getProjectPermissions,
+    updatePreferences,
+    getUserRoleInfo,
+    getSecurityEvents,
+    refreshSession,
+    getSessionInfo,
+    lastActivity,
+    sessionTimeout,
+  ]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
