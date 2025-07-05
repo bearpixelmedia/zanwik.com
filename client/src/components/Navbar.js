@@ -41,13 +41,13 @@ import { Button } from './ui/button';
 const Navbar = () => {
   const {
     user,
-    userProfile,
+    
     logout,
     getUserRoleInfo,
     getSessionInfo,
     refreshSession,
     hasPermission,
-    securityEvents,
+    
   } = useAuth();
 
   const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -186,7 +186,7 @@ const Navbar = () => {
 
   const markNotificationAsRead = notificationId => {
     setNotifications(prev =>
-      prev.map(n => (n.id === notificationId ? { ...n, read: true } : n))
+      prev.map(n => (n.id === notificationId ? { ...n, read: true } : n)),
     );
     setUnreadCount(prev => Math.max(0, prev - 1));
   };
@@ -358,7 +358,7 @@ const Navbar = () => {
                   {notifications.length > 0 ? (
                     notifications.map(notification => {
                       const IconComponent = getNotificationIcon(
-                        notification.type
+                        notification.type,
                       );
                       return (
                         <div
@@ -373,7 +373,7 @@ const Navbar = () => {
                           <div className='flex items-start space-x-3'>
                             <IconComponent
                               className={`h-5 w-5 mt-0.5 ${getNotificationColor(
-                                notification.type
+                                notification.type,
                               )}`}
                             />
                             <div className='flex-1 min-w-0'>

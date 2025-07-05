@@ -27,7 +27,7 @@ export const AuthProvider = ({ children }) => {
   const [securityEvents, setSecurityEvents] = useState([]);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [lastActivity, setLastActivity] = useState(Date.now());
-  const [sessionTimeout, setSessionTimeout] = useState(30 * 60 * 1000); // 30 minutes
+  const [sessionTimeout] = useState(30 * 60 * 1000); // 30 minutes
 
   // Refs to prevent multiple initializations
   const initializingRef = useRef(false);
@@ -77,6 +77,7 @@ export const AuthProvider = ({ children }) => {
     if (!mountedRef.current) return;
 
     try {
+      console.log('AuthContext: Initializing user', user?.email);
       setUser(user);
       setSession(session);
       setIsAuthenticated(true);
@@ -174,7 +175,7 @@ export const AuthProvider = ({ children }) => {
         console.error('Security event logging failed:', error);
       }
     },
-    [user?.id],
+    [user?.id]
   );
 
   // Initialize auth - only runs once
@@ -182,21 +183,31 @@ export const AuthProvider = ({ children }) => {
     if (initializingRef.current) return;
     initializingRef.current = true;
 
+    console.log('AuthContext: Starting initialization');
+
     const initAuth = async () => {
       try {
+        console.log('AuthContext: Getting initial session');
+
         // Get initial session with timeout
         const sessionPromise = supabase.auth.getSession();
         const timeoutPromise = new Promise((_, reject) =>
-          setTimeout(() => reject(new Error('Session timeout')), 5000)
+          setTimeout(() => reject(new Error('Session timeout')), 3000),
         );
 
         const {
           data: { session },
         } = await Promise.race([sessionPromise, timeoutPromise]);
 
+        console.log('AuthContext: Session check completed', !!session);
+
         if (session?.user && mountedRef.current) {
+          console.log('AuthContext: User found, initializing');
           await initializeUser(session.user, session);
         } else if (mountedRef.current) {
+          console.log(
+            'AuthContext: No user found, setting unauthenticated state',
+          );
           setUser(null);
           setSession(null);
           setUserProfile(null);
@@ -212,21 +223,34 @@ export const AuthProvider = ({ children }) => {
         }
       } finally {
         if (mountedRef.current) {
+          console.log('AuthContext: Setting loading to false');
           setLoading(false);
         }
       }
     };
 
+    // Add a fallback timeout to ensure loading is always set to false
+    const fallbackTimeout = setTimeout(() => {
+      if (mountedRef.current && loading) {
+        console.log('AuthContext: Fallback timeout - setting loading to false');
+        setLoading(false);
+      }
+    }, 5000);
+
     initAuth();
 
+    return () => {
+      clearTimeout(fallbackTimeout);
+    };
+
     // Set up auth listener - only once
-    if (!authListenerRef.current) {
+      console.log('AuthContext: Setting up auth listener');
       const {
         data: { subscription },
       } = supabase.auth.onAuthStateChange(async (event, session) => {
         if (!mountedRef.current) return;
 
-        console.log('Auth state changed:', event);
+        console.log('AuthContext: Auth state changed:', event);
 
         if (event === 'SIGNED_IN' && session?.user) {
           await initializeUser(session.user, session);
@@ -248,10 +272,8 @@ export const AuthProvider = ({ children }) => {
         }
       });
 
-      authListenerRef.current = subscription;
     }
 
-    return () => {
       if (authListenerRef.current) {
         authListenerRef.current.unsubscribe();
         authListenerRef.current = null;
@@ -304,11 +326,10 @@ export const AuthProvider = ({ children }) => {
   // Session timeout handler
   const handleSessionTimeout = useCallback(async () => {
     if (!mountedRef.current) return;
-
     try {
       await addSecurityEvent(
         'SESSION_TIMEOUT',
-        'Session expired due to inactivity',
+        'Session expired due to inactivity'
       );
       await supabase.auth.signOut();
     } catch (error) {
@@ -320,25 +341,23 @@ export const AuthProvider = ({ children }) => {
   const login = useCallback(
     async (email, password) => {
       try {
-        const { data, error } = await supabase.auth.signInWithPassword({
+        const { error } = await supabase.auth.signInWithPassword({
           email,
           password,
         });
-
         if (error) throw error;
-
         await addSecurityEvent('LOGIN_SUCCESS', 'User logged in successfully');
         return { success: true };
       } catch (error) {
         console.error('Login failed:', error);
         await addSecurityEvent(
           'LOGIN_FAILED',
-          `Login failed: ${error.message}`,
+          `Login failed: ${error.message}`
         );
         throw error;
       }
     },
-    [addSecurityEvent],
+    [addSecurityEvent]
   );
 
   // Logout function
@@ -347,14 +366,12 @@ export const AuthProvider = ({ children }) => {
       await addSecurityEvent('LOGOUT', 'User logged out');
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
-
       if (mountedRef.current) {
         setUser(null);
         setSession(null);
         setUserProfile(null);
         setIsAuthenticated(false);
       }
-
       localStorage.removeItem('user_preferences');
     } catch (error) {
       console.error('Logout failed:', error);
@@ -366,7 +383,7 @@ export const AuthProvider = ({ children }) => {
   const register = useCallback(
     async userData => {
       try {
-        const { data, error } = await supabase.auth.signUp({
+        const { error } = await supabase.auth.signUp({
           email: userData.email,
           password: userData.password,
           options: {
@@ -376,20 +393,18 @@ export const AuthProvider = ({ children }) => {
             },
           },
         });
-
         if (error) throw error;
-
         await addSecurityEvent('REGISTRATION_SUCCESS', 'New user registered');
         return { success: true };
       } catch (error) {
         await addSecurityEvent(
           'REGISTRATION_FAILED',
-          `Registration failed: ${error.message}`,
+          `Registration failed: ${error.message}`
         );
         throw error;
       }
     },
-    [addSecurityEvent],
+    [addSecurityEvent]
   );
 
   // Update profile
@@ -398,17 +413,17 @@ export const AuthProvider = ({ children }) => {
       try {
         const { data, error } = await supabase.auth.updateUser(profileData);
         if (error) throw error;
-
-        if (mountedRef.current) {
-          setUser(data.user);
-        }
         await addSecurityEvent('PROFILE_UPDATED', 'User profile updated');
-        return { success: true };
+        return data;
       } catch (error) {
+        await addSecurityEvent(
+          'PROFILE_UPDATE_FAILED',
+          `Profile update failed: ${error.message}`
+        );
         throw error;
       }
     },
-    [addSecurityEvent],
+    [addSecurityEvent]
   );
 
   // Change password
@@ -419,14 +434,17 @@ export const AuthProvider = ({ children }) => {
           password: newPassword,
         });
         if (error) throw error;
-
         await addSecurityEvent('PASSWORD_CHANGED', 'User password changed');
-        return { success: true };
+        return true;
       } catch (error) {
+        await addSecurityEvent(
+          'PASSWORD_CHANGE_FAILED',
+          `Password change failed: ${error.message}`
+        );
         throw error;
       }
     },
-    [addSecurityEvent],
+    [addSecurityEvent]
   );
 
   // Permission checks
@@ -438,7 +456,7 @@ export const AuthProvider = ({ children }) => {
         userProfile.permissions?.includes(permission)
       );
     },
-    [userProfile],
+    [userProfile]
   );
 
   const hasRole = useCallback(
@@ -454,9 +472,7 @@ export const AuthProvider = ({ children }) => {
 
   // Get project permissions
   const getProjectPermissions = useCallback(
-    projectId => {
-      if (!userProfile)
-        return { read: false, write: false, deploy: false, admin: false };
+    
 
       if (userProfile.role === 'admin') {
         return { read: true, write: true, deploy: true, admin: true };
@@ -478,35 +494,12 @@ export const AuthProvider = ({ children }) => {
       try {
         const updatedPreferences = {
           ...userProfile?.preferences,
-          ...preferences,
-        };
-
-        const { data, error } = await supabase
-          .from('profiles')
-          .update({ preferences: updatedPreferences })
-          .eq('id', user?.id)
-          .select()
-          .single();
-
-        if (error) throw error;
-
-        if (mountedRef.current) {
-          setUserProfile(data);
-        }
-        localStorage.setItem(
-          'user_preferences',
-          JSON.stringify(updatedPreferences),
-        );
-        await addSecurityEvent(
-          'PREFERENCES_UPDATED',
-          'User preferences updated',
-        );
-        return { success: true };
-      } catch (error) {
+        const updatedPreferences = {
+          ...userProfile?.preferences,
         throw error;
       }
     },
-    [userProfile, user?.id, addSecurityEvent],
+    [userProfile, user?.id, addSecurityEvent]
   );
 
   // Get user role info
@@ -525,20 +518,14 @@ export const AuthProvider = ({ children }) => {
     try {
       const { data, error } = await supabase.auth.refreshSession();
       if (error) throw error;
-
-      if (mountedRef.current) {
-        setSession(data.session);
-        setLastActivity(Date.now());
-      }
-      await addSecurityEvent('SESSION_REFRESHED', 'Session manually refreshed');
-      return { success: true };
-    } catch (error) {
+      const { data, error } = await supabase.auth.refreshSession();
+      if (error) throw error;
       throw error;
     }
   }, [addSecurityEvent]);
 
   // Get session info
-  const getSessionInfo = useCallback(() => {
+  const getSessionInfo = useCallback(() => {,
     if (!session) return null;
 
     const expiresAt = new Date(session.expires_at * 1000);
@@ -549,7 +536,7 @@ export const AuthProvider = ({ children }) => {
       expiresAt,
       timeLeft,
       isExpired: timeLeft <= 0,
-      willExpireSoon: timeLeft <= 5 * 60 * 1000, // 5 minutes
+      willExpireSoon: timeLeft <= 5 * 60 * 1000, // 5 minutes,
     };
   }, [session]);
 

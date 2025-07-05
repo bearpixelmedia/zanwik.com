@@ -15,16 +15,29 @@ import {
   FileText,
   Copy,
   ExternalLink,
+  Loader2,
+  Save,
+  Plus,
+  CreditCard,
+  Trash2,
+  Edit,
+  CheckCircle,
+  AlertTriangle,
+  Clock,
+  Activity,
+  Monitor,
+  RefreshCw,
+  Smartphone,
 } from 'lucide-react';
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
+  CardDescription,
 } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { useAuth } from '../contexts/AuthContext';
-import { cn } from '../utils/cn';
 import { usersAPI, paymentsAPI } from '../utils/api';
 
 const Settings = () => {
@@ -294,7 +307,7 @@ const Settings = () => {
           <CardContent className='space-y-4'>
             <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
               <div>
-                <label className='text-sm font-medium text-foreground'>
+                <label htmlFor="-first-name-">
                   First Name
                 </label>
                 <input
@@ -307,7 +320,7 @@ const Settings = () => {
                 />
               </div>
               <div>
-                <label className='text-sm font-medium text-foreground'>
+                <label htmlFor="-last-name-">
                   Last Name
                 </label>
                 <input
@@ -321,7 +334,7 @@ const Settings = () => {
               </div>
             </div>
             <div>
-              <label className='text-sm font-medium text-foreground'>
+              <label htmlFor="-email-">
                 Email
               </label>
               <input
@@ -333,7 +346,7 @@ const Settings = () => {
             </div>
             <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
               <div>
-                <label className='text-sm font-medium text-foreground'>
+                <label htmlFor="-company-">
                   Company
                 </label>
                 <input
@@ -346,7 +359,7 @@ const Settings = () => {
                 />
               </div>
               <div>
-                <label className='text-sm font-medium text-foreground'>
+                <label htmlFor="-phone-">
                   Phone
                 </label>
                 <input
@@ -361,7 +374,7 @@ const Settings = () => {
             </div>
             <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
               <div>
-                <label className='text-sm font-medium text-foreground'>
+                <label htmlFor="-timezone-">
                   Timezone
                 </label>
                 <select
@@ -382,7 +395,7 @@ const Settings = () => {
                 </select>
               </div>
               <div>
-                <label className='text-sm font-medium text-foreground'>
+                <label htmlFor="-language-">
                   Language
                 </label>
                 <select
@@ -409,7 +422,7 @@ const Settings = () => {
                   onChange={e => setAutoSave(e.target.checked)}
                   className='rounded border-gray-300'
                 />
-                <label className='text-sm text-muted-foreground'>
+                <label htmlFor="-auto-save-changes-">
                   Auto-save changes
                 </label>
               </div>
@@ -515,7 +528,7 @@ const Settings = () => {
                         <p className='text-sm text-muted-foreground'>
                           ${sub.plan?.amount / 100}/month • Next billing:{' '}
                           {new Date(
-                            sub.current_period_end * 1000
+                            sub.current_period_end * 1000,
                           ).toLocaleDateString()}
                         </p>
                       </div>
@@ -557,7 +570,7 @@ const Settings = () => {
                         <p className='font-medium'>Invoice #{invoice.number}</p>
                         <p className='text-sm text-muted-foreground'>
                           {new Date(
-                            invoice.created * 1000
+                            invoice.created * 1000,
                           ).toLocaleDateString()}{' '}
                           • ${invoice.amount_paid / 100}
                         </p>
@@ -1138,7 +1151,7 @@ const Settings = () => {
             </div>
             {showApiKey && (
               <div>
-                <label className='text-sm font-medium text-foreground'>
+                <label htmlFor="-api-key-">
                   API Key
                 </label>
                 <input
@@ -1167,7 +1180,7 @@ const Settings = () => {
               </Button>
             </div>
             <div>
-              <label className='text-sm font-medium text-foreground'>
+              <label htmlFor="-webhook-url-">
                 Webhook URL
               </label>
               <input
@@ -1245,7 +1258,7 @@ const Settings = () => {
               </Button>
             </div>
             <div>
-              <label className='text-sm font-medium text-foreground'>
+              <label htmlFor="-last-used-">
                 Last Used
               </label>
               <input
@@ -1472,7 +1485,7 @@ const Settings = () => {
             </CardHeader>
             <CardContent className='space-y-4'>
               <div>
-                <label className='text-sm font-medium text-foreground'>
+                <label htmlFor="-card-number-">
                   Card Number
                 </label>
                 <input
@@ -1487,7 +1500,7 @@ const Settings = () => {
               </div>
               <div className='grid grid-cols-2 gap-4'>
                 <div>
-                  <label className='text-sm font-medium text-foreground'>
+                  <label htmlFor="-expiry-date-">
                     Expiry Date
                   </label>
                   <input
@@ -1501,7 +1514,7 @@ const Settings = () => {
                   />
                 </div>
                 <div>
-                  <label className='text-sm font-medium text-foreground'>
+                  <label htmlFor="-cvc-">
                     CVC
                   </label>
                   <input
@@ -1555,7 +1568,7 @@ const Settings = () => {
             </CardHeader>
             <CardContent className='space-y-4'>
               <div>
-                <label className='text-sm font-medium text-foreground'>
+                <label htmlFor="-email-address-">
                   Email Address
                 </label>
                 <input
@@ -1567,7 +1580,7 @@ const Settings = () => {
                 />
               </div>
               <div>
-                <label className='text-sm font-medium text-foreground'>
+                <label htmlFor="-role-">
                   Role
                 </label>
                 <select

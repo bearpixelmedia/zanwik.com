@@ -19,18 +19,33 @@ import {
   TrendingDown,
   ArrowUpRight,
   ArrowDownRight,
+  CheckCircle,
+  Loader2,
+  AlertTriangle,
+  Clock,
+  Server,
+  Database,
+  Globe,
+  RefreshCw,
+  Settings,
+  Plus,
+  GitBranch,
+  TrendingUp,
+  Calendar,
+  Eye,
+  BarChart3,
+  Target,
+  Activity,
+  Search,
 } from 'lucide-react';
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
+  CardDescription,
 } from '../components/ui/card';
 import { Button } from '../components/ui/button';
-import { useAuth } from '../contexts/AuthContext';
-import api from '../utils/api';
-import { cn } from '../utils/cn';
-
 const Deployment = () => {
   console.log('Rendering Deployment');
   const [loading, setLoading] = useState(true);
@@ -40,9 +55,9 @@ const Deployment = () => {
   const [selectedEnvironment, setSelectedEnvironment] = useState('all');
   const [selectedStatus, setSelectedStatus] = useState('all');
   const [showDeployModal, setShowDeployModal] = useState(false);
-  const [showPipelineModal, setShowPipelineModal] = useState(false);
+  const [setShowPipelineModal] = useState(false);
   const [deploying, setDeploying] = useState(false);
-  const [deploymentData, setDeploymentData] = useState({
+  const [setDeploymentData] = useState({
     deployments: [],
     pipelines: [],
     environments: [],
@@ -230,7 +245,7 @@ const Deployment = () => {
     }
   };
 
-  const handleDeploy = async deploymentData => {
+  const handleDeploy = async => {
     try {
       setDeploying(true);
       // Simulate deployment
@@ -245,7 +260,7 @@ const Deployment = () => {
     }
   };
 
-  const handleRollback = async deploymentId => {
+  const handleRollback = async => {
     if (!window.confirm('Are you sure you want to rollback this deployment?')) {
       return;
     }
@@ -318,7 +333,7 @@ const Deployment = () => {
     }
   };
 
-  const filteredDeployments = deploymentData.deployments.filter(deployment => {
+  const filteredDeployments = .deployments.filter(deployment => {
     const matchesEnvironment =
       selectedEnvironment === 'all' ||
       deployment.environment === selectedEnvironment;
@@ -404,7 +419,7 @@ const Deployment = () => {
           </CardHeader>
           <CardContent>
             <div className='text-2xl font-bold text-foreground'>
-              {deploymentData.stats.totalDeployments}
+              {.stats.totalDeployments}
             </div>
             <div className='flex items-center space-x-2 text-xs text-muted-foreground'>
               <TrendingUp className='h-3 w-3 text-green-500' />
@@ -423,10 +438,10 @@ const Deployment = () => {
           </CardHeader>
           <CardContent>
             <div className='text-2xl font-bold text-foreground'>
-              {deploymentData.stats.successRate}%
+              {.stats.successRate}%
             </div>
             <div className='text-xs text-muted-foreground'>
-              {deploymentData.stats.successfulDeployments} successful
+              {.stats.successfulDeployments} successful
             </div>
           </CardContent>
         </Card>
@@ -440,7 +455,7 @@ const Deployment = () => {
           </CardHeader>
           <CardContent>
             <div className='text-2xl font-bold text-foreground'>
-              {deploymentData.stats.avgDeploymentTime}
+              {.stats.avgDeploymentTime}
             </div>
             <div className='text-xs text-muted-foreground'>
               Across all environments
@@ -457,8 +472,8 @@ const Deployment = () => {
           </CardHeader>
           <CardContent>
             <div className='text-2xl font-bold text-foreground'>
-              {deploymentData.stats.activePipelines}/
-              {deploymentData.stats.totalPipelines}
+              {.stats.activePipelines}/
+              {.stats.totalPipelines}
             </div>
             <div className='text-xs text-muted-foreground'>
               Pipelines running
@@ -469,7 +484,7 @@ const Deployment = () => {
 
       {/* Environment Status */}
       <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
-        {deploymentData.environments.map((env, index) => (
+        {.environments.map((env, index) => (
           <Card key={index}>
             <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
               <CardTitle className='text-sm font-medium text-muted-foreground'>
@@ -551,7 +566,7 @@ const Deployment = () => {
                       </h3>
                       <span
                         className={`text-xs px-2 py-1 rounded-full ${getStatusBadge(
-                          deployment.status
+                          deployment.status,
                         )}`}
                       >
                         {deployment.status}
@@ -628,13 +643,13 @@ const Deployment = () => {
         </CardHeader>
         <CardContent>
           <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
-            {deploymentData.pipelines.map(pipeline => (
+            {.pipelines.map(pipeline => (
               <div key={pipeline.id} className='p-4 border rounded-lg'>
                 <div className='flex items-center justify-between mb-3'>
                   <h3 className='font-medium'>{pipeline.name}</h3>
                   <span
                     className={`text-xs px-2 py-1 rounded-full ${getStatusBadge(
-                      pipeline.status
+                      pipeline.status,
                     )}`}
                   >
                     {pipeline.status}
@@ -679,7 +694,7 @@ const Deployment = () => {
         </CardHeader>
         <CardContent>
           <div className='space-y-3'>
-            {deploymentData.recentActivity.map(activity => (
+            {.recentActivity.map(activity => (
               <div
                 key={activity.id}
                 className='flex items-start space-x-3 p-3 border rounded-lg'
@@ -690,7 +705,7 @@ const Deployment = () => {
                       ? 'completed'
                       : activity.status === 'running'
                       ? 'in-progress'
-                      : 'failed'
+                      : 'failed',
                   )}
                 </div>
                 <div className='flex-1 min-w-0'>
@@ -722,7 +737,7 @@ const Deployment = () => {
             </CardHeader>
             <CardContent className='space-y-4'>
               <div>
-                <label className='text-sm font-medium text-foreground'>
+                <label htmlFor="-application-">
                   Application
                 </label>
                 <select className='w-full mt-1 px-3 py-2 border border-input rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary'>
@@ -733,7 +748,7 @@ const Deployment = () => {
                 </select>
               </div>
               <div>
-                <label className='text-sm font-medium text-foreground'>
+                <label htmlFor="-environment-">
                   Environment
                 </label>
                 <select className='w-full mt-1 px-3 py-2 border border-input rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary'>
@@ -742,7 +757,7 @@ const Deployment = () => {
                 </select>
               </div>
               <div>
-                <label className='text-sm font-medium text-foreground'>
+                <label htmlFor="-branch-">
                   Branch
                 </label>
                 <input

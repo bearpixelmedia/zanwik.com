@@ -11,18 +11,32 @@ import {
   Filter,
   Download,
   Calendar,
+  CheckCircle,
+  AlertCircle,
+  Clock,
+  Settings,
+  RefreshCw,
+  Upload,
+  TrendingUp,
+  TrendingDown,
+  Cpu,
+  HardDrive,
+  Play,
+  Pause,
+  Eye,
+  GitBranch,
+  BarChart3,
+  Loader2,
 } from 'lucide-react';
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
+  CardDescription,
 } from '../components/ui/card';
 import { Button } from '../components/ui/button';
-import { useAuth } from '../contexts/AuthContext';
 import api from '../utils/api';
-import { cn } from '../utils/cn';
-
 const Infrastructure = () => {
   console.log('Rendering Infrastructure');
   const [selectedService, setSelectedService] = useState('all');
@@ -188,7 +202,7 @@ const Infrastructure = () => {
     }
   };
 
-  const handleRestartService = async serviceId => {
+  const = async serviceId => {
     try {
       await api.infrastructure.restartService(serviceId);
       // Refresh data after restart
@@ -301,8 +315,8 @@ const Infrastructure = () => {
     selectedService === 'all'
       ? infrastructureData.services
       : infrastructureData.services.filter(
-          service => service.status === selectedService
-        );
+          service => service.status === selectedService,
+      );
 
   if (loading) {
     return (
@@ -489,7 +503,7 @@ const Infrastructure = () => {
                 Healthy (
                 {
                   infrastructureData.services.filter(
-                    s => s.status === 'healthy'
+                    s => s.status === 'healthy',
                   ).length
                 }
                 )
@@ -502,7 +516,7 @@ const Infrastructure = () => {
                 Warning (
                 {
                   infrastructureData.services.filter(
-                    s => s.status === 'warning'
+                    s => s.status === 'warning',
                   ).length
                 }
                 )
@@ -541,7 +555,7 @@ const Infrastructure = () => {
                         </h3>
                         <span
                           className={`px-2 py-1 rounded-full text-xs font-medium ${getDeploymentStatusColor(
-                            service.healthCheck
+                            service.healthCheck,
                           )}`}
                         >
                           {service.healthCheck}
@@ -561,7 +575,7 @@ const Infrastructure = () => {
                         {getStatusIcon(service.status)}
                         <span
                           className={`text-sm font-medium ${getStatusColor(
-                            service.status
+                            service.status,
                           )}`}
                         >
                           {service.status}
@@ -648,7 +662,7 @@ const Infrastructure = () => {
             <div className='space-y-4'>
               {infrastructureData.deployments.map(deployment => {
                 const service = infrastructureData.services.find(
-                  s => s.id === deployment.serviceId
+                  s => s.id === deployment.serviceId,
                 );
                 return (
                   <div
@@ -672,7 +686,7 @@ const Infrastructure = () => {
                     <div className='flex items-center space-x-4'>
                       <span
                         className={`px-2 py-1 rounded-full text-xs font-medium ${getDeploymentStatusColor(
-                          deployment.status
+                          deployment.status,
                         )}`}
                       >
                         {deployment.status}
@@ -706,7 +720,7 @@ const Infrastructure = () => {
             </CardHeader>
             <CardContent className='space-y-4'>
               <div>
-                <label className='text-sm font-medium text-foreground'>
+                <label htmlFor="-service-name-">
                   Service Name
                 </label>
                 <input
@@ -716,7 +730,7 @@ const Infrastructure = () => {
                 />
               </div>
               <div>
-                <label className='text-sm font-medium text-foreground'>
+                <label htmlFor="-service-type-">
                   Service Type
                 </label>
                 <select className='w-full mt-1 px-3 py-2 border border-input rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary'>
@@ -727,7 +741,7 @@ const Infrastructure = () => {
                 </select>
               </div>
               <div>
-                <label className='text-sm font-medium text-foreground'>
+                <label htmlFor="-version-">
                   Version
                 </label>
                 <input
@@ -737,7 +751,7 @@ const Infrastructure = () => {
                 />
               </div>
               <div>
-                <label className='text-sm font-medium text-foreground'>
+                <label htmlFor="-environment-">
                   Environment
                 </label>
                 <select className='w-full mt-1 px-3 py-2 border border-input rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary'>
@@ -834,7 +848,7 @@ const Infrastructure = () => {
                       <span className='text-muted-foreground'>Status:</span>
                       <span
                         className={getStatusColor(
-                          selectedServiceForAction.status
+                          selectedServiceForAction.status,
                         )}
                       >
                         {selectedServiceForAction.status}
@@ -850,7 +864,7 @@ const Infrastructure = () => {
                       </span>
                       <span
                         className={getHealthCheckColor(
-                          selectedServiceForAction.healthCheck
+                          selectedServiceForAction.healthCheck,
                         )}
                       >
                         {selectedServiceForAction.healthCheck}
@@ -922,7 +936,7 @@ const Infrastructure = () => {
                     onClick={() =>
                       handleServiceAction(
                         selectedServiceForAction.id,
-                        'restart'
+                        'restart',
                       )
                     }
                   >

@@ -15,18 +15,32 @@ import {
   TrendingDown,
   UserX,
   Settings,
+  Loader2,
+  RefreshCw,
+  Download,
+  UserPlus,
+  TrendingUp,
+  UserCheck,
+  Activity,
+  Mail,
+  CheckSquare,
+  Square,
+  Eye,
+  Trash2,
+  Key,
+  Lock,
+  Unlock,
 } from 'lucide-react';
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
+  CardDescription,
 } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { useAuth } from '../contexts/AuthContext';
 import api from '../utils/api';
-import { cn } from '../utils/cn';
-
 const Users = () => {
   console.log('Rendering Users');
   const { user: currentUser } = useAuth();
@@ -107,7 +121,7 @@ const Users = () => {
         }, {}),
         activityTrend: usersData.slice(0, 7).map((user, index) => ({
           date: new Date(
-            Date.now() - (6 - index) * 24 * 60 * 60 * 1000
+            Date.now() - (6 - index) * 24 * 60 * 60 * 1000,
           ).toLocaleDateString(),
           active: Math.floor(Math.random() * 10) + 1,
         })),
@@ -266,7 +280,7 @@ const Users = () => {
         case 'delete':
           if (
             window.confirm(
-              `Are you sure you want to delete ${selectedUsers.length} users?`
+              `Are you sure you want to delete ${selectedUsers.length} users?`,
             )
           ) {
             await Promise.all(selectedUsers.map(id => api.deleteUser(id)));
@@ -550,7 +564,7 @@ const Users = () => {
                       </span>
                     </div>
                   </div>
-                )
+                ),
               )}
             </div>
           </CardContent>
@@ -718,14 +732,14 @@ const Users = () => {
                       <div className='flex items-center space-x-2 mt-1'>
                         <span
                           className={`text-xs px-2 py-1 rounded-full ${getRoleColor(
-                            user.role
+                            user.role,
                           )}`}
                         >
                           {user.role}
                         </span>
                         <span
                           className={`text-xs px-2 py-1 rounded-full ${getStatusColor(
-                            user.status
+                            user.status,
                           )}`}
                         >
                           {user.status}
@@ -807,7 +821,7 @@ const Users = () => {
             <h2 className='text-xl font-bold mb-4'>Invite New User</h2>
             <div className='space-y-4'>
               <div>
-                <label className='block text-sm font-medium mb-1'>Name</label>
+                <label htmlFor="name">Name</label>
                 <input
                   type='text'
                   value={newUser.name}
@@ -819,7 +833,7 @@ const Users = () => {
                 />
               </div>
               <div>
-                <label className='block text-sm font-medium mb-1'>Email</label>
+                <label htmlFor="email">Email</label>
                 <input
                   type='email'
                   value={newUser.email}
@@ -831,7 +845,7 @@ const Users = () => {
                 />
               </div>
               <div>
-                <label className='block text-sm font-medium mb-1'>
+                <label htmlFor="-department-">
                   Department
                 </label>
                 <select
@@ -850,7 +864,7 @@ const Users = () => {
                 </select>
               </div>
               <div>
-                <label className='block text-sm font-medium mb-1'>Role</label>
+                <label htmlFor="role">Role</label>
                 <select
                   value={newUser.role}
                   onChange={e =>
@@ -938,7 +952,7 @@ const Users = () => {
                     <span className='text-sm text-muted-foreground'>Role:</span>
                     <span
                       className={`text-sm px-2 py-1 rounded-full ${getRoleColor(
-                        selectedUser.role
+                        selectedUser.role,
                       )}`}
                     >
                       {selectedUser.role}
@@ -950,7 +964,7 @@ const Users = () => {
                     </span>
                     <span
                       className={`text-sm px-2 py-1 rounded-full ${getStatusColor(
-                        selectedUser.status
+                        selectedUser.status,
                       )}`}
                     >
                       {selectedUser.status}
@@ -1035,8 +1049,8 @@ const Users = () => {
                       onClick={() =>
                         handleUpdateUserRole(
                           selectedUser.id,
-                          selectedUser.role === 'admin' ? 'user' : 'admin'
-                        )
+                          selectedUser.role === 'admin' ? 'user' : 'admin',
+                      )
                       }
                     >
                       <Key className='h-4 w-4 mr-2' />

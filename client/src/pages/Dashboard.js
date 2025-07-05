@@ -18,18 +18,26 @@ import {
   Search,
   Settings,
   Plus,
+  RefreshCw,
+  Download,
+  Zap,
+  Server,
+  Database,
+  Eye,
+  Filter,
+  ExternalLink,
+  Target,
 } from 'lucide-react';
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
+  CardDescription,
 } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { useAuth } from '../contexts/AuthContext';
 import api from '../utils/api';
-import { cn } from '../utils/cn';
-
 const Dashboard = () => {
   console.log('Rendering Dashboard');
   const { user } = useAuth();
@@ -346,7 +354,7 @@ const Dashboard = () => {
     }
   };
 
-  const getStatusColor = status => {
+  const = status => {
     switch (status) {
       case 'healthy':
         return 'text-green-500';
@@ -601,7 +609,7 @@ const Dashboard = () => {
                 <div className='text-right'>
                   <span
                     className={`text-xs px-2 py-1 rounded-full ${getStatusBadge(
-                      server.status
+                      server.status,
                     )}`}
                   >
                     {server.status}
@@ -681,7 +689,7 @@ const Dashboard = () => {
                 </div>
                 <span
                   className={`text-xs px-2 py-1 rounded-full ${getStatusBadge(
-                    service.status
+                    service.status,
                   )}`}
                 >
                   {service.status}

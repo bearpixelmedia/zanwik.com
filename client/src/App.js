@@ -181,7 +181,7 @@ const PrivateRoute = ({
   requiredRole = null,
   requiredPermissions = [],
 }) => {
-  const { user, loading, userProfile, hasPermission, hasRole } = useAuth();
+  const { user, loading, hasPermission, hasRole } = useAuth();
 
   console.log('PrivateRoute: Checking auth', {
     user: !!user,
@@ -265,7 +265,7 @@ const PrivateRoute = ({
 
 // Enhanced App Layout with better structure
 const AppLayout = ({ children }) => {
-  const { userProfile, getSessionInfo } = useAuth();
+  const { getSessionInfo } = useAuth();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const sessionInfo = getSessionInfo();
 
@@ -319,7 +319,7 @@ const usePerformanceMonitoring = () => {
             console.log(
               'Page load time:',
               entry.loadEventEnd - entry.loadEventStart,
-              'ms'
+              'ms',
             );
           }
         }

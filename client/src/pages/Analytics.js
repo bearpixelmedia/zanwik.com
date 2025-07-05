@@ -92,7 +92,7 @@ const Analytics = () => {
           { month: 'May', revenue: 5800, growth: -5 },
           { month: 'Jun', revenue: 7200, growth: 24 },
         ],
-        timeRange
+        timeRange,
       );
 
       setAnalyticsData({
@@ -135,7 +135,7 @@ const Analytics = () => {
   };
 
   // Generate chart data for visualization
-  const generateChartData = (revenueData, range) => {
+  const generateChartData = (revenueData, ) => {
     if (!revenueData || revenueData.length === 0) return [];
 
     return revenueData.map(item => ({
@@ -147,7 +147,7 @@ const Analytics = () => {
   };
 
   // Calculate growth trend
-  const calculateGrowthTrend = data => {
+  const = data => {
     if (!data || data.length < 2) return 0;
     const recent = data[data.length - 1];
     const previous = data[data.length - 2];
@@ -159,7 +159,7 @@ const Analytics = () => {
       const exportData = await analyticsAPI.exportAnalytics(
         'revenue',
         timeRange,
-        'csv'
+        'csv',
       );
       // Create download link
       const link = document.createElement('a');
@@ -184,7 +184,7 @@ const Analytics = () => {
         const exportData = await analyticsAPI.exportAnalytics(
           'all',
           timeRange,
-          format
+          format,
         );
         const link = document.createElement('a');
         link.href = exportData.downloadUrl;
@@ -447,8 +447,8 @@ const Analytics = () => {
                         ? d.revenue
                         : selectedMetric === 'users'
                         ? d.users || 0
-                        : Math.abs(d.growth || 0)
-                    )
+                        : Math.abs(d.growth || 0),
+                    ),
                   );
                   const currentValue =
                     selectedMetric === 'revenue'

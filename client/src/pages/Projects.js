@@ -7,18 +7,6 @@ import {
   Calendar,
   CheckCircle,
   AlertCircle,
-} from 'lucide-react';
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from '../components/ui/card';
-import { Button } from '../components/ui/button';
-import { useAuth } from '../contexts/AuthContext';
-import api from '../utils/api';
-import { cn } from '../utils/cn';
-import {
   MoreVertical,
   Edit,
   Trash2,
@@ -31,7 +19,16 @@ import {
   Star,
   Clock,
 } from 'lucide-react';
-
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from '../components/ui/card';
+import { Button } from '../components/ui/button';
+import { useAuth } from '../contexts/AuthContext';
+import api from '../utils/api';
 const Projects = () => {
   console.log('Rendering Projects');
   const { user: _user } = useAuth(); // eslint-disable-line no-unused-vars
@@ -61,7 +58,6 @@ const Projects = () => {
   // Fetch projects on component mount
   useEffect(() => {
     fetchProjects();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Auto-refresh functionality
   useEffect(() => {
@@ -77,7 +73,6 @@ const Projects = () => {
   // Refetch when filters change
   useEffect(() => {
     fetchProjects();
-  }, [searchTerm, filterStatus, filterCategory, sortBy]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const fetchProjects = async () => {
     try {
@@ -190,7 +185,7 @@ const Projects = () => {
       setEditingProject(projectId);
       const updatedProject = await api.updateProject(projectId, updatedData);
       setProjects(prev =>
-        prev.map(p => (p.id === projectId ? updatedProject : p))
+        prev.map(p => (p.id === projectId ? updatedProject : p)),
       );
       setShowEditModal(false);
     } catch (err) {
@@ -413,7 +408,7 @@ const Projects = () => {
                   <span className='text-sm text-muted-foreground'>Status</span>
                   <span
                     className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(
-                      project.status
+                      project.status,
                     )}`}
                   >
                     {project.status.charAt(0).toUpperCase() +
@@ -432,7 +427,7 @@ const Projects = () => {
                   <div className='w-full bg-gray-200 rounded-full h-2'>
                     <div
                       className={`h-2 rounded-full transition-all duration-300 ${getProgressColor(
-                        project.progress || 0
+                        project.progress || 0,
                       )}`}
                       style={{ width: `${project.progress || 0}%` }}
                     />
@@ -548,7 +543,7 @@ const Projects = () => {
             </CardHeader>
             <CardContent className='space-y-4'>
               <div>
-                <label className='text-sm font-medium text-foreground'>
+                <label htmlFor="-project-name-">
                   Project Name
                 </label>
                 <input
@@ -562,7 +557,7 @@ const Projects = () => {
                 />
               </div>
               <div>
-                <label className='text-sm font-medium text-foreground'>
+                <label htmlFor="-description-">
                   Description
                 </label>
                 <textarea
@@ -579,7 +574,7 @@ const Projects = () => {
                 />
               </div>
               <div>
-                <label className='text-sm font-medium text-foreground'>
+                <label htmlFor="-category-">
                   Category
                 </label>
                 <select
@@ -640,7 +635,7 @@ const Projects = () => {
             </CardHeader>
             <CardContent className='space-y-4'>
               <div>
-                <label className='text-sm font-medium text-foreground'>
+                <label htmlFor="-project-name-">
                   Project Name
                 </label>
                 <input
@@ -657,7 +652,7 @@ const Projects = () => {
                 />
               </div>
               <div>
-                <label className='text-sm font-medium text-foreground'>
+                <label htmlFor="-description-">
                   Description
                 </label>
                 <textarea
@@ -675,7 +670,7 @@ const Projects = () => {
               </div>
               <div className='grid grid-cols-2 gap-4'>
                 <div>
-                  <label className='text-sm font-medium text-foreground'>
+                  <label htmlFor="-category-">
                     Category
                   </label>
                   <select
@@ -696,7 +691,7 @@ const Projects = () => {
                   </select>
                 </div>
                 <div>
-                  <label className='text-sm font-medium text-foreground'>
+                  <label htmlFor="-status-">
                     Status
                   </label>
                   <select
@@ -718,7 +713,7 @@ const Projects = () => {
               </div>
               <div className='grid grid-cols-2 gap-4'>
                 <div>
-                  <label className='text-sm font-medium text-foreground'>
+                  <label htmlFor="-progress--">
                     Progress (%)
                   </label>
                   <input
@@ -736,7 +731,7 @@ const Projects = () => {
                   />
                 </div>
                 <div>
-                  <label className='text-sm font-medium text-foreground'>
+                  <label htmlFor="-priority-">
                     Priority
                   </label>
                   <select

@@ -11,7 +11,7 @@ const supabaseAnonKey =
 // Validate environment variables
 if (!supabaseUrl || !supabaseAnonKey) {
   console.error(
-    'Missing Supabase environment variables. Please check your .env file.'
+    'Missing Supabase environment variables. Please check your .env file.',
   );
   throw new Error('Supabase configuration is incomplete');
 }
@@ -35,14 +35,14 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
 });
 
 // Connection status monitoring
-let isConnected = false;
-let connectionRetries = 0;
-const maxRetries = 3;
+let = false;
+let = 0;
+const = 3;
 
 // Test database connection
 export const testConnection = async () => {
   try {
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from('projects')
       .select('count')
       .limit(1);
@@ -52,8 +52,8 @@ export const testConnection = async () => {
       return false;
     }
 
-    isConnected = true;
-    connectionRetries = 0;
+    = true;
+    = 0;
     console.log('✅ Successfully connected to Supabase database');
     return true;
   } catch (error) {
@@ -67,7 +67,7 @@ export const auth = {
   // Sign in with email/password
   signIn: async (email, password) => {
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
+      const { error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
@@ -76,7 +76,7 @@ export const auth = {
         throw error;
       }
       console.log('✅ User signed in successfully');
-      return data;
+      return ;
     } catch (error) {
       console.error('Sign in failed:', error);
       throw error;
@@ -86,7 +86,7 @@ export const auth = {
   // Sign up with email/password
   signUp: async (email, password) => {
     try {
-      const { data, error } = await supabase.auth.signUp({
+      const { error } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -98,7 +98,7 @@ export const auth = {
         throw error;
       }
       console.log('✅ User signed up successfully');
-      return data;
+      return ;
     } catch (error) {
       console.error('Sign up failed:', error);
       throw error;
@@ -124,7 +124,7 @@ export const auth = {
   getCurrentUser: async () => {
     try {
       const {
-        data: { user },
+        : { user },
         error,
       } = await supabase.auth.getUser();
       if (error) {
@@ -142,7 +142,7 @@ export const auth = {
   getCurrentSession: async () => {
     try {
       const {
-        data: { session },
+        : { session },
         error,
       } = await supabase.auth.getSession();
       if (error) {
@@ -221,12 +221,12 @@ export const db = {
           query = query.ilike('name', `%${filters.search}%`);
         }
 
-        const { data, error } = await query;
+        const { error } = await query;
         if (error) {
           console.error('Get projects error:', error);
           throw error;
         }
-        return data || [];
+        return || [];
       } catch (error) {
         console.error('Get all projects failed:', error);
         throw error;
@@ -235,7 +235,7 @@ export const db = {
 
     getById: async id => {
       try {
-        const { data, error } = await supabase
+        const { error } = await supabase
           .from('projects')
           .select('*')
           .eq('id', id)
@@ -244,7 +244,7 @@ export const db = {
           console.error('Get project by ID error:', error);
           throw error;
         }
-        return data;
+        return ;
       } catch (error) {
         console.error('Get project by ID failed:', error);
         throw error;
@@ -253,7 +253,7 @@ export const db = {
 
     create: async project => {
       try {
-        const { data, error } = await supabase
+        const { error } = await supabase
           .from('projects')
           .insert({
             ...project,
@@ -267,7 +267,7 @@ export const db = {
           throw error;
         }
         console.log('✅ Project created successfully');
-        return data;
+        return ;
       } catch (error) {
         console.error('Create project failed:', error);
         throw error;
@@ -276,7 +276,7 @@ export const db = {
 
     update: async (id, updates) => {
       try {
-        const { data, error } = await supabase
+        const { error } = await supabase
           .from('projects')
           .update({
             ...updates,
@@ -290,7 +290,7 @@ export const db = {
           throw error;
         }
         console.log('✅ Project updated successfully');
-        return data;
+        return ;
       } catch (error) {
         console.error('Update project failed:', error);
         throw error;
@@ -314,12 +314,12 @@ export const db = {
     // Get project statistics
     getStats: async () => {
       try {
-        const { data, error } = await supabase.rpc('get_project_stats');
+        const { error } = await supabase.rpc('get_project_stats');
         if (error) {
           console.error('Get project stats error:', error);
           throw error;
         }
-        return data;
+        return ;
       } catch (error) {
         console.error('Get project stats failed:', error);
         throw error;
@@ -331,7 +331,7 @@ export const db = {
   analytics: {
     getOverview: async () => {
       try {
-        const { data, error } = await supabase
+        const { error } = await supabase
           .from('analytics_overview')
           .select('*')
           .single();
@@ -339,7 +339,7 @@ export const db = {
           console.error('Get analytics overview error:', error);
           throw error;
         }
-        return data;
+        return ;
       } catch (error) {
         console.error('Get analytics overview failed:', error);
         throw error;
@@ -348,7 +348,7 @@ export const db = {
 
     getRevenue: async (period = '30d') => {
       try {
-        const { data, error } = await supabase
+        const { error } = await supabase
           .from('analytics_revenue')
           .select('*')
           .eq('period', period)
@@ -357,7 +357,7 @@ export const db = {
           console.error('Get revenue analytics error:', error);
           throw error;
         }
-        return data || [];
+        return || [];
       } catch (error) {
         console.error('Get revenue analytics failed:', error);
         throw error;
@@ -367,7 +367,7 @@ export const db = {
     // Get custom analytics
     getCustomAnalytics: async (startDate, endDate) => {
       try {
-        const { data, error } = await supabase
+        const { error } = await supabase
           .from('analytics_revenue')
           .select('*')
           .gte('date', startDate)
@@ -377,7 +377,7 @@ export const db = {
           console.error('Get custom analytics error:', error);
           throw error;
         }
-        return data || [];
+        return || [];
       } catch (error) {
         console.error('Get custom analytics failed:', error);
         throw error;
@@ -405,12 +405,12 @@ export const db = {
           query = query.ilike('email', `%${filters.search}%`);
         }
 
-        const { data, error } = await query;
+        const { error } = await query;
         if (error) {
           console.error('Get users error:', error);
           throw error;
         }
-        return data || [];
+        return || [];
       } catch (error) {
         console.error('Get all users failed:', error);
         throw error;
@@ -419,7 +419,7 @@ export const db = {
 
     getById: async id => {
       try {
-        const { data, error } = await supabase
+        const { error } = await supabase
           .from('users')
           .select('*')
           .eq('id', id)
@@ -428,7 +428,7 @@ export const db = {
           console.error('Get user by ID error:', error);
           throw error;
         }
-        return data;
+        return ;
       } catch (error) {
         console.error('Get user by ID failed:', error);
         throw error;
@@ -437,7 +437,7 @@ export const db = {
 
     update: async (id, updates) => {
       try {
-        const { data, error } = await supabase
+        const { error } = await supabase
           .from('users')
           .update({
             ...updates,
@@ -451,7 +451,7 @@ export const db = {
           throw error;
         }
         console.log('✅ User updated successfully');
-        return data;
+        return ;
       } catch (error) {
         console.error('Update user failed:', error);
         throw error;
@@ -486,12 +486,12 @@ export const db = {
           query = query.eq('severity', severity);
         }
 
-        const { data, error } = await query;
+        const { error } = await query;
         if (error) {
           console.error('Get alerts error:', error);
           throw error;
         }
-        return data || [];
+        return || [];
       } catch (error) {
         console.error('Get alerts failed:', error);
         throw error;
