@@ -58,6 +58,7 @@ const Projects = () => {
   // Fetch projects on component mount
   useEffect(() => {
     fetchProjects();
+  }, []);
 
   // Auto-refresh functionality
   useEffect(() => {
@@ -73,6 +74,7 @@ const Projects = () => {
   // Refetch when filters change
   useEffect(() => {
     fetchProjects();
+  }, [searchTerm, filterStatus, filterCategory, sortBy]);
 
   const fetchProjects = async () => {
     try {

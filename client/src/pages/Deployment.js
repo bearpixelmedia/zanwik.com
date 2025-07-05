@@ -57,7 +57,7 @@ const Deployment = () => {
   const [showDeployModal, setShowDeployModal] = useState(false);
   const [setShowPipelineModal] = useState(false);
   const [deploying, setDeploying] = useState(false);
-  const [setDeploymentData] = useState({
+  const [deploymentData, setDeploymentData] = useState({
     deployments: [],
     pipelines: [],
     environments: [],
@@ -245,7 +245,7 @@ const Deployment = () => {
     }
   };
 
-  const handleDeploy = async => {
+  const handleDeploy = async () => {
     try {
       setDeploying(true);
       // Simulate deployment
@@ -260,7 +260,7 @@ const Deployment = () => {
     }
   };
 
-  const handleRollback = async => {
+  const handleRollback = async () => {
     if (!window.confirm('Are you sure you want to rollback this deployment?')) {
       return;
     }
@@ -333,7 +333,7 @@ const Deployment = () => {
     }
   };
 
-  const filteredDeployments = .deployments.filter(deployment => {
+  const filteredDeployments = deploymentData.deployments.filter(deployment => {
     const matchesEnvironment =
       selectedEnvironment === 'all' ||
       deployment.environment === selectedEnvironment;
@@ -419,7 +419,7 @@ const Deployment = () => {
           </CardHeader>
           <CardContent>
             <div className='text-2xl font-bold text-foreground'>
-              {.stats.totalDeployments}
+              {deploymentData.stats.totalDeployments}
             </div>
             <div className='flex items-center space-x-2 text-xs text-muted-foreground'>
               <TrendingUp className='h-3 w-3 text-green-500' />
@@ -438,10 +438,10 @@ const Deployment = () => {
           </CardHeader>
           <CardContent>
             <div className='text-2xl font-bold text-foreground'>
-              {.stats.successRate}%
+              {deploymentData.stats.successRate}%
             </div>
             <div className='text-xs text-muted-foreground'>
-              {.stats.successfulDeployments} successful
+              {deploymentData.stats.successfulDeployments} successful
             </div>
           </CardContent>
         </Card>
@@ -455,7 +455,7 @@ const Deployment = () => {
           </CardHeader>
           <CardContent>
             <div className='text-2xl font-bold text-foreground'>
-              {.stats.avgDeploymentTime}
+              {deploymentData.stats.avgDeploymentTime}
             </div>
             <div className='text-xs text-muted-foreground'>
               Across all environments
@@ -472,8 +472,8 @@ const Deployment = () => {
           </CardHeader>
           <CardContent>
             <div className='text-2xl font-bold text-foreground'>
-              {.stats.activePipelines}/
-              {.stats.totalPipelines}
+              {deploymentData.stats.activePipelines}/
+              {deploymentData.stats.totalPipelines}
             </div>
             <div className='text-xs text-muted-foreground'>
               Pipelines running
@@ -484,7 +484,7 @@ const Deployment = () => {
 
       {/* Environment Status */}
       <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
-        {.environments.map((env, index) => (
+        {deploymentData.environments.map((env, index) => (
           <Card key={index}>
             <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
               <CardTitle className='text-sm font-medium text-muted-foreground'>
@@ -613,7 +613,7 @@ const Deployment = () => {
                       <Button
                         variant='outline'
                         size='sm'
-                        onClick={() => handleRollback(deployment.id)}
+                        onClick={() => handleRollback()}
                       >
                         <RefreshCw className='h-3 w-3' />
                       </Button>
@@ -643,7 +643,7 @@ const Deployment = () => {
         </CardHeader>
         <CardContent>
           <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
-            {.pipelines.map(pipeline => (
+            {deploymentData.pipelines.map(pipeline => (
               <div key={pipeline.id} className='p-4 border rounded-lg'>
                 <div className='flex items-center justify-between mb-3'>
                   <h3 className='font-medium'>{pipeline.name}</h3>
@@ -694,7 +694,7 @@ const Deployment = () => {
         </CardHeader>
         <CardContent>
           <div className='space-y-3'>
-            {.recentActivity.map(activity => (
+            {deploymentData.recentActivity.map(activity => (
               <div
                 key={activity.id}
                 className='flex items-start space-x-3 p-3 border rounded-lg'
@@ -777,7 +777,7 @@ const Deployment = () => {
                 </Button>
                 <Button
                   className='flex-1'
-                  onClick={() => handleDeploy({})}
+                  onClick={() => handleDeploy()}
                   disabled={deploying}
                 >
                   {deploying ? (

@@ -147,7 +147,7 @@ const Analytics = () => {
   };
 
   // Calculate growth trend
-  const = data => {
+  const calculateGrowthTrend = data => {
     if (!data || data.length < 2) return 0;
     const recent = data[data.length - 1];
     const previous = data[data.length - 2];

@@ -35,14 +35,14 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
 });
 
 // Connection status monitoring
-let = false;
-let = 0;
-const = 3;
+let isConnected = false;
+let connectionRetries = 0;
+const maxRetries = 3;
 
 // Test database connection
 export const testConnection = async () => {
   try {
-    const { error } = await supabase
+    const { data, error } = await supabase
       .from('projects')
       .select('count')
       .limit(1);
@@ -52,8 +52,8 @@ export const testConnection = async () => {
       return false;
     }
 
-    = true;
-    = 0;
+    isConnected = true;
+    connectionRetries = 0;
     console.log('✅ Successfully connected to Supabase database');
     return true;
   } catch (error) {
@@ -67,7 +67,7 @@ export const auth = {
   // Sign in with email/password
   signIn: async (email, password) => {
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
@@ -76,7 +76,7 @@ export const auth = {
         throw error;
       }
       console.log('✅ User signed in successfully');
-      return ;
+      return data;
     } catch (error) {
       console.error('Sign in failed:', error);
       throw error;
@@ -86,7 +86,7 @@ export const auth = {
   // Sign up with email/password
   signUp: async (email, password) => {
     try {
-      const { error } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -98,7 +98,7 @@ export const auth = {
         throw error;
       }
       console.log('✅ User signed up successfully');
-      return ;
+      return data;
     } catch (error) {
       console.error('Sign up failed:', error);
       throw error;
@@ -124,7 +124,7 @@ export const auth = {
   getCurrentUser: async () => {
     try {
       const {
-        : { user },
+        data: { user },
         error,
       } = await supabase.auth.getUser();
       if (error) {
@@ -142,7 +142,7 @@ export const auth = {
   getCurrentSession: async () => {
     try {
       const {
-        : { session },
+        data: { session },
         error,
       } = await supabase.auth.getSession();
       if (error) {
@@ -221,12 +221,12 @@ export const db = {
           query = query.ilike('name', `%${filters.search}%`);
         }
 
-        const { error } = await query;
+        const { data, error } = await query;
         if (error) {
           console.error('Get projects error:', error);
           throw error;
         }
-        return || [];
+        return data || [];
       } catch (error) {
         console.error('Get all projects failed:', error);
         throw error;
@@ -331,7 +331,7 @@ export const db = {
   analytics: {
     getOverview: async () => {
       try {
-        const { error } = await supabase
+        const { data, error } = await supabase
           .from('analytics_overview')
           .select('*')
           .single();
@@ -339,7 +339,7 @@ export const db = {
           console.error('Get analytics overview error:', error);
           throw error;
         }
-        return ;
+        return data;
       } catch (error) {
         console.error('Get analytics overview failed:', error);
         throw error;
@@ -348,7 +348,7 @@ export const db = {
 
     getRevenue: async (period = '30d') => {
       try {
-        const { error } = await supabase
+        const { data, error } = await supabase
           .from('analytics_revenue')
           .select('*')
           .eq('period', period)
@@ -357,7 +357,7 @@ export const db = {
           console.error('Get revenue analytics error:', error);
           throw error;
         }
-        return || [];
+        return data || [];
       } catch (error) {
         console.error('Get revenue analytics failed:', error);
         throw error;
@@ -367,7 +367,7 @@ export const db = {
     // Get custom analytics
     getCustomAnalytics: async (startDate, endDate) => {
       try {
-        const { error } = await supabase
+        const { data, error } = await supabase
           .from('analytics_revenue')
           .select('*')
           .gte('date', startDate)
@@ -377,7 +377,7 @@ export const db = {
           console.error('Get custom analytics error:', error);
           throw error;
         }
-        return || [];
+        return data || [];
       } catch (error) {
         console.error('Get custom analytics failed:', error);
         throw error;
@@ -405,12 +405,12 @@ export const db = {
           query = query.ilike('email', `%${filters.search}%`);
         }
 
-        const { error } = await query;
+        const { data, error } = await query;
         if (error) {
           console.error('Get users error:', error);
           throw error;
         }
-        return || [];
+        return data || [];
       } catch (error) {
         console.error('Get all users failed:', error);
         throw error;
@@ -419,7 +419,7 @@ export const db = {
 
     getById: async id => {
       try {
-        const { error } = await supabase
+        const { data, error } = await supabase
           .from('users')
           .select('*')
           .eq('id', id)
@@ -428,7 +428,7 @@ export const db = {
           console.error('Get user by ID error:', error);
           throw error;
         }
-        return ;
+        return data;
       } catch (error) {
         console.error('Get user by ID failed:', error);
         throw error;
@@ -437,7 +437,7 @@ export const db = {
 
     update: async (id, updates) => {
       try {
-        const { error } = await supabase
+        const { data, error } = await supabase
           .from('users')
           .update({
             ...updates,
@@ -451,7 +451,7 @@ export const db = {
           throw error;
         }
         console.log('✅ User updated successfully');
-        return ;
+        return data;
       } catch (error) {
         console.error('Update user failed:', error);
         throw error;
@@ -486,12 +486,12 @@ export const db = {
           query = query.eq('severity', severity);
         }
 
-        const { error } = await query;
+        const { data, error } = await query;
         if (error) {
           console.error('Get alerts error:', error);
           throw error;
         }
-        return || [];
+        return data || [];
       } catch (error) {
         console.error('Get alerts failed:', error);
         throw error;

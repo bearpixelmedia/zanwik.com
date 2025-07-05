@@ -202,14 +202,13 @@ const Infrastructure = () => {
     }
   };
 
-  const = async serviceId => {
+  const handleRestartService = async serviceId => {
     try {
       await api.infrastructure.restartService(serviceId);
       // Refresh data after restart
       fetchInfrastructureData();
-    } catch (err) {
-      console.error('Failed to restart service:', err);
-      alert('Failed to restart service');
+    } catch (error) {
+      console.error('Failed to restart service:', error);
     }
   };
 

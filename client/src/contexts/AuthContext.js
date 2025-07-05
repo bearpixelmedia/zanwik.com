@@ -242,44 +242,6 @@ export const AuthProvider = ({ children }) => {
     return () => {
       clearTimeout(fallbackTimeout);
     };
-
-    // Set up auth listener - only once
-      console.log('AuthContext: Setting up auth listener');
-      const {
-        data: { subscription },
-      } = supabase.auth.onAuthStateChange(async (event, session) => {
-        if (!mountedRef.current) return;
-
-        console.log('AuthContext: Auth state changed:', event);
-
-        if (event === 'SIGNED_IN' && session?.user) {
-          await initializeUser(session.user, session);
-          addSecurityEvent('SIGNED_IN', 'User signed in successfully');
-        } else if (event === 'SIGNED_OUT') {
-          setUser(null);
-          setSession(null);
-          setUserProfile(null);
-          setIsAuthenticated(false);
-          addSecurityEvent('SIGNED_OUT', 'User signed out');
-        } else if (event === 'TOKEN_REFRESHED' && session?.user) {
-          setSession(session);
-          setLastActivity(Date.now());
-          addSecurityEvent('TOKEN_REFRESHED', 'Session token refreshed');
-        }
-
-        if (mountedRef.current) {
-          setLoading(false);
-        }
-      });
-
-    }
-
-      if (authListenerRef.current) {
-        authListenerRef.current.unsubscribe();
-        authListenerRef.current = null;
-      }
-      mountedRef.current = false;
-    };
   }, [initializeUser, addSecurityEvent]);
 
   // Activity tracking
@@ -472,7 +434,8 @@ export const AuthProvider = ({ children }) => {
 
   // Get project permissions
   const getProjectPermissions = useCallback(
-    
+    (projectId) => {
+      if (!userProfile) return { read: false, write: false, deploy: false, admin: false };
 
       if (userProfile.role === 'admin') {
         return { read: true, write: true, deploy: true, admin: true };
@@ -485,7 +448,7 @@ export const AuthProvider = ({ children }) => {
         admin: hasPermission('manage_projects'),
       };
     },
-    [userProfile, hasPermission],
+    [userProfile, hasPermission]
   );
 
   // Update preferences
@@ -494,8 +457,28 @@ export const AuthProvider = ({ children }) => {
       try {
         const updatedPreferences = {
           ...userProfile?.preferences,
-        const updatedPreferences = {
-          ...userProfile?.preferences,
+          ...preferences,
+        };
+
+        const { error } = await supabase
+          .from('user_profiles')
+          .update({ preferences: updatedPreferences })
+          .eq('user_id', user?.id);
+
+        if (error) throw error;
+
+        setUserProfile(prev => ({
+          ...prev,
+          preferences: updatedPreferences,
+        }));
+
+        await addSecurityEvent('PREFERENCES_UPDATED', 'User preferences updated');
+        return { success: true };
+      } catch (error) {
+        await addSecurityEvent(
+          'PREFERENCES_UPDATE_FAILED',
+          `Preferences update failed: ${error.message}`
+        );
         throw error;
       }
     },
@@ -518,14 +501,25 @@ export const AuthProvider = ({ children }) => {
     try {
       const { data, error } = await supabase.auth.refreshSession();
       if (error) throw error;
-      const { data, error } = await supabase.auth.refreshSession();
-      if (error) throw error;
+      
+      if (data.session) {
+        setSession(data.session);
+        setLastActivity(Date.now());
+        await addSecurityEvent('SESSION_REFRESHED', 'Session refreshed successfully');
+      }
+      
+      return data;
+    } catch (error) {
+      await addSecurityEvent(
+        'SESSION_REFRESH_FAILED',
+        `Session refresh failed: ${error.message}`
+      );
       throw error;
     }
   }, [addSecurityEvent]);
 
   // Get session info
-  const getSessionInfo = useCallback(() => {,
+  const getSessionInfo = useCallback(() => {
     if (!session) return null;
 
     const expiresAt = new Date(session.expires_at * 1000);
@@ -536,7 +530,7 @@ export const AuthProvider = ({ children }) => {
       expiresAt,
       timeLeft,
       isExpired: timeLeft <= 0,
-      willExpireSoon: timeLeft <= 5 * 60 * 1000, // 5 minutes,
+      willExpireSoon: timeLeft <= 5 * 60 * 1000, // 5 minutes
     };
   }, [session]);
 
@@ -591,6 +585,35 @@ export const AuthProvider = ({ children }) => {
       sessionTimeout,
     ],
   );
+
+  // Set up auth listener - only once
+  console.log('AuthContext: Setting up auth listener');
+  const {
+    data: { subscription },
+  } = supabase.auth.onAuthStateChange(async (event, session) => {
+    if (!mountedRef.current) return;
+
+    console.log('AuthContext: Auth state changed:', event);
+
+    if (event === 'SIGNED_IN' && session?.user) {
+      await initializeUser(session.user, session);
+      addSecurityEvent('SIGNED_IN', 'User signed in successfully');
+    } else if (event === 'SIGNED_OUT') {
+      setUser(null);
+      setSession(null);
+      setUserProfile(null);
+      setIsAuthenticated(false);
+      addSecurityEvent('SIGNED_OUT', 'User signed out');
+    } else if (event === 'TOKEN_REFRESHED' && session?.user) {
+      setSession(session);
+      setLastActivity(Date.now());
+      addSecurityEvent('TOKEN_REFRESHED', 'Session token refreshed');
+    }
+
+    if (mountedRef.current) {
+      setLoading(false);
+    }
+  });
 
   return (
     <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>

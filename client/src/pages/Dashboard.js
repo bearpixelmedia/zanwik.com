@@ -354,7 +354,7 @@ const Dashboard = () => {
     }
   };
 
-  const = status => {
+  const getStatusColor = status => {
     switch (status) {
       case 'healthy':
         return 'text-green-500';
