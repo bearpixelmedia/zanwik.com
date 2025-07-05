@@ -111,6 +111,6 @@
     "hooks": {
       "pre-commit": "echo 'Skipping pre-commit in CI environment'"
     }
-  }
+  },
   "proxy": "http://localhost:3000"
 }
