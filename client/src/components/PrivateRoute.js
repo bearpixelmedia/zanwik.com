@@ -6,7 +6,6 @@ import {
   Clock,
   AlertTriangle,
   CheckCircle,
-  Loader2,
   Lock,
   RefreshCw,
   Zap,
@@ -100,7 +99,7 @@ const PrivateRoute = ({
         {/* Loading Animation */}
         <div className='space-y-4'>
           <div className='relative'>
-            <Loader2 className='h-12 w-12 animate-spin text-primary mx-auto' />
+            <div className='h-12 w-12 animate-spin text-primary mx-auto border-4 border-primary border-t-transparent rounded-full'></div>
             <div className='absolute inset-0 flex items-center justify-center'>
               <div className='w-8 h-8 bg-background rounded-full' />
             </div>
@@ -117,7 +116,7 @@ const PrivateRoute = ({
             <div className='flex items-center justify-center space-x-2'>
               {securityCheck ? (
                 <>
-                  <Loader2 className='h-4 w-4 animate-spin text-primary' />
+                  <div className='h-4 w-4 animate-spin text-primary border-2 border-primary border-t-transparent rounded-full'></div>
                   <span className='text-sm text-muted-foreground'>
                     Security check...
                   </span>
@@ -132,7 +131,7 @@ const PrivateRoute = ({
               )}
             </div>
             <div className='flex items-center justify-center space-x-2'>
-              <Loader2 className='h-4 w-4 animate-spin text-primary' />
+              <div className='h-4 w-4 animate-spin text-primary border-2 border-primary border-t-transparent rounded-full'></div>
               <span className='text-sm text-muted-foreground'>
                 Loading dashboard...
               </span>

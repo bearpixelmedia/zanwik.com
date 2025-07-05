@@ -371,8 +371,10 @@ const Dashboard = () => {
     return (
       <div className='p-6 flex items-center justify-center min-h-[400px]'>
         <div className='text-center'>
-          <Loader2 className='h-8 w-8 animate-spin mx-auto mb-4' />
-          <p className='text-muted-foreground'>Loading dashboard...</p>
+          <div className='h-8 w-8 animate-spin mx-auto mb-4 border-4 border-primary border-t-transparent rounded-full'></div>
+          <p className='text-muted-foreground'>
+            Loading dashboard data...
+          </p>
         </div>
       </div>
     );

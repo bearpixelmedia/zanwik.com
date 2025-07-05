@@ -20,7 +20,6 @@ import {
   DollarSign,
   Users,
   Target,
-  Loader2,
   TrendingUp,
   BarChart3,
   RefreshCw,
@@ -271,7 +270,7 @@ const Projects = () => {
     return (
       <div className='p-6 flex items-center justify-center min-h-[400px]'>
         <div className='text-center'>
-          <Loader2 className='h-8 w-8 animate-spin mx-auto mb-4 text-primary' />
+                      <div className='h-8 w-8 mx-auto mb-4 animate-spin border-4 border-primary border-t-transparent rounded-full'></div>
           <p className='text-muted-foreground'>Loading projects...</p>
         </div>
       </div>
@@ -296,9 +295,9 @@ const Projects = () => {
               size='sm'
               onClick={() => setAutoRefresh(!autoRefresh)}
             >
-              <RefreshCw
-                className={`h-4 w-4 mr-2 ${autoRefresh ? 'animate-spin' : ''}`}
-              />
+                              <RefreshCw
+                  className={`h-4 w-4 mr-2 ${autoRefresh ? 'animate-spin' : ''}`}
+                />
               {autoRefresh ? 'Auto-refresh ON' : 'Auto-refresh OFF'}
             </Button>
             {autoRefresh && (
@@ -613,7 +612,7 @@ const Projects = () => {
                 >
                   {creatingProject ? (
                     <>
-                      <Loader2 className='h-4 w-4 mr-2 animate-spin' />
+                      <div className='h-4 w-4 mr-2 animate-spin border-2 border-current border-t-transparent rounded-full'></div>
                       Creating...
                     </>
                   ) : (

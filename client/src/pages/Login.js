@@ -319,10 +319,10 @@ const Login = () => {
                   disabled={isLoading || twoFactorCode.length !== 6}
                 >
                   {isLoading ? (
-                    <>
-                      <Loader2 className='mr-2 h-4 w-4 animate-spin' />
-                      Verifying...
-                    </>
+                                          <>
+                        <div className='h-4 w-4 mr-2 animate-spin border-2 border-current border-t-transparent rounded-full'></div>
+                        Verifying...
+                      </>
                   ) : (
                     'Verify'
                   )}
@@ -382,10 +382,10 @@ const Login = () => {
 
                 <Button type='submit' className='w-full' disabled={isLoading}>
                   {isLoading ? (
-                    <>
-                      <Loader2 className='mr-2 h-4 w-4 animate-spin' />
-                      Sending...
-                    </>
+                                          <>
+                        <div className='h-4 w-4 mr-2 animate-spin border-2 border-current border-t-transparent rounded-full'></div>
+                        Sending...
+                      </>
                   ) : (
                     'Send Reset Link'
                   )}
@@ -507,10 +507,10 @@ const Login = () => {
                   disabled={isLoading || checkEnvironment().error || isLocked}
                 >
                   {isLoading ? (
-                    <>
-                      <Loader2 className='mr-2 h-4 w-4 animate-spin' />
-                      Signing in...
-                    </>
+                                          <>
+                        <div className='h-4 w-4 mr-2 animate-spin border-2 border-current border-t-transparent rounded-full'></div>
+                        Signing in...
+                      </>
                   ) : (
                     'Sign in'
                   )}
