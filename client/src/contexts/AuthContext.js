@@ -19,8 +19,6 @@ export const useAuth = () => {
 };
 
 export const AuthProvider = ({ children }) => {
-  console.log('AuthProvider: Initializing');
-  
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState(null);
@@ -31,40 +29,28 @@ export const AuthProvider = ({ children }) => {
   const [lastActivity, setLastActivity] = useState(Date.now());
   const [sessionTimeout, setSessionTimeout] = useState(30 * 60 * 1000); // 30 minutes
 
-  // Use refs to prevent infinite loops
-  const initializedRef = useRef(false);
+  // Refs to prevent multiple initializations
+  const initializingRef = useRef(false);
   const authListenerRef = useRef(null);
-  const mountedRef = useRef(false);
-
-  console.log('AuthProvider: State initialized');
+  const mountedRef = useRef(true);
 
   // User roles and permissions mapping
   const userRoles = {
     admin: {
       name: 'Administrator',
-      permissions: ['*'], // All permissions
+      permissions: ['*'],
       color: 'red',
       icon: '👑',
     },
     manager: {
       name: 'Manager',
-      permissions: [
-        'manage_projects',
-        'view_analytics',
-        'manage_users',
-        'deploy',
-      ],
+      permissions: ['manage_projects', 'view_analytics', 'manage_users', 'deploy'],
       color: 'blue',
       icon: '👔',
     },
     developer: {
       name: 'Developer',
-      permissions: [
-        'view_projects',
-        'edit_projects',
-        'deploy',
-        'view_analytics',
-      ],
+      permissions: ['view_projects', 'edit_projects', 'deploy', 'view_analytics'],
       color: 'green',
       icon: '💻',
     },
@@ -76,131 +62,78 @@ export const AuthProvider = ({ children }) => {
     },
   };
 
-  console.log('AuthProvider: User roles defined');
-
-  // Update last activity on user interaction
-  useEffect(() => {
-    console.log('AuthProvider: Setting up activity listeners');
-    const updateActivity = () => setLastActivity(Date.now());
-
-    const events = [
-      'mousedown',
-      'mousemove',
-      'keypress',
-      'scroll',
-      'touchstart',
-    ];
-    events.forEach(event => document.addEventListener(event, updateActivity));
-
-    return () => {
-      events.forEach(event =>
-        document.removeEventListener(event, updateActivity)
-      );
-    };
-  }, []);
-
-  // Check session timeout
-  useEffect(() => {
-    console.log('AuthProvider: Setting up session timeout check');
-    if (!isAuthenticated) return;
-
-    const checkSession = () => {
-      const timeSinceActivity = Date.now() - lastActivity;
-      if (timeSinceActivity >= sessionTimeout) {
-        handleSessionTimeout();
-      }
-    };
-
-    const interval = setInterval(checkSession, 1000);
-    return () => clearInterval(interval);
-  }, [isAuthenticated, lastActivity, sessionTimeout]);
-
-  // Initialize user data - memoized to prevent recreation
+  // Initialize user data
   const initializeUser = useCallback(async (user, session) => {
+    if (!mountedRef.current) return;
+    
     try {
-      console.log('AuthProvider: Initializing user data');
-      
-      // Check if component is still mounted
-      if (!mountedRef.current) {
-        console.log('AuthProvider: Component unmounted, skipping user initialization');
-        return;
-      }
-      
       setUser(user);
       setSession(session);
       setIsAuthenticated(true);
       setLastActivity(Date.now());
 
-      // Load user profile (don't block on this)
+      // Set default profile if database operations fail
+      const defaultProfile = {
+        id: user.id,
+        email: user.email,
+        role: 'viewer',
+        permissions: ['view_projects', 'view_analytics'],
+        preferences: {},
+      };
+
       try {
-        const { data: profile, error: profileError } = await supabase
+        const { data: profile, error } = await supabase
           .from('profiles')
           .select('*')
           .eq('id', user.id)
           .single();
 
-        if (profileError) {
-          console.warn('Profile load failed:', profileError);
-          // Set default profile
-          setUserProfile({
-            id: user.id,
-            email: user.email,
-            role: 'viewer',
-            permissions: ['view_projects', 'view_analytics'],
-            preferences: {},
-          });
+        if (error || !profile) {
+          console.warn('Profile not found, using default');
+          setUserProfile(defaultProfile);
         } else {
           setUserProfile(profile);
         }
-      } catch (profileError) {
-        console.warn('Profile load error:', profileError);
-        // Set default profile
-        setUserProfile({
-          id: user.id,
-          email: user.email,
-          role: 'viewer',
-          permissions: ['view_projects', 'view_analytics'],
-          preferences: {},
-        });
+      } catch (error) {
+        console.warn('Profile load failed, using default:', error);
+        setUserProfile(defaultProfile);
       }
 
-      // Load login history (don't block on this)
-      try {
-        const { data: history, error: historyError } = await supabase
+      // Load additional data in background (non-blocking)
+      setTimeout(() => {
+        if (!mountedRef.current) return;
+        
+        // Load login history
+        supabase
           .from('login_history')
           .select('*')
           .eq('user_id', user.id)
           .order('created_at', { ascending: false })
-          .limit(10);
+          .limit(10)
+          .then(({ data }) => {
+            if (mountedRef.current && data) {
+              setLoginHistory(data);
+            }
+          })
+          .catch(err => console.warn('Login history load failed:', err));
 
-        if (!historyError && history) {
-          setLoginHistory(history);
-        }
-      } catch (historyError) {
-        console.warn('Login history load error:', historyError);
-      }
-
-      // Load security events (don't block on this)
-      try {
-        const { data: events, error: eventsError } = await supabase
+        // Load security events
+        supabase
           .from('security_events')
           .select('*')
           .eq('user_id', user.id)
           .order('created_at', { ascending: false })
-          .limit(20);
+          .limit(20)
+          .then(({ data }) => {
+            if (mountedRef.current && data) {
+              setSecurityEvents(data);
+            }
+          })
+          .catch(err => console.warn('Security events load failed:', err));
+      }, 100);
 
-        if (!eventsError && events) {
-          setSecurityEvents(events);
-        }
-      } catch (eventsError) {
-        console.warn('Security events load error:', eventsError);
-      }
-
-      console.log('AuthProvider: User initialization complete');
     } catch (error) {
       console.error('User initialization failed:', error);
-      
-      // Check if component is still mounted before updating state
       if (mountedRef.current) {
         setUser(null);
         setSession(null);
@@ -210,55 +143,53 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  // Check if user is authenticated on mount - only run once
-  useEffect(() => {
-    if (initializedRef.current || mountedRef.current) {
-      console.log('AuthProvider: Already initialized or mounted, skipping');
-      return;
+  // Add security event
+  const addSecurityEvent = useCallback(async (eventType, description) => {
+    if (!mountedRef.current) return;
+    
+    const event = {
+      user_id: user?.id || null,
+      event_type: eventType,
+      description,
+      ip_address: '127.0.0.1',
+      user_agent: navigator.userAgent,
+      timestamp: new Date().toISOString(),
+    };
+
+    setSecurityEvents(prev => [event, ...prev.slice(0, 49)]);
+
+    try {
+      await supabase.from('security_events').insert([event]);
+    } catch (error) {
+      console.error('Security event logging failed:', error);
     }
+  }, [user?.id]);
 
-    console.log('AuthProvider: Starting auth check');
-    initializedRef.current = true;
-    mountedRef.current = true;
+  // Initialize auth - only runs once
+  useEffect(() => {
+    if (initializingRef.current) return;
+    initializingRef.current = true;
 
-    const checkAuth = async () => {
+    const initAuth = async () => {
       try {
-        console.log('AuthProvider: Getting user and session');
-        
-        // Add timeout to prevent hanging
+        // Get initial session with timeout
+        const sessionPromise = supabase.auth.getSession();
         const timeoutPromise = new Promise((_, reject) => 
-          setTimeout(() => reject(new Error('Auth check timeout')), 10000)
+          setTimeout(() => reject(new Error('Session timeout')), 5000)
         );
-        
-        const authPromise = Promise.all([
-          supabase.auth.getUser(),
-          supabase.auth.getSession()
-        ]);
-        
-        const [userResult, sessionResult] = await Promise.race([
-          authPromise,
-          timeoutPromise
-        ]);
-        
-        const { data: { user } } = userResult;
-        const { data: { session } } = sessionResult;
 
-        console.log('AuthProvider: User and session retrieved', { user: !!user, session: !!session });
-
-        if (user && session) {
-          console.log('AuthProvider: Initializing user');
-          await initializeUser(user, session);
-        } else {
-          console.log('AuthProvider: No user or session found');
-          if (mountedRef.current) {
-            setUser(null);
-            setSession(null);
-            setUserProfile(null);
-            setIsAuthenticated(false);
-          }
+        const { data: { session } } = await Promise.race([sessionPromise, timeoutPromise]);
+        
+        if (session?.user && mountedRef.current) {
+          await initializeUser(session.user, session);
+        } else if (mountedRef.current) {
+          setUser(null);
+          setSession(null);
+          setUserProfile(null);
+          setIsAuthenticated(false);
         }
       } catch (error) {
-        console.error('Auth check failed:', error);
+        console.error('Auth initialization failed:', error);
         if (mountedRef.current) {
           setUser(null);
           setSession(null);
@@ -266,212 +197,142 @@ export const AuthProvider = ({ children }) => {
           setIsAuthenticated(false);
         }
       } finally {
-        console.log('AuthProvider: Setting loading to false');
         if (mountedRef.current) {
           setLoading(false);
         }
       }
     };
 
-    checkAuth();
+    initAuth();
 
-    // Listen for auth state changes - only set up once
+    // Set up auth listener - only once
     if (!authListenerRef.current) {
-      console.log('AuthProvider: Setting up auth state listener');
-      const {
-        data: { subscription },
-      } = supabase.auth.onAuthStateChange(async (event, session) => {
-        // Check if component is still mounted
-        if (!mountedRef.current) {
-          console.log('AuthProvider: Component unmounted, ignoring auth state change');
-          return;
-        }
+      const { data: { subscription } } = supabase.auth.onAuthStateChange(
+        async (event, session) => {
+          if (!mountedRef.current) return;
 
-        console.log('Auth state changed:', event, session);
+          console.log('Auth state changed:', event);
 
-        if (event === 'SIGNED_IN' && session?.user) {
-          await initializeUser(session.user, session);
-          addSecurityEvent('SIGNED_IN', 'User signed in successfully');
-        } else if (event === 'SIGNED_OUT') {
-          if (mountedRef.current) {
+          if (event === 'SIGNED_IN' && session?.user) {
+            await initializeUser(session.user, session);
+            addSecurityEvent('SIGNED_IN', 'User signed in successfully');
+          } else if (event === 'SIGNED_OUT') {
             setUser(null);
             setSession(null);
             setUserProfile(null);
             setIsAuthenticated(false);
-          }
-          addSecurityEvent('SIGNED_OUT', 'User signed out');
-        } else if (event === 'TOKEN_REFRESHED' && session?.user) {
-          if (mountedRef.current) {
+            addSecurityEvent('SIGNED_OUT', 'User signed out');
+          } else if (event === 'TOKEN_REFRESHED' && session?.user) {
             setSession(session);
             setLastActivity(Date.now());
+            addSecurityEvent('TOKEN_REFRESHED', 'Session token refreshed');
           }
-          addSecurityEvent('TOKEN_REFRESHED', 'Session token refreshed');
-        }
 
-        if (mountedRef.current) {
-          setLoading(false);
+          if (mountedRef.current) {
+            setLoading(false);
+          }
         }
-      });
+      );
 
       authListenerRef.current = subscription;
     }
 
-    // Cleanup function
     return () => {
       if (authListenerRef.current) {
         authListenerRef.current.unsubscribe();
         authListenerRef.current = null;
+      }
+      mountedRef.current = false;
+    };
+  }, [initializeUser, addSecurityEvent]);
+
+  // Activity tracking
+  useEffect(() => {
+    const updateActivity = () => {
+      if (mountedRef.current) {
+        setLastActivity(Date.now());
       }
     };
-  }, [initializeUser]);
 
-  // Cleanup on unmount
-  useEffect(() => {
+    const events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'];
+    events.forEach(event => document.addEventListener(event, updateActivity));
+
     return () => {
-      if (authListenerRef.current) {
-        authListenerRef.current.unsubscribe();
-        authListenerRef.current = null;
-      }
-      initializedRef.current = false;
-      mountedRef.current = false;
+      events.forEach(event => document.removeEventListener(event, updateActivity));
     };
   }, []);
 
-  // Add security event
-  const addSecurityEvent = async (eventType, description) => {
-    const event = {
-      user_id: user?.id || null,
-      event_type: eventType,
-      description,
-      ip_address: '127.0.0.1', // In real app, get from request
-      user_agent: navigator.userAgent,
-      timestamp: new Date().toISOString(),
+  // Session timeout check
+  useEffect(() => {
+    if (!isAuthenticated || !mountedRef.current) return;
+
+    const checkSession = () => {
+      if (!mountedRef.current) return;
+      
+      const timeSinceActivity = Date.now() - lastActivity;
+      if (timeSinceActivity >= sessionTimeout) {
+        handleSessionTimeout();
+      }
     };
 
-    setSecurityEvents(prev => [event, ...prev.slice(0, 49)]); // Keep last 50 events
+    const interval = setInterval(checkSession, 60000); // Check every minute
+    return () => clearInterval(interval);
+  }, [isAuthenticated, lastActivity, sessionTimeout]);
 
+  // Session timeout handler
+  const handleSessionTimeout = useCallback(async () => {
+    if (!mountedRef.current) return;
+    
     try {
-      await supabase.from('security_events').insert([event]);
+      await addSecurityEvent('SESSION_TIMEOUT', 'Session expired due to inactivity');
+      await supabase.auth.signOut();
     } catch (error) {
-      console.error('Security event logging failed:', error);
+      console.error('Session timeout handling failed:', error);
     }
-  };
+  }, [addSecurityEvent]);
 
-  // Handle session timeout
-  const handleSessionTimeout = async () => {
-    addSecurityEvent('SESSION_TIMEOUT', 'Session expired due to inactivity');
-    await logout();
-  };
-
-  // Login function with enhanced security
-  const login = async (email, password) => {
+  // Login function
+  const login = useCallback(async (email, password) => {
     try {
-      console.log('Attempting login with:', email);
-
-      // Check for rate limiting
-      const loginAttempts =
-        localStorage.getItem(`login_attempts_${email}`) || 0;
-      if (loginAttempts >= 5) {
-        const lastAttempt = localStorage.getItem(`last_attempt_${email}`);
-        if (Date.now() - lastAttempt < 15 * 60 * 1000) {
-          // 15 minutes
-          throw new Error(
-            'Too many login attempts. Please wait 15 minutes before trying again.'
-          );
-        } else {
-          localStorage.removeItem(`login_attempts_${email}`);
-          localStorage.removeItem(`last_attempt_${email}`);
-        }
-      }
-
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
-      if (error) {
-        // Increment failed attempts
-        const newAttempts = parseInt(loginAttempts) + 1;
-        localStorage.setItem(`login_attempts_${email}`, newAttempts);
-        localStorage.setItem(`last_attempt_${email}`, Date.now());
+      if (error) throw error;
 
-        console.error('Login error:', error);
-        throw new Error(error.message);
-      }
-
-      // Reset login attempts on success
-      localStorage.removeItem(`login_attempts_${email}`);
-      localStorage.removeItem(`last_attempt_${email}`);
-
-      console.log('Login successful:', data);
-
-      // Update login count
-      if (userProfile) {
-        await updateLoginCount(userProfile.id);
-      }
-
-      addSecurityEvent('LOGIN_SUCCESS', 'User logged in successfully');
+      await addSecurityEvent('LOGIN_SUCCESS', 'User logged in successfully');
       return { success: true };
     } catch (error) {
       console.error('Login failed:', error);
-      addSecurityEvent('LOGIN_FAILED', `Login failed: ${error.message}`);
+      await addSecurityEvent('LOGIN_FAILED', `Login failed: ${error.message}`);
       throw error;
     }
-  };
+  }, [addSecurityEvent]);
 
-  // Update login count
-  const updateLoginCount = async profileId => {
+  // Logout function
+  const logout = useCallback(async () => {
     try {
-      const { error } = await supabase
-        .from('profiles')
-        .update({
-          login_count: (userProfile?.login_count || 0) + 1,
-          last_login: new Date().toISOString(),
-        })
-        .eq('id', profileId);
-
+      await addSecurityEvent('LOGOUT', 'User logged out');
+      const { error } = await supabase.auth.signOut();
       if (error) throw error;
+
+      if (mountedRef.current) {
+        setUser(null);
+        setSession(null);
+        setUserProfile(null);
+        setIsAuthenticated(false);
+      }
+
+      localStorage.removeItem('user_preferences');
     } catch (error) {
-      console.error('Login count update failed:', error);
+      console.error('Logout failed:', error);
+      throw error;
     }
-  };
+  }, [addSecurityEvent]);
 
-  // Create default user profile
-  const createDefaultProfile = async userId => {
-    try {
-      const defaultProfile = {
-        id: userId,
-        role: 'developer',
-        permissions: userRoles.developer.permissions,
-        preferences: {
-          theme: 'system',
-          language: 'en',
-          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-          notifications: {
-            email: true,
-            push: true,
-            security: true,
-          },
-        },
-        last_login: new Date().toISOString(),
-        login_count: 1,
-      };
-
-      const { data, error } = await supabase
-        .from('profiles')
-        .insert([defaultProfile])
-        .select()
-        .single();
-
-      if (error) throw error;
-      setUserProfile(data);
-    } catch (error) {
-      console.error('Profile creation failed:', error);
-    }
-  };
-
-  // Register function with profile creation
-  const register = async userData => {
+  // Register function
+  const register = useCallback(async (userData) => {
     try {
       const { data, error } = await supabase.auth.signUp({
         email: userData.email,
@@ -486,174 +347,128 @@ export const AuthProvider = ({ children }) => {
 
       if (error) throw error;
 
-      if (data.user) {
-        await createDefaultProfile(data.user.id);
-        addSecurityEvent('REGISTRATION_SUCCESS', 'New user registered');
-      }
-
+      await addSecurityEvent('REGISTRATION_SUCCESS', 'New user registered');
       return { success: true };
     } catch (error) {
-      addSecurityEvent(
-        'REGISTRATION_FAILED',
-        `Registration failed: ${error.message}`
-      );
+      await addSecurityEvent('REGISTRATION_FAILED', `Registration failed: ${error.message}`);
       throw error;
     }
-  };
+  }, [addSecurityEvent]);
 
-  // Logout function with cleanup
-  const logout = async () => {
-    try {
-      addSecurityEvent('LOGOUT', 'User logged out');
-
-      const { error } = await supabase.auth.signOut();
-      if (error) throw error;
-
-      setUser(null);
-      setSession(null);
-      setUserProfile(null);
-      setIsAuthenticated(false);
-
-      // Clear local storage
-      localStorage.removeItem('user_preferences');
-    } catch (error) {
-      console.error('Logout failed:', error);
-      throw error;
-    }
-  };
-
-  // Update user profile
-  const updateProfile = async profileData => {
+  // Update profile
+  const updateProfile = useCallback(async (profileData) => {
     try {
       const { data, error } = await supabase.auth.updateUser(profileData);
       if (error) throw error;
 
-      setUser(data.user);
-      addSecurityEvent('PROFILE_UPDATED', 'User profile updated');
+      if (mountedRef.current) {
+        setUser(data.user);
+      }
+      await addSecurityEvent('PROFILE_UPDATED', 'User profile updated');
       return { success: true };
     } catch (error) {
       throw error;
     }
-  };
+  }, [addSecurityEvent]);
 
-  // Change password with security check
-  const changePassword = async (currentPassword, newPassword) => {
+  // Change password
+  const changePassword = useCallback(async (currentPassword, newPassword) => {
     try {
-      // Verify current password first
-      const { error: verifyError } = await supabase.auth.signInWithPassword({
-        email: user?.email || '',
-        password: currentPassword,
-      });
-
-      if (verifyError) {
-        throw new Error('Current password is incorrect');
-      }
-
       const { error } = await supabase.auth.updateUser({
         password: newPassword,
       });
       if (error) throw error;
 
-      addSecurityEvent('PASSWORD_CHANGED', 'User password changed');
+      await addSecurityEvent('PASSWORD_CHANGED', 'User password changed');
       return { success: true };
     } catch (error) {
       throw error;
     }
-  };
+  }, [addSecurityEvent]);
 
-  // Check if user has permission
-  const hasPermission = permission => {
+  // Permission checks
+  const hasPermission = useCallback((permission) => {
     if (!userProfile) return false;
-    return (
-      userProfile.permissions.includes('*') ||
-      userProfile.permissions.includes(permission)
-    );
-  };
+    return userProfile.permissions?.includes('*') || userProfile.permissions?.includes(permission);
+  }, [userProfile]);
 
-  // Check if user has role
-  const hasRole = roles => {
+  const hasRole = useCallback((roles) => {
     if (!userProfile) return false;
     const allowedRoles = Array.isArray(roles) ? roles : [roles];
-    return (
-      allowedRoles.includes(userProfile.role) || userProfile.role === 'admin'
-    );
-  };
+    return allowedRoles.includes(userProfile.role) || userProfile.role === 'admin';
+  }, [userProfile]);
 
-  // Get user's project permissions
-  const getProjectPermissions = projectId => {
-    if (!userProfile)
-      return { read: false, write: false, deploy: false, admin: false };
+  // Get project permissions
+  const getProjectPermissions = useCallback((projectId) => {
+    if (!userProfile) return { read: false, write: false, deploy: false, admin: false };
 
-    // Admin has all permissions
     if (userProfile.role === 'admin') {
       return { read: true, write: true, deploy: true, admin: true };
     }
 
-    // Check specific project permissions
-    const permissions = {
+    return {
       read: hasPermission('view_projects'),
       write: hasPermission('edit_projects'),
       deploy: hasPermission('deploy'),
       admin: hasPermission('manage_projects'),
     };
+  }, [userProfile, hasPermission]);
 
-    return permissions;
-  };
-
-  // Update user preferences
-  const updatePreferences = async preferences => {
+  // Update preferences
+  const updatePreferences = useCallback(async (preferences) => {
     try {
-      const updatedPreferences = { ...userProfile.preferences, ...preferences };
+      const updatedPreferences = { ...userProfile?.preferences, ...preferences };
 
       const { data, error } = await supabase
         .from('profiles')
         .update({ preferences: updatedPreferences })
-        .eq('id', user.id)
+        .eq('id', user?.id)
         .select()
         .single();
 
       if (error) throw error;
 
-      setUserProfile(data);
-      localStorage.setItem(
-        'user_preferences',
-        JSON.stringify(updatedPreferences)
-      );
-      addSecurityEvent('PREFERENCES_UPDATED', 'User preferences updated');
+      if (mountedRef.current) {
+        setUserProfile(data);
+      }
+      localStorage.setItem('user_preferences', JSON.stringify(updatedPreferences));
+      await addSecurityEvent('PREFERENCES_UPDATED', 'User preferences updated');
       return { success: true };
     } catch (error) {
       throw error;
     }
-  };
+  }, [userProfile, user?.id, addSecurityEvent]);
 
   // Get user role info
-  const getUserRoleInfo = () => {
+  const getUserRoleInfo = useCallback(() => {
     if (!userProfile) return null;
     return userRoles[userProfile.role] || userRoles.viewer;
-  };
+  }, [userProfile]);
 
   // Get security events
-  const getSecurityEvents = () => {
+  const getSecurityEvents = useCallback(() => {
     return securityEvents;
-  };
+  }, [securityEvents]);
 
   // Refresh session
-  const refreshSession = async () => {
+  const refreshSession = useCallback(async () => {
     try {
       const { data, error } = await supabase.auth.refreshSession();
       if (error) throw error;
 
-      setSession(data.session);
-      setLastActivity(Date.now());
-      addSecurityEvent('SESSION_REFRESHED', 'Session manually refreshed');
+      if (mountedRef.current) {
+        setSession(data.session);
+        setLastActivity(Date.now());
+      }
+      await addSecurityEvent('SESSION_REFRESHED', 'Session manually refreshed');
       return { success: true };
     } catch (error) {
       throw error;
     }
-  };
+  }, [addSecurityEvent]);
 
   // Get session info
-  const getSessionInfo = () => {
+  const getSessionInfo = useCallback(() => {
     if (!session) return null;
 
     const expiresAt = new Date(session.expires_at * 1000);
@@ -666,10 +481,10 @@ export const AuthProvider = ({ children }) => {
       isExpired: timeLeft <= 0,
       willExpireSoon: timeLeft <= 5 * 60 * 1000, // 5 minutes
     };
-  };
+  }, [session]);
 
-  // Memoize the context value to prevent unnecessary re-renders
-  const value = React.useMemo(() => ({
+  // Memoize context value
+  const contextValue = React.useMemo(() => ({
     user,
     session,
     userProfile,
@@ -717,5 +532,9 @@ export const AuthProvider = ({ children }) => {
     sessionTimeout,
   ]);
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={contextValue}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
