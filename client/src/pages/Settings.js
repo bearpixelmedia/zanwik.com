@@ -9,7 +9,29 @@ import {
   Loader2,
   Plus,
   Trash2,
-  Edit
+  Edit,
+  Settings as SettingsIcon,
+  Database,
+  Globe,
+  Key,
+  Download,
+  Upload,
+  RefreshCw,
+  Eye,
+  EyeOff,
+  Lock,
+  Unlock,
+  AlertTriangle,
+  CheckCircle,
+  Clock,
+  Activity,
+  Palette,
+  Monitor,
+  Smartphone,
+  Zap,
+  FileText,
+  Copy,
+  ExternalLink
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { Button } from '../components/ui/button';
@@ -21,6 +43,8 @@ const Settings = () => {
   const [activeTab, setActiveTab] = useState('profile');
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [autoSave, setAutoSave] = useState(true);
+  const [showApiKey, setShowApiKey] = useState(false);
   
   // Profile state
   const [profile, setProfile] = useState({
@@ -28,7 +52,10 @@ const Settings = () => {
     lastName: user?.user_metadata?.lastName || '',
     email: user?.email || '',
     company: user?.user_metadata?.company || '',
-    phone: user?.user_metadata?.phone || ''
+    phone: user?.user_metadata?.phone || '',
+    timezone: user?.user_metadata?.timezone || 'UTC',
+    language: user?.user_metadata?.language || 'en',
+    avatar: user?.user_metadata?.avatar || null
   });
 
   // Billing state
@@ -57,7 +84,10 @@ const Settings = () => {
     weeklyReport: true,
     projectUpdates: true,
     billingAlerts: true,
-    securityAlerts: true
+    securityAlerts: true,
+    systemMaintenance: false,
+    newFeatures: true,
+    marketing: false
   });
 
   // Security state
@@ -65,7 +95,48 @@ const Settings = () => {
     twoFactor: false,
     sessionTimeout: 30,
     passwordExpiry: 90,
-    loginNotifications: true
+    loginNotifications: true,
+    deviceManagement: true,
+    apiKeyRotation: false,
+    lastPasswordChange: '2024-01-01',
+    failedLoginAttempts: 0
+  });
+
+  // System preferences
+  const [systemPrefs, setSystemPrefs] = useState({
+    theme: 'system',
+    sidebarCollapsed: false,
+    autoRefresh: true,
+    refreshInterval: 30,
+    defaultView: 'dashboard',
+    compactMode: false,
+    animations: true,
+    soundEffects: false
+  });
+
+  // API Management
+  const [apiSettings, setApiSettings] = useState({
+    apiKey: 'sk_test_1234567890abcdef',
+    webhookUrl: '',
+    rateLimit: 1000,
+    allowedOrigins: ['*'],
+    lastUsed: '2024-01-20T10:30:00Z',
+    usageStats: {
+      requests: 1250,
+      errors: 12,
+      bandwidth: '2.5GB'
+    }
+  });
+
+  // Data & Privacy
+  const [dataPrivacy, setDataPrivacy] = useState({
+    dataRetention: 365,
+    analytics: true,
+    crashReporting: true,
+    marketingEmails: false,
+    thirdPartySharing: false,
+    dataExport: true,
+    accountDeletion: false
   });
 
   useEffect(() => {
@@ -183,6 +254,9 @@ const Settings = () => {
     { id: 'team', label: 'Team', icon: Users },
     { id: 'notifications', label: 'Notifications', icon: Bell },
     { id: 'security', label: 'Security', icon: Shield },
+    { id: 'systemPrefs', label: 'System', icon: SettingsIcon },
+    { id: 'apiManagement', label: 'API', icon: Database },
+    { id: 'dataPrivacy', label: 'Privacy', icon: Globe },
   ];
 
   return (
@@ -271,19 +345,64 @@ const Settings = () => {
                 />
               </div>
             </div>
-            <Button onClick={handleProfileSave} disabled={saving}>
-              {saving ? (
-                <>
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  Saving...
-                </>
-              ) : (
-                <>
-                  <Save className="h-4 w-4 mr-2" />
-                  Save Changes
-                </>
-              )}
-            </Button>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="text-sm font-medium text-foreground">Timezone</label>
+                <select
+                  value={profile.timezone}
+                  onChange={(e) => setProfile(prev => ({ ...prev, timezone: e.target.value }))}
+                  className="w-full mt-1 px-3 py-2 border border-input rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                >
+                  <option value="UTC">UTC</option>
+                  <option value="America/New_York">Eastern Time</option>
+                  <option value="America/Chicago">Central Time</option>
+                  <option value="America/Denver">Mountain Time</option>
+                  <option value="America/Los_Angeles">Pacific Time</option>
+                  <option value="Europe/London">London</option>
+                  <option value="Europe/Paris">Paris</option>
+                  <option value="Asia/Tokyo">Tokyo</option>
+                </select>
+              </div>
+              <div>
+                <label className="text-sm font-medium text-foreground">Language</label>
+                <select
+                  value={profile.language}
+                  onChange={(e) => setProfile(prev => ({ ...prev, language: e.target.value }))}
+                  className="w-full mt-1 px-3 py-2 border border-input rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                >
+                  <option value="en">English</option>
+                  <option value="es">Spanish</option>
+                  <option value="fr">French</option>
+                  <option value="de">German</option>
+                  <option value="ja">Japanese</option>
+                  <option value="zh">Chinese</option>
+                </select>
+              </div>
+            </div>
+            <div className="flex items-center justify-between pt-4">
+              <div className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  checked={autoSave}
+                  onChange={(e) => setAutoSave(e.target.checked)}
+                  className="rounded border-gray-300"
+                />
+                <label className="text-sm text-muted-foreground">Auto-save changes</label>
+              </div>
+              <Button onClick={handleProfileSave} disabled={saving}>
+                {saving ? (
+                  <>
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    Saving...
+                  </>
+                ) : (
+                  <>
+                    <Save className="h-4 w-4 mr-2" />
+                    Save Changes
+                  </>
+                )}
+              </Button>
+            </div>
           </CardContent>
         </Card>
       )}
@@ -482,40 +601,622 @@ const Settings = () => {
 
       {/* Security Tab */}
       {activeTab === 'security' && (
+        <div className="space-y-6">
+          {/* Security Overview */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Security Overview</CardTitle>
+              <CardDescription>Your account security status and recent activity.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="text-center p-4 border rounded-lg">
+                  <div className="flex items-center justify-center mb-2">
+                    {security.twoFactor ? (
+                      <CheckCircle className="h-8 w-8 text-green-500" />
+                    ) : (
+                      <AlertTriangle className="h-8 w-8 text-yellow-500" />
+                    )}
+                  </div>
+                  <h3 className="font-medium">Two-Factor Auth</h3>
+                  <p className="text-sm text-muted-foreground">
+                    {security.twoFactor ? 'Enabled' : 'Not enabled'}
+                  </p>
+                </div>
+                <div className="text-center p-4 border rounded-lg">
+                  <div className="flex items-center justify-center mb-2">
+                    <Clock className="h-8 w-8 text-blue-500" />
+                  </div>
+                  <h3 className="font-medium">Last Password Change</h3>
+                  <p className="text-sm text-muted-foreground">
+                    {new Date(security.lastPasswordChange).toLocaleDateString()}
+                  </p>
+                </div>
+                <div className="text-center p-4 border rounded-lg">
+                  <div className="flex items-center justify-center mb-2">
+                    <Activity className="h-8 w-8 text-purple-500" />
+                  </div>
+                  <h3 className="font-medium">Failed Login Attempts</h3>
+                  <p className="text-sm text-muted-foreground">
+                    {security.failedLoginAttempts} today
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Security Settings */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Security Settings</CardTitle>
+              <CardDescription>Manage your account security and privacy settings.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="font-medium">Two-Factor Authentication</p>
+                  <p className="text-sm text-muted-foreground">
+                    Add an extra layer of security to your account
+                  </p>
+                </div>
+                <Button
+                  variant={security.twoFactor ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setSecurity(prev => ({ ...prev, twoFactor: !prev.twoFactor }))}
+                >
+                  {security.twoFactor ? 'Enabled' : 'Disabled'}
+                </Button>
+              </div>
+              
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="font-medium">Session Timeout</p>
+                  <p className="text-sm text-muted-foreground">
+                    Automatically log out after inactivity
+                  </p>
+                </div>
+                <select
+                  value={security.sessionTimeout}
+                  onChange={(e) => setSecurity(prev => ({ ...prev, sessionTimeout: Number(e.target.value) }))}
+                  className="px-3 py-1 text-sm border border-input rounded bg-background"
+                >
+                  <option value={15}>15 minutes</option>
+                  <option value={30}>30 minutes</option>
+                  <option value={60}>1 hour</option>
+                  <option value={120}>2 hours</option>
+                </select>
+              </div>
+              
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="font-medium">Password Expiry</p>
+                  <p className="text-sm text-muted-foreground">
+                    Require password change every {security.passwordExpiry} days
+                  </p>
+                </div>
+                <select
+                  value={security.passwordExpiry}
+                  onChange={(e) => setSecurity(prev => ({ ...prev, passwordExpiry: Number(e.target.value) }))}
+                  className="px-3 py-1 text-sm border border-input rounded bg-background"
+                >
+                  <option value={30}>30 days</option>
+                  <option value={60}>60 days</option>
+                  <option value={90}>90 days</option>
+                  <option value={180}>180 days</option>
+                </select>
+              </div>
+              
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="font-medium">Login Notifications</p>
+                  <p className="text-sm text-muted-foreground">
+                    Get notified when someone logs into your account
+                  </p>
+                </div>
+                <Button
+                  variant={security.loginNotifications ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setSecurity(prev => ({ ...prev, loginNotifications: !prev.loginNotifications }))}
+                >
+                  {security.loginNotifications ? 'On' : 'Off'}
+                </Button>
+              </div>
+              
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="font-medium">Device Management</p>
+                  <p className="text-sm text-muted-foreground">
+                    Track and manage your logged-in devices
+                  </p>
+                </div>
+                <Button
+                  variant={security.deviceManagement ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setSecurity(prev => ({ ...prev, deviceManagement: !prev.deviceManagement }))}
+                >
+                  {security.deviceManagement ? 'Enabled' : 'Disabled'}
+                </Button>
+              </div>
+              
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="font-medium">API Key Rotation</p>
+                  <p className="text-sm text-muted-foreground">
+                    Automatically rotate API keys for enhanced security
+                  </p>
+                </div>
+                <Button
+                  variant={security.apiKeyRotation ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setSecurity(prev => ({ ...prev, apiKeyRotation: !prev.apiKeyRotation }))}
+                >
+                  {security.apiKeyRotation ? 'Enabled' : 'Disabled'}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Active Sessions */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Active Sessions</CardTitle>
+              <CardDescription>Manage your current login sessions across devices.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between p-3 border rounded-lg">
+                  <div className="flex items-center space-x-3">
+                    <Monitor className="h-5 w-5 text-blue-500" />
+                    <div>
+                      <p className="font-medium">MacBook Pro (Current)</p>
+                      <p className="text-sm text-muted-foreground">
+                        San Francisco, CA • Last active: 2 minutes ago
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <span className="text-xs px-2 py-1 bg-green-100 text-green-800 rounded-full">Current</span>
+                    <Button variant="outline" size="sm">
+                      <RefreshCw className="h-3 w-3" />
+                    </Button>
+                  </div>
+                </div>
+                
+                <div className="flex items-center justify-between p-3 border rounded-lg">
+                  <div className="flex items-center space-x-3">
+                    <Smartphone className="h-5 w-5 text-green-500" />
+                    <div>
+                      <p className="font-medium">iPhone 14</p>
+                      <p className="text-sm text-muted-foreground">
+                        San Francisco, CA • Last active: 1 hour ago
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Button variant="outline" size="sm">
+                      <Trash2 className="h-3 w-3" />
+                    </Button>
+                  </div>
+                </div>
+                
+                <div className="flex items-center justify-between p-3 border rounded-lg">
+                  <div className="flex items-center space-x-3">
+                    <Monitor className="h-5 w-5 text-gray-500" />
+                    <div>
+                      <p className="font-medium">Windows PC</p>
+                      <p className="text-sm text-muted-foreground">
+                        New York, NY • Last active: 2 days ago
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Button variant="outline" size="sm">
+                      <Trash2 className="h-3 w-3" />
+                    </Button>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="mt-4 pt-4 border-t">
+                <Button variant="outline" className="w-full">
+                  <Shield className="h-4 w-4 mr-2" />
+                  Sign Out All Other Sessions
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      {/* System Preferences Tab */}
+      {activeTab === 'systemPrefs' && (
         <Card>
           <CardHeader>
-            <CardTitle>Security Settings</CardTitle>
-            <CardDescription>Manage your account security and privacy settings.</CardDescription>
+            <CardTitle>System Preferences</CardTitle>
+            <CardDescription>Manage your system preferences and settings.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="font-medium">Two-Factor Authentication</p>
+                <p className="font-medium">Theme</p>
                 <p className="text-sm text-muted-foreground">
-                  Add an extra layer of security to your account
+                  Choose your preferred theme
                 </p>
               </div>
               <Button
-                variant={security.twoFactor ? "default" : "outline"}
+                variant={systemPrefs.theme === 'system' ? "default" : "outline"}
                 size="sm"
-                onClick={() => setSecurity(prev => ({ ...prev, twoFactor: !prev.twoFactor }))}
+                onClick={() => setSystemPrefs(prev => ({ ...prev, theme: 'system' }))}
               >
-                {security.twoFactor ? 'Enabled' : 'Disabled'}
+                System
               </Button>
             </div>
             <div className="flex items-center justify-between">
               <div>
-                <p className="font-medium">Login Notifications</p>
+                <p className="font-medium">Sidebar Collapsed</p>
                 <p className="text-sm text-muted-foreground">
-                  Get notified when someone logs into your account
+                  Hide the sidebar in the dashboard
                 </p>
               </div>
               <Button
-                variant={security.loginNotifications ? "default" : "outline"}
+                variant={systemPrefs.sidebarCollapsed ? "default" : "outline"}
                 size="sm"
-                onClick={() => setSecurity(prev => ({ ...prev, loginNotifications: !prev.loginNotifications }))}
+                onClick={() => setSystemPrefs(prev => ({ ...prev, sidebarCollapsed: !prev.sidebarCollapsed }))}
               >
-                {security.loginNotifications ? 'On' : 'Off'}
+                {systemPrefs.sidebarCollapsed ? 'Expanded' : 'Collapsed'}
+              </Button>
+            </div>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-medium">Auto Refresh</p>
+                <p className="text-sm text-muted-foreground">
+                  Automatically refresh the dashboard
+                </p>
+              </div>
+              <Button
+                variant={systemPrefs.autoRefresh ? "default" : "outline"}
+                size="sm"
+                onClick={() => setSystemPrefs(prev => ({ ...prev, autoRefresh: !prev.autoRefresh }))}
+              >
+                {systemPrefs.autoRefresh ? 'Enabled' : 'Disabled'}
+              </Button>
+            </div>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-medium">Refresh Interval</p>
+                <p className="text-sm text-muted-foreground">
+                  Set the refresh interval for the dashboard
+                </p>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setSystemPrefs(prev => ({ ...prev, refreshInterval: prev.refreshInterval === 30 ? 60 : 30 }))}
+              >
+                {systemPrefs.refreshInterval === 30 ? '30 minutes' : '60 minutes'}
+              </Button>
+            </div>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-medium">Default View</p>
+                <p className="text-sm text-muted-foreground">
+                  Choose the default view for the dashboard
+                </p>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setSystemPrefs(prev => ({ ...prev, defaultView: prev.defaultView === 'dashboard' ? 'projects' : 'dashboard' }))}
+              >
+                {systemPrefs.defaultView === 'dashboard' ? 'Projects' : 'Dashboard'}
+              </Button>
+            </div>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-medium">Compact Mode</p>
+                <p className="text-sm text-muted-foreground">
+                  Use compact mode for the dashboard
+                </p>
+              </div>
+              <Button
+                variant={systemPrefs.compactMode ? "default" : "outline"}
+                size="sm"
+                onClick={() => setSystemPrefs(prev => ({ ...prev, compactMode: !prev.compactMode }))}
+              >
+                {systemPrefs.compactMode ? 'Enabled' : 'Disabled'}
+              </Button>
+            </div>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-medium">Animations</p>
+                <p className="text-sm text-muted-foreground">
+                  Enable or disable animations
+                </p>
+              </div>
+              <Button
+                variant={systemPrefs.animations ? "default" : "outline"}
+                size="sm"
+                onClick={() => setSystemPrefs(prev => ({ ...prev, animations: !prev.animations }))}
+              >
+                {systemPrefs.animations ? 'Enabled' : 'Disabled'}
+              </Button>
+            </div>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-medium">Sound Effects</p>
+                <p className="text-sm text-muted-foreground">
+                  Enable or disable sound effects
+                </p>
+              </div>
+              <Button
+                variant={systemPrefs.soundEffects ? "default" : "outline"}
+                size="sm"
+                onClick={() => setSystemPrefs(prev => ({ ...prev, soundEffects: !prev.soundEffects }))}
+              >
+                {systemPrefs.soundEffects ? 'Enabled' : 'Disabled'}
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* API Management Tab */}
+      {activeTab === 'apiManagement' && (
+        <Card>
+          <CardHeader>
+            <CardTitle>API Management</CardTitle>
+            <CardDescription>Manage your API settings and access.</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-medium">API Key</p>
+                <p className="text-sm text-muted-foreground">
+                  Your API key for accessing our services
+                </p>
+              </div>
+              <Button
+                variant={showApiKey ? "default" : "outline"}
+                size="sm"
+                onClick={() => setShowApiKey(!showApiKey)}
+              >
+                {showApiKey ? 'Hide' : 'Show'}
+              </Button>
+            </div>
+            {showApiKey && (
+              <div>
+                <label className="text-sm font-medium text-foreground">API Key</label>
+                <input
+                  type="text"
+                  value={apiSettings.apiKey}
+                  disabled
+                  className="w-full mt-1 px-3 py-2 border border-input rounded-md bg-muted text-muted-foreground"
+                />
+              </div>
+            )}
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-medium">Webhook URL</p>
+                <p className="text-sm text-muted-foreground">
+                  Set the webhook URL for receiving notifications
+                </p>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setApiSettings(prev => ({ ...prev, webhookUrl: '' }))}
+              >
+                Clear
+              </Button>
+            </div>
+            <div>
+              <label className="text-sm font-medium text-foreground">Webhook URL</label>
+              <input
+                type="text"
+                value={apiSettings.webhookUrl}
+                onChange={(e) => setApiSettings(prev => ({ ...prev, webhookUrl: e.target.value }))}
+                className="w-full mt-1 px-3 py-2 border border-input rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+              />
+            </div>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-medium">Rate Limit</p>
+                <p className="text-sm text-muted-foreground">
+                  Set the rate limit for API requests
+                </p>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setApiSettings(prev => ({ ...prev, rateLimit: prev.rateLimit === 1000 ? 2000 : 1000 }))}
+              >
+                {apiSettings.rateLimit === 1000 ? '2000 requests/minute' : '1000 requests/minute'}
+              </Button>
+            </div>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-medium">Allowed Origins</p>
+                <p className="text-sm text-muted-foreground">
+                  Set the allowed origins for API requests
+                </p>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setApiSettings(prev => ({ ...prev, allowedOrigins: prev.allowedOrigins.length === 1 ? ['*'] : [] }))}
+              >
+                {apiSettings.allowedOrigins.length === 1 ? 'All Origins' : 'No Origins'}
+              </Button>
+            </div>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-medium">Last Used</p>
+                <p className="text-sm text-muted-foreground">
+                  Last time the API key was used
+                </p>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setApiSettings(prev => ({ ...prev, lastUsed: '' }))}
+              >
+                Clear
+              </Button>
+            </div>
+            <div>
+              <label className="text-sm font-medium text-foreground">Last Used</label>
+              <input
+                type="text"
+                value={apiSettings.lastUsed}
+                disabled
+                className="w-full mt-1 px-3 py-2 border border-input rounded-md bg-muted text-muted-foreground"
+              />
+            </div>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-medium">Usage Stats</p>
+                <p className="text-sm text-muted-foreground">
+                  API usage statistics
+                </p>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setApiSettings(prev => ({ ...prev, usageStats: { ...prev.usageStats, requests: prev.usageStats.requests + 1 } }))}
+              >
+                Requests: {apiSettings.usageStats.requests}
+              </Button>
+            </div>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-medium">Bandwidth</p>
+                <p className="text-sm text-muted-foreground">
+                  API bandwidth usage
+                </p>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setApiSettings(prev => ({ ...prev, usageStats: { ...prev.usageStats, bandwidth: prev.usageStats.bandwidth === '2.5GB' ? '5GB' : '2.5GB' } }))}
+              >
+                {apiSettings.usageStats.bandwidth}
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Data & Privacy Tab */}
+      {activeTab === 'dataPrivacy' && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Data & Privacy</CardTitle>
+            <CardDescription>Manage your data and privacy settings.</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-medium">Data Retention</p>
+                <p className="text-sm text-muted-foreground">
+                  Set the data retention period
+                </p>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setDataPrivacy(prev => ({ ...prev, dataRetention: prev.dataRetention === 365 ? 730 : 365 }))}
+              >
+                {dataPrivacy.dataRetention === 365 ? '1 year' : '2 years'}
+              </Button>
+            </div>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-medium">Analytics</p>
+                <p className="text-sm text-muted-foreground">
+                  Enable or disable analytics
+                </p>
+              </div>
+              <Button
+                variant={dataPrivacy.analytics ? "default" : "outline"}
+                size="sm"
+                onClick={() => setDataPrivacy(prev => ({ ...prev, analytics: !prev.analytics }))}
+              >
+                {dataPrivacy.analytics ? 'Enabled' : 'Disabled'}
+              </Button>
+            </div>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-medium">Crash Reporting</p>
+                <p className="text-sm text-muted-foreground">
+                  Enable or disable crash reporting
+                </p>
+              </div>
+              <Button
+                variant={dataPrivacy.crashReporting ? "default" : "outline"}
+                size="sm"
+                onClick={() => setDataPrivacy(prev => ({ ...prev, crashReporting: !prev.crashReporting }))}
+              >
+                {dataPrivacy.crashReporting ? 'Enabled' : 'Disabled'}
+              </Button>
+            </div>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-medium">Marketing Emails</p>
+                <p className="text-sm text-muted-foreground">
+                  Receive marketing emails
+                </p>
+              </div>
+              <Button
+                variant={dataPrivacy.marketingEmails ? "default" : "outline"}
+                size="sm"
+                onClick={() => setDataPrivacy(prev => ({ ...prev, marketingEmails: !prev.marketingEmails }))}
+              >
+                {dataPrivacy.marketingEmails ? 'Subscribed' : 'Unsubscribed'}
+              </Button>
+            </div>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-medium">Third Party Sharing</p>
+                <p className="text-sm text-muted-foreground">
+                  Share data with third parties
+                </p>
+              </div>
+              <Button
+                variant={dataPrivacy.thirdPartySharing ? "default" : "outline"}
+                size="sm"
+                onClick={() => setDataPrivacy(prev => ({ ...prev, thirdPartySharing: !prev.thirdPartySharing }))}
+              >
+                {dataPrivacy.thirdPartySharing ? 'Enabled' : 'Disabled'}
+              </Button>
+            </div>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-medium">Data Export</p>
+                <p className="text-sm text-muted-foreground">
+                  Export your data
+                </p>
+              </div>
+              <Button
+                variant={dataPrivacy.dataExport ? "default" : "outline"}
+                size="sm"
+                onClick={() => setDataPrivacy(prev => ({ ...prev, dataExport: !prev.dataExport }))}
+              >
+                {dataPrivacy.dataExport ? 'Enabled' : 'Disabled'}
+              </Button>
+            </div>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-medium">Account Deletion</p>
+                <p className="text-sm text-muted-foreground">
+                  Enable or disable account deletion
+                </p>
+              </div>
+              <Button
+                variant={dataPrivacy.accountDeletion ? "default" : "outline"}
+                size="sm"
+                onClick={() => setDataPrivacy(prev => ({ ...prev, accountDeletion: !prev.accountDeletion }))}
+              >
+                {dataPrivacy.accountDeletion ? 'Enabled' : 'Disabled'}
               </Button>
             </div>
           </CardContent>
@@ -631,7 +1332,7 @@ const Settings = () => {
               </div>
             </CardContent>
           </Card>
-      </div>
+        </div>
       )}
     </div>
   );
