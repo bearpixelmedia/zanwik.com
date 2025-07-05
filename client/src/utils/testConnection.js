@@ -20,13 +20,17 @@ export const testAllEndpoints = async () => {
   ];
 
   const results = [];
-  
+
   for (const endpoint of endpoints) {
     try {
       const result = await endpoint.test();
       results.push({ name: endpoint.name, status: '✅ Success', data: result });
     } catch (error) {
-      results.push({ name: endpoint.name, status: '❌ Failed', error: error.message });
+      results.push({
+        name: endpoint.name,
+        status: '❌ Failed',
+        error: error.message,
+      });
     }
   }
 
@@ -35,17 +39,22 @@ export const testAllEndpoints = async () => {
 
 export const debugApiConnection = () => {
   console.log('🔍 API Connection Debug Info:');
-  console.log('API Base URL:', process.env.REACT_APP_API_URL || 'http://localhost:3000/api');
+  console.log(
+    'API Base URL:',
+    process.env.REACT_APP_API_URL || 'http://localhost:3000/api'
+  );
   console.log('Environment:', process.env.NODE_ENV);
   console.log('Current URL:', window.location.href);
-  
+
   // Test the connection
   testBackendConnection().then(result => {
     if (result.success) {
       console.log('✅ API connection is working!');
     } else {
       console.log('❌ API connection failed:', result.error);
-      console.log('💡 Make sure to set REACT_APP_API_URL in your environment variables');
+      console.log(
+        '💡 Make sure to set REACT_APP_API_URL in your environment variables'
+      );
     }
   });
 };
@@ -53,7 +62,7 @@ export const debugApiConnection = () => {
 // Test database connection and basic operations
 export const runConnectionTests = async () => {
   console.log('🔍 Testing Supabase database connection...');
-  
+
   try {
     // Test 1: Basic connection
     console.log('📡 Test 1: Testing basic connection...');
@@ -69,7 +78,7 @@ export const runConnectionTests = async () => {
       .from('projects')
       .select('count')
       .limit(1);
-    
+
     if (projectsError) {
       console.warn('⚠️ Projects table test failed:', projectsError.message);
     } else {
@@ -82,7 +91,7 @@ export const runConnectionTests = async () => {
       .from('users')
       .select('count')
       .limit(1);
-    
+
     if (usersError) {
       console.warn('⚠️ Users table test failed:', usersError.message);
     } else {
@@ -95,7 +104,7 @@ export const runConnectionTests = async () => {
       .from('analytics_overview')
       .select('count')
       .limit(1);
-    
+
     if (analyticsError) {
       console.warn('⚠️ Analytics table test failed:', analyticsError.message);
     } else {
@@ -108,7 +117,7 @@ export const runConnectionTests = async () => {
       .from('alerts')
       .select('count')
       .limit(1);
-    
+
     if (alertsError) {
       console.warn('⚠️ Alerts table test failed:', alertsError.message);
     } else {
@@ -117,8 +126,11 @@ export const runConnectionTests = async () => {
 
     // Test 6: Test authentication
     console.log('🔐 Test 6: Testing authentication...');
-    const { data: { session }, error: authError } = await supabase.auth.getSession();
-    
+    const {
+      data: { session },
+      error: authError,
+    } = await supabase.auth.getSession();
+
     if (authError) {
       console.warn('⚠️ Authentication test failed:', authError.message);
     } else {
@@ -139,16 +151,15 @@ export const runConnectionTests = async () => {
         users: !usersError,
         analytics: !analyticsError,
         alerts: !alertsError,
-        auth: !authError
-      }
+        auth: !authError,
+      },
     };
-
   } catch (error) {
     console.error('❌ Connection test failed:', error);
     return {
       success: false,
       message: error.message,
-      error: error
+      error: error,
     };
   }
 };
@@ -160,12 +171,12 @@ export const quickConnectionCheck = async () => {
       .from('projects')
       .select('count')
       .limit(1);
-    
+
     if (error) {
       console.error('❌ Database connection failed:', error.message);
       return false;
     }
-    
+
     console.log('✅ Database connection successful');
     return true;
   } catch (error) {
@@ -177,5 +188,5 @@ export const quickConnectionCheck = async () => {
 // Export for use in components
 export default {
   runConnectionTests,
-  quickConnectionCheck
-}; 
+  quickConnectionCheck,
+};

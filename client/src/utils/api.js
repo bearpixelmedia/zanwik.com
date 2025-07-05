@@ -1,6 +1,8 @@
 import { supabase } from './supabase';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://money-production-55af.up.railway.app/api';
+const API_BASE_URL =
+  process.env.REACT_APP_API_URL ||
+  'https://money-production-55af.up.railway.app/api';
 
 // Enhanced error handling
 class APIError extends Error {
@@ -34,7 +36,9 @@ const performanceMetrics = {
 // Enhanced auth token management
 const getAuthToken = async () => {
   try {
-    const { data: { session } } = await supabase.auth.getSession();
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
     return session?.access_token;
   } catch (error) {
     console.error('Failed to get auth token:', error);
@@ -43,16 +47,18 @@ const getAuthToken = async () => {
 };
 
 // Request interceptor
-const requestInterceptor = async (config) => {
+const requestInterceptor = async config => {
   // Add request ID for tracking
-  config.requestId = `req_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-  
+  config.requestId = `req_${Date.now()}_${Math.random()
+    .toString(36)
+    .substr(2, 9)}`;
+
   // Add performance tracking
   config.startTime = performance.now();
-  
+
   // Add retry count
   config.retryCount = config.retryCount || 0;
-  
+
   return config;
 };
 
@@ -60,17 +66,20 @@ const requestInterceptor = async (config) => {
 const responseInterceptor = async (response, config) => {
   const endTime = performance.now();
   const responseTime = endTime - config.startTime;
-  
+
   // Update performance metrics
   performanceMetrics.requests++;
   performanceMetrics.totalResponseTime += responseTime;
-  performanceMetrics.averageResponseTime = performanceMetrics.totalResponseTime / performanceMetrics.requests;
-  
+  performanceMetrics.averageResponseTime =
+    performanceMetrics.totalResponseTime / performanceMetrics.requests;
+
   // Log performance data
   if (responseTime > 1000) {
-    console.warn(`Slow API request: ${config.requestId} took ${responseTime.toFixed(2)}ms`);
+    console.warn(
+      `Slow API request: ${config.requestId} took ${responseTime.toFixed(2)}ms`
+    );
   }
-  
+
   return response;
 };
 
@@ -78,16 +87,17 @@ const responseInterceptor = async (response, config) => {
 const shouldRetry = (error, retryCount) => {
   const retryableStatuses = [408, 429, 500, 502, 503, 504];
   const maxRetries = 3;
-  
-  return retryCount < maxRetries && (
-    retryableStatuses.includes(error.status) ||
-    error.message.includes('network') ||
-    error.message.includes('timeout')
+
+  return (
+    retryCount < maxRetries &&
+    (retryableStatuses.includes(error.status) ||
+      error.message.includes('network') ||
+      error.message.includes('timeout'))
   );
 };
 
 // Cache management
-const getCachedResponse = (key) => {
+const getCachedResponse = key => {
   const cached = cache.get(key);
   if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
     return cached.data;
@@ -106,32 +116,32 @@ const setCachedResponse = (key, data) => {
 // Request queue processing
 const processQueue = async () => {
   if (isProcessingQueue || requestQueue.length === 0) return;
-  
+
   isProcessingQueue = true;
-  
+
   while (requestQueue.length > 0) {
     const { resolve, reject, requestFn } = requestQueue.shift();
-    
+
     try {
       const result = await requestFn();
       resolve(result);
     } catch (error) {
       reject(error);
     }
-    
+
     // Rate limiting delay
     if (requestQueue.length > 0) {
       await new Promise(resolve => setTimeout(resolve, RATE_LIMIT_DELAY));
     }
   }
-  
+
   isProcessingQueue = false;
 };
 
 // Enhanced API call with all features
 const apiCall = async (endpoint, options = {}) => {
   const token = await getAuthToken();
-  
+
   const config = {
     headers: {
       'Content-Type': 'application/json',
@@ -156,44 +166,44 @@ const apiCall = async (endpoint, options = {}) => {
   const makeRequest = async () => {
     try {
       const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
-      
+
       // Apply response interceptor
       await responseInterceptor(response, config);
-      
+
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
         throw new APIError(
           errorData.message || `HTTP error! status: ${response.status}`,
           response.status,
           errorData.code,
-          errorData.details
+          errorData.details,
         );
       }
-      
+
       const data = await response.json();
-      
+
       // Cache successful GET responses
       if (options.method === 'GET' || !options.method) {
         const cacheKey = `${endpoint}_${JSON.stringify(options)}`;
         setCachedResponse(cacheKey, data);
       }
-      
+
       return data;
     } catch (error) {
       performanceMetrics.errors++;
-      
+
       // Retry logic
       if (shouldRetry(error, config.retryCount)) {
         config.retryCount++;
         console.warn(`Retrying request (${config.retryCount}/3):`, endpoint);
-        
+
         // Exponential backoff
         const delay = Math.pow(2, config.retryCount) * 1000;
         await new Promise(resolve => setTimeout(resolve, delay));
-        
+
         return makeRequest();
       }
-      
+
       // Enhanced error logging
       console.error('API call failed:', {
         endpoint,
@@ -202,7 +212,7 @@ const apiCall = async (endpoint, options = {}) => {
         status: error.status,
         retryCount: config.retryCount,
       });
-      
+
       throw error;
     }
   };
@@ -242,27 +252,30 @@ export const projectsAPI = {
   },
 
   // Get single project
-  getProject: (id) => apiCall(`/projects/${id}`),
+  getProject: id => apiCall(`/projects/${id}`),
 
   // Create new project
-  createProject: (projectData) => apiCall('/projects', {
-    method: 'POST',
-    body: JSON.stringify(projectData),
-  }),
+  createProject: projectData =>
+    apiCall('/projects', {
+      method: 'POST',
+      body: JSON.stringify(projectData),
+    }),
 
   // Update project
-  updateProject: (id, projectData) => apiCall(`/projects/${id}`, {
-    method: 'PUT',
-    body: JSON.stringify(projectData),
-  }),
+  updateProject: (id, projectData) =>
+    apiCall(`/projects/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(projectData),
+    }),
 
   // Delete project
-  deleteProject: (id) => apiCall(`/projects/${id}`, {
-    method: 'DELETE',
-  }),
+  deleteProject: id =>
+    apiCall(`/projects/${id}`, {
+      method: 'DELETE',
+    }),
 
   // Get project analytics
-  getProjectAnalytics: (id) => apiCall(`/projects/${id}/analytics`),
+  getProjectAnalytics: id => apiCall(`/projects/${id}/analytics`),
 
   // Get project categories
   getCategories: () => apiCall('/projects/categories/list'),
@@ -277,20 +290,23 @@ export const analyticsAPI = {
   getDashboardOverview: () => apiCall('/analytics/dashboard/public'),
 
   // Get revenue analytics
-  getRevenueAnalytics: (period = '30d') => apiCall(`/analytics/revenue?period=${period}`),
+  getRevenueAnalytics: (period = '30d') =>
+    apiCall(`/analytics/revenue?period=${period}`),
 
   // Get user analytics
-  getUserAnalytics: (period = '30d') => apiCall(`/analytics/users?period=${period}`),
+  getUserAnalytics: (period = '30d') =>
+    apiCall(`/analytics/users?period=${period}`),
 
   // Get project performance
-  getProjectPerformance: (period = '30d') => apiCall(`/analytics/projects?period=${period}`),
+  getProjectPerformance: (period = '30d') =>
+    apiCall(`/analytics/projects?period=${period}`),
 
   // Get custom date range analytics
-  getCustomAnalytics: (startDate, endDate) => 
+  getCustomAnalytics: (startDate, endDate) =>
     apiCall(`/analytics/custom?startDate=${startDate}&endDate=${endDate}`),
 
   // Export analytics data
-  exportAnalytics: (type = 'all', period = '30d', format = 'csv') => 
+  exportAnalytics: (type = 'all', period = '30d', format = 'csv') =>
     apiCall(`/analytics/export?type=${type}&period=${period}&format=${format}`),
 };
 
@@ -300,47 +316,53 @@ export const paymentsAPI = {
   getPaymentMethods: () => apiCall('/payments/methods'),
 
   // Add payment method
-  addPaymentMethod: (paymentMethodId) => apiCall('/payments/methods', {
-    method: 'POST',
-    body: JSON.stringify({ paymentMethodId }),
-  }),
+  addPaymentMethod: paymentMethodId =>
+    apiCall('/payments/methods', {
+      method: 'POST',
+      body: JSON.stringify({ paymentMethodId }),
+    }),
 
   // Remove payment method
-  removePaymentMethod: (id) => apiCall(`/payments/methods/${id}`, {
-    method: 'DELETE',
-  }),
+  removePaymentMethod: id =>
+    apiCall(`/payments/methods/${id}`, {
+      method: 'DELETE',
+    }),
 
   // Get subscriptions
   getSubscriptions: () => apiCall('/payments/subscriptions'),
 
   // Create subscription
-  createSubscription: (priceId, paymentMethodId) => apiCall('/payments/subscriptions', {
-    method: 'POST',
-    body: JSON.stringify({ priceId, paymentMethodId }),
-  }),
+  createSubscription: (priceId, paymentMethodId) =>
+    apiCall('/payments/subscriptions', {
+      method: 'POST',
+      body: JSON.stringify({ priceId, paymentMethodId }),
+    }),
 
   // Cancel subscription
-  cancelSubscription: (id) => apiCall(`/payments/subscriptions/${id}/cancel`, {
-    method: 'POST',
-  }),
+  cancelSubscription: id =>
+    apiCall(`/payments/subscriptions/${id}/cancel`, {
+      method: 'POST',
+    }),
 
   // Reactivate subscription
-  reactivateSubscription: (id) => apiCall(`/payments/subscriptions/${id}/reactivate`, {
-    method: 'POST',
-  }),
+  reactivateSubscription: id =>
+    apiCall(`/payments/subscriptions/${id}/reactivate`, {
+      method: 'POST',
+    }),
 
   // Get invoices
   getInvoices: () => apiCall('/payments/invoices'),
 
   // Create payment intent
-  createPaymentIntent: (amount, currency = 'usd', description) => 
+  createPaymentIntent: (amount, currency = 'usd', description) =>
     apiCall('/payments/payment-intent', {
       method: 'POST',
       body: JSON.stringify({ amount, currency, description }),
     }),
 
   // Get revenue analytics
-  getRevenueAnalytics: (period = '30d') => apiCall(`/payments/analytics/revenue?period=${period}`),
+  getRevenueAnalytics: (period = '30d') =>
+    apiCall(`/payments/analytics/revenue?period=${period}`),
 };
 
 // Infrastructure API
@@ -355,21 +377,24 @@ export const infrastructureAPI = {
   getResourceUsage: () => apiCall('/infrastructure/resources'),
 
   // Deploy service
-  deployService: (serviceData) => apiCall('/infrastructure/deploy', {
-    method: 'POST',
-    body: JSON.stringify(serviceData),
-  }),
+  deployService: serviceData =>
+    apiCall('/infrastructure/deploy', {
+      method: 'POST',
+      body: JSON.stringify(serviceData),
+    }),
 
   // Restart service
-  restartService: (serviceId) => apiCall(`/infrastructure/services/${serviceId}/restart`, {
-    method: 'POST',
-  }),
+  restartService: serviceId =>
+    apiCall(`/infrastructure/services/${serviceId}/restart`, {
+      method: 'POST',
+    }),
 };
 
 // Monitoring API
 export const monitoringAPI = {
   // Get alerts
-  getAlerts: (severity = 'all') => apiCall(`/monitoring/alerts?severity=${severity}`),
+  getAlerts: (severity = 'all') =>
+    apiCall(`/monitoring/alerts?severity=${severity}`),
 
   // Get performance metrics
   getPerformanceMetrics: () => apiCall('/monitoring/performance'),
@@ -378,12 +403,14 @@ export const monitoringAPI = {
   getSystemHealth: () => apiCall('/monitoring/health'),
 
   // Acknowledge alert
-  acknowledgeAlert: (alertId) => apiCall(`/monitoring/alerts/${alertId}/acknowledge`, {
-    method: 'POST',
-  }),
+  acknowledgeAlert: alertId =>
+    apiCall(`/monitoring/alerts/${alertId}/acknowledge`, {
+      method: 'POST',
+    }),
 
   // Get logs
-  getLogs: (serviceId, limit = 100) => apiCall(`/monitoring/logs?serviceId=${serviceId}&limit=${limit}`),
+  getLogs: (serviceId, limit = 100) =>
+    apiCall(`/monitoring/logs?serviceId=${serviceId}&limit=${limit}`),
 };
 
 // Users API
@@ -392,24 +419,27 @@ export const usersAPI = {
   getProfile: () => apiCall('/users/profile'),
 
   // Update user profile
-  updateProfile: (profileData) => apiCall('/users/profile', {
-    method: 'PUT',
-    body: JSON.stringify(profileData),
-  }),
+  updateProfile: profileData =>
+    apiCall('/users/profile', {
+      method: 'PUT',
+      body: JSON.stringify(profileData),
+    }),
 
   // Get team members
   getTeamMembers: () => apiCall('/users/team'),
 
   // Invite team member
-  inviteTeamMember: (email, role) => apiCall('/users/invite', {
-    method: 'POST',
-    body: JSON.stringify({ email, role }),
-  }),
+  inviteTeamMember: (email, role) =>
+    apiCall('/users/invite', {
+      method: 'POST',
+      body: JSON.stringify({ email, role }),
+    }),
 
   // Remove team member
-  removeTeamMember: (userId) => apiCall(`/users/team/${userId}`, {
-    method: 'DELETE',
-  }),
+  removeTeamMember: userId =>
+    apiCall(`/users/team/${userId}`, {
+      method: 'DELETE',
+    }),
 };
 
 // WebSocket connection management
@@ -417,21 +447,23 @@ let wsConnection = null;
 let reconnectAttempts = 0;
 const MAX_RECONNECT_ATTEMPTS = 5;
 
-export const initializeWebSocket = (userId) => {
+export const initializeWebSocket = userId => {
   if (wsConnection) {
     wsConnection.close();
   }
 
   const connect = () => {
     try {
-      wsConnection = new WebSocket(`${API_BASE_URL.replace('http', 'ws')}/ws?userId=${userId}`);
-      
+      wsConnection = new WebSocket(
+        `${API_BASE_URL.replace('http', 'ws')}/ws?userId=${userId}`
+      );
+
       wsConnection.onopen = () => {
         console.log('WebSocket connected');
         reconnectAttempts = 0;
       };
-      
-      wsConnection.onmessage = (event) => {
+
+      wsConnection.onmessage = event => {
         try {
           const data = JSON.parse(event.data);
           // Handle different message types
@@ -452,7 +484,7 @@ export const initializeWebSocket = (userId) => {
           console.error('Failed to parse WebSocket message:', error);
         }
       };
-      
+
       wsConnection.onclose = () => {
         console.log('WebSocket disconnected');
         if (reconnectAttempts < MAX_RECONNECT_ATTEMPTS) {
@@ -461,8 +493,8 @@ export const initializeWebSocket = (userId) => {
           setTimeout(() => connect(), delay);
         }
       };
-      
-      wsConnection.onerror = (error) => {
+
+      wsConnection.onerror = error => {
         console.error('WebSocket error:', error);
       };
     } catch (error) {
@@ -481,7 +513,7 @@ export const closeWebSocket = () => {
   }
 };
 
-export const sendWebSocketMessage = (message) => {
+export const sendWebSocketMessage = message => {
   if (wsConnection && wsConnection.readyState === WebSocket.OPEN) {
     wsConnection.send(JSON.stringify(message));
   }
@@ -491,7 +523,7 @@ export const sendWebSocketMessage = (message) => {
 export const healthCheck = () => {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 5000);
-  
+
   return fetch(`${API_BASE_URL}/health`, {
     signal: controller.signal,
   })
@@ -501,7 +533,9 @@ export const healthCheck = () => {
     })
     .catch(error => {
       clearTimeout(timeoutId);
-      throw new APIError('Health check failed', 0, 'HEALTH_CHECK_FAILED', { error: error.message });
+      throw new APIError('Health check failed', 0, 'HEALTH_CHECK_FAILED', {
+        error: error.message,
+      });
     });
 };
 
@@ -519,4 +553,4 @@ const api = {
   initializeWebSocket,
 };
 
-export default api; 
+export default api;

@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+} from 'react';
 import { supabase } from '../utils/supabase';
 
 const AuthContext = createContext();
@@ -28,37 +34,55 @@ export const AuthProvider = ({ children }) => {
       name: 'Administrator',
       permissions: ['*'], // All permissions
       color: 'red',
-      icon: '👑'
+      icon: '👑',
     },
     manager: {
       name: 'Manager',
-      permissions: ['manage_projects', 'view_analytics', 'manage_users', 'deploy'],
+      permissions: [
+        'manage_projects',
+        'view_analytics',
+        'manage_users',
+        'deploy',
+      ],
       color: 'blue',
-      icon: '👔'
+      icon: '👔',
     },
     developer: {
       name: 'Developer',
-      permissions: ['view_projects', 'edit_projects', 'deploy', 'view_analytics'],
+      permissions: [
+        'view_projects',
+        'edit_projects',
+        'deploy',
+        'view_analytics',
+      ],
       color: 'green',
-      icon: '💻'
+      icon: '💻',
     },
     viewer: {
       name: 'Viewer',
       permissions: ['view_projects', 'view_analytics'],
       color: 'gray',
-      icon: '👁️'
-    }
+      icon: '👁️',
+    },
   };
 
   // Update last activity on user interaction
   useEffect(() => {
     const updateActivity = () => setLastActivity(Date.now());
-    
-    const events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'];
+
+    const events = [
+      'mousedown',
+      'mousemove',
+      'keypress',
+      'scroll',
+      'touchstart',
+    ];
     events.forEach(event => document.addEventListener(event, updateActivity));
-    
+
     return () => {
-      events.forEach(event => document.removeEventListener(event, updateActivity));
+      events.forEach(event =>
+        document.removeEventListener(event, updateActivity)
+      );
     };
   }, []);
 
@@ -81,9 +105,13 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const { data: { user } } = await supabase.auth.getUser();
-        const { data: { session } } = await supabase.auth.getSession();
-        
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
+
         if (user && session) {
           await initializeUser(user, session);
         } else {
@@ -105,9 +133,11 @@ export const AuthProvider = ({ children }) => {
     checkAuth();
 
     // Listen for auth state changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
       console.log('Auth state changed:', event, session);
-      
+
       if (event === 'SIGNED_IN' && session?.user) {
         await initializeUser(session.user, session);
         addSecurityEvent('SIGNED_IN', 'User signed in successfully');
@@ -122,7 +152,7 @@ export const AuthProvider = ({ children }) => {
         setLastActivity(Date.now());
         addSecurityEvent('TOKEN_REFRESHED', 'Session token refreshed');
       }
-      
+
       setLoading(false);
     });
 
@@ -138,16 +168,16 @@ export const AuthProvider = ({ children }) => {
 
     // Load user profile
     await loadUserProfile(user.id);
-    
+
     // Load login history
     await loadLoginHistory(user.id);
-    
+
     // Add login event
     addSecurityEvent('SESSION_STARTED', 'User session started');
   };
 
   // Load user profile from database
-  const loadUserProfile = async (userId) => {
+  const loadUserProfile = async userId => {
     try {
       const { data, error } = await supabase
         .from('profiles')
@@ -168,7 +198,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   // Create default user profile
-  const createDefaultProfile = async (userId) => {
+  const createDefaultProfile = async userId => {
     try {
       const defaultProfile = {
         id: userId,
@@ -181,11 +211,11 @@ export const AuthProvider = ({ children }) => {
           notifications: {
             email: true,
             push: true,
-            security: true
-          }
+            security: true,
+          },
         },
         last_login: new Date().toISOString(),
-        login_count: 1
+        login_count: 1,
       };
 
       const { data, error } = await supabase
@@ -202,7 +232,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   // Load login history
-  const loadLoginHistory = async (userId) => {
+  const loadLoginHistory = async userId => {
     try {
       const { data, error } = await supabase
         .from('login_history')
@@ -227,15 +257,13 @@ export const AuthProvider = ({ children }) => {
       description,
       ip_address: '127.0.0.1', // In real app, get from request
       user_agent: navigator.userAgent,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     };
 
     setSecurityEvents(prev => [event, ...prev.slice(0, 49)]); // Keep last 50 events
 
     try {
-      await supabase
-        .from('security_events')
-        .insert([event]);
+      await supabase.from('security_events').insert([event]);
     } catch (error) {
       console.error('Security event logging failed:', error);
     }
@@ -251,13 +279,17 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     try {
       console.log('Attempting login with:', email);
-      
+
       // Check for rate limiting
-      const loginAttempts = localStorage.getItem(`login_attempts_${email}`) || 0;
+      const loginAttempts =
+        localStorage.getItem(`login_attempts_${email}`) || 0;
       if (loginAttempts >= 5) {
         const lastAttempt = localStorage.getItem(`last_attempt_${email}`);
-        if (Date.now() - lastAttempt < 15 * 60 * 1000) { // 15 minutes
-          throw new Error('Too many login attempts. Please wait 15 minutes before trying again.');
+        if (Date.now() - lastAttempt < 15 * 60 * 1000) {
+          // 15 minutes
+          throw new Error(
+            'Too many login attempts. Please wait 15 minutes before trying again.'
+          );
         } else {
           localStorage.removeItem(`login_attempts_${email}`);
           localStorage.removeItem(`last_attempt_${email}`);
@@ -266,7 +298,7 @@ export const AuthProvider = ({ children }) => {
 
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
-        password
+        password,
       });
 
       if (error) {
@@ -274,7 +306,7 @@ export const AuthProvider = ({ children }) => {
         const newAttempts = parseInt(loginAttempts) + 1;
         localStorage.setItem(`login_attempts_${email}`, newAttempts);
         localStorage.setItem(`last_attempt_${email}`, Date.now());
-        
+
         console.error('Login error:', error);
         throw new Error(error.message);
       }
@@ -284,7 +316,7 @@ export const AuthProvider = ({ children }) => {
       localStorage.removeItem(`last_attempt_${email}`);
 
       console.log('Login successful:', data);
-      
+
       // Update login count
       if (userProfile) {
         await updateLoginCount(userProfile.id);
@@ -300,13 +332,13 @@ export const AuthProvider = ({ children }) => {
   };
 
   // Update login count
-  const updateLoginCount = async (profileId) => {
+  const updateLoginCount = async profileId => {
     try {
       const { error } = await supabase
         .from('profiles')
         .update({
           login_count: (userProfile?.login_count || 0) + 1,
-          last_login: new Date().toISOString()
+          last_login: new Date().toISOString(),
         })
         .eq('id', profileId);
 
@@ -317,7 +349,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   // Register function with profile creation
-  const register = async (userData) => {
+  const register = async userData => {
     try {
       const { data, error } = await supabase.auth.signUp({
         email: userData.email,
@@ -325,9 +357,9 @@ export const AuthProvider = ({ children }) => {
         options: {
           data: {
             full_name: userData.fullName,
-            role: userData.role || 'developer'
-          }
-        }
+            role: userData.role || 'developer',
+          },
+        },
       });
 
       if (error) throw error;
@@ -339,7 +371,10 @@ export const AuthProvider = ({ children }) => {
 
       return { success: true };
     } catch (error) {
-      addSecurityEvent('REGISTRATION_FAILED', `Registration failed: ${error.message}`);
+      addSecurityEvent(
+        'REGISTRATION_FAILED',
+        `Registration failed: ${error.message}`
+      );
       throw error;
     }
   };
@@ -348,15 +383,15 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     try {
       addSecurityEvent('LOGOUT', 'User logged out');
-      
+
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
-      
+
       setUser(null);
       setSession(null);
       setUserProfile(null);
       setIsAuthenticated(false);
-      
+
       // Clear local storage
       localStorage.removeItem('user_preferences');
     } catch (error) {
@@ -366,11 +401,11 @@ export const AuthProvider = ({ children }) => {
   };
 
   // Update user profile
-  const updateProfile = async (profileData) => {
+  const updateProfile = async profileData => {
     try {
       const { data, error } = await supabase.auth.updateUser(profileData);
       if (error) throw error;
-      
+
       setUser(data.user);
       addSecurityEvent('PROFILE_UPDATED', 'User profile updated');
       return { success: true };
@@ -385,16 +420,18 @@ export const AuthProvider = ({ children }) => {
       // Verify current password first
       const { error: verifyError } = await supabase.auth.signInWithPassword({
         email: user.email,
-        password: currentPassword
+        password: currentPassword,
       });
 
       if (verifyError) {
         throw new Error('Current password is incorrect');
       }
 
-      const { error } = await supabase.auth.updateUser({ password: newPassword });
+      const { error } = await supabase.auth.updateUser({
+        password: newPassword,
+      });
       if (error) throw error;
-      
+
       addSecurityEvent('PASSWORD_CHANGED', 'User password changed');
       return { success: true };
     } catch (error) {
@@ -403,22 +440,28 @@ export const AuthProvider = ({ children }) => {
   };
 
   // Check if user has permission
-  const hasPermission = (permission) => {
+  const hasPermission = permission => {
     if (!userProfile) return false;
-    return userProfile.permissions.includes('*') || userProfile.permissions.includes(permission);
+    return (
+      userProfile.permissions.includes('*') ||
+      userProfile.permissions.includes(permission)
+    );
   };
 
   // Check if user has role
-  const hasRole = (roles) => {
+  const hasRole = roles => {
     if (!userProfile) return false;
     const allowedRoles = Array.isArray(roles) ? roles : [roles];
-    return allowedRoles.includes(userProfile.role) || userProfile.role === 'admin';
+    return (
+      allowedRoles.includes(userProfile.role) || userProfile.role === 'admin'
+    );
   };
 
   // Get user's project permissions
-  const getProjectPermissions = (projectId) => {
-    if (!userProfile) return { read: false, write: false, deploy: false, admin: false };
-    
+  const getProjectPermissions = projectId => {
+    if (!userProfile)
+      return { read: false, write: false, deploy: false, admin: false };
+
     // Admin has all permissions
     if (userProfile.role === 'admin') {
       return { read: true, write: true, deploy: true, admin: true };
@@ -429,17 +472,17 @@ export const AuthProvider = ({ children }) => {
       read: hasPermission('view_projects'),
       write: hasPermission('edit_projects'),
       deploy: hasPermission('deploy'),
-      admin: hasPermission('manage_projects')
+      admin: hasPermission('manage_projects'),
     };
 
     return permissions;
   };
 
   // Update user preferences
-  const updatePreferences = async (preferences) => {
+  const updatePreferences = async preferences => {
     try {
       const updatedPreferences = { ...userProfile.preferences, ...preferences };
-      
+
       const { data, error } = await supabase
         .from('profiles')
         .update({ preferences: updatedPreferences })
@@ -448,10 +491,12 @@ export const AuthProvider = ({ children }) => {
         .single();
 
       if (error) throw error;
-      
+
       setUserProfile(data);
-      localStorage.setItem('user_preferences', JSON.stringify(updatedPreferences));
-      
+      localStorage.setItem(
+        'user_preferences',
+        JSON.stringify(updatedPreferences)
+      );
       addSecurityEvent('PREFERENCES_UPDATED', 'User preferences updated');
       return { success: true };
     } catch (error) {
@@ -475,7 +520,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const { data, error } = await supabase.auth.refreshSession();
       if (error) throw error;
-      
+
       setSession(data.session);
       setLastActivity(Date.now());
       addSecurityEvent('SESSION_REFRESHED', 'Session manually refreshed');
@@ -488,16 +533,16 @@ export const AuthProvider = ({ children }) => {
   // Get session info
   const getSessionInfo = () => {
     if (!session) return null;
-    
+
     const expiresAt = new Date(session.expires_at * 1000);
     const now = new Date();
     const timeLeft = expiresAt - now;
-    
+
     return {
       expiresAt,
       timeLeft,
       isExpired: timeLeft <= 0,
-      willExpireSoon: timeLeft <= 5 * 60 * 1000 // 5 minutes
+      willExpireSoon: timeLeft <= 5 * 60 * 1000, // 5 minutes
     };
   };
 
@@ -523,12 +568,8 @@ export const AuthProvider = ({ children }) => {
     refreshSession,
     getSessionInfo,
     lastActivity,
-    sessionTimeout
+    sessionTimeout,
   };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  );
-}; 
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+};

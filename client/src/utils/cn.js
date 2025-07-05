@@ -1,8 +1,8 @@
-import { clsx } from "clsx"
-import { twMerge } from "tailwind-merge"
+import { clsx } from 'clsx';
+import { twMerge } from 'tailwind-merge';
 
 export function cn(...inputs) {
-  return twMerge(clsx(inputs))
+  return twMerge(clsx(inputs));
 }
 
 // Enhanced utility functions
@@ -23,11 +23,11 @@ export const utils = {
     return `${(value * 100).toFixed(decimals)}%`;
   },
 
-  formatFileSize: (bytes) => {
+  formatFileSize: bytes => {
     const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
     if (bytes === 0) return '0 Bytes';
     const i = Math.floor(Math.log(bytes) / Math.log(1024));
-    return Math.round(bytes / Math.pow(1024, i) * 100) / 100 + ' ' + sizes[i];
+    return Math.round((bytes / Math.pow(1024, i)) * 100) / 100 + ' ' + sizes[i];
   },
 
   // Date utilities
@@ -38,19 +38,24 @@ export const utils = {
       day: 'numeric',
       ...options,
     };
-    return new Intl.DateTimeFormat('en-US', defaultOptions).format(new Date(date));
+    return new Intl.DateTimeFormat('en-US', defaultOptions).format(
+      new Date(date)
+    );
   },
 
-  formatRelativeTime: (date) => {
+  formatRelativeTime: date => {
     const now = new Date();
     const target = new Date(date);
     const diffInSeconds = Math.floor((now - target) / 1000);
 
     if (diffInSeconds < 60) return 'just now';
     if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
-    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
-    if (diffInSeconds < 2592000) return `${Math.floor(diffInSeconds / 86400)}d ago`;
-    if (diffInSeconds < 31536000) return `${Math.floor(diffInSeconds / 2592000)}mo ago`;
+    if (diffInSeconds < 86400)
+      return `${Math.floor(diffInSeconds / 3600)}h ago`;
+    if (diffInSeconds < 2592000)
+      return `${Math.floor(diffInSeconds / 86400)}d ago`;
+    if (diffInSeconds < 31536000)
+      return `${Math.floor(diffInSeconds / 2592000)}mo ago`;
     return `${Math.floor(diffInSeconds / 31536000)}y ago`;
   },
 
@@ -61,22 +66,28 @@ export const utils = {
   },
 
   // Validation utilities
-  isValidEmail: (email) => {
+  isValidEmail: email => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   },
 
-  isValidPassword: (password) => {
+  isValidPassword: password => {
     const minLength = 8;
     const hasUpperCase = /[A-Z]/.test(password);
     const hasLowerCase = /[a-z]/.test(password);
     const hasNumbers = /\d/.test(password);
     const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
-    
-    return password.length >= minLength && hasUpperCase && hasLowerCase && hasNumbers && hasSpecialChar;
+
+    return (
+      password.length >= minLength &&
+      hasUpperCase &&
+      hasLowerCase &&
+      hasNumbers &&
+      hasSpecialChar
+    );
   },
 
-  isValidUrl: (url) => {
+  isValidUrl: url => {
     try {
       new URL(url);
       return true;
@@ -86,7 +97,7 @@ export const utils = {
   },
 
   // String utilities
-  capitalize: (str) => {
+  capitalize: str => {
     return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
   },
 
@@ -94,7 +105,7 @@ export const utils = {
     return str.length > length ? str.substring(0, length) + suffix : str;
   },
 
-  slugify: (str) => {
+  slugify: str => {
     return str
       .toLowerCase()
       .replace(/[^\w\s-]/g, '')
@@ -135,7 +146,7 @@ export const utils = {
   },
 
   // Object utilities
-  deepClone: (obj) => {
+  deepClone: obj => {
     return JSON.parse(JSON.stringify(obj));
   },
 
@@ -158,17 +169,19 @@ export const utils = {
   },
 
   // Color utilities
-  hexToRgb: (hex) => {
+  hexToRgb: hex => {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    return result ? {
-      r: parseInt(result[1], 16),
-      g: parseInt(result[2], 16),
-      b: parseInt(result[3], 16)
-    } : null;
+    return result
+      ? {
+          r: parseInt(result[1], 16),
+          g: parseInt(result[2], 16),
+          b: parseInt(result[3], 16),
+        }
+      : null;
   },
 
   rgbToHex: (r, g, b) => {
-    return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+    return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
   },
 
   // Storage utilities
@@ -191,7 +204,7 @@ export const utils = {
       }
     },
 
-    remove: (key) => {
+    remove: key => {
       try {
         localStorage.removeItem(key);
         return true;
@@ -225,19 +238,19 @@ export const utils = {
 
   throttle: (func, limit) => {
     let inThrottle;
-    return function() {
+    return function () {
       const args = arguments;
       const context = this;
       if (!inThrottle) {
         func.apply(context, args);
         inThrottle = true;
-        setTimeout(() => inThrottle = false, limit);
+        setTimeout(() => (inThrottle = false), limit);
       }
     };
   },
 
   // Copy to clipboard
-  copyToClipboard: async (text) => {
+  copyToClipboard: async text => {
     try {
       await navigator.clipboard.writeText(text);
       return true;
@@ -280,12 +293,13 @@ export const utils = {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   },
 
-  randomChoice: (array) => {
+  randomChoice: array => {
     return array[Math.floor(Math.random() * array.length)];
   },
 
   randomString: (length = 8) => {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const chars =
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     let result = '';
     for (let i = 0; i < length; i++) {
       result += chars.charAt(Math.floor(Math.random() * chars.length));
@@ -303,7 +317,7 @@ export const utils = {
     return result;
   },
 
-  setQueryParams: (params) => {
+  setQueryParams: params => {
     const url = new URL(window.location);
     Object.entries(params).forEach(([key, value]) => {
       if (value === null || value === undefined) {
@@ -317,7 +331,9 @@ export const utils = {
 
   // Device utilities
   isMobile: () => {
-    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+      navigator.userAgent
+    );
   },
 
   isTouchDevice: () => {
@@ -326,7 +342,9 @@ export const utils = {
 
   // Browser utilities
   isChrome: () => {
-    return /Chrome/.test(navigator.userAgent) && !/Edge/.test(navigator.userAgent);
+    return (
+      /Chrome/.test(navigator.userAgent) && !/Edge/.test(navigator.userAgent)
+    );
   },
 
   isFirefox: () => {
@@ -334,7 +352,9 @@ export const utils = {
   },
 
   isSafari: () => {
-    return /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent);
+    return (
+      /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent)
+    );
   },
 
   isEdge: () => {
@@ -382,4 +402,4 @@ export const {
   isFirefox,
   isSafari,
   isEdge,
-} = utils; 
+} = utils;

@@ -43,7 +43,7 @@
     "react-router-dom": "^6.8.1",
     "react-scripts": "5.0.1",
     "react-select": "^5.7.0",
-    "react-spring": "^9.5.5",
+    "react-spring": "^9.3.0",
     "react-table": "^7.8.0",
     "react-tooltip": "^5.18.1",
     "react-transition-group": "^4.4.5",
@@ -56,7 +56,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "DISABLE_ESLINT_PLUGIN=true GENERATE_SOURCEMAP=false react-scripts build",
     "vercel-build": "CI=false GENERATE_SOURCEMAP=false react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
@@ -111,6 +111,14 @@
     "hooks": {
       "pre-commit": "echo 'Skipping pre-commit in CI environment'"
     }
+  },
+  "resolutions": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "overrides": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "proxy": "http://localhost:3000"
 }

@@ -1,13 +1,19 @@
-import { createClient } from '@supabase/supabase-js'
+import { createClient } from '@supabase/supabase-js';
 
 // Environment variables for the new Supabase database
-const supabaseUrl = process.env.REACT_APP_SUPABASE_URL || 'https://fxzwnjmzhdynsatvakim.supabase.co'
-const supabaseAnonKey = process.env.REACT_APP_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ4enduam16aGR5bnNhdHZha2ltIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE1ODI4MjUsImV4cCI6MjA2NzE1ODgyNX0.l1fmDYnD8eIszoMqx2S0Cqq28fpz_rSjaim2Ke3YIow'
+const supabaseUrl =
+  process.env.REACT_APP_SUPABASE_URL ||
+  'https://fxzwnjmzhdynsatvakim.supabase.co';
+const supabaseAnonKey =
+  process.env.REACT_APP_SUPABASE_ANON_KEY ||
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ4enduam16aGR5bnNhdHZha2ltIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE1ODI4MjUsImV4cCI6MjA2NzE1ODgyNX0.l1fmDYnD8eIszoMqx2S0Cqq28fpz_rSjaim2Ke3YIow';
 
 // Validate environment variables
 if (!supabaseUrl || !supabaseAnonKey) {
-  console.error('Missing Supabase environment variables. Please check your .env file.')
-  throw new Error('Supabase configuration is incomplete')
+  console.error(
+    'Missing Supabase environment variables. Please check your .env file.'
+  );
+  throw new Error('Supabase configuration is incomplete');
 }
 
 // Create Supabase client with enhanced configuration
@@ -16,22 +22,22 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
     autoRefreshToken: true,
     persistSession: true,
     detectSessionInUrl: true,
-    flowType: 'pkce'
+    flowType: 'pkce',
   },
   db: {
-    schema: 'public'
+    schema: 'public',
   },
   global: {
     headers: {
-      'X-Client-Info': 'zanwik-dashboard'
-    }
-  }
-})
+      'X-Client-Info': 'zanwik-dashboard',
+    },
+  },
+});
 
 // Connection status monitoring
-let isConnected = false
-let connectionRetries = 0
-const maxRetries = 3
+let isConnected = false;
+let connectionRetries = 0;
+const maxRetries = 3;
 
 // Test database connection
 export const testConnection = async () => {
@@ -39,22 +45,22 @@ export const testConnection = async () => {
     const { data, error } = await supabase
       .from('projects')
       .select('count')
-      .limit(1)
-    
+      .limit(1);
+
     if (error) {
-      console.error('Database connection test failed:', error)
-      return false
+      console.error('Database connection test failed:', error);
+      return false;
     }
-    
-    isConnected = true
-    connectionRetries = 0
-    console.log('✅ Successfully connected to Supabase database')
-    return true
+
+    isConnected = true;
+    connectionRetries = 0;
+    console.log('✅ Successfully connected to Supabase database');
+    return true;
   } catch (error) {
-    console.error('Database connection error:', error)
-    return false
+    console.error('Database connection error:', error);
+    return false;
   }
-}
+};
 
 // Enhanced auth helpers with better error handling
 export const auth = {
@@ -63,17 +69,17 @@ export const auth = {
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
-        password
-      })
+        password,
+      });
       if (error) {
-        console.error('Sign in error:', error)
-        throw error
+        console.error('Sign in error:', error);
+        throw error;
       }
-      console.log('✅ User signed in successfully')
-      return data
+      console.log('✅ User signed in successfully');
+      return data;
     } catch (error) {
-      console.error('Sign in failed:', error)
-      throw error
+      console.error('Sign in failed:', error);
+      throw error;
     }
   },
 
@@ -84,108 +90,114 @@ export const auth = {
         email,
         password,
         options: {
-          emailRedirectTo: `${window.location.origin}/auth/callback`
-        }
-      })
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
+        },
+      });
       if (error) {
-        console.error('Sign up error:', error)
-        throw error
+        console.error('Sign up error:', error);
+        throw error;
       }
-      console.log('✅ User signed up successfully')
-      return data
+      console.log('✅ User signed up successfully');
+      return data;
     } catch (error) {
-      console.error('Sign up failed:', error)
-      throw error
+      console.error('Sign up failed:', error);
+      throw error;
     }
   },
 
   // Sign out
   signOut: async () => {
     try {
-      const { error } = await supabase.auth.signOut()
+      const { error } = await supabase.auth.signOut();
       if (error) {
-        console.error('Sign out error:', error)
-        throw error
+        console.error('Sign out error:', error);
+        throw error;
       }
-      console.log('✅ User signed out successfully')
+      console.log('✅ User signed out successfully');
     } catch (error) {
-      console.error('Sign out failed:', error)
-      throw error
+      console.error('Sign out failed:', error);
+      throw error;
     }
   },
 
   // Get current user
   getCurrentUser: async () => {
     try {
-      const { data: { user }, error } = await supabase.auth.getUser()
+      const {
+        data: { user },
+        error,
+      } = await supabase.auth.getUser();
       if (error) {
-        console.error('Get user error:', error)
-        throw error
+        console.error('Get user error:', error);
+        throw error;
       }
-      return user
+      return user;
     } catch (error) {
-      console.error('Get current user failed:', error)
-      throw error
+      console.error('Get current user failed:', error);
+      throw error;
     }
   },
 
   // Get current session
   getCurrentSession: async () => {
     try {
-      const { data: { session }, error } = await supabase.auth.getSession()
+      const {
+        data: { session },
+        error,
+      } = await supabase.auth.getSession();
       if (error) {
-        console.error('Get session error:', error)
-        throw error
+        console.error('Get session error:', error);
+        throw error;
       }
-      return session
+      return session;
     } catch (error) {
-      console.error('Get current session failed:', error)
-      throw error
+      console.error('Get current session failed:', error);
+      throw error;
     }
   },
 
   // Listen to auth changes
-  onAuthStateChange: (callback) => {
+  onAuthStateChange: callback => {
     return supabase.auth.onAuthStateChange((event, session) => {
-      console.log('Auth state changed:', event, session?.user?.email)
-      callback(event, session)
-    })
+      console.log('Auth state changed:', event, session?.user?.email);
+      callback(event, session);
+    });
   },
 
   // Reset password
-  resetPassword: async (email) => {
+  resetPassword: async email => {
     try {
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/auth/reset-password`
-      })
+        redirectTo: `${window.location.origin}/auth/reset-password`,
+      });
       if (error) {
-        console.error('Password reset error:', error)
-        throw error
+        console.error('Password reset error:', error);
+        throw error;
       }
-      console.log('✅ Password reset email sent')
+      console.log('✅ Password reset email sent');
     } catch (error) {
-      console.error('Password reset failed:', error)
-      throw error
+      console.error('Password reset failed:', error);
+      throw error;
     }
   },
 
   // Update password
-  updatePassword: async (newPassword) => {
+  updatePassword: async newPassword => {
     try {
       const { error } = await supabase.auth.updateUser({
-        password: newPassword
-      })
+        password: newPassword,
+      });
       if (error) {
-        console.error('Password update error:', error)
-        throw error
+        console.error('Password update error:', error);
+        throw error;
       }
-      console.log('✅ Password updated successfully')
+      console.log('✅ Password updated successfully');
     } catch (error) {
-      console.error('Password update failed:', error)
-      throw error
+      console.error('Password update failed:', error);
+      throw error;
     }
-  }
-}
+  },
+};
 
 // Enhanced database helpers with retry logic and better error handling
 export const db = {
@@ -196,69 +208,69 @@ export const db = {
         let query = supabase
           .from('projects')
           .select('*')
-          .order('created_at', { ascending: false })
+          .order('created_at', { ascending: false });
 
         // Apply filters
         if (filters.status) {
-          query = query.eq('status', filters.status)
+          query = query.eq('status', filters.status);
         }
         if (filters.category) {
-          query = query.eq('category', filters.category)
+          query = query.eq('category', filters.category);
         }
         if (filters.search) {
-          query = query.ilike('name', `%${filters.search}%`)
+          query = query.ilike('name', `%${filters.search}%`);
         }
 
-        const { data, error } = await query
+        const { data, error } = await query;
         if (error) {
-          console.error('Get projects error:', error)
-          throw error
+          console.error('Get projects error:', error);
+          throw error;
         }
-        return data || []
+        return data || [];
       } catch (error) {
-        console.error('Get all projects failed:', error)
-        throw error
+        console.error('Get all projects failed:', error);
+        throw error;
       }
     },
 
-    getById: async (id) => {
+    getById: async id => {
       try {
         const { data, error } = await supabase
           .from('projects')
           .select('*')
           .eq('id', id)
-          .single()
+          .single();
         if (error) {
-          console.error('Get project by ID error:', error)
-          throw error
+          console.error('Get project by ID error:', error);
+          throw error;
         }
-        return data
+        return data;
       } catch (error) {
-        console.error('Get project by ID failed:', error)
-        throw error
+        console.error('Get project by ID failed:', error);
+        throw error;
       }
     },
 
-    create: async (project) => {
+    create: async project => {
       try {
         const { data, error } = await supabase
           .from('projects')
           .insert({
             ...project,
             created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString()
+            updated_at: new Date().toISOString(),
           })
           .select()
-          .single()
+          .single();
         if (error) {
-          console.error('Create project error:', error)
-          throw error
+          console.error('Create project error:', error);
+          throw error;
         }
-        console.log('✅ Project created successfully')
-        return data
+        console.log('✅ Project created successfully');
+        return data;
       } catch (error) {
-        console.error('Create project failed:', error)
-        throw error
+        console.error('Create project failed:', error);
+        throw error;
       }
     },
 
@@ -268,55 +280,51 @@ export const db = {
           .from('projects')
           .update({
             ...updates,
-            updated_at: new Date().toISOString()
+            updated_at: new Date().toISOString(),
           })
           .eq('id', id)
           .select()
-          .single()
+          .single();
         if (error) {
-          console.error('Update project error:', error)
-          throw error
+          console.error('Update project error:', error);
+          throw error;
         }
-        console.log('✅ Project updated successfully')
-        return data
+        console.log('✅ Project updated successfully');
+        return data;
       } catch (error) {
-        console.error('Update project failed:', error)
-        throw error
+        console.error('Update project failed:', error);
+        throw error;
       }
     },
 
-    delete: async (id) => {
+    delete: async id => {
       try {
-        const { error } = await supabase
-          .from('projects')
-          .delete()
-          .eq('id', id)
+        const { error } = await supabase.from('projects').delete().eq('id', id);
         if (error) {
-          console.error('Delete project error:', error)
-          throw error
+          console.error('Delete project error:', error);
+          throw error;
         }
-        console.log('✅ Project deleted successfully')
+        console.log('✅ Project deleted successfully');
       } catch (error) {
-        console.error('Delete project failed:', error)
-        throw error
+        console.error('Delete project failed:', error);
+        throw error;
       }
     },
 
     // Get project statistics
     getStats: async () => {
       try {
-        const { data, error } = await supabase
-          .rpc('get_project_stats')
+        const { data, error } = await supabase.rpc('get_project_stats');
         if (error) {
-          console.error('Get project stats error:', error)
-          throw error
+          console.error('Get project stats error:', error);
+          throw error;
         }
-        return data
+        return data;
       } catch (error) {
-        console.error('Get project stats failed:', error)
-        throw error
+        console.error('Get project stats failed:', error);
+        throw error;
       }
-    }
+    },
   },
 
   // Analytics
@@ -326,15 +334,15 @@ export const db = {
         const { data, error } = await supabase
           .from('analytics_overview')
           .select('*')
-          .single()
+          .single();
         if (error) {
-          console.error('Get analytics overview error:', error)
-          throw error
+          console.error('Get analytics overview error:', error);
+          throw error;
         }
-        return data
+        return data;
       } catch (error) {
-        console.error('Get analytics overview failed:', error)
-        throw error
+        console.error('Get analytics overview failed:', error);
+        throw error;
       }
     },
 
@@ -344,15 +352,15 @@ export const db = {
           .from('analytics_revenue')
           .select('*')
           .eq('period', period)
-          .order('date', { ascending: true })
+          .order('date', { ascending: true });
         if (error) {
-          console.error('Get revenue analytics error:', error)
-          throw error
+          console.error('Get revenue analytics error:', error);
+          throw error;
         }
-        return data || []
+        return data || [];
       } catch (error) {
-        console.error('Get revenue analytics failed:', error)
-        throw error
+        console.error('Get revenue analytics failed:', error);
+        throw error;
       }
     },
 
@@ -364,17 +372,17 @@ export const db = {
           .select('*')
           .gte('date', startDate)
           .lte('date', endDate)
-          .order('date', { ascending: true })
+          .order('date', { ascending: true });
         if (error) {
-          console.error('Get custom analytics error:', error)
-          throw error
+          console.error('Get custom analytics error:', error);
+          throw error;
         }
-        return data || []
+        return data || [];
       } catch (error) {
-        console.error('Get custom analytics failed:', error)
-        throw error
+        console.error('Get custom analytics failed:', error);
+        throw error;
       }
-    }
+    },
   },
 
   // Users
@@ -384,46 +392,46 @@ export const db = {
         let query = supabase
           .from('users')
           .select('*')
-          .order('created_at', { ascending: false })
+          .order('created_at', { ascending: false });
 
         // Apply filters
         if (filters.role) {
-          query = query.eq('role', filters.role)
+          query = query.eq('role', filters.role);
         }
         if (filters.status) {
-          query = query.eq('status', filters.status)
+          query = query.eq('status', filters.status);
         }
         if (filters.search) {
-          query = query.ilike('email', `%${filters.search}%`)
+          query = query.ilike('email', `%${filters.search}%`);
         }
 
-        const { data, error } = await query
+        const { data, error } = await query;
         if (error) {
-          console.error('Get users error:', error)
-          throw error
+          console.error('Get users error:', error);
+          throw error;
         }
-        return data || []
+        return data || [];
       } catch (error) {
-        console.error('Get all users failed:', error)
-        throw error
+        console.error('Get all users failed:', error);
+        throw error;
       }
     },
 
-    getById: async (id) => {
+    getById: async id => {
       try {
         const { data, error } = await supabase
           .from('users')
           .select('*')
           .eq('id', id)
-          .single()
+          .single();
         if (error) {
-          console.error('Get user by ID error:', error)
-          throw error
+          console.error('Get user by ID error:', error);
+          throw error;
         }
-        return data
+        return data;
       } catch (error) {
-        console.error('Get user by ID failed:', error)
-        throw error
+        console.error('Get user by ID failed:', error);
+        throw error;
       }
     },
 
@@ -433,39 +441,36 @@ export const db = {
           .from('users')
           .update({
             ...updates,
-            updated_at: new Date().toISOString()
+            updated_at: new Date().toISOString(),
           })
           .eq('id', id)
           .select()
-          .single()
+          .single();
         if (error) {
-          console.error('Update user error:', error)
-          throw error
+          console.error('Update user error:', error);
+          throw error;
         }
-        console.log('✅ User updated successfully')
-        return data
+        console.log('✅ User updated successfully');
+        return data;
       } catch (error) {
-        console.error('Update user failed:', error)
-        throw error
+        console.error('Update user failed:', error);
+        throw error;
       }
     },
 
-    delete: async (id) => {
+    delete: async id => {
       try {
-        const { error } = await supabase
-          .from('users')
-          .delete()
-          .eq('id', id)
+        const { error } = await supabase.from('users').delete().eq('id', id);
         if (error) {
-          console.error('Delete user error:', error)
-          throw error
+          console.error('Delete user error:', error);
+          throw error;
         }
-        console.log('✅ User deleted successfully')
+        console.log('✅ User deleted successfully');
       } catch (error) {
-        console.error('Delete user failed:', error)
-        throw error
+        console.error('Delete user failed:', error);
+        throw error;
       }
-    }
+    },
   },
 
   // System monitoring
@@ -475,47 +480,47 @@ export const db = {
         let query = supabase
           .from('alerts')
           .select('*')
-          .order('created_at', { ascending: false })
+          .order('created_at', { ascending: false });
 
         if (severity !== 'all') {
-          query = query.eq('severity', severity)
+          query = query.eq('severity', severity);
         }
 
-        const { data, error } = await query
+        const { data, error } = await query;
         if (error) {
-          console.error('Get alerts error:', error)
-          throw error
+          console.error('Get alerts error:', error);
+          throw error;
         }
-        return data || []
+        return data || [];
       } catch (error) {
-        console.error('Get alerts failed:', error)
-        throw error
+        console.error('Get alerts failed:', error);
+        throw error;
       }
     },
 
-    acknowledgeAlert: async (alertId) => {
+    acknowledgeAlert: async alertId => {
       try {
         const { error } = await supabase
           .from('alerts')
           .update({
             acknowledged: true,
-            acknowledged_at: new Date().toISOString()
+            acknowledged_at: new Date().toISOString(),
           })
-          .eq('id', alertId)
+          .eq('id', alertId);
         if (error) {
-          console.error('Acknowledge alert error:', error)
-          throw error
+          console.error('Acknowledge alert error:', error);
+          throw error;
         }
-        console.log('✅ Alert acknowledged successfully')
+        console.log('✅ Alert acknowledged successfully');
       } catch (error) {
-        console.error('Acknowledge alert failed:', error)
-        throw error
+        console.error('Acknowledge alert failed:', error);
+        throw error;
       }
-    }
-  }
-}
+    },
+  },
+};
 
 // Initialize connection test
-testConnection()
+testConnection();
 
-export default supabase 
+export default supabase;

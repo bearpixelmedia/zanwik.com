@@ -1,41 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  User, 
-  CreditCard, 
-  Users, 
-  Bell, 
-  Shield, 
-  Save,
-  Loader2,
-  Plus,
-  Trash2,
-  Edit,
-  Settings as SettingsIcon,
-  Database,
-  Globe,
+import {
+  User,
+  Shield,
+  Bell,
   Key,
   Download,
   Upload,
-  RefreshCw,
   Eye,
   EyeOff,
   Lock,
   Unlock,
-  AlertTriangle,
-  CheckCircle,
-  Clock,
-  Activity,
   Palette,
-  Monitor,
-  Smartphone,
   Zap,
   FileText,
   Copy,
-  ExternalLink
+  ExternalLink,
 } from 'lucide-react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { useAuth } from '../contexts/AuthContext';
+import { cn } from '../utils/cn';
 import { usersAPI, paymentsAPI } from '../utils/api';
 
 const Settings = () => {
@@ -45,7 +29,7 @@ const Settings = () => {
   const [saving, setSaving] = useState(false);
   const [autoSave, setAutoSave] = useState(true);
   const [showApiKey, setShowApiKey] = useState(false);
-  
+
   // Profile state
   const [profile, setProfile] = useState({
     firstName: user?.user_metadata?.firstName || '',
@@ -55,7 +39,7 @@ const Settings = () => {
     phone: user?.user_metadata?.phone || '',
     timezone: user?.user_metadata?.timezone || 'UTC',
     language: user?.user_metadata?.language || 'en',
-    avatar: user?.user_metadata?.avatar || null
+    avatar: user?.user_metadata?.avatar || null,
   });
 
   // Billing state
@@ -67,7 +51,7 @@ const Settings = () => {
     number: '',
     expiry: '',
     cvc: '',
-    name: ''
+    name: '',
   });
 
   // Team state
@@ -87,7 +71,7 @@ const Settings = () => {
     securityAlerts: true,
     systemMaintenance: false,
     newFeatures: true,
-    marketing: false
+    marketing: false,
   });
 
   // Security state
@@ -99,7 +83,7 @@ const Settings = () => {
     deviceManagement: true,
     apiKeyRotation: false,
     lastPasswordChange: '2024-01-01',
-    failedLoginAttempts: 0
+    failedLoginAttempts: 0,
   });
 
   // System preferences
@@ -111,7 +95,7 @@ const Settings = () => {
     defaultView: 'dashboard',
     compactMode: false,
     animations: true,
-    soundEffects: false
+    soundEffects: false,
   });
 
   // API Management
@@ -124,8 +108,8 @@ const Settings = () => {
     usageStats: {
       requests: 1250,
       errors: 12,
-      bandwidth: '2.5GB'
-    }
+      bandwidth: '2.5GB',
+    },
   });
 
   // Data & Privacy
@@ -136,7 +120,7 @@ const Settings = () => {
     marketingEmails: false,
     thirdPartySharing: false,
     dataExport: true,
-    accountDeletion: false
+    accountDeletion: false,
   });
 
   useEffect(() => {
@@ -149,7 +133,7 @@ const Settings = () => {
       const [methods, subs, invs] = await Promise.all([
         paymentsAPI.getPaymentMethods(),
         paymentsAPI.getSubscriptions(),
-        paymentsAPI.getInvoices()
+        paymentsAPI.getInvoices(),
       ]);
       setPaymentMethods(methods);
       setSubscriptions(subs);
@@ -198,8 +182,10 @@ const Settings = () => {
     }
   };
 
-  const handleRemovePaymentMethod = async (methodId) => {
-    if (!window.confirm('Are you sure you want to remove this payment method?')) {
+  const handleRemovePaymentMethod = async methodId => {
+    if (
+      !window.confirm('Are you sure you want to remove this payment method?')
+    ) {
       return;
     }
 
@@ -234,7 +220,7 @@ const Settings = () => {
     }
   };
 
-  const handleRemoveTeamMember = async (userId) => {
+  const handleRemoveTeamMember = async userId => {
     if (!window.confirm('Are you sure you want to remove this team member?')) {
       return;
     }
@@ -250,26 +236,28 @@ const Settings = () => {
 
   const tabs = [
     { id: 'profile', label: 'Profile', icon: User },
-    { id: 'billing', label: 'Billing', icon: CreditCard },
-    { id: 'team', label: 'Team', icon: Users },
+    { id: 'billing', label: 'Billing', icon: Key },
+    { id: 'team', label: 'Team', icon: User },
     { id: 'notifications', label: 'Notifications', icon: Bell },
     { id: 'security', label: 'Security', icon: Shield },
-    { id: 'systemPrefs', label: 'System', icon: SettingsIcon },
-    { id: 'apiManagement', label: 'API', icon: Database },
-    { id: 'dataPrivacy', label: 'Privacy', icon: Globe },
+    { id: 'systemPrefs', label: 'System', icon: User },
+    { id: 'apiManagement', label: 'API', icon: Key },
+    { id: 'dataPrivacy', label: 'Privacy', icon: ExternalLink },
   ];
 
   return (
-    <div className="p-6 space-y-6">
+    <div className='p-6 space-y-6'>
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-foreground">Settings</h1>
-        <p className="text-muted-foreground">Manage your account settings and preferences.</p>
+        <h1 className='text-3xl font-bold text-foreground'>Settings</h1>
+        <p className='text-muted-foreground'>
+          Manage your account settings and preferences.
+        </p>
       </div>
 
       {/* Tabs */}
-      <div className="flex space-x-1 bg-muted p-1 rounded-lg">
-        {tabs.map((tab) => {
+      <div className='flex space-x-1 bg-muted p-1 rounded-lg'>
+        {tabs.map(tab => {
           const Icon = tab.icon;
           return (
             <button
@@ -281,7 +269,7 @@ const Settings = () => {
                   : 'text-muted-foreground hover:text-foreground'
               }`}
             >
-              <Icon className="h-4 w-4" />
+              <Icon className='h-4 w-4' />
               <span>{tab.label}</span>
             </button>
           );
@@ -293,111 +281,141 @@ const Settings = () => {
         <Card>
           <CardHeader>
             <CardTitle>Profile Information</CardTitle>
-            <CardDescription>Update your personal information and contact details.</CardDescription>
+            <CardDescription>
+              Update your personal information and contact details.
+            </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <CardContent className='space-y-4'>
+            <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
               <div>
-                <label className="text-sm font-medium text-foreground">First Name</label>
+                <label className='text-sm font-medium text-foreground'>
+                  First Name
+                </label>
                 <input
-                  type="text"
+                  type='text'
                   value={profile.firstName}
-                  onChange={(e) => setProfile(prev => ({ ...prev, firstName: e.target.value }))}
-                  className="w-full mt-1 px-3 py-2 border border-input rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                  onChange={e =>
+                    setProfile(prev => ({ ...prev, firstName: e.target.value }))
+                  }
+                  className='w-full mt-1 px-3 py-2 border border-input rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary'
                 />
               </div>
               <div>
-                <label className="text-sm font-medium text-foreground">Last Name</label>
+                <label className='text-sm font-medium text-foreground'>
+                  Last Name
+                </label>
                 <input
-                  type="text"
+                  type='text'
                   value={profile.lastName}
-                  onChange={(e) => setProfile(prev => ({ ...prev, lastName: e.target.value }))}
-                  className="w-full mt-1 px-3 py-2 border border-input rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                  onChange={e =>
+                    setProfile(prev => ({ ...prev, lastName: e.target.value }))
+                  }
+                  className='w-full mt-1 px-3 py-2 border border-input rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary'
                 />
               </div>
             </div>
             <div>
-              <label className="text-sm font-medium text-foreground">Email</label>
+              <label className='text-sm font-medium text-foreground'>
+                Email
+              </label>
               <input
-                type="email"
+                type='email'
                 value={profile.email}
                 disabled
-                className="w-full mt-1 px-3 py-2 border border-input rounded-md bg-muted text-muted-foreground"
+                className='w-full mt-1 px-3 py-2 border border-input rounded-md bg-muted text-muted-foreground'
               />
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
               <div>
-                <label className="text-sm font-medium text-foreground">Company</label>
+                <label className='text-sm font-medium text-foreground'>
+                  Company
+                </label>
                 <input
-                  type="text"
+                  type='text'
                   value={profile.company}
-                  onChange={(e) => setProfile(prev => ({ ...prev, company: e.target.value }))}
-                  className="w-full mt-1 px-3 py-2 border border-input rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                  onChange={e =>
+                    setProfile(prev => ({ ...prev, company: e.target.value }))
+                  }
+                  className='w-full mt-1 px-3 py-2 border border-input rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary'
                 />
               </div>
               <div>
-                <label className="text-sm font-medium text-foreground">Phone</label>
+                <label className='text-sm font-medium text-foreground'>
+                  Phone
+                </label>
                 <input
-                  type="tel"
+                  type='tel'
                   value={profile.phone}
-                  onChange={(e) => setProfile(prev => ({ ...prev, phone: e.target.value }))}
-                  className="w-full mt-1 px-3 py-2 border border-input rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                  onChange={e =>
+                    setProfile(prev => ({ ...prev, phone: e.target.value }))
+                  }
+                  className='w-full mt-1 px-3 py-2 border border-input rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary'
                 />
               </div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
               <div>
-                <label className="text-sm font-medium text-foreground">Timezone</label>
+                <label className='text-sm font-medium text-foreground'>
+                  Timezone
+                </label>
                 <select
                   value={profile.timezone}
-                  onChange={(e) => setProfile(prev => ({ ...prev, timezone: e.target.value }))}
-                  className="w-full mt-1 px-3 py-2 border border-input rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                  onChange={e =>
+                    setProfile(prev => ({ ...prev, timezone: e.target.value }))
+                  }
+                  className='w-full mt-1 px-3 py-2 border border-input rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary'
                 >
-                  <option value="UTC">UTC</option>
-                  <option value="America/New_York">Eastern Time</option>
-                  <option value="America/Chicago">Central Time</option>
-                  <option value="America/Denver">Mountain Time</option>
-                  <option value="America/Los_Angeles">Pacific Time</option>
-                  <option value="Europe/London">London</option>
-                  <option value="Europe/Paris">Paris</option>
-                  <option value="Asia/Tokyo">Tokyo</option>
+                  <option value='UTC'>UTC</option>
+                  <option value='America/New_York'>Eastern Time</option>
+                  <option value='America/Chicago'>Central Time</option>
+                  <option value='America/Denver'>Mountain Time</option>
+                  <option value='America/Los_Angeles'>Pacific Time</option>
+                  <option value='Europe/London'>London</option>
+                  <option value='Europe/Paris'>Paris</option>
+                  <option value='Asia/Tokyo'>Tokyo</option>
                 </select>
               </div>
               <div>
-                <label className="text-sm font-medium text-foreground">Language</label>
+                <label className='text-sm font-medium text-foreground'>
+                  Language
+                </label>
                 <select
                   value={profile.language}
-                  onChange={(e) => setProfile(prev => ({ ...prev, language: e.target.value }))}
-                  className="w-full mt-1 px-3 py-2 border border-input rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                  onChange={e =>
+                    setProfile(prev => ({ ...prev, language: e.target.value }))
+                  }
+                  className='w-full mt-1 px-3 py-2 border border-input rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary'
                 >
-                  <option value="en">English</option>
-                  <option value="es">Spanish</option>
-                  <option value="fr">French</option>
-                  <option value="de">German</option>
-                  <option value="ja">Japanese</option>
-                  <option value="zh">Chinese</option>
+                  <option value='en'>English</option>
+                  <option value='es'>Spanish</option>
+                  <option value='fr'>French</option>
+                  <option value='de'>German</option>
+                  <option value='ja'>Japanese</option>
+                  <option value='zh'>Chinese</option>
                 </select>
               </div>
             </div>
-            <div className="flex items-center justify-between pt-4">
-              <div className="flex items-center space-x-2">
+            <div className='flex items-center justify-between pt-4'>
+              <div className='flex items-center space-x-2'>
                 <input
-                  type="checkbox"
+                  type='checkbox'
                   checked={autoSave}
-                  onChange={(e) => setAutoSave(e.target.checked)}
-                  className="rounded border-gray-300"
+                  onChange={e => setAutoSave(e.target.checked)}
+                  className='rounded border-gray-300'
                 />
-                <label className="text-sm text-muted-foreground">Auto-save changes</label>
+                <label className='text-sm text-muted-foreground'>
+                  Auto-save changes
+                </label>
               </div>
               <Button onClick={handleProfileSave} disabled={saving}>
                 {saving ? (
                   <>
-                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    <Loader2 className='h-4 w-4 mr-2 animate-spin' />
                     Saving...
                   </>
                 ) : (
                   <>
-                    <Save className="h-4 w-4 mr-2" />
+                    <Save className='h-4 w-4 mr-2' />
                     Save Changes
                   </>
                 )}
@@ -409,43 +427,53 @@ const Settings = () => {
 
       {/* Billing Tab */}
       {activeTab === 'billing' && (
-        <div className="space-y-6">
+        <div className='space-y-6'>
           {/* Payment Methods */}
           <Card>
             <CardHeader>
-              <div className="flex items-center justify-between">
+              <div className='flex items-center justify-between'>
                 <div>
                   <CardTitle>Payment Methods</CardTitle>
-                  <CardDescription>Manage your payment methods and billing information.</CardDescription>
+                  <CardDescription>
+                    Manage your payment methods and billing information.
+                  </CardDescription>
                 </div>
                 <Button onClick={() => setShowAddCard(true)}>
-                  <Plus className="h-4 w-4 mr-2" />
+                  <Plus className='h-4 w-4 mr-2' />
                   Add Card
                 </Button>
               </div>
             </CardHeader>
             <CardContent>
               {paymentMethods.length === 0 ? (
-                <p className="text-muted-foreground">No payment methods added yet.</p>
+                <p className='text-muted-foreground'>
+                  No payment methods added yet.
+                </p>
               ) : (
-                <div className="space-y-3">
-                  {paymentMethods.map((method) => (
-                    <div key={method.id} className="flex items-center justify-between p-3 border rounded-lg">
-                      <div className="flex items-center space-x-3">
-                        <CreditCard className="h-5 w-5 text-muted-foreground" />
+                <div className='space-y-3'>
+                  {paymentMethods.map(method => (
+                    <div
+                      key={method.id}
+                      className='flex items-center justify-between p-3 border rounded-lg'
+                    >
+                      <div className='flex items-center space-x-3'>
+                        <CreditCard className='h-5 w-5 text-muted-foreground' />
                         <div>
-                          <p className="font-medium">•••• •••• •••• {method.card?.last4}</p>
-                          <p className="text-sm text-muted-foreground">
-                            Expires {method.card?.exp_month}/{method.card?.exp_year}
+                          <p className='font-medium'>
+                            •••• •••• •••• {method.card?.last4}
+                          </p>
+                          <p className='text-sm text-muted-foreground'>
+                            Expires {method.card?.exp_month}/
+                            {method.card?.exp_year}
                           </p>
                         </div>
                       </div>
                       <Button
-                        variant="outline"
-                        size="sm"
+                        variant='outline'
+                        size='sm'
                         onClick={() => handleRemovePaymentMethod(method.id)}
                       >
-                        <Trash2 className="h-4 w-4" />
+                        <Trash2 className='h-4 w-4' />
                       </Button>
                     </div>
                   ))}
@@ -458,27 +486,39 @@ const Settings = () => {
           <Card>
             <CardHeader>
               <CardTitle>Active Subscriptions</CardTitle>
-              <CardDescription>Your current subscription plans and billing cycles.</CardDescription>
+              <CardDescription>
+                Your current subscription plans and billing cycles.
+              </CardDescription>
             </CardHeader>
             <CardContent>
               {subscriptions.length === 0 ? (
-                <p className="text-muted-foreground">No active subscriptions.</p>
+                <p className='text-muted-foreground'>
+                  No active subscriptions.
+                </p>
               ) : (
-                <div className="space-y-3">
-                  {subscriptions.map((sub) => (
-                    <div key={sub.id} className="flex items-center justify-between p-3 border rounded-lg">
+                <div className='space-y-3'>
+                  {subscriptions.map(sub => (
+                    <div
+                      key={sub.id}
+                      className='flex items-center justify-between p-3 border rounded-lg'
+                    >
                       <div>
-                        <p className="font-medium">{sub.plan?.name || 'Unknown Plan'}</p>
-                        <p className="text-sm text-muted-foreground">
-                          ${sub.plan?.amount / 100}/month • Next billing: {new Date(sub.current_period_end * 1000).toLocaleDateString()}
+                        <p className='font-medium'>
+                          {sub.plan?.name || 'Unknown Plan'}
+                        </p>
+                        <p className='text-sm text-muted-foreground'>
+                          ${sub.plan?.amount / 100}/month • Next billing:{' '}
+                          {new Date(
+                            sub.current_period_end * 1000
+                          ).toLocaleDateString()}
                         </p>
                       </div>
-                      <div className="flex space-x-2">
-                        <Button variant="outline" size="sm">
-                          <Edit className="h-4 w-4 mr-1" />
+                      <div className='flex space-x-2'>
+                        <Button variant='outline' size='sm'>
+                          <Edit className='h-4 w-4 mr-1' />
                           Edit
                         </Button>
-                        <Button variant="outline" size="sm">
+                        <Button variant='outline' size='sm'>
                           Cancel
                         </Button>
                       </div>
@@ -493,22 +533,30 @@ const Settings = () => {
           <Card>
             <CardHeader>
               <CardTitle>Recent Invoices</CardTitle>
-              <CardDescription>Your recent billing history and invoices.</CardDescription>
+              <CardDescription>
+                Your recent billing history and invoices.
+              </CardDescription>
             </CardHeader>
             <CardContent>
               {invoices.length === 0 ? (
-                <p className="text-muted-foreground">No invoices found.</p>
+                <p className='text-muted-foreground'>No invoices found.</p>
               ) : (
-                <div className="space-y-3">
-                  {invoices.slice(0, 5).map((invoice) => (
-                    <div key={invoice.id} className="flex items-center justify-between p-3 border rounded-lg">
+                <div className='space-y-3'>
+                  {invoices.slice(0, 5).map(invoice => (
+                    <div
+                      key={invoice.id}
+                      className='flex items-center justify-between p-3 border rounded-lg'
+                    >
                       <div>
-                        <p className="font-medium">Invoice #{invoice.number}</p>
-                        <p className="text-sm text-muted-foreground">
-                          {new Date(invoice.created * 1000).toLocaleDateString()} • ${invoice.amount_paid / 100}
+                        <p className='font-medium'>Invoice #{invoice.number}</p>
+                        <p className='text-sm text-muted-foreground'>
+                          {new Date(
+                            invoice.created * 1000
+                          ).toLocaleDateString()}{' '}
+                          • ${invoice.amount_paid / 100}
                         </p>
                       </div>
-                      <Button variant="outline" size="sm">
+                      <Button variant='outline' size='sm'>
                         Download
                       </Button>
                     </div>
@@ -524,43 +572,50 @@ const Settings = () => {
       {activeTab === 'team' && (
         <Card>
           <CardHeader>
-            <div className="flex items-center justify-between">
+            <div className='flex items-center justify-between'>
               <div>
                 <CardTitle>Team Members</CardTitle>
-                <CardDescription>Manage your team members and their permissions.</CardDescription>
+                <CardDescription>
+                  Manage your team members and their permissions.
+                </CardDescription>
               </div>
               <Button onClick={() => setShowInvite(true)}>
-                <Plus className="h-4 w-4 mr-2" />
+                <Plus className='h-4 w-4 mr-2' />
                 Invite Member
               </Button>
             </div>
           </CardHeader>
           <CardContent>
-            <div className="space-y-3">
-              {teamMembers.map((member) => (
-                <div key={member.id} className="flex items-center justify-between p-3 border rounded-lg">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
-                      <span className="text-sm font-medium text-primary-foreground">
+            <div className='space-y-3'>
+              {teamMembers.map(member => (
+                <div
+                  key={member.id}
+                  className='flex items-center justify-between p-3 border rounded-lg'
+                >
+                  <div className='flex items-center space-x-3'>
+                    <div className='w-8 h-8 bg-primary rounded-full flex items-center justify-center'>
+                      <span className='text-sm font-medium text-primary-foreground'>
                         {member.email?.charAt(0).toUpperCase()}
                       </span>
                     </div>
                     <div>
-                      <p className="font-medium">{member.email}</p>
-                      <p className="text-sm text-muted-foreground capitalize">{member.role}</p>
+                      <p className='font-medium'>{member.email}</p>
+                      <p className='text-sm text-muted-foreground capitalize'>
+                        {member.role}
+                      </p>
                     </div>
                   </div>
-                  <div className="flex space-x-2">
-                    <Button variant="outline" size="sm">
-                      <Edit className="h-4 w-4 mr-1" />
+                  <div className='flex space-x-2'>
+                    <Button variant='outline' size='sm'>
+                      <Edit className='h-4 w-4 mr-1' />
                       Edit
                     </Button>
                     <Button
-                      variant="outline"
-                      size="sm"
+                      variant='outline'
+                      size='sm'
                       onClick={() => handleRemoveTeamMember(member.id)}
                     >
-                      <Trash2 className="h-4 w-4" />
+                      <Trash2 className='h-4 w-4' />
                     </Button>
                   </div>
                 </div>
@@ -575,21 +630,27 @@ const Settings = () => {
         <Card>
           <CardHeader>
             <CardTitle>Notification Preferences</CardTitle>
-            <CardDescription>Choose how and when you want to be notified.</CardDescription>
+            <CardDescription>
+              Choose how and when you want to be notified.
+            </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className='space-y-4'>
             {Object.entries(notifications).map(([key, value]) => (
-              <div key={key} className="flex items-center justify-between">
+              <div key={key} className='flex items-center justify-between'>
                 <div>
-                  <p className="font-medium capitalize">{key.replace(/([A-Z])/g, ' $1').trim()}</p>
-                  <p className="text-sm text-muted-foreground">
+                  <p className='font-medium capitalize'>
+                    {key.replace(/([A-Z])/g, ' $1').trim()}
+                  </p>
+                  <p className='text-sm text-muted-foreground'>
                     Receive notifications about {key.toLowerCase()}
                   </p>
                 </div>
                 <Button
-                  variant={value ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setNotifications(prev => ({ ...prev, [key]: !value }))}
+                  variant={value ? 'default' : 'outline'}
+                  size='sm'
+                  onClick={() =>
+                    setNotifications(prev => ({ ...prev, [key]: !value }))
+                  }
                 >
                   {value ? 'On' : 'Off'}
                 </Button>
@@ -601,43 +662,45 @@ const Settings = () => {
 
       {/* Security Tab */}
       {activeTab === 'security' && (
-        <div className="space-y-6">
+        <div className='space-y-6'>
           {/* Security Overview */}
           <Card>
             <CardHeader>
               <CardTitle>Security Overview</CardTitle>
-              <CardDescription>Your account security status and recent activity.</CardDescription>
+              <CardDescription>
+                Your account security status and recent activity.
+              </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="text-center p-4 border rounded-lg">
-                  <div className="flex items-center justify-center mb-2">
+              <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
+                <div className='text-center p-4 border rounded-lg'>
+                  <div className='flex items-center justify-center mb-2'>
                     {security.twoFactor ? (
-                      <CheckCircle className="h-8 w-8 text-green-500" />
+                      <CheckCircle className='h-8 w-8 text-green-500' />
                     ) : (
-                      <AlertTriangle className="h-8 w-8 text-yellow-500" />
+                      <AlertTriangle className='h-8 w-8 text-yellow-500' />
                     )}
                   </div>
-                  <h3 className="font-medium">Two-Factor Auth</h3>
-                  <p className="text-sm text-muted-foreground">
+                  <h3 className='font-medium'>Two-Factor Auth</h3>
+                  <p className='text-sm text-muted-foreground'>
                     {security.twoFactor ? 'Enabled' : 'Not enabled'}
                   </p>
                 </div>
-                <div className="text-center p-4 border rounded-lg">
-                  <div className="flex items-center justify-center mb-2">
-                    <Clock className="h-8 w-8 text-blue-500" />
+                <div className='text-center p-4 border rounded-lg'>
+                  <div className='flex items-center justify-center mb-2'>
+                    <Clock className='h-8 w-8 text-blue-500' />
                   </div>
-                  <h3 className="font-medium">Last Password Change</h3>
-                  <p className="text-sm text-muted-foreground">
+                  <h3 className='font-medium'>Last Password Change</h3>
+                  <p className='text-sm text-muted-foreground'>
                     {new Date(security.lastPasswordChange).toLocaleDateString()}
                   </p>
                 </div>
-                <div className="text-center p-4 border rounded-lg">
-                  <div className="flex items-center justify-center mb-2">
-                    <Activity className="h-8 w-8 text-purple-500" />
+                <div className='text-center p-4 border rounded-lg'>
+                  <div className='flex items-center justify-center mb-2'>
+                    <Activity className='h-8 w-8 text-purple-500' />
                   </div>
-                  <h3 className="font-medium">Failed Login Attempts</h3>
-                  <p className="text-sm text-muted-foreground">
+                  <h3 className='font-medium'>Failed Login Attempts</h3>
+                  <p className='text-sm text-muted-foreground'>
                     {security.failedLoginAttempts} today
                   </p>
                 </div>
@@ -649,36 +712,48 @@ const Settings = () => {
           <Card>
             <CardHeader>
               <CardTitle>Security Settings</CardTitle>
-              <CardDescription>Manage your account security and privacy settings.</CardDescription>
+              <CardDescription>
+                Manage your account security and privacy settings.
+              </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center justify-between">
+            <CardContent className='space-y-4'>
+              <div className='flex items-center justify-between'>
                 <div>
-                  <p className="font-medium">Two-Factor Authentication</p>
-                  <p className="text-sm text-muted-foreground">
+                  <p className='font-medium'>Two-Factor Authentication</p>
+                  <p className='text-sm text-muted-foreground'>
                     Add an extra layer of security to your account
                   </p>
                 </div>
                 <Button
-                  variant={security.twoFactor ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setSecurity(prev => ({ ...prev, twoFactor: !prev.twoFactor }))}
+                  variant={security.twoFactor ? 'default' : 'outline'}
+                  size='sm'
+                  onClick={() =>
+                    setSecurity(prev => ({
+                      ...prev,
+                      twoFactor: !prev.twoFactor,
+                    }))
+                  }
                 >
                   {security.twoFactor ? 'Enabled' : 'Disabled'}
                 </Button>
               </div>
-              
-              <div className="flex items-center justify-between">
+
+              <div className='flex items-center justify-between'>
                 <div>
-                  <p className="font-medium">Session Timeout</p>
-                  <p className="text-sm text-muted-foreground">
+                  <p className='font-medium'>Session Timeout</p>
+                  <p className='text-sm text-muted-foreground'>
                     Automatically log out after inactivity
                   </p>
                 </div>
                 <select
                   value={security.sessionTimeout}
-                  onChange={(e) => setSecurity(prev => ({ ...prev, sessionTimeout: Number(e.target.value) }))}
-                  className="px-3 py-1 text-sm border border-input rounded bg-background"
+                  onChange={e =>
+                    setSecurity(prev => ({
+                      ...prev,
+                      sessionTimeout: Number(e.target.value),
+                    }))
+                  }
+                  className='px-3 py-1 text-sm border border-input rounded bg-background'
                 >
                   <option value={15}>15 minutes</option>
                   <option value={30}>30 minutes</option>
@@ -686,18 +761,23 @@ const Settings = () => {
                   <option value={120}>2 hours</option>
                 </select>
               </div>
-              
-              <div className="flex items-center justify-between">
+
+              <div className='flex items-center justify-between'>
                 <div>
-                  <p className="font-medium">Password Expiry</p>
-                  <p className="text-sm text-muted-foreground">
+                  <p className='font-medium'>Password Expiry</p>
+                  <p className='text-sm text-muted-foreground'>
                     Require password change every {security.passwordExpiry} days
                   </p>
                 </div>
                 <select
                   value={security.passwordExpiry}
-                  onChange={(e) => setSecurity(prev => ({ ...prev, passwordExpiry: Number(e.target.value) }))}
-                  className="px-3 py-1 text-sm border border-input rounded bg-background"
+                  onChange={e =>
+                    setSecurity(prev => ({
+                      ...prev,
+                      passwordExpiry: Number(e.target.value),
+                    }))
+                  }
+                  className='px-3 py-1 text-sm border border-input rounded bg-background'
                 >
                   <option value={30}>30 days</option>
                   <option value={60}>60 days</option>
@@ -705,50 +785,65 @@ const Settings = () => {
                   <option value={180}>180 days</option>
                 </select>
               </div>
-              
-              <div className="flex items-center justify-between">
+
+              <div className='flex items-center justify-between'>
                 <div>
-                  <p className="font-medium">Login Notifications</p>
-                  <p className="text-sm text-muted-foreground">
+                  <p className='font-medium'>Login Notifications</p>
+                  <p className='text-sm text-muted-foreground'>
                     Get notified when someone logs into your account
                   </p>
                 </div>
                 <Button
-                  variant={security.loginNotifications ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setSecurity(prev => ({ ...prev, loginNotifications: !prev.loginNotifications }))}
+                  variant={security.loginNotifications ? 'default' : 'outline'}
+                  size='sm'
+                  onClick={() =>
+                    setSecurity(prev => ({
+                      ...prev,
+                      loginNotifications: !prev.loginNotifications,
+                    }))
+                  }
                 >
                   {security.loginNotifications ? 'On' : 'Off'}
                 </Button>
               </div>
-              
-              <div className="flex items-center justify-between">
+
+              <div className='flex items-center justify-between'>
                 <div>
-                  <p className="font-medium">Device Management</p>
-                  <p className="text-sm text-muted-foreground">
+                  <p className='font-medium'>Device Management</p>
+                  <p className='text-sm text-muted-foreground'>
                     Track and manage your logged-in devices
                   </p>
                 </div>
                 <Button
-                  variant={security.deviceManagement ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setSecurity(prev => ({ ...prev, deviceManagement: !prev.deviceManagement }))}
+                  variant={security.deviceManagement ? 'default' : 'outline'}
+                  size='sm'
+                  onClick={() =>
+                    setSecurity(prev => ({
+                      ...prev,
+                      deviceManagement: !prev.deviceManagement,
+                    }))
+                  }
                 >
                   {security.deviceManagement ? 'Enabled' : 'Disabled'}
                 </Button>
               </div>
-              
-              <div className="flex items-center justify-between">
+
+              <div className='flex items-center justify-between'>
                 <div>
-                  <p className="font-medium">API Key Rotation</p>
-                  <p className="text-sm text-muted-foreground">
+                  <p className='font-medium'>API Key Rotation</p>
+                  <p className='text-sm text-muted-foreground'>
                     Automatically rotate API keys for enhanced security
                   </p>
                 </div>
                 <Button
-                  variant={security.apiKeyRotation ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setSecurity(prev => ({ ...prev, apiKeyRotation: !prev.apiKeyRotation }))}
+                  variant={security.apiKeyRotation ? 'default' : 'outline'}
+                  size='sm'
+                  onClick={() =>
+                    setSecurity(prev => ({
+                      ...prev,
+                      apiKeyRotation: !prev.apiKeyRotation,
+                    }))
+                  }
                 >
                   {security.apiKeyRotation ? 'Enabled' : 'Disabled'}
                 </Button>
@@ -760,66 +855,70 @@ const Settings = () => {
           <Card>
             <CardHeader>
               <CardTitle>Active Sessions</CardTitle>
-              <CardDescription>Manage your current login sessions across devices.</CardDescription>
+              <CardDescription>
+                Manage your current login sessions across devices.
+              </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="space-y-3">
-                <div className="flex items-center justify-between p-3 border rounded-lg">
-                  <div className="flex items-center space-x-3">
-                    <Monitor className="h-5 w-5 text-blue-500" />
+              <div className='space-y-3'>
+                <div className='flex items-center justify-between p-3 border rounded-lg'>
+                  <div className='flex items-center space-x-3'>
+                    <Monitor className='h-5 w-5 text-blue-500' />
                     <div>
-                      <p className="font-medium">MacBook Pro (Current)</p>
-                      <p className="text-sm text-muted-foreground">
+                      <p className='font-medium'>MacBook Pro (Current)</p>
+                      <p className='text-sm text-muted-foreground'>
                         San Francisco, CA • Last active: 2 minutes ago
                       </p>
                     </div>
                   </div>
-                  <div className="flex items-center space-x-2">
-                    <span className="text-xs px-2 py-1 bg-green-100 text-green-800 rounded-full">Current</span>
-                    <Button variant="outline" size="sm">
-                      <RefreshCw className="h-3 w-3" />
+                  <div className='flex items-center space-x-2'>
+                    <span className='text-xs px-2 py-1 bg-green-100 text-green-800 rounded-full'>
+                      Current
+                    </span>
+                    <Button variant='outline' size='sm'>
+                      <RefreshCw className='h-3 w-3' />
                     </Button>
                   </div>
                 </div>
-                
-                <div className="flex items-center justify-between p-3 border rounded-lg">
-                  <div className="flex items-center space-x-3">
-                    <Smartphone className="h-5 w-5 text-green-500" />
+
+                <div className='flex items-center justify-between p-3 border rounded-lg'>
+                  <div className='flex items-center space-x-3'>
+                    <Smartphone className='h-5 w-5 text-green-500' />
                     <div>
-                      <p className="font-medium">iPhone 14</p>
-                      <p className="text-sm text-muted-foreground">
+                      <p className='font-medium'>iPhone 14</p>
+                      <p className='text-sm text-muted-foreground'>
                         San Francisco, CA • Last active: 1 hour ago
                       </p>
                     </div>
                   </div>
-                  <div className="flex items-center space-x-2">
-                    <Button variant="outline" size="sm">
-                      <Trash2 className="h-3 w-3" />
+                  <div className='flex items-center space-x-2'>
+                    <Button variant='outline' size='sm'>
+                      <Trash2 className='h-3 w-3' />
                     </Button>
                   </div>
                 </div>
-                
-                <div className="flex items-center justify-between p-3 border rounded-lg">
-                  <div className="flex items-center space-x-3">
-                    <Monitor className="h-5 w-5 text-gray-500" />
+
+                <div className='flex items-center justify-between p-3 border rounded-lg'>
+                  <div className='flex items-center space-x-3'>
+                    <Monitor className='h-5 w-5 text-gray-500' />
                     <div>
-                      <p className="font-medium">Windows PC</p>
-                      <p className="text-sm text-muted-foreground">
+                      <p className='font-medium'>Windows PC</p>
+                      <p className='text-sm text-muted-foreground'>
                         New York, NY • Last active: 2 days ago
                       </p>
                     </div>
                   </div>
-                  <div className="flex items-center space-x-2">
-                    <Button variant="outline" size="sm">
-                      <Trash2 className="h-3 w-3" />
+                  <div className='flex items-center space-x-2'>
+                    <Button variant='outline' size='sm'>
+                      <Trash2 className='h-3 w-3' />
                     </Button>
                   </div>
                 </div>
               </div>
-              
-              <div className="mt-4 pt-4 border-t">
-                <Button variant="outline" className="w-full">
-                  <Shield className="h-4 w-4 mr-2" />
+
+              <div className='mt-4 pt-4 border-t'>
+                <Button variant='outline' className='w-full'>
+                  <Shield className='h-4 w-4 mr-2' />
                   Sign Out All Other Sessions
                 </Button>
               </div>
@@ -833,125 +932,171 @@ const Settings = () => {
         <Card>
           <CardHeader>
             <CardTitle>System Preferences</CardTitle>
-            <CardDescription>Manage your system preferences and settings.</CardDescription>
+            <CardDescription>
+              Manage your system preferences and settings.
+            </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center justify-between">
+          <CardContent className='space-y-4'>
+            <div className='flex items-center justify-between'>
               <div>
-                <p className="font-medium">Theme</p>
-                <p className="text-sm text-muted-foreground">
+                <p className='font-medium'>Theme</p>
+                <p className='text-sm text-muted-foreground'>
                   Choose your preferred theme
                 </p>
               </div>
               <Button
-                variant={systemPrefs.theme === 'system' ? "default" : "outline"}
-                size="sm"
-                onClick={() => setSystemPrefs(prev => ({ ...prev, theme: 'system' }))}
+                variant={systemPrefs.theme === 'system' ? 'default' : 'outline'}
+                size='sm'
+                onClick={() =>
+                  setSystemPrefs(prev => ({ ...prev, theme: 'system' }))
+                }
               >
                 System
               </Button>
             </div>
-            <div className="flex items-center justify-between">
+            <div className='flex items-center justify-between'>
               <div>
-                <p className="font-medium">Sidebar Collapsed</p>
-                <p className="text-sm text-muted-foreground">
+                <p className='font-medium'>Sidebar Collapsed</p>
+                <p className='text-sm text-muted-foreground'>
                   Hide the sidebar in the dashboard
                 </p>
               </div>
               <Button
-                variant={systemPrefs.sidebarCollapsed ? "default" : "outline"}
-                size="sm"
-                onClick={() => setSystemPrefs(prev => ({ ...prev, sidebarCollapsed: !prev.sidebarCollapsed }))}
+                variant={systemPrefs.sidebarCollapsed ? 'default' : 'outline'}
+                size='sm'
+                onClick={() =>
+                  setSystemPrefs(prev => ({
+                    ...prev,
+                    sidebarCollapsed: !prev.sidebarCollapsed,
+                  }))
+                }
               >
                 {systemPrefs.sidebarCollapsed ? 'Expanded' : 'Collapsed'}
               </Button>
             </div>
-            <div className="flex items-center justify-between">
+            <div className='flex items-center justify-between'>
               <div>
-                <p className="font-medium">Auto Refresh</p>
-                <p className="text-sm text-muted-foreground">
+                <p className='font-medium'>Auto Refresh</p>
+                <p className='text-sm text-muted-foreground'>
                   Automatically refresh the dashboard
                 </p>
               </div>
               <Button
-                variant={systemPrefs.autoRefresh ? "default" : "outline"}
-                size="sm"
-                onClick={() => setSystemPrefs(prev => ({ ...prev, autoRefresh: !prev.autoRefresh }))}
+                variant={systemPrefs.autoRefresh ? 'default' : 'outline'}
+                size='sm'
+                onClick={() =>
+                  setSystemPrefs(prev => ({
+                    ...prev,
+                    autoRefresh: !prev.autoRefresh,
+                  }))
+                }
               >
                 {systemPrefs.autoRefresh ? 'Enabled' : 'Disabled'}
               </Button>
             </div>
-            <div className="flex items-center justify-between">
+            <div className='flex items-center justify-between'>
               <div>
-                <p className="font-medium">Refresh Interval</p>
-                <p className="text-sm text-muted-foreground">
+                <p className='font-medium'>Refresh Interval</p>
+                <p className='text-sm text-muted-foreground'>
                   Set the refresh interval for the dashboard
                 </p>
               </div>
               <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setSystemPrefs(prev => ({ ...prev, refreshInterval: prev.refreshInterval === 30 ? 60 : 30 }))}
+                variant='outline'
+                size='sm'
+                onClick={() =>
+                  setSystemPrefs(prev => ({
+                    ...prev,
+                    refreshInterval: prev.refreshInterval === 30 ? 60 : 30,
+                  }))
+                }
               >
-                {systemPrefs.refreshInterval === 30 ? '30 minutes' : '60 minutes'}
+                {systemPrefs.refreshInterval === 30
+                  ? '30 minutes'
+                  : '60 minutes'}
               </Button>
             </div>
-            <div className="flex items-center justify-between">
+            <div className='flex items-center justify-between'>
               <div>
-                <p className="font-medium">Default View</p>
-                <p className="text-sm text-muted-foreground">
+                <p className='font-medium'>Default View</p>
+                <p className='text-sm text-muted-foreground'>
                   Choose the default view for the dashboard
                 </p>
               </div>
               <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setSystemPrefs(prev => ({ ...prev, defaultView: prev.defaultView === 'dashboard' ? 'projects' : 'dashboard' }))}
+                variant='outline'
+                size='sm'
+                onClick={() =>
+                  setSystemPrefs(prev => ({
+                    ...prev,
+                    defaultView:
+                      prev.defaultView === 'dashboard'
+                        ? 'projects'
+                        : 'dashboard',
+                  }))
+                }
               >
-                {systemPrefs.defaultView === 'dashboard' ? 'Projects' : 'Dashboard'}
+                {systemPrefs.defaultView === 'dashboard'
+                  ? 'Projects'
+                  : 'Dashboard'}
               </Button>
             </div>
-            <div className="flex items-center justify-between">
+            <div className='flex items-center justify-between'>
               <div>
-                <p className="font-medium">Compact Mode</p>
-                <p className="text-sm text-muted-foreground">
+                <p className='font-medium'>Compact Mode</p>
+                <p className='text-sm text-muted-foreground'>
                   Use compact mode for the dashboard
                 </p>
               </div>
               <Button
-                variant={systemPrefs.compactMode ? "default" : "outline"}
-                size="sm"
-                onClick={() => setSystemPrefs(prev => ({ ...prev, compactMode: !prev.compactMode }))}
+                variant={systemPrefs.compactMode ? 'default' : 'outline'}
+                size='sm'
+                onClick={() =>
+                  setSystemPrefs(prev => ({
+                    ...prev,
+                    compactMode: !prev.compactMode,
+                  }))
+                }
               >
                 {systemPrefs.compactMode ? 'Enabled' : 'Disabled'}
               </Button>
             </div>
-            <div className="flex items-center justify-between">
+            <div className='flex items-center justify-between'>
               <div>
-                <p className="font-medium">Animations</p>
-                <p className="text-sm text-muted-foreground">
+                <p className='font-medium'>Animations</p>
+                <p className='text-sm text-muted-foreground'>
                   Enable or disable animations
                 </p>
               </div>
               <Button
-                variant={systemPrefs.animations ? "default" : "outline"}
-                size="sm"
-                onClick={() => setSystemPrefs(prev => ({ ...prev, animations: !prev.animations }))}
+                variant={systemPrefs.animations ? 'default' : 'outline'}
+                size='sm'
+                onClick={() =>
+                  setSystemPrefs(prev => ({
+                    ...prev,
+                    animations: !prev.animations,
+                  }))
+                }
               >
                 {systemPrefs.animations ? 'Enabled' : 'Disabled'}
               </Button>
             </div>
-            <div className="flex items-center justify-between">
+            <div className='flex items-center justify-between'>
               <div>
-                <p className="font-medium">Sound Effects</p>
-                <p className="text-sm text-muted-foreground">
+                <p className='font-medium'>Sound Effects</p>
+                <p className='text-sm text-muted-foreground'>
                   Enable or disable sound effects
                 </p>
               </div>
               <Button
-                variant={systemPrefs.soundEffects ? "default" : "outline"}
-                size="sm"
-                onClick={() => setSystemPrefs(prev => ({ ...prev, soundEffects: !prev.soundEffects }))}
+                variant={systemPrefs.soundEffects ? 'default' : 'outline'}
+                size='sm'
+                onClick={() =>
+                  setSystemPrefs(prev => ({
+                    ...prev,
+                    soundEffects: !prev.soundEffects,
+                  }))
+                }
               >
                 {systemPrefs.soundEffects ? 'Enabled' : 'Disabled'}
               </Button>
@@ -965,19 +1110,21 @@ const Settings = () => {
         <Card>
           <CardHeader>
             <CardTitle>API Management</CardTitle>
-            <CardDescription>Manage your API settings and access.</CardDescription>
+            <CardDescription>
+              Manage your API settings and access.
+            </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center justify-between">
+          <CardContent className='space-y-4'>
+            <div className='flex items-center justify-between'>
               <div>
-                <p className="font-medium">API Key</p>
-                <p className="text-sm text-muted-foreground">
+                <p className='font-medium'>API Key</p>
+                <p className='text-sm text-muted-foreground'>
                   Your API key for accessing our services
                 </p>
               </div>
               <Button
-                variant={showApiKey ? "default" : "outline"}
-                size="sm"
+                variant={showApiKey ? 'default' : 'outline'}
+                size='sm'
                 onClick={() => setShowApiKey(!showApiKey)}
               >
                 {showApiKey ? 'Hide' : 'Show'}
@@ -985,119 +1132,166 @@ const Settings = () => {
             </div>
             {showApiKey && (
               <div>
-                <label className="text-sm font-medium text-foreground">API Key</label>
+                <label className='text-sm font-medium text-foreground'>
+                  API Key
+                </label>
                 <input
-                  type="text"
+                  type='text'
                   value={apiSettings.apiKey}
                   disabled
-                  className="w-full mt-1 px-3 py-2 border border-input rounded-md bg-muted text-muted-foreground"
+                  className='w-full mt-1 px-3 py-2 border border-input rounded-md bg-muted text-muted-foreground'
                 />
               </div>
             )}
-            <div className="flex items-center justify-between">
+            <div className='flex items-center justify-between'>
               <div>
-                <p className="font-medium">Webhook URL</p>
-                <p className="text-sm text-muted-foreground">
+                <p className='font-medium'>Webhook URL</p>
+                <p className='text-sm text-muted-foreground'>
                   Set the webhook URL for receiving notifications
                 </p>
               </div>
               <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setApiSettings(prev => ({ ...prev, webhookUrl: '' }))}
+                variant='outline'
+                size='sm'
+                onClick={() =>
+                  setApiSettings(prev => ({ ...prev, webhookUrl: '' }))
+                }
               >
                 Clear
               </Button>
             </div>
             <div>
-              <label className="text-sm font-medium text-foreground">Webhook URL</label>
+              <label className='text-sm font-medium text-foreground'>
+                Webhook URL
+              </label>
               <input
-                type="text"
+                type='text'
                 value={apiSettings.webhookUrl}
-                onChange={(e) => setApiSettings(prev => ({ ...prev, webhookUrl: e.target.value }))}
-                className="w-full mt-1 px-3 py-2 border border-input rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                onChange={e =>
+                  setApiSettings(prev => ({
+                    ...prev,
+                    webhookUrl: e.target.value,
+                  }))
+                }
+                className='w-full mt-1 px-3 py-2 border border-input rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary'
               />
             </div>
-            <div className="flex items-center justify-between">
+            <div className='flex items-center justify-between'>
               <div>
-                <p className="font-medium">Rate Limit</p>
-                <p className="text-sm text-muted-foreground">
+                <p className='font-medium'>Rate Limit</p>
+                <p className='text-sm text-muted-foreground'>
                   Set the rate limit for API requests
                 </p>
               </div>
               <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setApiSettings(prev => ({ ...prev, rateLimit: prev.rateLimit === 1000 ? 2000 : 1000 }))}
+                variant='outline'
+                size='sm'
+                onClick={() =>
+                  setApiSettings(prev => ({
+                    ...prev,
+                    rateLimit: prev.rateLimit === 1000 ? 2000 : 1000,
+                  }))
+                }
               >
-                {apiSettings.rateLimit === 1000 ? '2000 requests/minute' : '1000 requests/minute'}
+                {apiSettings.rateLimit === 1000
+                  ? '2000 requests/minute'
+                  : '1000 requests/minute'}
               </Button>
             </div>
-            <div className="flex items-center justify-between">
+            <div className='flex items-center justify-between'>
               <div>
-                <p className="font-medium">Allowed Origins</p>
-                <p className="text-sm text-muted-foreground">
+                <p className='font-medium'>Allowed Origins</p>
+                <p className='text-sm text-muted-foreground'>
                   Set the allowed origins for API requests
                 </p>
               </div>
               <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setApiSettings(prev => ({ ...prev, allowedOrigins: prev.allowedOrigins.length === 1 ? ['*'] : [] }))}
+                variant='outline'
+                size='sm'
+                onClick={() =>
+                  setApiSettings(prev => ({
+                    ...prev,
+                    allowedOrigins:
+                      prev.allowedOrigins.length === 1 ? ['*'] : [],
+                  }))
+                }
               >
-                {apiSettings.allowedOrigins.length === 1 ? 'All Origins' : 'No Origins'}
+                {apiSettings.allowedOrigins.length === 1
+                  ? 'All Origins'
+                  : 'No Origins'}
               </Button>
             </div>
-            <div className="flex items-center justify-between">
+            <div className='flex items-center justify-between'>
               <div>
-                <p className="font-medium">Last Used</p>
-                <p className="text-sm text-muted-foreground">
+                <p className='font-medium'>Last Used</p>
+                <p className='text-sm text-muted-foreground'>
                   Last time the API key was used
                 </p>
               </div>
               <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setApiSettings(prev => ({ ...prev, lastUsed: '' }))}
+                variant='outline'
+                size='sm'
+                onClick={() =>
+                  setApiSettings(prev => ({ ...prev, lastUsed: '' }))
+                }
               >
                 Clear
               </Button>
             </div>
             <div>
-              <label className="text-sm font-medium text-foreground">Last Used</label>
+              <label className='text-sm font-medium text-foreground'>
+                Last Used
+              </label>
               <input
-                type="text"
+                type='text'
                 value={apiSettings.lastUsed}
                 disabled
-                className="w-full mt-1 px-3 py-2 border border-input rounded-md bg-muted text-muted-foreground"
+                className='w-full mt-1 px-3 py-2 border border-input rounded-md bg-muted text-muted-foreground'
               />
             </div>
-            <div className="flex items-center justify-between">
+            <div className='flex items-center justify-between'>
               <div>
-                <p className="font-medium">Usage Stats</p>
-                <p className="text-sm text-muted-foreground">
+                <p className='font-medium'>Usage Stats</p>
+                <p className='text-sm text-muted-foreground'>
                   API usage statistics
                 </p>
               </div>
               <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setApiSettings(prev => ({ ...prev, usageStats: { ...prev.usageStats, requests: prev.usageStats.requests + 1 } }))}
+                variant='outline'
+                size='sm'
+                onClick={() =>
+                  setApiSettings(prev => ({
+                    ...prev,
+                    usageStats: {
+                      ...prev.usageStats,
+                      requests: prev.usageStats.requests + 1,
+                    },
+                  }))
+                }
               >
                 Requests: {apiSettings.usageStats.requests}
               </Button>
             </div>
-            <div className="flex items-center justify-between">
+            <div className='flex items-center justify-between'>
               <div>
-                <p className="font-medium">Bandwidth</p>
-                <p className="text-sm text-muted-foreground">
+                <p className='font-medium'>Bandwidth</p>
+                <p className='text-sm text-muted-foreground'>
                   API bandwidth usage
                 </p>
               </div>
               <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setApiSettings(prev => ({ ...prev, usageStats: { ...prev.usageStats, bandwidth: prev.usageStats.bandwidth === '2.5GB' ? '5GB' : '2.5GB' } }))}
+                variant='outline'
+                size='sm'
+                onClick={() =>
+                  setApiSettings(prev => ({
+                    ...prev,
+                    usageStats: {
+                      ...prev.usageStats,
+                      bandwidth:
+                        prev.usageStats.bandwidth === '2.5GB' ? '5GB' : '2.5GB',
+                    },
+                  }))
+                }
               >
                 {apiSettings.usageStats.bandwidth}
               </Button>
@@ -1111,110 +1305,147 @@ const Settings = () => {
         <Card>
           <CardHeader>
             <CardTitle>Data & Privacy</CardTitle>
-            <CardDescription>Manage your data and privacy settings.</CardDescription>
+            <CardDescription>
+              Manage your data and privacy settings.
+            </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center justify-between">
+          <CardContent className='space-y-4'>
+            <div className='flex items-center justify-between'>
               <div>
-                <p className="font-medium">Data Retention</p>
-                <p className="text-sm text-muted-foreground">
+                <p className='font-medium'>Data Retention</p>
+                <p className='text-sm text-muted-foreground'>
                   Set the data retention period
                 </p>
               </div>
               <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setDataPrivacy(prev => ({ ...prev, dataRetention: prev.dataRetention === 365 ? 730 : 365 }))}
+                variant='outline'
+                size='sm'
+                onClick={() =>
+                  setDataPrivacy(prev => ({
+                    ...prev,
+                    dataRetention: prev.dataRetention === 365 ? 730 : 365,
+                  }))
+                }
               >
                 {dataPrivacy.dataRetention === 365 ? '1 year' : '2 years'}
               </Button>
             </div>
-            <div className="flex items-center justify-between">
+            <div className='flex items-center justify-between'>
               <div>
-                <p className="font-medium">Analytics</p>
-                <p className="text-sm text-muted-foreground">
+                <p className='font-medium'>Analytics</p>
+                <p className='text-sm text-muted-foreground'>
                   Enable or disable analytics
                 </p>
               </div>
               <Button
-                variant={dataPrivacy.analytics ? "default" : "outline"}
-                size="sm"
-                onClick={() => setDataPrivacy(prev => ({ ...prev, analytics: !prev.analytics }))}
+                variant={dataPrivacy.analytics ? 'default' : 'outline'}
+                size='sm'
+                onClick={() =>
+                  setDataPrivacy(prev => ({
+                    ...prev,
+                    analytics: !prev.analytics,
+                  }))
+                }
               >
                 {dataPrivacy.analytics ? 'Enabled' : 'Disabled'}
               </Button>
             </div>
-            <div className="flex items-center justify-between">
+            <div className='flex items-center justify-between'>
               <div>
-                <p className="font-medium">Crash Reporting</p>
-                <p className="text-sm text-muted-foreground">
+                <p className='font-medium'>Crash Reporting</p>
+                <p className='text-sm text-muted-foreground'>
                   Enable or disable crash reporting
                 </p>
               </div>
               <Button
-                variant={dataPrivacy.crashReporting ? "default" : "outline"}
-                size="sm"
-                onClick={() => setDataPrivacy(prev => ({ ...prev, crashReporting: !prev.crashReporting }))}
+                variant={dataPrivacy.crashReporting ? 'default' : 'outline'}
+                size='sm'
+                onClick={() =>
+                  setDataPrivacy(prev => ({
+                    ...prev,
+                    crashReporting: !prev.crashReporting,
+                  }))
+                }
               >
                 {dataPrivacy.crashReporting ? 'Enabled' : 'Disabled'}
               </Button>
             </div>
-            <div className="flex items-center justify-between">
+            <div className='flex items-center justify-between'>
               <div>
-                <p className="font-medium">Marketing Emails</p>
-                <p className="text-sm text-muted-foreground">
+                <p className='font-medium'>Marketing Emails</p>
+                <p className='text-sm text-muted-foreground'>
                   Receive marketing emails
                 </p>
               </div>
               <Button
-                variant={dataPrivacy.marketingEmails ? "default" : "outline"}
-                size="sm"
-                onClick={() => setDataPrivacy(prev => ({ ...prev, marketingEmails: !prev.marketingEmails }))}
+                variant={dataPrivacy.marketingEmails ? 'default' : 'outline'}
+                size='sm'
+                onClick={() =>
+                  setDataPrivacy(prev => ({
+                    ...prev,
+                    marketingEmails: !prev.marketingEmails,
+                  }))
+                }
               >
                 {dataPrivacy.marketingEmails ? 'Subscribed' : 'Unsubscribed'}
               </Button>
             </div>
-            <div className="flex items-center justify-between">
+            <div className='flex items-center justify-between'>
               <div>
-                <p className="font-medium">Third Party Sharing</p>
-                <p className="text-sm text-muted-foreground">
+                <p className='font-medium'>Third Party Sharing</p>
+                <p className='text-sm text-muted-foreground'>
                   Share data with third parties
                 </p>
               </div>
               <Button
-                variant={dataPrivacy.thirdPartySharing ? "default" : "outline"}
-                size="sm"
-                onClick={() => setDataPrivacy(prev => ({ ...prev, thirdPartySharing: !prev.thirdPartySharing }))}
+                variant={dataPrivacy.thirdPartySharing ? 'default' : 'outline'}
+                size='sm'
+                onClick={() =>
+                  setDataPrivacy(prev => ({
+                    ...prev,
+                    thirdPartySharing: !prev.thirdPartySharing,
+                  }))
+                }
               >
                 {dataPrivacy.thirdPartySharing ? 'Enabled' : 'Disabled'}
               </Button>
             </div>
-            <div className="flex items-center justify-between">
+            <div className='flex items-center justify-between'>
               <div>
-                <p className="font-medium">Data Export</p>
-                <p className="text-sm text-muted-foreground">
+                <p className='font-medium'>Data Export</p>
+                <p className='text-sm text-muted-foreground'>
                   Export your data
                 </p>
               </div>
               <Button
-                variant={dataPrivacy.dataExport ? "default" : "outline"}
-                size="sm"
-                onClick={() => setDataPrivacy(prev => ({ ...prev, dataExport: !prev.dataExport }))}
+                variant={dataPrivacy.dataExport ? 'default' : 'outline'}
+                size='sm'
+                onClick={() =>
+                  setDataPrivacy(prev => ({
+                    ...prev,
+                    dataExport: !prev.dataExport,
+                  }))
+                }
               >
                 {dataPrivacy.dataExport ? 'Enabled' : 'Disabled'}
               </Button>
             </div>
-            <div className="flex items-center justify-between">
+            <div className='flex items-center justify-between'>
               <div>
-                <p className="font-medium">Account Deletion</p>
-                <p className="text-sm text-muted-foreground">
+                <p className='font-medium'>Account Deletion</p>
+                <p className='text-sm text-muted-foreground'>
                   Enable or disable account deletion
                 </p>
               </div>
               <Button
-                variant={dataPrivacy.accountDeletion ? "default" : "outline"}
-                size="sm"
-                onClick={() => setDataPrivacy(prev => ({ ...prev, accountDeletion: !prev.accountDeletion }))}
+                variant={dataPrivacy.accountDeletion ? 'default' : 'outline'}
+                size='sm'
+                onClick={() =>
+                  setDataPrivacy(prev => ({
+                    ...prev,
+                    accountDeletion: !prev.accountDeletion,
+                  }))
+                }
               >
                 {dataPrivacy.accountDeletion ? 'Enabled' : 'Disabled'}
               </Button>
@@ -1225,53 +1456,75 @@ const Settings = () => {
 
       {/* Add Card Modal */}
       {showAddCard && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <Card className="w-full max-w-md mx-4">
+        <div className='fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50'>
+          <Card className='w-full max-w-md mx-4'>
             <CardHeader>
               <CardTitle>Add Payment Method</CardTitle>
-              <CardDescription>Add a new credit or debit card to your account.</CardDescription>
+              <CardDescription>
+                Add a new credit or debit card to your account.
+              </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className='space-y-4'>
               <div>
-                <label className="text-sm font-medium text-foreground">Card Number</label>
+                <label className='text-sm font-medium text-foreground'>
+                  Card Number
+                </label>
                 <input
-                  type="text"
-                  placeholder="1234 5678 9012 3456"
+                  type='text'
+                  placeholder='1234 5678 9012 3456'
                   value={newCard.number}
-                  onChange={(e) => setNewCard(prev => ({ ...prev, number: e.target.value }))}
-                  className="w-full mt-1 px-3 py-2 border border-input rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                  onChange={e =>
+                    setNewCard(prev => ({ ...prev, number: e.target.value }))
+                  }
+                  className='w-full mt-1 px-3 py-2 border border-input rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary'
                 />
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className='grid grid-cols-2 gap-4'>
                 <div>
-                  <label className="text-sm font-medium text-foreground">Expiry Date</label>
+                  <label className='text-sm font-medium text-foreground'>
+                    Expiry Date
+                  </label>
                   <input
-                    type="text"
-                    placeholder="MM/YY"
+                    type='text'
+                    placeholder='MM/YY'
                     value={newCard.expiry}
-                    onChange={(e) => setNewCard(prev => ({ ...prev, expiry: e.target.value }))}
-                    className="w-full mt-1 px-3 py-2 border border-input rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                    onChange={e =>
+                      setNewCard(prev => ({ ...prev, expiry: e.target.value }))
+                    }
+                    className='w-full mt-1 px-3 py-2 border border-input rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary'
                   />
                 </div>
                 <div>
-                  <label className="text-sm font-medium text-foreground">CVC</label>
+                  <label className='text-sm font-medium text-foreground'>
+                    CVC
+                  </label>
                   <input
-                    type="text"
-                    placeholder="123"
+                    type='text'
+                    placeholder='123'
                     value={newCard.cvc}
-                    onChange={(e) => setNewCard(prev => ({ ...prev, cvc: e.target.value }))}
-                    className="w-full mt-1 px-3 py-2 border border-input rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                    onChange={e =>
+                      setNewCard(prev => ({ ...prev, cvc: e.target.value }))
+                    }
+                    className='w-full mt-1 px-3 py-2 border border-input rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary'
                   />
                 </div>
               </div>
-              <div className="flex space-x-2 pt-4">
-                <Button variant="outline" className="flex-1" onClick={() => setShowAddCard(false)}>
+              <div className='flex space-x-2 pt-4'>
+                <Button
+                  variant='outline'
+                  className='flex-1'
+                  onClick={() => setShowAddCard(false)}
+                >
                   Cancel
                 </Button>
-                <Button className="flex-1" onClick={handleAddPaymentMethod} disabled={loading}>
+                <Button
+                  className='flex-1'
+                  onClick={handleAddPaymentMethod}
+                  disabled={loading}
+                >
                   {loading ? (
                     <>
-                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      <Loader2 className='h-4 w-4 mr-2 animate-spin' />
                       Adding...
                     </>
                   ) : (
@@ -1286,43 +1539,57 @@ const Settings = () => {
 
       {/* Invite Team Member Modal */}
       {showInvite && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <Card className="w-full max-w-md mx-4">
+        <div className='fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50'>
+          <Card className='w-full max-w-md mx-4'>
             <CardHeader>
               <CardTitle>Invite Team Member</CardTitle>
-              <CardDescription>Send an invitation to join your team.</CardDescription>
+              <CardDescription>
+                Send an invitation to join your team.
+              </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className='space-y-4'>
               <div>
-                <label className="text-sm font-medium text-foreground">Email Address</label>
+                <label className='text-sm font-medium text-foreground'>
+                  Email Address
+                </label>
                 <input
-                  type="email"
-                  placeholder="colleague@company.com"
+                  type='email'
+                  placeholder='colleague@company.com'
                   value={inviteEmail}
-                  onChange={(e) => setInviteEmail(e.target.value)}
-                  className="w-full mt-1 px-3 py-2 border border-input rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                  onChange={e => setInviteEmail(e.target.value)}
+                  className='w-full mt-1 px-3 py-2 border border-input rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary'
                 />
               </div>
               <div>
-                <label className="text-sm font-medium text-foreground">Role</label>
+                <label className='text-sm font-medium text-foreground'>
+                  Role
+                </label>
                 <select
                   value={inviteRole}
-                  onChange={(e) => setInviteRole(e.target.value)}
-                  className="w-full mt-1 px-3 py-2 border border-input rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                  onChange={e => setInviteRole(e.target.value)}
+                  className='w-full mt-1 px-3 py-2 border border-input rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary'
                 >
-                  <option value="member">Member</option>
-                  <option value="admin">Admin</option>
-                  <option value="viewer">Viewer</option>
+                  <option value='member'>Member</option>
+                  <option value='admin'>Admin</option>
+                  <option value='viewer'>Viewer</option>
                 </select>
               </div>
-              <div className="flex space-x-2 pt-4">
-                <Button variant="outline" className="flex-1" onClick={() => setShowInvite(false)}>
+              <div className='flex space-x-2 pt-4'>
+                <Button
+                  variant='outline'
+                  className='flex-1'
+                  onClick={() => setShowInvite(false)}
+                >
                   Cancel
                 </Button>
-                <Button className="flex-1" onClick={handleInviteTeamMember} disabled={loading}>
+                <Button
+                  className='flex-1'
+                  onClick={handleInviteTeamMember}
+                  disabled={loading}
+                >
                   {loading ? (
                     <>
-                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      <Loader2 className='h-4 w-4 mr-2 animate-spin' />
                       Sending...
                     </>
                   ) : (
@@ -1338,4 +1605,4 @@ const Settings = () => {
   );
 };
 
-export default Settings; 
+export default Settings;
