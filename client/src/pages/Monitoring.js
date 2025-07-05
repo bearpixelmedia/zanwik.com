@@ -12,24 +12,23 @@ const Monitoring = () => {
     { name: 'Throughput', value: '1.2k req/s', change: '+150', trend: 'up' },
     { name: 'Uptime', value: '99.9%', change: '+0.1%', trend: 'up' },
   ]);
+  const [alerts, setAlerts] = useState([
+    { id: 1, title: 'High CPU Usage', description: 'CPU usage exceeded 80% threshold', time: '2 minutes ago', service: 'Web Server', status: 'active', severity: 'warning' },
+    { id: 2, title: 'Database Connection Slow', description: 'Database response time increased by 200%', time: '5 minutes ago', service: 'Database', status: 'resolved', severity: 'error' },
+  ]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Alerts and system health remain static for now
-  const alerts = [
-    { id: 1, title: 'High CPU Usage', description: 'CPU usage exceeded 80% threshold', time: '2 minutes ago', service: 'Web Server', status: 'active', severity: 'warning' },
-    { id: 2, title: 'Database Connection Slow', description: 'Database response time increased by 200%', time: '5 minutes ago', service: 'Database', status: 'resolved', severity: 'error' },
-  ];
+  // System health remains static for now
   const systemHealth = { overall: 'healthy', services: 4, issues: 1 };
 
   useEffect(() => {
-    const fetchMetrics = async () => {
+    const fetchData = async () => {
       try {
         setLoading(true);
         setError(null);
         // Fetch performance metrics from API
         const performance = await monitoringAPI.getPerformanceMetrics();
-        // Example: performance.metrics = { responseTime, errorRate, throughput, uptime }
         if (performance && performance.metrics) {
           setMetrics([
             { name: 'Response Time', value: performance.metrics.responseTime || 'N/A', change: '+12ms', trend: 'up' },
@@ -38,13 +37,18 @@ const Monitoring = () => {
             { name: 'Uptime', value: performance.metrics.uptime || 'N/A', change: '+0.1%', trend: 'up' },
           ]);
         }
+        // Fetch alerts from API
+        const alertsData = await monitoringAPI.getAlerts('all');
+        if (alertsData && Array.isArray(alertsData.alerts)) {
+          setAlerts(alertsData.alerts);
+        }
       } catch (err) {
-        setError('Failed to load metrics');
+        setError('Failed to load monitoring data');
       } finally {
         setLoading(false);
       }
     };
-    fetchMetrics();
+    fetchData();
   }, []);
 
   return (
@@ -115,7 +119,7 @@ const Monitoring = () => {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {alerts.map((alert) => (
+              {alerts.length > 0 ? alerts.map((alert) => (
                 <div key={alert.id} className="flex items-start space-x-4 p-4 rounded-lg border">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between">
@@ -139,7 +143,12 @@ const Monitoring = () => {
                     </div>
                   </div>
                 </div>
-              ))}
+              )) : (
+                <div className="text-center py-8 text-muted-foreground">
+                  <Bell className="h-8 w-8 mx-auto mb-2 opacity-50" />
+                  <p>No alerts found</p>
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>
