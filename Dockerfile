@@ -1,5 +1,5 @@
 # Stage 1: Build React app
-FROM node:18-alpine as client-build
+FROM node:18-alpine AS client-build
 WORKDIR /app/client
 COPY client/package*.json ./
 RUN npm install
@@ -10,7 +10,7 @@ RUN npm run build
 FROM node:18-alpine
 WORKDIR /app
 
-# Backend dependencies
+# Install backend dependencies
 COPY package*.json ./
 RUN npm install
 
@@ -30,7 +30,7 @@ COPY deploy-railway.sh ./
 COPY deploy-railway-simple.sh ./
 COPY generate-env.js ./
 
-# Copy React build output to the expected location
+# Copy React build output
 COPY --from=client-build /app/client/build ./client/build
 
 EXPOSE 3000
