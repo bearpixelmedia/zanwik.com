@@ -178,57 +178,21 @@ export const AuthProvider = ({ children }) => {
     [user?.id]
   );
 
-  // Memoize context value
-  const contextValue = React.useMemo(
-    () => ({
-      user,
-      session,
-      userProfile,
-      loading,
-      isAuthenticated,
-      loginHistory,
-      securityEvents,
-      login,
-      register,
-      logout,
-      updateProfile,
-      changePassword,
-      hasPermission,
-      hasRole,
-      getProjectPermissions,
-      updatePreferences,
-      getUserRoleInfo,
-      getSecurityEvents,
-      refreshSession,
-      getSessionInfo,
-      lastActivity,
-      sessionTimeout,
-    }),
-    [
-      user,
-      session,
-      userProfile,
-      loading,
-      isAuthenticated,
-      loginHistory,
-      securityEvents,
-      login,
-      register,
-      logout,
-      updateProfile,
-      changePassword,
-      hasPermission,
-      hasRole,
-      getProjectPermissions,
-      updatePreferences,
-      getUserRoleInfo,
-      getSecurityEvents,
-      refreshSession,
-      getSessionInfo,
-      lastActivity,
-      sessionTimeout,
-    ],
-  );
+  // Get session info
+  const getSessionInfo = useCallback(() => {
+    if (!session) return null;
+
+    const expiresAt = new Date(session.expires_at * 1000);
+    const now = new Date();
+    const timeLeft = expiresAt - now;
+
+    return {
+      expiresAt,
+      timeLeft,
+      isExpired: timeLeft <= 0,
+      willExpireSoon: timeLeft <= 5 * 60 * 1000, // 5 minutes
+    };
+  }, [session]);
 
   // Initialize auth state and set up listeners
   useEffect(() => {
@@ -332,6 +296,20 @@ export const AuthProvider = ({ children }) => {
     };
   }, []);
 
+  // Session timeout handler
+  const handleSessionTimeout = useCallback(async () => {
+    if (!mountedRef.current) return;
+    try {
+      await addSecurityEvent(
+        'SESSION_TIMEOUT',
+        'Session expired due to inactivity'
+      );
+      await supabase.auth.signOut();
+    } catch (error) {
+      console.error('Session timeout handling failed:', error);
+    }
+  }, [addSecurityEvent]);
+
   // Session timeout check
   useEffect(() => {
     if (!isAuthenticated || !mountedRef.current) return;
@@ -347,21 +325,7 @@ export const AuthProvider = ({ children }) => {
 
     const interval = setInterval(checkSession, 60000); // Check every minute
     return () => clearInterval(interval);
-  }, [isAuthenticated, lastActivity, sessionTimeout]);
-
-  // Session timeout handler
-  const handleSessionTimeout = useCallback(async () => {
-    if (!mountedRef.current) return;
-    try {
-      await addSecurityEvent(
-        'SESSION_TIMEOUT',
-        'Session expired due to inactivity'
-      );
-      await supabase.auth.signOut();
-    } catch (error) {
-      console.error('Session timeout handling failed:', error);
-    }
-  }, [addSecurityEvent]);
+  }, [isAuthenticated, lastActivity, sessionTimeout, handleSessionTimeout]);
 
   // Login function
   const login = useCallback(
@@ -506,13 +470,13 @@ export const AuthProvider = ({ children }) => {
       }
 
       return {
-        read: hasPermission('view_projects'),
-        write: hasPermission('edit_projects'),
-        deploy: hasPermission('deploy'),
-        admin: hasPermission('manage_projects'),
+        read: userProfile.permissions?.includes('*') || userProfile.permissions?.includes('view_projects'),
+        write: userProfile.permissions?.includes('*') || userProfile.permissions?.includes('edit_projects'),
+        deploy: userProfile.permissions?.includes('*') || userProfile.permissions?.includes('deploy'),
+        admin: userProfile.permissions?.includes('*') || userProfile.permissions?.includes('manage_projects'),
       };
     },
-    [userProfile, hasPermission]
+    [userProfile]
   );
 
   // Update preferences
@@ -582,21 +546,57 @@ export const AuthProvider = ({ children }) => {
     }
   }, [addSecurityEvent]);
 
-  // Get session info
-  const getSessionInfo = useCallback(() => {
-    if (!session) return null;
-
-    const expiresAt = new Date(session.expires_at * 1000);
-    const now = new Date();
-    const timeLeft = expiresAt - now;
-
-    return {
-      expiresAt,
-      timeLeft,
-      isExpired: timeLeft <= 0,
-      willExpireSoon: timeLeft <= 5 * 60 * 1000, // 5 minutes
-    };
-  }, [session]);
+  // Memoize context value
+  const contextValue = React.useMemo(
+    () => ({
+      user,
+      session,
+      userProfile,
+      loading,
+      isAuthenticated,
+      loginHistory,
+      securityEvents,
+      login,
+      register,
+      logout,
+      updateProfile,
+      changePassword,
+      hasPermission,
+      hasRole,
+      getProjectPermissions,
+      updatePreferences,
+      getUserRoleInfo,
+      getSecurityEvents,
+      refreshSession,
+      getSessionInfo,
+      lastActivity,
+      sessionTimeout,
+    }),
+    [
+      user,
+      session,
+      userProfile,
+      loading,
+      isAuthenticated,
+      loginHistory,
+      securityEvents,
+      login,
+      register,
+      logout,
+      updateProfile,
+      changePassword,
+      hasPermission,
+      hasRole,
+      getProjectPermissions,
+      updatePreferences,
+      getUserRoleInfo,
+      getSecurityEvents,
+      refreshSession,
+      getSessionInfo,
+      lastActivity,
+      sessionTimeout,
+    ],
+  );
 
   return (
     <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
