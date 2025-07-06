@@ -6,6 +6,7 @@
     <title>Zanwik - Enterprise SaaS Solutions</title>
     <meta name="description" content="Zanwik provides enterprise-grade SaaS solutions for modern businesses. Streamline operations, boost productivity, and scale with confidence.">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -14,29 +15,29 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             line-height: 1.6;
-            color: #333;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
+            color: #1a1a1a;
+            background: #ffffff;
+            overflow-x: hidden;
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 20px;
+            padding: 0 24px;
         }
 
         /* Header */
         header {
             background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(20px);
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             z-index: 1000;
-            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            border-bottom: 1px solid #e5e5e5;
         }
 
         nav {
@@ -47,64 +48,72 @@
         }
 
         .logo {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: #667eea;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #000000;
             text-decoration: none;
+            letter-spacing: -0.02em;
         }
 
         .nav-links {
             display: flex;
             list-style: none;
-            gap: 2rem;
+            gap: 2.5rem;
         }
 
         .nav-links a {
             text-decoration: none;
-            color: #333;
+            color: #666666;
             font-weight: 500;
-            transition: color 0.3s ease;
+            font-size: 0.9rem;
+            transition: color 0.2s ease;
         }
 
         .nav-links a:hover {
-            color: #667eea;
+            color: #000000;
         }
 
         .cta-button {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #000000;
             color: white;
             padding: 0.75rem 1.5rem;
-            border-radius: 25px;
+            border-radius: 8px;
             text-decoration: none;
             font-weight: 600;
-            transition: transform 0.3s ease;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            border: 1px solid #000000;
         }
 
         .cta-button:hover {
-            transform: translateY(-2px);
+            background: #ffffff;
+            color: #000000;
         }
 
         /* Hero Section */
         .hero {
-            padding: 120px 0 80px;
+            padding: 140px 0 100px;
             text-align: center;
-            color: white;
+            background: linear-gradient(180deg, #fafafa 0%, #ffffff 100%);
         }
 
         .hero h1 {
             font-size: 3.5rem;
             font-weight: 700;
             margin-bottom: 1.5rem;
-            line-height: 1.2;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+            color: #000000;
         }
 
         .hero p {
-            font-size: 1.3rem;
-            margin-bottom: 2rem;
-            opacity: 0.9;
+            font-size: 1.25rem;
+            margin-bottom: 2.5rem;
+            color: #666666;
             max-width: 600px;
             margin-left: auto;
             margin-right: auto;
+            font-weight: 400;
         }
 
         .hero-buttons {
@@ -115,97 +124,112 @@
         }
 
         .btn-primary {
-            background: white;
-            color: #667eea;
+            background: #000000;
+            color: white;
             padding: 1rem 2rem;
-            border-radius: 30px;
+            border-radius: 8px;
             text-decoration: none;
             font-weight: 600;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
+            border: 1px solid #000000;
         }
 
         .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            background: #ffffff;
+            color: #000000;
         }
 
         .btn-secondary {
             background: transparent;
-            color: white;
+            color: #000000;
             padding: 1rem 2rem;
-            border: 2px solid white;
-            border-radius: 30px;
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
             text-decoration: none;
             font-weight: 600;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
         }
 
         .btn-secondary:hover {
-            background: white;
-            color: #667eea;
+            background: #f5f5f5;
+            border-color: #000000;
         }
 
         /* Features Section */
         .features {
-            padding: 80px 0;
-            background: white;
+            padding: 100px 0;
+            background: #ffffff;
         }
 
         .section-title {
             text-align: center;
             font-size: 2.5rem;
             font-weight: 700;
-            margin-bottom: 3rem;
-            color: #333;
+            margin-bottom: 1rem;
+            color: #000000;
+            letter-spacing: -0.02em;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 1.1rem;
+            color: #666666;
+            margin-bottom: 4rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 2rem;
             margin-top: 3rem;
         }
 
         .feature-card {
-            background: #f8f9fa;
-            padding: 2rem;
-            border-radius: 15px;
-            text-align: center;
-            transition: transform 0.3s ease;
+            background: #fafafa;
+            padding: 2.5rem;
+            border-radius: 12px;
+            border: 1px solid #e5e5e5;
+            transition: all 0.2s ease;
         }
 
         .feature-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border-color: #000000;
         }
 
         .feature-icon {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            background: #000000;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 1rem;
+            margin-bottom: 1.5rem;
             color: white;
-            font-size: 1.5rem;
+            font-size: 1.25rem;
         }
 
         .feature-card h3 {
-            font-size: 1.3rem;
+            font-size: 1.25rem;
             margin-bottom: 1rem;
-            color: #333;
+            color: #000000;
+            font-weight: 600;
         }
 
         .feature-card p {
-            color: #666;
+            color: #666666;
             line-height: 1.6;
         }
 
         /* About Section */
         .about {
-            padding: 80px 0;
-            background: #f8f9fa;
+            padding: 100px 0;
+            background: #fafafa;
         }
 
         .about-content {
@@ -217,36 +241,51 @@
 
         .about-text h2 {
             font-size: 2.5rem;
+            font-weight: 700;
             margin-bottom: 1.5rem;
-            color: #333;
+            color: #000000;
+            letter-spacing: -0.02em;
         }
 
         .about-text p {
             font-size: 1.1rem;
-            color: #666;
+            color: #666666;
             margin-bottom: 1.5rem;
+            line-height: 1.7;
         }
 
-        .about-image {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            height: 400px;
-            border-radius: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 3rem;
+        .about-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #000000;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #666666;
+            font-weight: 500;
         }
 
         /* Contact Section */
         .contact {
-            padding: 80px 0;
-            background: white;
-            text-align: center;
+            padding: 100px 0;
+            background: #ffffff;
         }
 
         .contact-form {
-            max-width: 500px;
+            max-width: 600px;
             margin: 0 auto;
         }
 
@@ -254,66 +293,92 @@
             margin-bottom: 1.5rem;
         }
 
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #000000;
+        }
+
         .form-group input,
         .form-group textarea {
             width: 100%;
             padding: 1rem;
-            border: 2px solid #e1e5e9;
-            border-radius: 10px;
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
             font-size: 1rem;
-            transition: border-color 0.3s ease;
+            font-family: inherit;
+            transition: border-color 0.2s ease;
         }
 
         .form-group input:focus,
         .form-group textarea:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #000000;
         }
 
         .form-group textarea {
-            height: 120px;
             resize: vertical;
+            min-height: 120px;
+        }
+
+        .submit-btn {
+            background: #000000;
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            width: 100%;
+        }
+
+        .submit-btn:hover {
+            background: #333333;
         }
 
         /* Footer */
         footer {
-            background: #333;
+            background: #000000;
             color: white;
-            padding: 2rem 0;
-            text-align: center;
+            padding: 3rem 0 2rem;
         }
 
         .footer-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-
-        .footer-links {
-            display: flex;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 2rem;
-            list-style: none;
+            margin-bottom: 2rem;
         }
 
-        .footer-links a {
-            color: white;
+        .footer-section h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .footer-section p,
+        .footer-section a {
+            color: #cccccc;
             text-decoration: none;
-            opacity: 0.8;
-            transition: opacity 0.3s ease;
+            line-height: 1.6;
         }
 
-        .footer-links a:hover {
-            opacity: 1;
+        .footer-section a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #333333;
+            padding-top: 2rem;
+            text-align: center;
+            color: #cccccc;
         }
 
         /* Responsive Design */
         @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-            }
-
             .hero h1 {
                 font-size: 2.5rem;
             }
@@ -322,20 +387,55 @@
                 font-size: 1.1rem;
             }
 
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
             .about-content {
                 grid-template-columns: 1fr;
                 gap: 2rem;
             }
 
-            .footer-content {
-                flex-direction: column;
-                text-align: center;
+            .nav-links {
+                display: none;
             }
 
             .hero-buttons {
                 flex-direction: column;
                 align-items: center;
             }
+
+            .btn-primary,
+            .btn-secondary {
+                width: 100%;
+                max-width: 300px;
+                text-align: center;
+            }
+        }
+
+        /* Success message */
+        .success-message {
+            background: #f0f9ff;
+            border: 1px solid #0ea5e9;
+            color: #0c4a6e;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .error-message {
+            background: #fef2f2;
+            border: 1px solid #ef4444;
+            color: #991b1b;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: none;
         }
     </style>
 </head>
@@ -343,7 +443,7 @@
     <!-- Header -->
     <header>
         <nav class="container">
-            <a href="#" class="logo">Zanwik</a>
+            <a href="/" class="logo">Zanwik</a>
             <ul class="nav-links">
                 <li><a href="#features">Features</a></li>
                 <li><a href="#about">About</a></li>
@@ -357,89 +457,119 @@
     <section class="hero">
         <div class="container">
             <h1>Enterprise SaaS Solutions</h1>
-            <p>Transform your business with our comprehensive suite of enterprise-grade SaaS tools. Streamline operations, boost productivity, and scale with confidence.</p>
+            <p>Streamline operations, boost productivity, and scale with confidence. Zanwik provides the tools you need to build and manage successful SaaS ventures.</p>
             <div class="hero-buttons">
-                <a href="#contact" class="btn-primary">Get Started</a>
+                <a href="/dashboard" class="btn-primary">Get Started</a>
                 <a href="#features" class="btn-secondary">Learn More</a>
             </div>
         </div>
     </section>
 
     <!-- Features Section -->
-    <section id="features" class="features">
+    <section class="features" id="features">
         <div class="container">
             <h2 class="section-title">Why Choose Zanwik?</h2>
+            <p class="section-subtitle">Built for modern businesses that demand excellence in every aspect of their operations.</p>
             <div class="features-grid">
                 <div class="feature-card">
-                    <div class="feature-icon">🚀</div>
-                    <h3>Scalable Infrastructure</h3>
-                    <p>Built for growth with enterprise-grade infrastructure that scales with your business needs.</p>
+                    <div class="feature-icon">⚡</div>
+                    <h3>Lightning Fast</h3>
+                    <p>Optimized performance ensures your applications run smoothly at any scale, providing the best user experience possible.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">🔒</div>
                     <h3>Enterprise Security</h3>
-                    <p>Bank-level security with SOC 2 compliance, encryption, and advanced threat protection.</p>
+                    <p>Bank-level security protocols protect your data and ensure compliance with industry standards and regulations.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">📊</div>
                     <h3>Advanced Analytics</h3>
-                    <p>Real-time insights and comprehensive reporting to drive data-driven decisions.</p>
+                    <p>Comprehensive insights and real-time monitoring help you make data-driven decisions and optimize performance.</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">⚡</div>
-                    <h3>Lightning Fast</h3>
-                    <p>Optimized performance with 99.9% uptime guarantee and global CDN distribution.</p>
+                    <div class="feature-icon">🚀</div>
+                    <h3>Scalable Infrastructure</h3>
+                    <p>Built to grow with your business, our infrastructure automatically scales to meet your changing needs.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">🛠️</div>
-                    <h3>Easy Integration</h3>
-                    <p>Seamless integration with your existing tools and workflows through our robust API.</p>
+                    <h3>Developer Friendly</h3>
+                    <p>Modern APIs and comprehensive documentation make integration seamless for your development team.</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">🎯</div>
-                    <h3>Custom Solutions</h3>
-                    <p>Tailored solutions designed specifically for your industry and business requirements.</p>
+                    <div class="feature-icon">💼</div>
+                    <h3>Business Focused</h3>
+                    <p>Every feature is designed with business outcomes in mind, helping you achieve your strategic goals.</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- About Section -->
-    <section id="about" class="about">
+    <section class="about" id="about">
         <div class="container">
             <div class="about-content">
                 <div class="about-text">
-                    <h2>About Zanwik</h2>
-                    <p>Zanwik is a leading SaaS venture company dedicated to empowering businesses with cutting-edge technology solutions. We believe in creating tools that not only solve today's challenges but anticipate tomorrow's needs.</p>
-                    <p>Our team of experts combines deep industry knowledge with innovative technology to deliver solutions that drive real business value. From startups to Fortune 500 companies, we help organizations of all sizes achieve their digital transformation goals.</p>
-                    <p>With a focus on security, scalability, and user experience, we're building the future of enterprise software.</p>
+                    <h2>Built for Success</h2>
+                    <p>Zanwik is more than just a platform—it's a comprehensive solution designed to help businesses thrive in the digital age. We understand the challenges modern companies face and provide the tools needed to overcome them.</p>
+                    <p>Our team of experts has years of experience building and scaling successful SaaS ventures. We've distilled that knowledge into a platform that empowers you to focus on what matters most: growing your business.</p>
+                    <div class="about-stats">
+                        <div class="stat">
+                            <div class="stat-number">99.9%</div>
+                            <div class="stat-label">Uptime</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-number">24/7</div>
+                            <div class="stat-label">Support</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-number">500+</div>
+                            <div class="stat-label">Companies</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-number">50M+</div>
+                            <div class="stat-label">API Calls</div>
+                        </div>
+                    </div>
                 </div>
-                <div class="about-image">
-                    🏢
+                <div class="about-text">
+                    <h2>Trusted by Industry Leaders</h2>
+                    <p>From startups to Fortune 500 companies, businesses of all sizes trust Zanwik to power their critical operations. Our platform has been battle-tested in the most demanding environments.</p>
+                    <p>We're committed to continuous improvement and innovation, ensuring that our platform evolves with your business needs. When you choose Zanwik, you're choosing a partner for long-term success.</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Contact Section -->
-    <section id="contact" class="contact">
+    <section class="contact" id="contact">
         <div class="container">
-            <h2 class="section-title">Get In Touch</h2>
-            <p style="margin-bottom: 3rem; color: #666; font-size: 1.1rem;">Ready to transform your business? Contact us to learn how Zanwik can help you achieve your goals.</p>
-            <form class="contact-form" action="/api/contact" method="POST">
-                <div class="form-group">
-                    <input type="text" name="name" placeholder="Your Name" required>
+            <h2 class="section-title">Get in Touch</h2>
+            <p class="section-subtitle">Ready to transform your business? Let's discuss how Zanwik can help you achieve your goals.</p>
+            <form class="contact-form" id="contactForm">
+                <div class="success-message" id="successMessage">
+                    Thank you for your message! We'll get back to you soon.
+                </div>
+                <div class="error-message" id="errorMessage">
+                    There was an error sending your message. Please try again.
                 </div>
                 <div class="form-group">
-                    <input type="email" name="email" placeholder="Your Email" required>
+                    <label for="name">Name</label>
+                    <input type="text" id="name" name="name" required>
                 </div>
                 <div class="form-group">
-                    <input type="text" name="company" placeholder="Company Name" required>
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
                 </div>
                 <div class="form-group">
-                    <textarea name="message" placeholder="Tell us about your project or requirements..." required></textarea>
+                    <label for="company">Company</label>
+                    <input type="text" id="company" name="company">
                 </div>
-                <button type="submit" class="btn-primary" style="border: none; cursor: pointer;">Send Message</button>
+                <div class="form-group">
+                    <label for="message">Message</label>
+                    <textarea id="message" name="message" required></textarea>
+                </div>
+                <button type="submit" class="submit-btn">Send Message</button>
             </form>
         </div>
     </section>
@@ -448,20 +578,72 @@
     <footer>
         <div class="container">
             <div class="footer-content">
-                <div>
-                    <p>&copy; 2024 Zanwik. All rights reserved.</p>
+                <div class="footer-section">
+                    <h3>Zanwik</h3>
+                    <p>Enterprise SaaS solutions for modern businesses. Streamline operations, boost productivity, and scale with confidence.</p>
                 </div>
-                <ul class="footer-links">
-                    <li><a href="/privacy">Privacy Policy</a></li>
-                    <li><a href="/terms">Terms of Service</a></li>
-                    <li><a href="/support">Support</a></li>
-                </ul>
+                <div class="footer-section">
+                    <h3>Product</h3>
+                    <p><a href="#features">Features</a></p>
+                    <p><a href="/dashboard">Dashboard</a></p>
+                    <p><a href="#about">About</a></p>
+                </div>
+                <div class="footer-section">
+                    <h3>Support</h3>
+                    <p><a href="#contact">Contact</a></p>
+                    <p><a href="/dashboard">Documentation</a></p>
+                    <p><a href="/dashboard">Status</a></p>
+                </div>
+                <div class="footer-section">
+                    <h3>Company</h3>
+                    <p><a href="#about">About Us</a></p>
+                    <p><a href="#contact">Careers</a></p>
+                    <p><a href="#contact">Privacy</a></p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Zanwik. All rights reserved.</p>
             </div>
         </div>
     </footer>
 
     <script>
-        // Smooth scrolling for anchor links
+        // Contact form handling
+        document.getElementById('contactForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                company: document.getElementById('company').value,
+                message: document.getElementById('message').value
+            };
+
+            try {
+                const response = await fetch('/api/contact', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    document.getElementById('successMessage').style.display = 'block';
+                    document.getElementById('errorMessage').style.display = 'none';
+                    document.getElementById('contactForm').reset();
+                } else {
+                    throw new Error('Failed to send message');
+                }
+            } catch (error) {
+                document.getElementById('errorMessage').style.display = 'block';
+                document.getElementById('successMessage').style.display = 'none';
+            }
+        });
+
+        // Smooth scrolling for navigation links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
@@ -473,47 +655,6 @@
                     });
                 }
             });
-        });
-
-        // Form submission handling
-        document.querySelector('.contact-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Get form data
-            const formData = new FormData(this);
-            const data = Object.fromEntries(formData);
-            
-            // Submit to API
-            fetch('/api/contact', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data)
-            })
-            .then(response => response.json())
-            .then(result => {
-                if (result.success) {
-                    alert(result.message);
-                    this.reset();
-                } else {
-                    alert('Failed to send message. Please try again.');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Failed to send message. Please try again.');
-            });
-        });
-
-        // Header scroll effect
-        window.addEventListener('scroll', function() {
-            const header = document.querySelector('header');
-            if (window.scrollY > 100) {
-                header.style.background = 'rgba(255, 255, 255, 0.98)';
-            } else {
-                header.style.background = 'rgba(255, 255, 255, 0.95)';
-            }
         });
     </script>
 </body>
