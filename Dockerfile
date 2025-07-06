@@ -1,39 +1,20 @@
-# Use Node.js 18 as base image
-FROM node:18-alpine
+# Stage 1: Build React app
+FROM node:18-alpine as client-build
+WORKDIR /app/client
+COPY client/package*.json ./
+RUN npm install
+COPY client/ ./
+RUN npm run build
 
-# Set working directory
+# Stage 2: Backend
+FROM node:18-alpine
 WORKDIR /app
 
-# Copy backend package files and install dependencies
+# Backend dependencies
 COPY package*.json ./
 RUN npm install
 
-# Copy client package files and install dependencies
-COPY client/package*.json ./client/
-WORKDIR /app/client
-RUN npm install
-
-# Copy client source files and build React app
-COPY client/src ./src
-COPY client/public ./public
-COPY client/tsconfig.json ./
-COPY client/tailwind.config.js ./
-COPY client/.eslintrc.js ./
-COPY client/.prettierrc ./
-COPY client/.gitignore ./
-COPY client/README.md ./
-COPY client/vercel.json ./
-COPY client/setup-dev.sh ./
-COPY client/setup-env.sh ./
-COPY client/.lintstagedrc.js ./
-COPY client/.huskyrc ./
-COPY client/fix-empty-imports.js ./
-RUN npm run build
-
-# Return to app directory
-WORKDIR /app
-
-# Copy backend source files
+# Copy backend source
 COPY src ./src
 COPY public ./public
 COPY railway.json ./
@@ -49,8 +30,8 @@ COPY deploy-railway.sh ./
 COPY deploy-railway-simple.sh ./
 COPY generate-env.js ./
 
-# Expose port
-EXPOSE 3000
+# Copy React build output to the expected location
+COPY --from=client-build /app/client/build ./client/build
 
-# Start the application
+EXPOSE 3000
 CMD ["npm", "start"] 
