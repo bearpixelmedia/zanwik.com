@@ -381,11 +381,21 @@ app.get('/dashboard', (req, res) => {
   res.sendFile(path.join(__dirname, '../client/build/index.html'));
 });
 
-// Serve React app for all other routes (SPA routing)
+// Serve React app for dashboard-related routes (SPA routing)
+app.get('/dashboard/*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client/build/index.html'));
+});
+
+// Catch-all for other non-API routes - serve React app
 app.get('*', (req, res) => {
   // Don't serve React app for API routes
   if (req.path.startsWith('/api/')) {
     return res.status(404).json({ message: 'API endpoint not found' });
+  }
+  
+  // Don't serve React app for root path (landing page)
+  if (req.path === '/') {
+    return res.status(404).json({ message: 'Route not found' });
   }
   
   // Serve React app for all other routes
