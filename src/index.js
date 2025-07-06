@@ -405,6 +405,11 @@ app.get('/dashboard/*', (req, res) => {
   res.sendFile(path.join(__dirname, '../client/build/index.html'));
 });
 
+// Login route - serve the React app
+app.get('/login', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client/build/index.html'));
+});
+
 // Catch-all for other non-API routes - serve React app
 app.get('*', (req, res) => {
   // Don't serve React app for API routes
@@ -417,7 +422,12 @@ app.get('*', (req, res) => {
     return res.status(404).json({ message: 'Route not found' });
   }
   
-  // Serve React app for all other routes
+  // Don't serve React app for static files that should be served by Express
+  if (req.path.startsWith('/static/') || req.path.startsWith('/uploads/') || req.path === '/favicon.ico' || req.path === '/asset-manifest.json') {
+    return res.status(404).json({ message: 'Static file not found' });
+  }
+  
+  // Serve React app for all other routes (SPA routing)
   res.sendFile(path.join(__dirname, '../client/build/index.html'));
 });
 
