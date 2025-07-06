@@ -285,7 +285,8 @@ const PrivateRoute = ({
     return <LoadingScreen />;
   }
 
-  if (!isAuthenticated) {
+  if (!user) {
+    // Not authenticated, redirect to login
     return <Navigate to='/login' state={{ from: location }} replace />;
   }
 
