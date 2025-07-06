@@ -9,7 +9,9 @@
     <title>Zanwik - Enterprise SaaS Solutions</title>
     <meta name="description" content="Zanwik provides enterprise-grade SaaS solutions for modern businesses. Streamline operations, boost productivity, and scale with confidence.">
     <link rel="icon" type="image/svg+xml" href="/zanwik-icon.svg">
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap&v=2" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap&v=3&t=20240706" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -23,6 +25,11 @@
             color: #1a1a1a;
             background: #ffffff;
             overflow-x: hidden;
+        }
+
+        /* Force font loading */
+        .font-loading {
+            font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
         }
 
         .container {
@@ -669,6 +676,26 @@
                     });
                 }
             });
+        });
+
+        // Force Manrope font loading
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add font-loading class to all elements
+            document.body.classList.add('font-loading');
+            
+            // Force font loading by creating a test element
+            const testElement = document.createElement('div');
+            testElement.style.fontFamily = 'Manrope, sans-serif';
+            testElement.style.position = 'absolute';
+            testElement.style.visibility = 'hidden';
+            testElement.style.fontSize = '16px';
+            testElement.textContent = 'Test';
+            document.body.appendChild(testElement);
+            
+            // Remove test element after a short delay
+            setTimeout(() => {
+                document.body.removeChild(testElement);
+            }, 100);
         });
     </script>
 </body>
