@@ -5,7 +5,34 @@
 
 set -e
 
-echo "🚀 Starting Umbrella Dashboard deployment..."
+echo "🚀 Deploying Zanwik to Railway..."
+
+# Check if we're in the right directory
+if [ ! -f "package.json" ]; then
+    echo "❌ Error: package.json not found. Make sure you're in the project root."
+    exit 1
+fi
+
+# Check if Railway CLI is installed
+if ! command -v railway &> /dev/null; then
+    echo "📦 Installing Railway CLI..."
+    npm install -g @railway/cli
+fi
+
+# Login to Railway (if not already logged in)
+echo "🔐 Checking Railway login status..."
+railway whoami || railway login
+
+# Deploy to Railway
+echo "🚂 Deploying to Railway..."
+railway up
+
+echo "✅ Deployment complete!"
+echo "🌐 Your app should be available at: https://www.zanwik.com/"
+echo "📊 Dashboard available at: https://www.zanwik.com/dashboard"
+echo ""
+echo "📝 To check deployment status: railway status"
+echo "📝 To view logs: railway logs"
 
 # Colors for output
 RED='\033[0;31m'
