@@ -101,7 +101,21 @@ const initializeRedis = () => {
 };
 
 // Middleware
-app.use(helmet());
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "https://www.googletagmanager.com"],
+      connectSrc: ["'self'", "https://ynssliolfybuczopjfgn.supabase.co", "https://www.google-analytics.com"],
+      imgSrc: ["'self'", "data:", "https://www.google-analytics.com"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      fontSrc: ["'self'"],
+      objectSrc: ["'none'"],
+      mediaSrc: ["'self'"],
+      frameSrc: ["'none'"]
+    }
+  }
+}));
 app.use(cors({
   origin: true, // Allow all origins for now
   credentials: true

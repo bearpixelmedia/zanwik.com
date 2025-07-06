@@ -24,12 +24,8 @@ COPY deploy-railway.sh ./
 COPY deploy-railway-simple.sh ./
 COPY generate-env.js ./
 
-# Copy client directory and build React app
-COPY client ./client
-WORKDIR /app/client
-RUN npm install
-RUN npm run build
-WORKDIR /app
+# Copy pre-built React app
+COPY client/build ./client/build
 
 # Expose port
 EXPOSE 3000
