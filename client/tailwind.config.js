@@ -77,7 +77,7 @@ module.exports = {
         'xl': 'var(--shadow-xl)',
       },
       fontFamily: {
-        sans: ['var(--font-sans)', 'ui-sans-serif', 'system-ui'],
+        sans: ['Inter', 'var(--font-sans)', 'ui-sans-serif', 'system-ui'],
         mono: ['var(--font-mono)', 'ui-monospace', 'SFMono-Regular'],
         serif: ['var(--font-serif)', 'ui-serif', 'Georgia'],
       },

@@ -115,7 +115,7 @@ app.use(helmet({
       ],
       imgSrc: ["'self'", "data:", "https://www.google-analytics.com"],
       styleSrc: ["'self'", "'unsafe-inline'"],
-      fontSrc: ["'self'"],
+      fontSrc: ["'self'", "https://fonts.googleapis.com", "https://fonts.gstatic.com"],
       objectSrc: ["'none'"],
       mediaSrc: ["'self'"],
       frameSrc: ["'none'"]
