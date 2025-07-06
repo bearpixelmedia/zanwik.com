@@ -121,6 +121,31 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // Static files
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+app.use(express.static(path.join(__dirname, '../public')));
+
+// Contact form endpoint
+app.post('/api/contact', async (req, res) => {
+  try {
+    const { name, email, company, message } = req.body;
+    
+    // Log the contact form submission
+    logger.info('Contact form submission:', { name, email, company, message });
+    
+    // Here you can add email sending logic, database storage, etc.
+    // For now, we'll just log it and send a success response
+    
+    res.json({ 
+      success: true, 
+      message: 'Thank you for your message! We\'ll get back to you soon.' 
+    });
+  } catch (error) {
+    logger.error('Contact form error:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: 'Failed to send message. Please try again.' 
+    });
+  }
+});
 
 // Database connection
 const connectDatabase = async () => {
@@ -245,12 +270,7 @@ console.log('About to set up Express app...');
 // Root endpoint for basic connectivity
 console.log('Setting up root endpoint...');
 app.get('/', (req, res) => {
-  res.json({ 
-    message: 'Umbrella Dashboard API',
-    version: '2.0.0',
-    status: 'running',
-    timestamp: new Date().toISOString()
-  });
+  res.sendFile(path.join(__dirname, '../public/index.html'));
 });
 console.log('Root endpoint setup completed');
 
@@ -356,26 +376,20 @@ app.get('/test', (req, res) => {
   res.json({ message: 'Test endpoint working!' });
 });
 
-// Simple public dashboard endpoint
+// Dashboard route - serve the React app
 app.get('/dashboard', (req, res) => {
-  res.json({
-    overview: {
-      totalRevenue: 45600,
-      monthlyGrowth: 15.2,
-      activeUsers: 1890,
-      totalProjects: 12,
-      recentActivity: [
-        { type: 'project_created', title: 'AI Content Generator', time: '2 hours ago' },
-        { type: 'revenue_milestone', title: 'Reached $45K monthly revenue', time: '1 day ago' },
-        { type: 'user_signup', title: 'New user joined', time: '3 hours ago' }
-      ],
-      topProjects: [
-        { name: 'AI Content Generator', revenue: 2450, growth: 18 },
-        { name: 'Digital Marketplace', revenue: 1890, growth: 12 },
-        { name: 'Freelance Hub', revenue: 1200, growth: 8 }
-      ]
-    }
-  });
+  res.sendFile(path.join(__dirname, '../client/build/index.html'));
+});
+
+// Serve React app for all other routes (SPA routing)
+app.get('*', (req, res) => {
+  // Don't serve React app for API routes
+  if (req.path.startsWith('/api/')) {
+    return res.status(404).json({ message: 'API endpoint not found' });
+  }
+  
+  // Serve React app for all other routes
+  res.sendFile(path.join(__dirname, '../client/build/index.html'));
 });
 
 console.log('Express app setup completed');
