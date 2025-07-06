@@ -106,7 +106,13 @@ app.use(helmet({
     directives: {
       defaultSrc: ["'self'"],
       scriptSrc: ["'self'", "'unsafe-inline'", "https://www.googletagmanager.com"],
-      connectSrc: ["'self'", "https://ynssliolfybuczopjfgn.supabase.co", "https://www.google-analytics.com"],
+      connectSrc: [
+        "'self'",
+        "https://ynssliolfybuczopjfgn.supabase.co",
+        "https://www.google-analytics.com",
+        "https://money-production-55af.up.railway.app",
+        "https://www.zanwik.com"
+      ],
       imgSrc: ["'self'", "data:", "https://www.google-analytics.com"],
       styleSrc: ["'self'", "'unsafe-inline'"],
       fontSrc: ["'self'"],
