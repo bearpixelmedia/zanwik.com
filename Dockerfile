@@ -4,16 +4,26 @@ FROM node:18-alpine
 # Set working directory
 WORKDIR /app
 
-# Copy only backend package files
+# Copy package files for both backend and frontend
 COPY package*.json ./
+COPY client/package*.json ./client/
 
 # Install backend dependencies
 RUN npm install
 
-# Copy backend source code and config (exclude client/ and frontend files)
+# Install frontend dependencies
+WORKDIR /app/client
+RUN npm install
+
+# Build the React app
+RUN npm run build
+
+# Go back to app root
+WORKDIR /app
+
+# Copy backend source code and config
 COPY src/ ./src/
 COPY public/ ./public/
-COPY client/build/ ./client/build/
 COPY railway.json ./
 COPY env.example ./
 COPY env.production.example ./

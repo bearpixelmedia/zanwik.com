@@ -1,6 +1,0 @@
-flask
-requests
-pillow
-opencv-python
-python-dotenv
-jinja2 
