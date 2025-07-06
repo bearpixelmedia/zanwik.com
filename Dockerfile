@@ -4,22 +4,11 @@ FROM node:18-alpine
 # Set working directory
 WORKDIR /app
 
-# Copy package files for both backend and frontend
+# Copy package files
 COPY package*.json ./
-COPY client/package*.json ./client/
 
 # Install backend dependencies
 RUN npm install
-
-# Install frontend dependencies
-WORKDIR /app/client
-RUN npm install
-
-# Build the React app
-RUN npm run build
-
-# Go back to app root
-WORKDIR /app
 
 # Copy backend source code and config
 COPY src/ ./src/

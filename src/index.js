@@ -123,6 +123,11 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 app.use(express.static(path.join(__dirname, '../public')));
 
+// Serve React app static files
+app.use('/static', express.static(path.join(__dirname, '../client/build/static')));
+app.use('/favicon.ico', express.static(path.join(__dirname, '../client/build/favicon.ico')));
+app.use('/asset-manifest.json', express.static(path.join(__dirname, '../client/build/asset-manifest.json')));
+
 // Contact form endpoint
 app.post('/api/contact', async (req, res) => {
   try {
@@ -396,6 +401,11 @@ app.get('*', (req, res) => {
   // Don't serve React app for root path (landing page)
   if (req.path === '/') {
     return res.status(404).json({ message: 'Route not found' });
+  }
+  
+  // For now, redirect dashboard routes to landing page
+  if (req.path.startsWith('/dashboard')) {
+    return res.redirect('/');
   }
   
   // Serve React app for all other routes
