@@ -110,6 +110,7 @@ app.use(helmet({
         "'self'",
         "https://ynssliolfybuczopjfgn.supabase.co",
         "https://www.google-analytics.com",
+        "https://analytics.google.com",
         "https://money-production-55af.up.railway.app",
         "https://www.zanwik.com"
       ],
