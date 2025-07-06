@@ -8,7 +8,7 @@ yarn-error.log*
 pnpm-debug.log*
 
 # Production builds
-build/
+# build/  # Temporarily uncommented for Railway deployment
 dist/
 out/
 
