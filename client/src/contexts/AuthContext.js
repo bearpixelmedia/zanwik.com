@@ -196,16 +196,15 @@ export const AuthProvider = ({ children }) => {
 
   // Initialize auth state and set up listeners
   useEffect(() => {
+    mountedRef.current = true; // Ensure this is set at the very start
     if (initializingRef.current) return;
     initializingRef.current = true;
 
     const initAuth = async () => {
       try {
         console.log('AuthContext: Initializing auth state');
-        
         // Get current session
         const { data: { session: currentSession } } = await supabase.auth.getSession();
-        
         if (currentSession?.user) {
           console.log('AuthContext: Found existing session for user:', currentSession.user.email);
           await initializeUser(currentSession.user, currentSession);
@@ -225,9 +224,7 @@ export const AuthProvider = ({ children }) => {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (!mountedRef.current) return;
-
       console.log('AuthContext: Auth state changed:', event);
-
       if (event === 'SIGNED_IN' && session?.user) {
         await initializeUser(session.user, session);
         addSecurityEvent('SIGNED_IN', 'User signed in successfully');
@@ -242,25 +239,27 @@ export const AuthProvider = ({ children }) => {
         setLastActivity(Date.now());
         addSecurityEvent('TOKEN_REFRESHED', 'Session token refreshed');
       }
-
       if (mountedRef.current) {
         setLoading(false);
       }
     });
 
-    // Store subscription reference
     authListenerRef.current = subscription;
-
-    // Initialize auth state
+    setLoading(true); // Always set loading to true at the start
     initAuth();
 
     // Set up fallback timeout
     const fallbackTimeout = setTimeout(() => {
       if (mountedRef.current && loading) {
         console.log('AuthContext: Fallback timeout reached, stopping loading');
+        console.log('AuthContext: Fallback debug:', {
+          user,
+          session,
+          isAuthenticated,
+        });
         setLoading(false);
       }
-    }, 5000);
+    }, 7000); // Increase timeout to 7s for extra robustness
 
     return () => {
       if (authListenerRef.current) {
