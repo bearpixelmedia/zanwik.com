@@ -6,12 +6,10 @@ README.md
 .env
 .nyc_output
 coverage
-.nyc_output
 .coverage
 .cache
 .DS_Store
 *.log
 logs
 uploads
-.vercel
-client/.vercel 
+.vercel 

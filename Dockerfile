@@ -8,17 +8,6 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 
-# Copy the entire client directory
-COPY client ./client
-
-# Build the React app
-WORKDIR /app/client
-RUN npm install
-RUN npm run build
-
-# Return to app root
-WORKDIR /app
-
 # Copy backend source and config files
 COPY src ./src
 COPY public ./public
@@ -34,7 +23,17 @@ COPY deploy.sh ./
 COPY deploy-railway.sh ./
 COPY deploy-railway-simple.sh ./
 COPY generate-env.js ./
-COPY client/build/ ./client/build/
+
+# Copy the entire client directory
+COPY client ./client
+
+# Build the React app
+WORKDIR /app/client
+RUN npm install
+RUN npm run build
+
+# Return to app root
+WORKDIR /app
 # Expose port
 EXPOSE 3000
 
