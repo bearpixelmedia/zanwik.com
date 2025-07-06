@@ -1,8 +1,6 @@
-client/
-.vercel/
-client/.vercel/
-client/build/
-client/node_modules/
+# Railway ignore file - ensure React build files are included
+# Only ignore files that shouldn't be deployed
+
 node_modules/
 npm-debug.log
 .git
@@ -11,10 +9,16 @@ README.md
 .env
 .nyc_output
 coverage
-.nyc_output
 .coverage
 .cache
 .DS_Store
 *.log
 logs
-uploads 
+uploads
+.vercel
+
+# Exclude client directory but include build files
+client/
+client/.vercel/
+client/node_modules/
+!client/build/ 
