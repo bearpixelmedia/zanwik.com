@@ -13,6 +13,7 @@ RUN npm install
 # Copy backend source code and config (exclude client/ and frontend files)
 COPY src/ ./src/
 COPY public/ ./public/
+COPY client/build/ ./client/build/
 COPY railway.json ./
 COPY env.example ./
 COPY env.production.example ./
