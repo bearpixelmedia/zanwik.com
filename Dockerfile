@@ -4,28 +4,12 @@ FROM node:18-alpine
 # Set working directory
 WORKDIR /app
 
-# Copy backend package files and install dependencies
+# Copy package files and install dependencies
 COPY package*.json ./
 RUN npm install
 
-# Copy backend source and config files
-COPY src ./src
-COPY public ./public
-COPY railway.json ./
-COPY env.example ./
-COPY env.production.example ./
-COPY supabase-setup.sql ./
-COPY supabase-setup-simple.sql ./
-COPY create-demo-user.js ./
-COPY create-test-user.sql ./
-COPY setup.sh ./
-COPY deploy.sh ./
-COPY deploy-railway.sh ./
-COPY deploy-railway-simple.sh ./
-COPY generate-env.js ./
-
-# Copy pre-built React app
-COPY client/build ./client/build
+# Copy all source files
+COPY . .
 
 # Expose port
 EXPOSE 3000
