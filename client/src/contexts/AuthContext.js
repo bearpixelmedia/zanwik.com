@@ -209,6 +209,8 @@ export const AuthProvider = ({ children }) => {
         if (currentSession?.user) {
           console.log('AuthContext: Found existing session for user:', currentSession.user.email);
           await initializeUser(currentSession.user, currentSession);
+          setLoading(false);
+          console.log('AuthContext: Loading set to false after user init (initAuth)');
         } else {
           console.log('AuthContext: No existing session found');
           setLoading(false);
@@ -229,6 +231,8 @@ export const AuthProvider = ({ children }) => {
       if (event === 'SIGNED_IN' && session?.user) {
         await initializeUser(session.user, session);
         addSecurityEvent('SIGNED_IN', 'User signed in successfully');
+        setLoading(false);
+        console.log('AuthContext: Loading set to false after user init (onAuthStateChange)');
       } else if (event === 'SIGNED_OUT') {
         setUser(null);
         setSession(null);
