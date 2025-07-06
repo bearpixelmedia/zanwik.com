@@ -98,7 +98,7 @@ const LoadingScreen = ({ message = 'Loading...' }) => (
       {/* Logo and Branding */}
       <div className='space-y-4'>
         <div className='inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-primary to-primary/80 rounded-2xl'>
-          <Zap className='w-8 h-8 text-primary-foreground' />
+          <img src="/zanwik-icon.svg" alt="Zanwik" className="w-8 h-8" />
         </div>
         <h2 className='text-2xl font-bold text-foreground'>Zanwik Dashboard</h2>
       </div>

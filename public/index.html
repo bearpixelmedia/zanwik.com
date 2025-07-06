@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zanwik - Enterprise SaaS Solutions</title>
     <meta name="description" content="Zanwik provides enterprise-grade SaaS solutions for modern businesses. Streamline operations, boost productivity, and scale with confidence.">
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/svg+xml" href="/zanwik-icon.svg">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
@@ -53,6 +53,14 @@
             color: #000000;
             text-decoration: none;
             letter-spacing: -0.02em;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
         }
 
         .nav-links {
@@ -443,7 +451,10 @@
     <!-- Header -->
     <header>
         <nav class="container">
-            <a href="/" class="logo">Zanwik</a>
+            <a href="/" class="logo">
+                <img src="/zanwik-icon.svg" alt="Zanwik" class="logo-icon">
+                Zanwik
+            </a>
             <ul class="nav-links">
                 <li><a href="#features">Features</a></li>
                 <li><a href="#about">About</a></li>

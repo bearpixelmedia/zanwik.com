@@ -219,7 +219,7 @@ const Login = () => {
         {/* Logo and Header */}
         <div className='text-center mb-8'>
           <div className='inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-primary to-primary/80 rounded-2xl mb-4'>
-            <TrendingUp className='w-8 h-8 text-primary-foreground' />
+            <img src="/zanwik-icon.svg" alt="Zanwik" className="w-8 h-8" />
           </div>
           <h1 className='text-3xl font-bold text-foreground mb-2'>
             Welcome back
