@@ -1,0 +1,47 @@
+# Code Quality Standards
+
+## Linting & Formatting
+- Fix all ESLint errors before committing
+- Use consistent indentation (2 spaces)
+- Remove unused imports and variables
+- Follow consistent naming conventions
+
+## Import Organization
+- Group imports by type (React, third-party, local)
+- Use absolute imports when possible
+- Remove duplicate imports
+- Use specific imports from lucide-react
+
+## Function Definitions
+- Always provide function names for arrow functions
+- Use proper async/await syntax
+- Implement proper error handling
+- Add JSDoc comments for complex functions
+
+## State Management
+- Use proper dependency arrays in useEffect
+- Avoid infinite re-render loops
+- Implement proper cleanup in useEffect
+- Use useCallback for expensive operations
+
+## Error Handling
+- Implement try-catch blocks for async operations
+- Provide meaningful error messages
+- Log errors appropriately
+- Handle edge cases gracefully
+
+## Performance
+- Use React.memo for expensive components
+- Implement proper loading states
+- Avoid unnecessary re-renders
+- Optimize bundle size
+
+## Security
+- Validate all user inputs
+- Sanitize data before database operations
+- Use proper authentication checks
+- Implement rate limiting where appropriate
+description:
+globs:
+alwaysApply: false
+---

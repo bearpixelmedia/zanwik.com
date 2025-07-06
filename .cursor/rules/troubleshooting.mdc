@@ -1,0 +1,60 @@
+# Troubleshooting Guide
+
+## Common Build Issues
+
+### React Build Errors
+- **Syntax Errors**: Check for missing function names, broken imports
+- **Circular Dependencies**: Avoid functions calling each other before definition
+- **Missing Variables**: Ensure all variables are properly declared
+- **Import Issues**: Fix missing icon imports from lucide-react
+
+### AuthContext Issues
+- **Infinite Re-renders**: Move auth listener setup into useEffect
+- **Initialization Order**: Define functions before using them in contextValue
+- **Circular Dependencies**: Avoid hasPermission in getProjectPermissions
+- **Missing Cleanup**: Properly unsubscribe auth listeners
+
+## Runtime Errors
+
+### "Cannot access 'O' before initialization"
+- Check for circular dependencies in AuthContext
+- Ensure proper initialization order
+- Move contextValue definition after all functions
+
+### "Unexpected token" Errors
+- Check for missing function names
+- Verify proper async/await syntax
+- Ensure all brackets and parentheses are matched
+
+## Server Issues
+
+### Port Already in Use
+```bash
+pkill -f "node src/index.js"
+npm start
+```
+
+### Build Failures
+1. Fix all linting errors first
+2. Run `npm run build` in client directory
+3. Check for syntax errors in all files
+4. Verify all imports are correct
+
+## Development Workflow
+
+### Before Committing
+1. Run `npm run build` in client directory
+2. Fix all linting errors
+3. Test the application locally
+4. Ensure no runtime errors
+
+### Testing Checklist
+- [ ] Landing page loads correctly
+- [ ] Contact form submits successfully
+- [ ] Dashboard authentication works
+- [ ] No console errors
+- [ ] All routes accessible
+description:
+globs:
+alwaysApply: false
+---

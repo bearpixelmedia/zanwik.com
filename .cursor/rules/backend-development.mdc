@@ -1,0 +1,47 @@
+# Backend Development Guidelines
+
+## Server Structure
+- Main entry point: [src/index.js](mdc:src/index.js)
+- Modular route organization in `src/routes/`
+- Service layer in `src/services/`
+- Middleware in `src/middleware/`
+
+## API Design
+- RESTful endpoints with consistent naming
+- Proper HTTP status codes
+- JSON responses with consistent structure
+- Input validation and sanitization
+
+## Authentication & Security
+- JWT-based authentication via Supabase
+- Rate limiting on API endpoints
+- CORS configuration for security
+- Input validation to prevent injection attacks
+
+## Database Integration
+- MongoDB for main data storage
+- Redis for caching and sessions
+- Proper connection handling and error recovery
+- Use transactions for data consistency
+
+## Error Handling
+- Centralized error handling middleware
+- Proper logging with different levels
+- User-friendly error messages
+- Graceful degradation when services fail
+
+## Performance
+- Implement caching strategies
+- Use connection pooling
+- Optimize database queries
+- Monitor and log performance metrics
+
+## Development Workflow
+- Use environment variables for configuration
+- Implement health check endpoints
+- Proper logging throughout the application
+- Graceful shutdown handling
+description:
+globs:
+alwaysApply: false
+---

@@ -1,0 +1,41 @@
+# React Development Guidelines
+
+## Component Structure
+- Use functional components with hooks
+- Implement proper error boundaries
+- Use React.memo for performance optimization
+- Follow consistent naming conventions
+
+## State Management
+- Use AuthContext for authentication state
+- Implement proper loading states
+- Handle errors gracefully with user feedback
+- Use useCallback and useMemo for performance
+
+## Authentication Patterns
+- Always check authentication status before rendering protected content
+- Use PrivateRoute component for protected routes
+- Implement proper session management
+- Handle auth state changes in AuthContext
+
+## API Integration
+- Use consistent error handling patterns
+- Implement retry logic for failed requests
+- Show loading states during API calls
+- Cache responses when appropriate
+
+## Code Quality
+- Fix all linting errors before committing
+- Use proper TypeScript-like prop validation
+- Implement accessibility features
+- Follow consistent import ordering
+
+## Common Issues to Avoid
+- Circular dependencies in AuthContext
+- Infinite re-renders from improper useEffect dependencies
+- Missing error boundaries
+- Unhandled promise rejections
+description:
+globs:
+alwaysApply: false
+---

@@ -1,0 +1,38 @@
+# Zanwik SaaS Project Structure
+
+## Overview
+Zanwik is a B2B SaaS venture company with a controlled user access model (no public signups, only admin-created users).
+
+## Architecture
+- **Landing Page**: `public/index.html` - Professional SaaS landing page for lead generation
+- **Dashboard App**: `client/` - React-based dashboard application
+- **Backend API**: `src/` - Node.js/Express backend with MongoDB and Redis
+- **Database**: MongoDB with Supabase integration for auth
+
+## Key Files
+- [src/index.js](mdc:src/index.js) - Main backend server entry point
+- [public/index.html](mdc:public/index.html) - Landing page
+- [client/src/App.js](mdc:client/src/App.js) - React app entry point
+- [client/src/contexts/AuthContext.js](mdc:client/src/contexts/AuthContext.js) - Authentication context
+
+## Routing Structure
+- `/` - Landing page (public/index.html)
+- `/dashboard` - React dashboard app
+- `/api/*` - Backend API endpoints
+- `/login` - Authentication page
+
+## Authentication Model
+- No public user registration
+- Only admin can create users
+- Supabase handles authentication
+- AuthContext manages user state and permissions
+
+## Development Guidelines
+- Always build client before testing: `cd client && npm run build`
+- Backend serves both landing page and React app
+- Contact form submissions go to `/api/contact`
+- Use proper error handling and logging throughout
+description:
+globs:
+alwaysApply: false
+---

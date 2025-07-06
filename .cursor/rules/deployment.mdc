@@ -1,0 +1,47 @@
+# Deployment & Production Guidelines
+
+## Build Process
+1. Build React app: `cd client && npm run build`
+2. Ensure all linting errors are fixed
+3. Test the build locally before deployment
+4. Verify static assets are properly served
+
+## Environment Configuration
+- Use environment variables for all sensitive data
+- Separate development and production configs
+- Never commit API keys or secrets
+- Use proper .env file management
+
+## Server Setup
+- Port 3000 for backend API
+- Static file serving for landing page and React app
+- Proper CORS configuration for production
+- Health check endpoints for monitoring
+
+## Database Setup
+- MongoDB Atlas for production database
+- Redis for caching and sessions
+- Supabase for authentication
+- Proper backup and recovery procedures
+
+## Security Considerations
+- HTTPS in production
+- Rate limiting on API endpoints
+- Input validation and sanitization
+- Regular security updates
+
+## Monitoring & Logging
+- Implement proper logging levels
+- Monitor application performance
+- Set up error tracking
+- Health check endpoints
+
+## Deployment Platforms
+- Railway deployment configuration available
+- Vercel for frontend deployment
+- Docker support for containerization
+- CI/CD pipeline setup
+description:
+globs:
+alwaysApply: false
+---
