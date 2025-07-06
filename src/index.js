@@ -403,11 +403,6 @@ app.get('*', (req, res) => {
     return res.status(404).json({ message: 'Route not found' });
   }
   
-  // For now, redirect dashboard routes to landing page
-  if (req.path.startsWith('/dashboard')) {
-    return res.redirect('/');
-  }
-  
   // Serve React app for all other routes
   res.sendFile(path.join(__dirname, '../client/build/index.html'));
 });

@@ -4,15 +4,14 @@ FROM node:18-alpine
 # Set working directory
 WORKDIR /app
 
-# Copy package files
+# Copy package files and install backend dependencies
 COPY package*.json ./
-
-# Install backend dependencies
 RUN npm install
 
-# Copy backend source code and config
+# Copy backend source, public, and config
 COPY src/ ./src/
 COPY public/ ./public/
+COPY client/build/ ./client/build/
 COPY railway.json ./
 COPY env.example ./
 COPY env.production.example ./
