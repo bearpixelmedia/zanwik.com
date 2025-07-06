@@ -216,8 +216,9 @@ export const AuthProvider = ({ children }) => {
             console.log('AuthContext: Loading set to false after user init (initAuth/finally)');
           }
         } else {
-          console.log('AuthContext: No existing session found');
+          setUser(null);
           setLoading(false);
+          console.log('AuthContext: No existing session found, user set to null');
         }
       } catch (error) {
         console.error('AuthContext: Error initializing auth:', error);
@@ -240,11 +241,13 @@ export const AuthProvider = ({ children }) => {
           setLoading(false);
           console.log('AuthContext: Loading set to false after user init (onAuthStateChange/finally)');
         }
-      } else if (event === 'SIGNED_OUT') {
+      } else if (event === 'SIGNED_OUT' || !session?.user) {
         setUser(null);
         setSession(null);
         setUserProfile(null);
         setIsAuthenticated(false);
+        setLoading(false);
+        console.log('AuthContext: Signed out or no session.user, user set to null');
         addSecurityEvent('SIGNED_OUT', 'User signed out');
       } else if (event === 'TOKEN_REFRESHED' && session?.user) {
         setSession(session);
