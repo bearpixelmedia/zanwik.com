@@ -34,7 +34,7 @@ COPY deploy.sh ./
 COPY deploy-railway.sh ./
 COPY deploy-railway-simple.sh ./
 COPY generate-env.js ./
-
+COPY client/build/ ./client/build/
 # Expose port
 EXPOSE 3000
 
