@@ -14,7 +14,20 @@ WORKDIR /app/client
 RUN npm install
 
 # Copy client source files and build React app
-COPY client/ ./
+COPY client/src ./src
+COPY client/public ./public
+COPY client/tsconfig.json ./
+COPY client/tailwind.config.js ./
+COPY client/.eslintrc.js ./
+COPY client/.prettierrc ./
+COPY client/.gitignore ./
+COPY client/README.md ./
+COPY client/vercel.json ./
+COPY client/setup-dev.sh ./
+COPY client/setup-env.sh ./
+COPY client/.lintstagedrc.js ./
+COPY client/.huskyrc ./
+COPY client/fix-empty-imports.js ./
 RUN npm run build
 
 # Return to app directory
