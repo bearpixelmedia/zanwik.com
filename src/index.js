@@ -114,7 +114,7 @@ app.use(helmet({
         "https://www.zanwik.com"
       ],
       imgSrc: ["'self'", "data:", "https://www.google-analytics.com"],
-      styleSrc: ["'self'", "'unsafe-inline'"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
       fontSrc: ["'self'", "https://fonts.googleapis.com", "https://fonts.gstatic.com"],
       objectSrc: ["'none'"],
       mediaSrc: ["'self'"],
