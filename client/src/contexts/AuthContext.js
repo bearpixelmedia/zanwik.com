@@ -76,9 +76,8 @@ export const AuthProvider = ({ children }) => {
   // Initialize user data
   const initializeUser = useCallback(async (user, session) => {
     if (!mountedRef.current) return;
-
     try {
-      console.log('AuthContext: Initializing user', user?.email);
+      console.log('AuthContext: [initializeUser] START', user?.email);
       setUser(user);
       setSession(session);
       setIsAuthenticated(true);
@@ -151,6 +150,8 @@ export const AuthProvider = ({ children }) => {
         setUserProfile(null);
         setIsAuthenticated(false);
       }
+    } finally {
+      console.log('AuthContext: [initializeUser] END', user?.email);
     }
   }, []);
 
@@ -208,9 +209,12 @@ export const AuthProvider = ({ children }) => {
         const { data: { session: currentSession } } = await supabase.auth.getSession();
         if (currentSession?.user) {
           console.log('AuthContext: Found existing session for user:', currentSession.user.email);
-          await initializeUser(currentSession.user, currentSession);
-          setLoading(false);
-          console.log('AuthContext: Loading set to false after user init (initAuth)');
+          try {
+            await initializeUser(currentSession.user, currentSession);
+          } finally {
+            setLoading(false);
+            console.log('AuthContext: Loading set to false after user init (initAuth/finally)');
+          }
         } else {
           console.log('AuthContext: No existing session found');
           setLoading(false);
@@ -229,10 +233,13 @@ export const AuthProvider = ({ children }) => {
       if (!mountedRef.current) return;
       console.log('AuthContext: Auth state changed:', event);
       if (event === 'SIGNED_IN' && session?.user) {
-        await initializeUser(session.user, session);
-        addSecurityEvent('SIGNED_IN', 'User signed in successfully');
-        setLoading(false);
-        console.log('AuthContext: Loading set to false after user init (onAuthStateChange)');
+        try {
+          await initializeUser(session.user, session);
+          addSecurityEvent('SIGNED_IN', 'User signed in successfully');
+        } finally {
+          setLoading(false);
+          console.log('AuthContext: Loading set to false after user init (onAuthStateChange/finally)');
+        }
       } else if (event === 'SIGNED_OUT') {
         setUser(null);
         setSession(null);
