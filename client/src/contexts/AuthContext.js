@@ -33,6 +33,7 @@ export const AuthProvider = ({ children }) => {
   const initializingRef = useRef(false);
   const authListenerRef = useRef(null);
   const mountedRef = useRef(true);
+  const loadingRef = useRef(loading);
 
   // User roles and permissions mapping
   const userRoles = {
@@ -250,7 +251,7 @@ export const AuthProvider = ({ children }) => {
 
     // Set up fallback timeout
     const fallbackTimeout = setTimeout(() => {
-      if (mountedRef.current && loading) {
+      if (mountedRef.current && loadingRef.current) {
         console.log('AuthContext: Fallback timeout reached, stopping loading');
         console.log('AuthContext: Fallback debug:', {
           user,
@@ -596,6 +597,8 @@ export const AuthProvider = ({ children }) => {
       sessionTimeout,
     ],
   );
+
+  useEffect(() => { loadingRef.current = loading; }, [loading]);
 
   return (
     <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
