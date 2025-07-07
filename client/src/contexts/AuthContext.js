@@ -97,12 +97,25 @@ export const AuthProvider = ({ children }) => {
         preferences: {},
       };
 
+      // Test database connection first
+      try {
+        console.log('AuthContext: [initializeUser] Testing database connection...');
+        const { data: testData, error: testError } = await supabase
+          .from('profiles')
+          .select('count')
+          .limit(1);
+        console.log('AuthContext: [initializeUser] Database connection test:', { testData, testError });
+      } catch (testErr) {
+        console.warn('AuthContext: [initializeUser] Database connection test failed:', testErr);
+      }
+
       // Fetch profile with manual timeout
       try {
         console.log('AuthContext: [initializeUser] Fetching profile...');
         let profile = null;
         let error = null;
         try {
+          console.log('AuthContext: [initializeUser] Starting profile fetch for user ID:', user.id);
           const timeoutPromise = new Promise((_, reject) =>
             setTimeout(() => reject(new Error('Profile fetch timed out')), 5000),
           );
@@ -111,7 +124,9 @@ export const AuthProvider = ({ children }) => {
             .select('*')
             .eq('id', user.id)
             .single();
+          console.log('AuthContext: [initializeUser] Profile fetch promise created');
           const result = await Promise.race([fetchPromise, timeoutPromise]);
+          console.log('AuthContext: [initializeUser] Profile fetch completed:', result);
           // If fetchPromise resolves, result is { data, error }
           // If timeoutPromise rejects, it throws and is caught below
           profile = result.data;
@@ -136,6 +151,7 @@ export const AuthProvider = ({ children }) => {
           );
           setUserProfile(defaultProfile);
         } else {
+          console.log('AuthContext: [initializeUser] Profile set successfully:', profile);
           setUserProfile(profile);
         }
       } catch (error) {
@@ -146,6 +162,8 @@ export const AuthProvider = ({ children }) => {
         setUserProfile(defaultProfile);
       }
       console.log('AuthContext: [initializeUser] END', user?.email);
+      console.log('AuthContext: [initializeUser] Setting loading to false');
+      setLoading(false);
 
       // Load additional data in background (non-blocking)
       setTimeout(() => {
@@ -310,8 +328,15 @@ export const AuthProvider = ({ children }) => {
       console.log('AuthContext: Auth state changed:', event);
       if (event === 'SIGNED_IN' && session?.user) {
         try {
+          console.log('AuthContext: SIGNED_IN event, initializing user...');
           await initializeUser(session.user, session);
           addSecurityEvent('SIGNED_IN', 'User signed in successfully');
+        } catch (error) {
+          console.error('AuthContext: Error in SIGNED_IN handler:', error);
+          setUser(null);
+          setSession(null);
+          setUserProfile(null);
+          setIsAuthenticated(false);
         } finally {
           setLoading(false);
           console.log(
@@ -350,10 +375,22 @@ export const AuthProvider = ({ children }) => {
           user,
           session,
           isAuthenticated,
+          userProfile,
         });
         setLoading(false);
+        // If we have a user but no profile, set a default profile
+        if (user && !userProfile) {
+          console.log('AuthContext: Setting default profile due to timeout');
+          setUserProfile({
+            id: user.id,
+            email: user.email,
+            role: 'viewer',
+            permissions: ['view_projects', 'view_analytics'],
+            preferences: {},
+          });
+        }
       }
-    }, 7000); // Increase timeout to 7s for extra robustness
+    }, 10000); // Increase timeout to 10s for extra robustness
 
     return () => {
       if (authListenerRef.current) {

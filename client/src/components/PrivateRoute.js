@@ -18,7 +18,7 @@ const PrivateRoute = ({
   requiredRole = null,
   requiredPermissions = [],
 }) => {
-  const { isAuthenticated, loading, user, logout } = useAuth();
+  const { isAuthenticated, loading, user, userProfile, logout } = useAuth();
   const location = useLocation();
   const [sessionWarning, setSessionWarning] = useState(false);
   const [sessionExpired, setSessionExpired] = useState(false);
@@ -254,9 +254,9 @@ const PrivateRoute = ({
             <p className='text-sm text-muted-foreground'>
               <strong>Required Role:</strong> {requiredRole}
             </p>
-            {user?.role && (
+            {userProfile?.role && (
               <p className='text-sm text-muted-foreground'>
-                <strong>Your Role:</strong> {user?.role || 'Unknown'}
+                <strong>Your Role:</strong> {userProfile?.role || 'Unknown'}
               </p>
             )}
           </div>
@@ -268,26 +268,36 @@ const PrivateRoute = ({
   // Check if user has required role
   const hasRequiredRole = () => {
     if (!requiredRole) return true;
-    if (!user?.role) return false;
-    return user?.role === requiredRole || user?.role === 'admin';
+    if (!userProfile?.role) return false;
+    return userProfile?.role === requiredRole || userProfile?.role === 'admin';
   };
 
   // Check if user has required permissions
   const hasRequiredPermissions = () => {
     if (requiredPermissions.length === 0) return true;
-    if (!user?.permissions) return false;
+    if (!userProfile?.permissions) return false;
     return requiredPermissions.every(permission =>
-      user?.permissions?.includes(permission)
+      userProfile?.permissions?.includes(permission)
     );
   };
 
+  console.log('PrivateRoute: Checking auth Object', { loading, isAuthenticated, user: !!user, userProfile: !!userProfile });
+  
   if (loading || securityCheck) {
+    console.log('PrivateRoute: Still loading, showing loading screen');
     return <LoadingScreen />;
   }
 
-  if (!user) {
+  if (!isAuthenticated || !user) {
+    console.log('PrivateRoute: Not authenticated, redirecting to login');
     // Not authenticated, redirect to login
     return <Navigate to='/login' state={{ from: location }} replace />;
+  }
+
+  // If we have a user but no profile, still allow access (profile will be loaded)
+  if (!userProfile) {
+    console.log('PrivateRoute: User authenticated but no profile yet, showing loading');
+    return <LoadingScreen />;
   }
 
   if (!hasRequiredRole() || !hasRequiredPermissions()) {
