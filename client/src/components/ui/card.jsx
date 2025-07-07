@@ -81,7 +81,7 @@ const Card = React.forwardRef(
     },
     ref
   ) => {
-    const [setIsHovered] = React.useState(false);
+    const [isHovered, setIsHovered] = React.useState(false);
 
     return (
       <div

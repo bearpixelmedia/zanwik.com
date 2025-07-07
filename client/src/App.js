@@ -175,6 +175,21 @@ const RouteTransition = ({ children }) => {
   );
 };
 
+// Redirect authenticated users away from login page
+const AuthenticatedRedirect = ({ children }) => {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return <LoadingScreen message='Checking authentication...' />;
+  }
+
+  if (user) {
+    return <Navigate to='/dashboard' replace />;
+  }
+
+  return children;
+};
+
 // Enhanced Private Route with better loading and error handling
 const PrivateRoute = ({
   children,
@@ -183,23 +198,13 @@ const PrivateRoute = ({
 }) => {
   const { user, loading, hasPermission, hasRole } = useAuth();
 
-  console.log('PrivateRoute: Checking auth', {
-    user: !!user,
-    loading,
-    hasUser: !!user,
-  });
-
   if (loading) {
-    console.log('PrivateRoute: Still loading, showing loading screen');
     return <LoadingScreen message='Authenticating...' />;
   }
 
   if (!user) {
-    console.log('PrivateRoute: No user found, redirecting to login');
     return <Navigate to='/login' replace />;
   }
-
-  console.log('PrivateRoute: User authenticated, checking permissions');
 
   // Check role requirements
   if (requiredRole && !hasRole(requiredRole)) {
@@ -259,7 +264,6 @@ const PrivateRoute = ({
     );
   }
 
-  console.log('PrivateRoute: All checks passed, rendering children');
   return children;
 };
 
@@ -308,9 +312,8 @@ const AppLayout = ({ children }) => {
 
 // Performance monitoring hook
 const usePerformanceMonitoring = () => {
-  console.log('usePerformanceMonitoring: Starting');
   useEffect(() => {
-    console.log('usePerformanceMonitoring: Setting up observer');
+    // Monitor page load performance
     // Monitor page load performance
     if ('performance' in window) {
       const observer = new PerformanceObserver(list => {
@@ -334,11 +337,10 @@ const usePerformanceMonitoring = () => {
 
 // Analytics tracking hook
 const useAnalytics = () => {
-  console.log('useAnalytics: Starting');
   const location = useLocation();
 
   useEffect(() => {
-    console.log('useAnalytics: Setting up analytics');
+    // Track page views
     // Track page views
     if (process.env.NODE_ENV === 'production') {
       // Example: Google Analytics
@@ -356,11 +358,7 @@ const AnalyticsWrapper = () => {
 
 // Main App Component
 const App = () => {
-  console.log('App: Component starting');
-
   usePerformanceMonitoring();
-
-  console.log('App: About to render');
 
   return (
     <ErrorBoundary>
@@ -370,7 +368,14 @@ const App = () => {
           <div className='App'>
             <Routes>
               {/* Public Routes */}
-              <Route path='/login' element={<Login />} />
+              <Route 
+                path='/login' 
+                element={
+                  <AuthenticatedRedirect>
+                    <Login />
+                  </AuthenticatedRedirect>
+                } 
+              />
 
               {/* Protected Routes */}
               <Route

@@ -1,4 +1,4 @@
-console.log('AuthContext.js loaded - DEBUG UNIQUE');
+// AuthContext loaded
 import React, {
   createContext,
   useContext,
@@ -476,9 +476,11 @@ export const AuthProvider = ({ children }) => {
     return () => clearInterval(interval);
   }, [isAuthenticated, lastActivity, sessionTimeout, handleSessionTimeout]);
 
-  // Debug userProfile state changes
+  // Debug userProfile state changes - reduce logging
   useEffect(() => {
-    console.log('AuthContext: userProfile state changed:', userProfile);
+    if (userProfile) {
+      console.log('AuthContext: userProfile loaded:', userProfile.email);
+    }
   }, [userProfile]);
 
   // Login function

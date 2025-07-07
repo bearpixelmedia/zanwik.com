@@ -25,7 +25,7 @@ import {
 import { Button } from '../components/ui/button';
 import { useAuth } from '../contexts/AuthContext';
 const Login = () => {
-  console.log('Rendering Login');
+  // Remove excessive logging to prevent console spam
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -42,8 +42,8 @@ const Login = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  // Check if environment variables are set
-  const checkEnvironment = () => {
+  // Check if environment variables are set - memoized to prevent re-renders
+  const environmentCheck = React.useMemo(() => {
     if (
       !process.env.REACT_APP_SUPABASE_URL ||
       !process.env.REACT_APP_SUPABASE_ANON_KEY
@@ -55,7 +55,7 @@ const Login = () => {
       };
     }
     return { error: false };
-  };
+  }, []);
 
   // Handle account lockout
   useEffect(() => {
@@ -86,9 +86,8 @@ const Login = () => {
     }
 
     // Check environment first
-    const envCheck = checkEnvironment();
-    if (envCheck.error) {
-      setError(envCheck.message);
+    if (environmentCheck.error) {
+      setError(environmentCheck.message);
       setIsLoading(false);
       return;
     }
@@ -230,7 +229,7 @@ const Login = () => {
         </div>
 
         {/* Environment Check */}
-        {checkEnvironment().error && (
+        {environmentCheck.error && (
           <div className='mb-6 p-4 bg-destructive/10 border border-destructive/20 rounded-lg'>
             <div className='flex items-center space-x-2'>
               <AlertCircle className='h-4 w-4 text-destructive' />
@@ -239,7 +238,7 @@ const Login = () => {
               </p>
             </div>
             <p className='text-sm text-destructive mt-1'>
-              {checkEnvironment().message}
+              {environmentCheck.message}
             </p>
           </div>
         )}
@@ -508,7 +507,7 @@ const Login = () => {
                 <Button
                   type='submit'
                   className='w-full'
-                  disabled={isLoading || checkEnvironment().error || isLocked}
+                  disabled={isLoading || environmentCheck.error || isLocked}
                 >
                   {isLoading ? (
                     <>
