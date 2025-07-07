@@ -9,22 +9,28 @@ const filesToFix = [
   'src/pages/Projects.js',
   'src/pages/Deployment.js',
   'src/pages/Users.js',
-  'src/pages/Infrastructure.js'
+  'src/pages/Infrastructure.js',
 ];
 
 function fixEmptyImports(content) {
   // Remove empty import statements
   let newContent = content;
-  
+
   // Remove empty imports like "import {} from '../utils/';"
-  newContent = newContent.replace(/import\s*{\s*}\s*from\s*['"][^'"]*['"]\s*;?\s*/g, '');
-  
+  newContent = newContent.replace(
+    /import\s*{\s*}\s*from\s*['"][^'"]*['"]\s*;?\s*/g,
+    '',
+  );
+
   // Remove incomplete imports like "import from '../utils/';"
-  newContent = newContent.replace(/import\s+from\s*['"][^'"]*['"]\s*;?\s*/g, '');
-  
+  newContent = newContent.replace(
+    /import\s+from\s*['"][^'"]*['"]\s*;?\s*/g,
+    '',
+  );
+
   // Clean up multiple empty lines
   newContent = newContent.replace(/\n\s*\n\s*\n/g, '\n\n');
-  
+
   return newContent;
 }
 
@@ -33,12 +39,12 @@ console.log('🚀 Fixing empty imports...');
 
 for (const file of filesToFix) {
   const filePath = path.join(process.cwd(), file);
-  
+
   if (!fs.existsSync(filePath)) {
     console.log(`⚠️  File not found: ${file}`);
     continue;
   }
-  
+
   try {
     let content = fs.readFileSync(filePath, 'utf8');
     content = fixEmptyImports(content);
@@ -49,4 +55,4 @@ for (const file of filesToFix) {
   }
 }
 
-console.log('🎉 Empty imports fixed!'); 
+console.log('🎉 Empty imports fixed!');

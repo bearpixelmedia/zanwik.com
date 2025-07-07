@@ -18,12 +18,7 @@ module.exports = {
     ecmaVersion: 12,
     sourceType: 'module',
   },
-  plugins: [
-    'react',
-    'jsx-a11y',
-    '@typescript-eslint',
-    'prettier',
-  ],
+  plugins: ['react', 'jsx-a11y', '@typescript-eslint', 'prettier'],
   rules: {
     // React rules
     'react/react-in-jsx-scope': 'off',
@@ -90,9 +85,9 @@ module.exports = {
     'no-trailing-spaces': 'error',
     'eol-last': 'error',
     'comma-dangle': ['error', 'always-multiline'],
-    'semi': ['error', 'always'],
-    'quotes': ['error', 'single', { avoidEscape: true }],
-    'indent': ['error', 2, { SwitchCase: 1 }],
+    semi: ['error', 'always'],
+    quotes: ['error', 'single', { avoidEscape: true }],
+    indent: ['error', 2, { SwitchCase: 1 }],
     'object-curly-spacing': ['error', 'always'],
     'array-bracket-spacing': ['error', 'never'],
     'comma-spacing': ['error', { before: false, after: true }],
@@ -143,4 +138,4 @@ module.exports = {
       },
     },
   ],
-}; 
+};

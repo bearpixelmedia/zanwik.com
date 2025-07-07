@@ -1,1 +1,166 @@
-"use strict";(self.webpackChunkumbrella_dashboard_client=self.webpackChunkumbrella_dashboard_client||[]).push([[554],{554:(e,t,a)=>{a.r(t),a.d(t,{default:()=>r});var s=a(555),l=a(950),c=a(813),n=a(414);const r=()=>{const[e,t]=(0,l.useState)([]),[a,r]=(0,l.useState)(!0),[d,i]=(0,l.useState)(""),[o,x]=(0,l.useState)(!1),[u,h]=(0,l.useState)({name:"",status:"planning"});(0,l.useEffect)(()=>{(async()=>{r(!0),i("");try{const e=await c.db.projects.getAll();t(e)}catch(e){i("Failed to load projects")}r(!1)})()},[]);return(0,n.jsxs)("div",{className:"max-w-2xl mx-auto p-4",children:[(0,n.jsxs)("div",{className:"flex justify-between items-center mb-4",children:[(0,n.jsx)("h1",{className:"text-2xl font-bold",children:"Projects"}),(0,n.jsx)("button",{onClick:()=>x(e=>!e),className:"bg-primary text-white px-4 py-2 rounded",children:o?"Cancel":"New Project"})]}),o&&(0,n.jsxs)("form",{onSubmit:async e=>{e.preventDefault(),i("");try{await c.db.projects.create(u),h({name:"",status:"planning"}),x(!1);const e=await c.db.projects.getAll();t(e)}catch(a){i("Failed to create project")}},className:"mb-4 flex gap-2",children:[(0,n.jsx)("input",{className:"border px-2 py-1 rounded flex-1",placeholder:"Project name",value:u.name,onChange:e=>h(t=>(0,s.A)((0,s.A)({},t),{},{name:e.target.value})),required:!0}),(0,n.jsxs)("select",{className:"border px-2 py-1 rounded",value:u.status,onChange:e=>h(t=>(0,s.A)((0,s.A)({},t),{},{status:e.target.value})),children:[(0,n.jsx)("option",{value:"planning",children:"Planning"}),(0,n.jsx)("option",{value:"active",children:"Active"}),(0,n.jsx)("option",{value:"completed",children:"Completed"})]}),(0,n.jsx)("button",{type:"submit",className:"bg-green-600 text-white px-3 py-1 rounded",children:"Create"})]}),a?(0,n.jsx)("div",{children:"Loading..."}):d?(0,n.jsx)("div",{className:"text-red-600",children:d}):(0,n.jsxs)("table",{className:"w-full border mt-2",children:[(0,n.jsx)("thead",{children:(0,n.jsxs)("tr",{className:"bg-gray-100",children:[(0,n.jsx)("th",{className:"p-2 text-left",children:"Name"}),(0,n.jsx)("th",{className:"p-2 text-left",children:"Status"}),(0,n.jsx)("th",{className:"p-2 text-left",children:"Created"})]})}),(0,n.jsx)("tbody",{children:e.map(e=>(0,n.jsxs)("tr",{className:"border-t",children:[(0,n.jsx)("td",{className:"p-2",children:e.name}),(0,n.jsx)("td",{className:"p-2",children:e.status}),(0,n.jsx)("td",{className:"p-2",children:e.created_at?new Date(e.created_at).toLocaleDateString():""})]},e.id))})]})]})}}}]);
+'use strict';
+(self.webpackChunkumbrella_dashboard_client =
+  self.webpackChunkumbrella_dashboard_client || []).push([
+  [554],
+  {
+    554: (e, t, a) => {
+      a.r(t), a.d(t, { default: () => r });
+      const s = a(555),
+        l = a(950),
+        c = a(813),
+        n = a(414);
+      const r = () => {
+        const [e, t] = (0, l.useState)([]),
+          [a, r] = (0, l.useState)(!0),
+          [d, i] = (0, l.useState)(''),
+          [o, x] = (0, l.useState)(!1),
+          [u, h] = (0, l.useState)({ name: '', status: 'planning' });
+        (0, l.useEffect)(() => {
+          (async () => {
+            r(!0), i('');
+            try {
+              const e = await c.db.projects.getAll();
+              t(e);
+            } catch (e) {
+              i('Failed to load projects');
+            }
+            r(!1);
+          })();
+        }, []);
+        return (0, n.jsxs)('div', {
+          className: 'max-w-2xl mx-auto p-4',
+          children: [
+            (0, n.jsxs)('div', {
+              className: 'flex justify-between items-center mb-4',
+              children: [
+                (0, n.jsx)('h1', {
+                  className: 'text-2xl font-bold',
+                  children: 'Projects',
+                }),
+                (0, n.jsx)('button', {
+                  onClick: () => x(e => !e),
+                  className: 'bg-primary text-white px-4 py-2 rounded',
+                  children: o ? 'Cancel' : 'New Project',
+                }),
+              ],
+            }),
+            o &&
+              (0, n.jsxs)('form', {
+                onSubmit: async e => {
+                  e.preventDefault(), i('');
+                  try {
+                    await c.db.projects.create(u),
+                      h({ name: '', status: 'planning' }),
+                      x(!1);
+                    const e = await c.db.projects.getAll();
+                    t(e);
+                  } catch (a) {
+                    i('Failed to create project');
+                  }
+                },
+                className: 'mb-4 flex gap-2',
+                children: [
+                  (0, n.jsx)('input', {
+                    className: 'border px-2 py-1 rounded flex-1',
+                    placeholder: 'Project name',
+                    value: u.name,
+                    onChange: e =>
+                      h(t =>
+                        (0, s.A)((0, s.A)({}, t), {}, { name: e.target.value })
+                      ),
+                    required: !0,
+                  }),
+                  (0, n.jsxs)('select', {
+                    className: 'border px-2 py-1 rounded',
+                    value: u.status,
+                    onChange: e =>
+                      h(t =>
+                        (0, s.A)(
+                          (0, s.A)({}, t),
+                          {},
+                          { status: e.target.value }
+                        )
+                      ),
+                    children: [
+                      (0, n.jsx)('option', {
+                        value: 'planning',
+                        children: 'Planning',
+                      }),
+                      (0, n.jsx)('option', {
+                        value: 'active',
+                        children: 'Active',
+                      }),
+                      (0, n.jsx)('option', {
+                        value: 'completed',
+                        children: 'Completed',
+                      }),
+                    ],
+                  }),
+                  (0, n.jsx)('button', {
+                    type: 'submit',
+                    className: 'bg-green-600 text-white px-3 py-1 rounded',
+                    children: 'Create',
+                  }),
+                ],
+              }),
+            a
+              ? (0, n.jsx)('div', { children: 'Loading...' })
+              : d
+              ? (0, n.jsx)('div', { className: 'text-red-600', children: d })
+              : (0, n.jsxs)('table', {
+                  className: 'w-full border mt-2',
+                  children: [
+                    (0, n.jsx)('thead', {
+                      children: (0, n.jsxs)('tr', {
+                        className: 'bg-gray-100',
+                        children: [
+                          (0, n.jsx)('th', {
+                            className: 'p-2 text-left',
+                            children: 'Name',
+                          }),
+                          (0, n.jsx)('th', {
+                            className: 'p-2 text-left',
+                            children: 'Status',
+                          }),
+                          (0, n.jsx)('th', {
+                            className: 'p-2 text-left',
+                            children: 'Created',
+                          }),
+                        ],
+                      }),
+                    }),
+                    (0, n.jsx)('tbody', {
+                      children: e.map(e =>
+                        (0, n.jsxs)(
+                          'tr',
+                          {
+                            className: 'border-t',
+                            children: [
+                              (0, n.jsx)('td', {
+                                className: 'p-2',
+                                children: e.name,
+                              }),
+                              (0, n.jsx)('td', {
+                                className: 'p-2',
+                                children: e.status,
+                              }),
+                              (0, n.jsx)('td', {
+                                className: 'p-2',
+                                children: e.created_at
+                                  ? new Date(e.created_at).toLocaleDateString()
+                                  : '',
+                              }),
+                            ],
+                          },
+                          e.id
+                        )
+                      ),
+                    }),
+                  ],
+                }),
+          ],
+        });
+      };
+    },
+  },
+]);
