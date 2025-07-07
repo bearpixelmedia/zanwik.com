@@ -36,63 +36,7 @@ const Security = lazy(() => import('./pages/Security'));
 const Performance = lazy(() => import('./pages/Performance'));
 const Alerts = lazy(() => import('./pages/Alerts'));
 
-// Error Boundary Component
-class ErrorBoundary extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { error: null, errorInfo: null };
-  }
 
-  static getDerivedStateFromError(error) {
-    return { error };
-  }
-
-  componentDidCatch(error, errorInfo) {
-    this.setState({
-      error: error,
-      errorInfo: errorInfo,
-    });
-
-    // Log error to console in all environments
-    console.error('Error caught by boundary:', error, errorInfo);
-
-    // Optionally send error to a remote logging service
-    if (window && window.fetch) {
-      try {
-        fetch('/error-log', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            error: error.toString(),
-            errorInfo: errorInfo?.componentStack,
-            url: window.location.href,
-            userAgent: navigator.userAgent,
-            timestamp: new Date().toISOString(),
-          }),
-        });
-      } catch (e) {
-        // Ignore logging errors
-      }
-    }
-  }
-
-  render() {
-    if (this.state.error) {
-      return (
-        <div style={{ padding: 32, color: 'red', background: '#fff0f0' }}>
-          <h2>Something went wrong.</h2>
-          <pre style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}>
-            {this.state.error && this.state.error.toString()}
-            {'\n'}
-            {this.state.errorInfo && this.state.errorInfo.componentStack}
-          </pre>
-          <p>Please contact support with the above error message.</p>
-        </div>
-      );
-    }
-    return this.props.children;
-  }
-}
 
 // Enhanced Loading Component
 const LoadingScreen = ({ message = 'Loading...' }) => (
@@ -364,11 +308,10 @@ const App = () => {
   usePerformanceMonitoring();
 
   return (
-    <ErrorBoundary>
-      <AuthProvider>
-        <Router>
-          <AnalyticsWrapper />
-          <div className='App'>
+    <AuthProvider>
+      <Router>
+        <AnalyticsWrapper />
+        <div className='App'>
             <Routes>
               {/* Public Routes */}
               <Route 
@@ -519,7 +462,6 @@ const App = () => {
           </div>
         </Router>
       </AuthProvider>
-    </ErrorBoundary>
   );
 };
 
