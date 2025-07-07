@@ -821,7 +821,7 @@ const Users = () => {
             <h2 className='text-xl font-bold mb-4'>Invite New User</h2>
             <div className='space-y-4'>
               <div>
-                <label htmlFor="name">Name</label>
+                <label htmlFor='name'>Name</label>
                 <input
                   type='text'
                   value={newUser.name}
@@ -833,7 +833,7 @@ const Users = () => {
                 />
               </div>
               <div>
-                <label htmlFor="email">Email</label>
+                <label htmlFor='email'>Email</label>
                 <input
                   type='email'
                   value={newUser.email}
@@ -845,9 +845,7 @@ const Users = () => {
                 />
               </div>
               <div>
-                <label htmlFor="-department-">
-                  Department
-                </label>
+                <label htmlFor='-department-'>Department</label>
                 <select
                   value={newUser.department}
                   onChange={e =>
@@ -864,7 +862,7 @@ const Users = () => {
                 </select>
               </div>
               <div>
-                <label htmlFor="role">Role</label>
+                <label htmlFor='role'>Role</label>
                 <select
                   value={newUser.role}
                   onChange={e =>
@@ -1050,7 +1048,7 @@ const Users = () => {
                         handleUpdateUserRole(
                           selectedUser.id,
                           selectedUser.role === 'admin' ? 'user' : 'admin',
-                      )
+                        )
                       }
                     >
                       <Key className='h-4 w-4 mr-2' />

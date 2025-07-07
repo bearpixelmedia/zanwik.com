@@ -315,7 +315,7 @@ const Infrastructure = () => {
       ? infrastructureData.services
       : infrastructureData.services.filter(
           service => service.status === selectedService,
-      );
+        );
 
   if (loading) {
     return (
@@ -719,9 +719,7 @@ const Infrastructure = () => {
             </CardHeader>
             <CardContent className='space-y-4'>
               <div>
-                <label htmlFor="-service-name-">
-                  Service Name
-                </label>
+                <label htmlFor='-service-name-'>Service Name</label>
                 <input
                   type='text'
                   placeholder='Enter service name'
@@ -729,9 +727,7 @@ const Infrastructure = () => {
                 />
               </div>
               <div>
-                <label htmlFor="-service-type-">
-                  Service Type
-                </label>
+                <label htmlFor='-service-type-'>Service Type</label>
                 <select className='w-full mt-1 px-3 py-2 border border-input rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary'>
                   <option value='server'>Web Server</option>
                   <option value='database'>Database</option>
@@ -740,9 +736,7 @@ const Infrastructure = () => {
                 </select>
               </div>
               <div>
-                <label htmlFor="-version-">
-                  Version
-                </label>
+                <label htmlFor='-version-'>Version</label>
                 <input
                   type='text'
                   placeholder='v1.0.0'
@@ -750,9 +744,7 @@ const Infrastructure = () => {
                 />
               </div>
               <div>
-                <label htmlFor="-environment-">
-                  Environment
-                </label>
+                <label htmlFor='-environment-'>Environment</label>
                 <select className='w-full mt-1 px-3 py-2 border border-input rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary'>
                   <option value='production'>Production</option>
                   <option value='staging'>Staging</option>

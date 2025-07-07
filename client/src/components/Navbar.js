@@ -41,13 +41,12 @@ import { Button } from './ui/button';
 const Navbar = () => {
   const {
     user,
-    
+
     logout,
     getUserRoleInfo,
     getSessionInfo,
     refreshSession,
     hasPermission,
-    
   } = useAuth();
 
   const [isProfileOpen, setIsProfileOpen] = useState(false);

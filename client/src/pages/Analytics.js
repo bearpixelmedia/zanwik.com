@@ -135,7 +135,7 @@ const Analytics = () => {
   };
 
   // Generate chart data for visualization
-  const generateChartData = (revenueData, ) => {
+  const generateChartData = revenueData => {
     if (!revenueData || revenueData.length === 0) return [];
 
     return revenueData.map(item => ({
@@ -448,7 +448,7 @@ const Analytics = () => {
                         : selectedMetric === 'users'
                         ? d.users || 0
                         : Math.abs(d.growth || 0),
-                    ),
+                    )
                   );
                   const currentValue =
                     selectedMetric === 'revenue'

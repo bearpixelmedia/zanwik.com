@@ -191,7 +191,7 @@ const Monitoring = () => {
       setAlerts(prevAlerts =>
         prevAlerts.map(alert =>
           alert.id === alertId ? { ...alert, status: 'acknowledged' } : alert,
-        )
+        ),
       );
     } catch (err) {
       console.error('Failed to acknowledge alert:', err);

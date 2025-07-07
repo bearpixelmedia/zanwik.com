@@ -76,7 +76,7 @@ const responseInterceptor = async (response, config) => {
   // Log performance data
   if (responseTime > 1000) {
     console.warn(
-      `Slow API request: ${config.requestId} took ${responseTime.toFixed(2)}ms`,
+      `Slow API request: ${config.requestId} took ${responseTime.toFixed(2)}ms`
     );
   }
 
@@ -455,7 +455,7 @@ export const initializeWebSocket = userId => {
   const connect = () => {
     try {
       wsConnection = new WebSocket(
-        `${API_BASE_URL.replace('http', 'ws')}/ws?userId=${userId}`,
+        `${API_BASE_URL.replace('http', 'ws')}/ws?userId=${userId}`
       );
 
       wsConnection.onopen = () => {

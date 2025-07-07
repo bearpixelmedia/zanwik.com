@@ -11,7 +11,7 @@ const supabaseAnonKey =
 // Validate environment variables
 if (!supabaseUrl || !supabaseAnonKey) {
   console.error(
-    'Missing Supabase environment variables. Please check your .env file.',
+    'Missing Supabase environment variables. Please check your .env file.'
   );
   throw new Error('Supabase configuration is incomplete');
 }
@@ -244,7 +244,7 @@ export const db = {
           console.error('Get project by ID error:', error);
           throw error;
         }
-        return ;
+        return;
       } catch (error) {
         console.error('Get project by ID failed:', error);
         throw error;
@@ -267,7 +267,7 @@ export const db = {
           throw error;
         }
         console.log('✅ Project created successfully');
-        return ;
+        return;
       } catch (error) {
         console.error('Create project failed:', error);
         throw error;
@@ -290,7 +290,7 @@ export const db = {
           throw error;
         }
         console.log('✅ Project updated successfully');
-        return ;
+        return;
       } catch (error) {
         console.error('Update project failed:', error);
         throw error;
@@ -319,7 +319,7 @@ export const db = {
           console.error('Get project stats error:', error);
           throw error;
         }
-        return ;
+        return;
       } catch (error) {
         console.error('Get project stats failed:', error);
         throw error;

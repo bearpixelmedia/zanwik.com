@@ -545,9 +545,7 @@ const Projects = () => {
             </CardHeader>
             <CardContent className='space-y-4'>
               <div>
-                <label htmlFor="-project-name-">
-                  Project Name
-                </label>
+                <label htmlFor='-project-name-'>Project Name</label>
                 <input
                   type='text'
                   placeholder='Enter project name'
@@ -559,9 +557,7 @@ const Projects = () => {
                 />
               </div>
               <div>
-                <label htmlFor="-description-">
-                  Description
-                </label>
+                <label htmlFor='-description-'>Description</label>
                 <textarea
                   placeholder='Describe your project'
                   rows={3}
@@ -576,9 +572,7 @@ const Projects = () => {
                 />
               </div>
               <div>
-                <label htmlFor="-category-">
-                  Category
-                </label>
+                <label htmlFor='-category-'>Category</label>
                 <select
                   value={newProject.category}
                   onChange={e =>
@@ -637,9 +631,7 @@ const Projects = () => {
             </CardHeader>
             <CardContent className='space-y-4'>
               <div>
-                <label htmlFor="-project-name-">
-                  Project Name
-                </label>
+                <label htmlFor='-project-name-'>Project Name</label>
                 <input
                   type='text'
                   placeholder='Enter project name'
@@ -654,9 +646,7 @@ const Projects = () => {
                 />
               </div>
               <div>
-                <label htmlFor="-description-">
-                  Description
-                </label>
+                <label htmlFor='-description-'>Description</label>
                 <textarea
                   placeholder='Describe your project'
                   rows={3}
@@ -672,9 +662,7 @@ const Projects = () => {
               </div>
               <div className='grid grid-cols-2 gap-4'>
                 <div>
-                  <label htmlFor="-category-">
-                    Category
-                  </label>
+                  <label htmlFor='-category-'>Category</label>
                   <select
                     value={editingProject.category}
                     onChange={e =>
@@ -693,9 +681,7 @@ const Projects = () => {
                   </select>
                 </div>
                 <div>
-                  <label htmlFor="-status-">
-                    Status
-                  </label>
+                  <label htmlFor='-status-'>Status</label>
                   <select
                     value={editingProject.status}
                     onChange={e =>
@@ -715,9 +701,7 @@ const Projects = () => {
               </div>
               <div className='grid grid-cols-2 gap-4'>
                 <div>
-                  <label htmlFor="-progress--">
-                    Progress (%)
-                  </label>
+                  <label htmlFor='-progress--'>Progress (%)</label>
                   <input
                     type='number'
                     min='0'
@@ -733,9 +717,7 @@ const Projects = () => {
                   />
                 </div>
                 <div>
-                  <label htmlFor="-priority-">
-                    Priority
-                  </label>
+                  <label htmlFor='-priority-'>Priority</label>
                   <select
                     value={editingProject.priority || 'medium'}
                     onChange={e =>

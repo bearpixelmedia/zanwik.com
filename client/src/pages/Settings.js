@@ -307,9 +307,7 @@ const Settings = () => {
           <CardContent className='space-y-4'>
             <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
               <div>
-                <label htmlFor="-first-name-">
-                  First Name
-                </label>
+                <label htmlFor='-first-name-'>First Name</label>
                 <input
                   type='text'
                   value={profile.firstName}
@@ -320,9 +318,7 @@ const Settings = () => {
                 />
               </div>
               <div>
-                <label htmlFor="-last-name-">
-                  Last Name
-                </label>
+                <label htmlFor='-last-name-'>Last Name</label>
                 <input
                   type='text'
                   value={profile.lastName}
@@ -334,9 +330,7 @@ const Settings = () => {
               </div>
             </div>
             <div>
-              <label htmlFor="-email-">
-                Email
-              </label>
+              <label htmlFor='-email-'>Email</label>
               <input
                 type='email'
                 value={profile.email}
@@ -346,9 +340,7 @@ const Settings = () => {
             </div>
             <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
               <div>
-                <label htmlFor="-company-">
-                  Company
-                </label>
+                <label htmlFor='-company-'>Company</label>
                 <input
                   type='text'
                   value={profile.company}
@@ -359,9 +351,7 @@ const Settings = () => {
                 />
               </div>
               <div>
-                <label htmlFor="-phone-">
-                  Phone
-                </label>
+                <label htmlFor='-phone-'>Phone</label>
                 <input
                   type='tel'
                   value={profile.phone}
@@ -374,9 +364,7 @@ const Settings = () => {
             </div>
             <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
               <div>
-                <label htmlFor="-timezone-">
-                  Timezone
-                </label>
+                <label htmlFor='-timezone-'>Timezone</label>
                 <select
                   value={profile.timezone}
                   onChange={e =>
@@ -395,9 +383,7 @@ const Settings = () => {
                 </select>
               </div>
               <div>
-                <label htmlFor="-language-">
-                  Language
-                </label>
+                <label htmlFor='-language-'>Language</label>
                 <select
                   value={profile.language}
                   onChange={e =>
@@ -422,9 +408,7 @@ const Settings = () => {
                   onChange={e => setAutoSave(e.target.checked)}
                   className='rounded border-gray-300'
                 />
-                <label htmlFor="-auto-save-changes-">
-                  Auto-save changes
-                </label>
+                <label htmlFor='-auto-save-changes-'>Auto-save changes</label>
               </div>
               <Button onClick={handleProfileSave} disabled={saving}>
                 {saving ? (
@@ -1151,9 +1135,7 @@ const Settings = () => {
             </div>
             {showApiKey && (
               <div>
-                <label htmlFor="-api-key-">
-                  API Key
-                </label>
+                <label htmlFor='-api-key-'>API Key</label>
                 <input
                   type='text'
                   value={apiSettings.apiKey}
@@ -1180,9 +1162,7 @@ const Settings = () => {
               </Button>
             </div>
             <div>
-              <label htmlFor="-webhook-url-">
-                Webhook URL
-              </label>
+              <label htmlFor='-webhook-url-'>Webhook URL</label>
               <input
                 type='text'
                 value={apiSettings.webhookUrl}
@@ -1258,9 +1238,7 @@ const Settings = () => {
               </Button>
             </div>
             <div>
-              <label htmlFor="-last-used-">
-                Last Used
-              </label>
+              <label htmlFor='-last-used-'>Last Used</label>
               <input
                 type='text'
                 value={apiSettings.lastUsed}
@@ -1485,9 +1463,7 @@ const Settings = () => {
             </CardHeader>
             <CardContent className='space-y-4'>
               <div>
-                <label htmlFor="-card-number-">
-                  Card Number
-                </label>
+                <label htmlFor='-card-number-'>Card Number</label>
                 <input
                   type='text'
                   placeholder='1234 5678 9012 3456'
@@ -1500,9 +1476,7 @@ const Settings = () => {
               </div>
               <div className='grid grid-cols-2 gap-4'>
                 <div>
-                  <label htmlFor="-expiry-date-">
-                    Expiry Date
-                  </label>
+                  <label htmlFor='-expiry-date-'>Expiry Date</label>
                   <input
                     type='text'
                     placeholder='MM/YY'
@@ -1514,9 +1488,7 @@ const Settings = () => {
                   />
                 </div>
                 <div>
-                  <label htmlFor="-cvc-">
-                    CVC
-                  </label>
+                  <label htmlFor='-cvc-'>CVC</label>
                   <input
                     type='text'
                     placeholder='123'
@@ -1568,9 +1540,7 @@ const Settings = () => {
             </CardHeader>
             <CardContent className='space-y-4'>
               <div>
-                <label htmlFor="-email-address-">
-                  Email Address
-                </label>
+                <label htmlFor='-email-address-'>Email Address</label>
                 <input
                   type='email'
                   placeholder='colleague@company.com'
@@ -1580,9 +1550,7 @@ const Settings = () => {
                 />
               </div>
               <div>
-                <label htmlFor="-role-">
-                  Role
-                </label>
+                <label htmlFor='-role-'>Role</label>
                 <select
                   value={inviteRole}
                   onChange={e => setInviteRole(e.target.value)}

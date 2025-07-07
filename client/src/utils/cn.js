@@ -39,7 +39,7 @@ export const utils = {
       ...options,
     };
     return new Intl.DateTimeFormat('en-US', defaultOptions).format(
-      new Date(date),
+      new Date(date)
     );
   },
 
@@ -332,7 +332,7 @@ export const utils = {
   // Device utilities
   isMobile: () => {
     return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-      navigator.userAgent,
+      navigator.userAgent
     );
   },
 

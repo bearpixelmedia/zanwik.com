@@ -737,9 +737,7 @@ const Deployment = () => {
             </CardHeader>
             <CardContent className='space-y-4'>
               <div>
-                <label htmlFor="-application-">
-                  Application
-                </label>
+                <label htmlFor='-application-'>Application</label>
                 <select className='w-full mt-1 px-3 py-2 border border-input rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary'>
                   <option value=''>Select Application</option>
                   <option value='ai-content'>AI Content Generator</option>
@@ -748,18 +746,14 @@ const Deployment = () => {
                 </select>
               </div>
               <div>
-                <label htmlFor="-environment-">
-                  Environment
-                </label>
+                <label htmlFor='-environment-'>Environment</label>
                 <select className='w-full mt-1 px-3 py-2 border border-input rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary'>
                   <option value='staging'>Staging</option>
                   <option value='production'>Production</option>
                 </select>
               </div>
               <div>
-                <label htmlFor="-branch-">
-                  Branch
-                </label>
+                <label htmlFor='-branch-'>Branch</label>
                 <input
                   type='text'
                   placeholder='main'

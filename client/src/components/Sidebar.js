@@ -53,7 +53,7 @@ import { cn } from '../utils/cn';
 const Sidebar = () => {
   const {
     logout,
-    
+
     getUserRoleInfo,
     hasPermission,
     getSessionInfo,
