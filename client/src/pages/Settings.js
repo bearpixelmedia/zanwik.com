@@ -35,7 +35,7 @@ const Settings = () => {
     } catch {
       setError('Failed to save');
     }
-    setSaving(false);
+      setSaving(false);
   };
 
   if (loading) return <div className='p-4'>Loading...</div>;
@@ -45,11 +45,11 @@ const Settings = () => {
     <div className='max-w-md mx-auto p-4'>
       <h1 className='text-2xl font-bold mb-4'>Settings</h1>
       <form onSubmit={handleSave} className='space-y-4'>
-        <div>
+      <div>
           <label className='block text-sm mb-1'>Email</label>
           <input value={user.email} disabled className='w-full border p-2 rounded bg-gray-100' />
         </div>
-        <div>
+              <div>
           <label className='block text-sm mb-1'>Display Name</label>
           <input value={name} onChange={e => setName(e.target.value)} className='w-full border p-2 rounded' />
         </div>

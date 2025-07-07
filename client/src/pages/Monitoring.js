@@ -12,11 +12,11 @@ const Monitoring = () => {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    setLoading(true);
+        setLoading(true);
     setError('');
     setTimeout(() => {
       setMetrics(mockMetrics);
-      setLoading(false);
+        setLoading(false);
     }, 800);
   }, []);
 

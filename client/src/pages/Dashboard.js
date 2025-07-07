@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import {
   TrendingUp,
@@ -39,7 +39,6 @@ import { Button } from '../components/ui/button';
 import { useAuth } from '../contexts/AuthContext';
 import api from '../utils/api';
 const Dashboard = () => {
-  console.log('Rendering Dashboard');
   const { user } = useAuth();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -55,22 +54,7 @@ const Dashboard = () => {
     systemHealth: {},
   });
 
-  useEffect(() => {
-    fetchDashboardData();
-  }, [selectedTimeRange]);
-
-  // Auto-refresh functionality
-  useEffect(() => {
-    if (!autoRefresh) return;
-
-    const interval = setInterval(() => {
-      fetchDashboardData();
-    }, refreshInterval * 1000);
-
-    return () => clearInterval(interval);
-  }, [autoRefresh, refreshInterval]);
-
-  const fetchDashboardData = async () => {
+  const fetchDashboardData = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -324,7 +308,22 @@ const Dashboard = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [selectedTimeRange]);
+
+  useEffect(() => {
+    fetchDashboardData();
+  }, [fetchDashboardData]);
+
+  // Auto-refresh functionality
+  useEffect(() => {
+    if (!autoRefresh) return;
+
+    const interval = setInterval(() => {
+      fetchDashboardData();
+    }, refreshInterval * 1000);
+
+    return () => clearInterval(interval);
+  }, [autoRefresh, refreshInterval, fetchDashboardData]);
 
   const getActivityIcon = type => {
     switch (type) {

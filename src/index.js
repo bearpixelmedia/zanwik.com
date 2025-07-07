@@ -108,7 +108,7 @@ app.use(helmet({
       scriptSrc: ["'self'", "'unsafe-inline'", "https://www.googletagmanager.com"],
       connectSrc: [
         "'self'",
-        "https://ynssliolfybuczopjfgn.supabase.co",
+        "https://fxzwnjmzhdynsatvakim.supabase.co",
         "https://www.google-analytics.com",
         "https://analytics.google.com",
         "https://money-production-55af.up.railway.app",
@@ -440,7 +440,7 @@ app.get('*', (req, res) => {
 
 console.log('Express app setup completed');
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 
 // Add global error handlers at the very top
 process.on('uncaughtException', (err) => {

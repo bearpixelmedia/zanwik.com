@@ -7,18 +7,18 @@ const Users = () => {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    const fetchUsers = async () => {
+  const fetchUsers = async () => {
       setLoading(true);
       setError('');
       try {
         const data = await db.users.getAll();
         setUsers(data);
-      } catch (err) {
-        setError('Failed to load users');
+    } catch (err) {
+      setError('Failed to load users');
       }
       setLoading(false);
     };
-    fetchUsers();
+      fetchUsers();
   }, []);
 
   return (

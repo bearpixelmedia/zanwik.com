@@ -9,7 +9,7 @@ const Projects = () => {
   const [form, setForm] = useState({ name: '', status: 'planning' });
 
   useEffect(() => {
-    const fetchProjects = async () => {
+  const fetchProjects = async () => {
       setLoading(true);
       setError('');
       try {
@@ -55,15 +55,15 @@ const Projects = () => {
             onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
             required
           />
-          <select
+        <select
             className='border px-2 py-1 rounded'
             value={form.status}
             onChange={e => setForm(f => ({ ...f, status: e.target.value }))}
-          >
-            <option value='planning'>Planning</option>
-            <option value='active'>Active</option>
+                  >
+                    <option value='planning'>Planning</option>
+                    <option value='active'>Active</option>
             <option value='completed'>Completed</option>
-          </select>
+                  </select>
           <button type='submit' className='bg-green-600 text-white px-3 py-1 rounded'>Create</button>
         </form>
       )}

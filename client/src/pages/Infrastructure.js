@@ -12,7 +12,7 @@ const Infrastructure = () => {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    setLoading(true);
+      setLoading(true);
     setError('');
     // Mock fetch
     setTimeout(() => {

@@ -13,7 +13,7 @@ const Analytics = () => {
       try {
         const data = await db.analytics.getOverview();
         setOverview(data);
-      } catch (err) {
+    } catch (err) {
         setError('Failed to load analytics');
       }
       setLoading(false);
@@ -37,11 +37,11 @@ const Analytics = () => {
           <div className='p-4 border rounded'>
             <div className='text-gray-500 text-sm'>Total Users</div>
             <div className='text-2xl font-bold'>{overview.users?.toLocaleString() || 0}</div>
-          </div>
+        </div>
           <div className='p-4 border rounded'>
             <div className='text-gray-500 text-sm'>Growth</div>
             <div className='text-2xl font-bold'>{overview.growth || 0}%</div>
-          </div>
+      </div>
         </div>
       ) : (
         <div>No analytics data available.</div>
