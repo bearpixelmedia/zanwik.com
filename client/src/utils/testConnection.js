@@ -1,5 +1,5 @@
-import { healthCheck } from './api';
-import { supabase, testConnection } from './supabase';
+import { healthCheck } from './api.js';
+import { supabase, testConnection } from './supabase.js';
 
 export const testBackendConnection = async () => {
   try {
