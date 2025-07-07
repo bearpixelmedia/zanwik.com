@@ -76,7 +76,10 @@ export const AuthProvider = ({ children }) => {
 
   // Initialize user data
   const initializeUser = useCallback(async (user, session) => {
-    console.log('AuthContext: [initializeUser] called, mountedRef.current:', mountedRef.current);
+    console.log(
+      'AuthContext: [initializeUser] called, mountedRef.current:',
+      mountedRef.current,
+    );
     if (!mountedRef.current) return;
     try {
       console.log('AuthContext: [initializeUser] START', user?.email);
@@ -94,31 +97,53 @@ export const AuthProvider = ({ children }) => {
         preferences: {},
       };
 
-      // Fetch profile
+      // Fetch profile with timeout
       try {
         console.log('AuthContext: [initializeUser] Fetching profile...');
-        const { data: profile, error } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('id', user.id)
-          .single();
+        let profile, error;
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 5000);
+        try {
+          ({ data: profile, error } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', user.id)
+            .single()
+            .abortSignal(controller.signal));
+        } catch (err) {
+          console.warn(
+            'AuthContext: [initializeUser] Profile fetch timed out or errored:',
+            err,
+          );
+          error = err;
+        }
+        clearTimeout(timeout);
         if (error || !profile) {
-          console.warn('AuthContext: [initializeUser] Profile not found, using default', error);
+          console.warn(
+            'AuthContext: [initializeUser] Profile not found, using default',
+            error,
+          );
           setUserProfile(defaultProfile);
         } else {
           setUserProfile(profile);
         }
       } catch (error) {
-        console.warn('AuthContext: [initializeUser] Profile load failed, using default:', error);
+        console.warn(
+          'AuthContext: [initializeUser] Profile load failed, using default:',
+          error,
+        );
         setUserProfile(defaultProfile);
       }
+      console.log('AuthContext: [initializeUser] END', user?.email);
 
       // Load additional data in background (non-blocking)
       setTimeout(() => {
         if (!mountedRef.current) return;
         // Load login history
         try {
-          console.log('AuthContext: [initializeUser] Fetching login history...');
+          console.log(
+            'AuthContext: [initializeUser] Fetching login history...',
+          );
           supabase
             .from('login_history')
             .select('*')
@@ -130,13 +155,23 @@ export const AuthProvider = ({ children }) => {
                 setLoginHistory(data);
               }
             })
-            .catch(err => console.warn('AuthContext: [initializeUser] Login history load failed:', err));
+            .catch(err =>
+              console.warn(
+                'AuthContext: [initializeUser] Login history load failed:',
+                err,
+              )
+            );
         } catch (err) {
-          console.warn('AuthContext: [initializeUser] Login history fetch error:', err);
+          console.warn(
+            'AuthContext: [initializeUser] Login history fetch error:',
+            err,
+          );
         }
         // Load security events
         try {
-          console.log('AuthContext: [initializeUser] Fetching security events...');
+          console.log(
+            'AuthContext: [initializeUser] Fetching security events...',
+          );
           supabase
             .from('security_events')
             .select('*')
@@ -148,9 +183,17 @@ export const AuthProvider = ({ children }) => {
                 setSecurityEvents(data);
               }
             })
-            .catch(err => console.warn('AuthContext: [initializeUser] Security events load failed:', err));
+            .catch(err =>
+              console.warn(
+                'AuthContext: [initializeUser] Security events load failed:',
+                err,
+              )
+            );
         } catch (err) {
-          console.warn('AuthContext: [initializeUser] Security events fetch error:', err);
+          console.warn(
+            'AuthContext: [initializeUser] Security events fetch error:',
+            err,
+          );
         }
       }, 100);
     } catch (error) {
@@ -161,8 +204,6 @@ export const AuthProvider = ({ children }) => {
         setUserProfile(null);
         setIsAuthenticated(false);
       }
-    } finally {
-      console.log('AuthContext: [initializeUser] END', user?.email);
     }
   }, []);
 
