@@ -243,7 +243,7 @@ const Sidebar = () => {
 
       return acc;
     },
-    {}
+    {},
   );
 
   const filteredQuickActions = quickActions.filter(
@@ -255,7 +255,7 @@ const Sidebar = () => {
     <div
       className={cn(
         'flex flex-col h-screen bg-card border-r border-border transition-all duration-300 ease-in-out',
-        isCollapsed ? 'w-16' : 'w-64'
+        isCollapsed ? 'w-16' : 'w-64',
       )}
     >
       {/* Header */}
@@ -394,7 +394,7 @@ const Sidebar = () => {
                           isCollapsed ? 'justify-center' : '',
                           isActive(item.href)
                             ? 'bg-primary text-primary-foreground shadow-sm'
-                            : 'text-muted-foreground hover:text-foreground hover:bg-accent'
+                            : 'text-muted-foreground hover:text-foreground hover:bg-accent',
                         )}
                       >
                         <Icon
@@ -402,7 +402,7 @@ const Sidebar = () => {
                             'h-5 w-5 transition-colors',
                             isActive(item.href)
                               ? 'text-primary-foreground'
-                              : 'text-muted-foreground group-hover:text-foreground'
+                              : 'text-muted-foreground group-hover:text-foreground',
                           )}
                         />
                         {!isCollapsed && (
@@ -422,7 +422,7 @@ const Sidebar = () => {
                                     'px-2 py-0.5 text-xs rounded-full',
                                     isActive(item.href)
                                       ? 'bg-primary-foreground/20 text-primary-foreground'
-                                      : 'bg-muted text-muted-foreground'
+                                      : 'bg-muted text-muted-foreground',
                                   )}
                                 >
                                   {item.badge}
@@ -441,13 +441,13 @@ const Sidebar = () => {
                             'absolute right-2 top-1/2 transform -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity',
                             isFavorite(item.href)
                               ? 'text-yellow-500'
-                              : 'text-muted-foreground hover:text-yellow-500'
+                              : 'text-muted-foreground hover:text-yellow-500',
                           )}
                         >
                           <Star
                             className={cn(
                               'h-3 w-3',
-                              isFavorite(item.href) ? 'fill-current' : ''
+                              isFavorite(item.href) ? 'fill-current' : '',
                             )}
                           />
                         </button>
@@ -499,7 +499,7 @@ const Sidebar = () => {
                 'px-2 py-0.5 rounded-full',
                 sessionInfo.willExpireSoon
                   ? 'bg-yellow-500/20 text-yellow-600'
-                  : 'bg-green-500/20 text-green-600'
+                  : 'bg-green-500/20 text-green-600',
               )}
             >
               {Math.floor(sessionInfo.timeLeft / 60000)}m
@@ -513,7 +513,7 @@ const Sidebar = () => {
           onClick={logout}
           className={cn(
             'w-full justify-start text-muted-foreground hover:text-foreground hover:bg-accent',
-            isCollapsed && 'justify-center'
+            isCollapsed && 'justify-center',
           )}
         >
           <LogOut className='h-5 w-5' />

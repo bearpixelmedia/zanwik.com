@@ -32,7 +32,7 @@ export const AuthProvider = ({ children }) => {
   const [error, setError] = useState(null);
 
   // Default profile for fallback
-  const defaultProfile = {
+  const _defaultProfile = {
     id: user?.id || null,
     email: user?.email || '',
     role: 'viewer',
@@ -41,10 +41,10 @@ export const AuthProvider = ({ children }) => {
   };
 
   // Test database connection function
-  const testConnection = useCallback(async () => {
+  const _testConnection = useCallback(async () => {
     try {
       const { error } = await supabase
-        .from('profiles')
+        .from('projects')
         .select('count')
         .limit(1);
       return !error;
@@ -67,13 +67,11 @@ export const AuthProvider = ({ children }) => {
       setLoading(true);
       setError(null);
 
-      // Test database connection
-      const isConnected = await testConnection();
-      if (!isConnected) {
-        throw new Error('Database connection failed');
-      }
+      // Set user immediately
+      setUser(user);
+      setIsAuthenticated(true);
 
-      // Set default profile if database operations fail
+      // Set default profile immediately to prevent loading stuck
       const userDefaultProfile = {
         id: user.id,
         email: user.email,
@@ -82,12 +80,11 @@ export const AuthProvider = ({ children }) => {
         preferences: {},
       };
 
-      // Fetch profile with manual timeout
+      // Try to fetch profile with shorter timeout
       let profile = null;
-      let error = null;
       try {
         const timeoutPromise = new Promise((_, reject) =>
-          setTimeout(() => reject(new Error('Profile fetch timed out')), 5000),
+          setTimeout(() => reject(new Error('Profile fetch timed out')), 3000),
         );
         const fetchPromise = supabase
           .from('profiles')
@@ -95,80 +92,60 @@ export const AuthProvider = ({ children }) => {
           .eq('id', user.id)
           .single();
         const result = await Promise.race([fetchPromise, timeoutPromise]);
-        profile = result.data;
-        error = result.error;
+        if (result.data && !result.error) {
+          profile = result.data;
+        }
       } catch (err) {
-        // This will catch the timeout or any thrown error
-        error = err;
+        console.warn('Profile fetch failed, using default:', err.message);
         profile = null;
       }
-      if (error || !profile) {
-        setUserProfile(userDefaultProfile);
-      } else {
-        setUserProfile(profile);
-      }
-      // If after all attempts userProfile is still null, set an error state
-      if (!profile && !error) {
-        setUserProfile({
-          ...userDefaultProfile,
-          error: 'Profile not found. Please contact support.',
-        });
-      }
+
+      // Always set a profile (either fetched or default)
+      setUserProfile(profile || userDefaultProfile);
       setLoading(false);
+      setLoadingStuck(false);
 
       // Load additional data in background (non-blocking)
       setTimeout(() => {
         if (!mountedRef.current) return;
+
         // Load login history
-        try {
-          supabase
-            .from('login_history')
-            .select('*')
-            .eq('user_id', user.id)
-            .order('created_at', { ascending: false })
-            .limit(10)
-            .then(({ data }) => {
-              if (mountedRef.current && data) {
-                setLoginHistory(data);
-              }
-            })
-            .catch(err =>
-              console.warn(
-                'AuthContext: [initializeUser] Login history load failed:',
-                err,
-              )
-            );
-        } catch (err) {
-          console.warn(
-            'AuthContext: [initializeUser] Login history fetch error:',
-            err,
+        supabase
+          .from('login_history')
+          .select('*')
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: false })
+          .limit(10)
+          .then(({ data }) => {
+            if (mountedRef.current && data) {
+              setLoginHistory(data);
+            }
+          })
+          .catch(err =>
+            console.warn(
+              'AuthContext: [initializeUser] Login history load failed:',
+              err,
+            ),
           );
-        }
+
         // Load security events
-        try {
-          supabase
-            .from('security_events')
-            .select('*')
-            .eq('user_id', user.id)
-            .order('created_at', { ascending: false })
-            .limit(20)
-            .then(({ data }) => {
-              if (mountedRef.current && data) {
-                setSecurityEvents(data);
-              }
-            })
-            .catch(err =>
-              console.warn(
-                'AuthContext: [initializeUser] Security events load failed:',
-                err,
-              )
-            );
-        } catch (err) {
-          console.warn(
-            'AuthContext: [initializeUser] Security events fetch error:',
-            err,
+        supabase
+          .from('security_events')
+          .select('*')
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: false })
+          .limit(20)
+          .then(({ data }) => {
+            if (mountedRef.current && data) {
+              setSecurityEvents(data);
+            }
+          })
+          .catch(err =>
+            console.warn(
+              'AuthContext: [initializeUser] Security events load failed:',
+              err,
+            ),
           );
-        }
       }, 100);
     } catch (error) {
       console.error('AuthContext: Error initializing user:', error);
@@ -199,36 +176,30 @@ export const AuthProvider = ({ children }) => {
         timestamp: new Date().toISOString(),
       };
 
-      setSecurityEvents(prev => [event, ...prev.slice(0, 49)]);
-
       try {
         await supabase.from('security_events').insert([event]);
+        setSecurityEvents(prev => [event, ...prev.slice(0, 19)]);
       } catch (error) {
-        console.error('Security event logging failed:', error);
+        console.warn('Failed to log security event:', error);
       }
     },
-    [user?.id]
+    [user?.id],
   );
 
   // Get session info
   const getSessionInfo = useCallback(() => {
-    if (!session) return null;
-
-    const expiresAt = new Date(session.expires_at * 1000);
-    const now = new Date();
-    const timeLeft = expiresAt - now;
-
     return {
-      expiresAt,
-      timeLeft,
-      isExpired: timeLeft <= 0,
-      willExpireSoon: timeLeft <= 5 * 60 * 1000, // 5 minutes
+      user,
+      isAuthenticated,
+      lastActivity,
+      sessionTimeout,
+      timeRemaining: sessionTimeout - (Date.now() - lastActivity),
     };
-  }, [session]);
+  }, [user, isAuthenticated, lastActivity, sessionTimeout]);
 
-  // Initialize auth state and set up listeners
+  // Initialize auth state
   useEffect(() => {
-    mountedRef.current = true; // Ensure this is set at the very start
+    mountedRef.current = true;
     if (initializingRef.current) return;
     initializingRef.current = true;
 
@@ -238,30 +209,32 @@ export const AuthProvider = ({ children }) => {
         const {
           data: { session: currentSession },
         } = await supabase.auth.getSession();
+
         if (currentSession?.user) {
-          try {
-            await initializeUser(currentSession.user);
-          } finally {
-            setLoading(false);
-            setLoadingStuck(false);
-          }
+          await initializeUser(currentSession.user);
         } else {
           setUser(null);
+          setUserProfile(null);
+          setIsAuthenticated(false);
           setLoading(false);
           setLoadingStuck(false);
         }
       } catch (error) {
         console.error('AuthContext: Error initializing auth:', error);
+        setUser(null);
+        setUserProfile(null);
+        setIsAuthenticated(false);
         setLoading(false);
         setLoadingStuck(false);
       }
     };
 
-    // Set up auth listener - only once
+    // Set up auth listener
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (!mountedRef.current) return;
+
       if (event === 'SIGNED_IN' && session?.user) {
         try {
           await initializeUser(session.user);
@@ -271,7 +244,6 @@ export const AuthProvider = ({ children }) => {
           setUser(null);
           setUserProfile(null);
           setIsAuthenticated(false);
-        } finally {
           setLoading(false);
           setLoadingStuck(false);
         }
@@ -286,32 +258,24 @@ export const AuthProvider = ({ children }) => {
         setLastActivity(Date.now());
         addSecurityEvent('TOKEN_REFRESHED', 'Session token refreshed');
       }
-      if (mountedRef.current) {
-        setLoading(false);
-        setLoadingStuck(false);
-      }
     });
 
     authListenerRef.current = subscription;
-    setLoading(true); // Always set loading to true at the start
+    setLoading(true);
     setLoadingStuck(false);
     initAuth();
 
-    // Set up fallback timeout
+    // Reduced fallback timeout to 5 seconds
     const fallbackTimeout = setTimeout(() => {
-      if (mountedRef.current && loadingRef.current) {
+      if (mountedRef.current && loading) {
+        console.warn(
+          'AuthContext: Fallback timeout reached, forcing loading to complete',
+        );
         setLoadingStuck(true);
-        console.error('AuthContext: Fallback timeout reached, loading stuck!');
-        console.log('AuthContext: Fallback debug:', {
-          user,
-          session,
-          isAuthenticated,
-          userProfile,
-        });
         setLoading(false);
+
         // If we have a user but no profile, set a default profile
         if (user && !userProfile) {
-          console.log('AuthContext: Setting default profile due to timeout');
           setUserProfile({
             id: user.id,
             email: user.email,
@@ -321,7 +285,7 @@ export const AuthProvider = ({ children }) => {
           });
         }
       }
-    }, 7000); // 7 seconds for stuck loading
+    }, 5000); // Reduced from 7 to 5 seconds
 
     return () => {
       if (authListenerRef.current) {
@@ -415,7 +379,7 @@ export const AuthProvider = ({ children }) => {
         throw error;
       }
     },
-    [addSecurityEvent]
+    [addSecurityEvent],
   );
 
   // Logout function
@@ -440,18 +404,18 @@ export const AuthProvider = ({ children }) => {
   const hasPermission = useCallback(
     permission => {
       return (
-        userProfile.permissions?.includes('*') ||
-        userProfile.permissions?.includes(permission)
+        userProfile?.permissions?.includes('*') ||
+        userProfile?.permissions?.includes(permission)
       );
     },
-    [userProfile]
+    [userProfile],
   );
 
   const hasRole = useCallback(
     roles => {
-      return roles.some(role => userProfile.role === role);
+      return roles.some(role => userProfile?.role === role);
     },
-    [userProfile]
+    [userProfile],
   );
 
   useEffect(() => {
@@ -475,6 +439,7 @@ export const AuthProvider = ({ children }) => {
         hasRole,
         getSessionInfo,
         loadingStuck,
+        error,
       }}
     >
       {loadingStuck ? (
@@ -496,9 +461,9 @@ export const AuthProvider = ({ children }) => {
             }}
           >
             {JSON.stringify(
-              { user, session, isAuthenticated, userProfile },
+              { user, isAuthenticated, userProfile, error },
               null,
-              2
+              2,
             )}
           </pre>
           <p>

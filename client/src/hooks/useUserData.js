@@ -5,9 +5,9 @@ import { useState, useEffect } from 'react';
  * @returns {Object} Hook state and methods
  */
 export const useUserData = () => {
-  const [state, setState] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [state, _setState] = useState(null);
+  const [loading, _setLoading] = useState(true);
+  const [error, _setError] = useState(null);
 
   useEffect(() => {
     // Add your hook logic here

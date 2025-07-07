@@ -61,7 +61,7 @@ const buttonVariants = cva(
       fullWidth: false,
       rounded: 'default',
     },
-  }
+  },
 );
 
 const Button = React.forwardRef(
@@ -165,7 +165,7 @@ const Button = React.forwardRef(
         <div
           className={cn(
             'flex items-center justify-center',
-            isLoading && 'opacity-0'
+            isLoading && 'opacity-0',
           )}
         >
           {/* Left icon */}
@@ -239,7 +239,7 @@ const Button = React.forwardRef(
         )}
       </Comp>
     );
-  }
+  },
 );
 
 Button.displayName = 'Button';
@@ -248,7 +248,7 @@ Button.displayName = 'Button';
 const IconButton = React.forwardRef(
   ({ icon, size = 'icon', ...props }, ref) => (
     <Button ref={ref} size={size} icon={icon} {...props} />
-  )
+  ),
 );
 IconButton.displayName = 'IconButton';
 
@@ -266,14 +266,14 @@ ConfirmButton.displayName = 'ConfirmButton';
 const SuccessButton = React.forwardRef(
   ({ icon = CheckCircle, ...props }, ref) => (
     <Button ref={ref} variant='success' icon={icon} {...props} />
-  )
+  ),
 );
 SuccessButton.displayName = 'SuccessButton';
 
 const WarningButton = React.forwardRef(
   ({ icon = AlertTriangle, ...props }, ref) => (
     <Button ref={ref} variant='warning' icon={icon} {...props} />
-  )
+  ),
 );
 WarningButton.displayName = 'WarningButton';
 

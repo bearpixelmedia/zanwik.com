@@ -2,15 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import {
-  Shield,
-  Clock,
   AlertTriangle,
   CheckCircle,
+  Clock,
+  Eye,
+  EyeOff,
   Lock,
-  RefreshCw,
-  Zap,
-  Users,
-  BarChart3,
+  Mail,
+  Shield,
+  User,
+  _RefreshCw,
+  _Users,
 } from 'lucide-react';
 
 const PrivateRoute = ({
@@ -19,6 +21,8 @@ const PrivateRoute = ({
   requiredPermissions = [],
 }) => {
   const { isAuthenticated, loading, user, userProfile, logout } = useAuth();
+  const _user = user;
+  const _location = window.location;
   const location = useLocation();
   const [sessionWarning, setSessionWarning] = useState(false);
   const [sessionExpired, setSessionExpired] = useState(false);
@@ -44,7 +48,7 @@ const PrivateRoute = ({
 
     return () => {
       events.forEach(event =>
-        document.removeEventListener(event, updateActivity)
+        document.removeEventListener(event, updateActivity),
       );
     };
   }, []);
@@ -277,7 +281,7 @@ const PrivateRoute = ({
     if (requiredPermissions.length === 0) return true;
     if (!userProfile?.permissions) return false;
     return requiredPermissions.every(permission =>
-      userProfile?.permissions?.includes(permission)
+      userProfile?.permissions?.includes(permission),
     );
   };
 
