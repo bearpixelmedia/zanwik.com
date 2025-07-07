@@ -13,6 +13,9 @@ import {
   AlertTriangle,
   CheckCircle,
   Info,
+  Plus,
+  RefreshCw,
+  HelpCircle,
 } from 'lucide-react';
 import { Button } from './ui/button';
 

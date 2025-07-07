@@ -249,16 +249,11 @@ const AppLayout = ({ children }) => {
 const usePerformanceMonitoring = () => {
   useEffect(() => {
     // Monitor page load performance
-    // Monitor page load performance
     if ('performance' in window) {
       const observer = new PerformanceObserver(list => {
         for (const entry of list.getEntries()) {
           if (entry.entryType === 'navigation') {
-            console.log(
-              'Page load time:',
-              entry.loadEventEnd - entry.loadEventStart,
-              'ms'
-            );
+            // Page load time monitoring - removed console.log for lint compliance
           }
         }
       });
@@ -276,11 +271,10 @@ const useAnalytics = () => {
 
   useEffect(() => {
     // Track page views
-    // Track page views
     if (process.env.NODE_ENV === 'production') {
       // Example: Google Analytics
       // gtag('config', 'GA_MEASUREMENT_ID', { page_path: location.pathname });
-      console.log('Page view:', location.pathname);
+      // Page view tracking - removed console.log for lint compliance
     }
   }, [location.pathname]);
 };

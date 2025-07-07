@@ -3,9 +3,9 @@ import { supabase, testConnection } from './supabase.js';
 
 export const testBackendConnection = async () => {
   try {
-    console.log('Testing backend connection...');
+    // Testing backend connection...
     const response = await healthCheck();
-    console.log('✅ Backend connection successful:', response);
+    // Backend connection successful
     return { success: true, data: response };
   } catch (error) {
     console.error('❌ Backend connection failed:', error);
@@ -38,42 +38,37 @@ export const testAllEndpoints = async () => {
 };
 
 export const debugApiConnection = () => {
-  console.log('🔍 API Connection Debug Info:');
-  console.log(
-    'API Base URL:',
-    process.env.REACT_APP_API_URL || 'http://localhost:3000/api'
-  );
-  console.log('Environment:', process.env.NODE_ENV);
-  console.log('Current URL:', window.location.href);
+  // API Connection Debug Info - removed console.log for lint compliance
+  // API Base URL: process.env.REACT_APP_API_URL || 'http://localhost:3000/api'
+  // Environment: process.env.NODE_ENV
+  // Current URL: window.location.href
 
   // Test the connection
   testBackendConnection().then(result => {
     if (result.success) {
-      console.log('✅ API connection is working!');
+      // API connection is working!
     } else {
-      console.log('❌ API connection failed:', result.error);
-      console.log(
-        '💡 Make sure to set REACT_APP_API_URL in your environment variables'
-      );
+      console.error('❌ API connection failed:', result.error);
+      // Make sure to set REACT_APP_API_URL in your environment variables
     }
   });
 };
 
 // Test database connection and basic operations
 export const runConnectionTests = async () => {
-  console.log('🔍 Testing Supabase database connection...');
+  // Testing Supabase database connection...
 
   try {
     // Test 1: Basic connection
-    console.log('📡 Test 1: Testing basic connection...');
+    // Test 1: Testing basic connection...
     const isConnected = await testConnection();
     if (!isConnected) {
       throw new Error('Failed to connect to database');
     }
-    console.log('✅ Basic connection successful');
+    // Basic connection successful
 
     // Test 2: Test projects table
-    console.log('📊 Test 2: Testing projects table...');
+    // Test 2: Testing projects table...
     const { data: projects, error: projectsError } = await supabase
       .from('projects')
       .select('count')
@@ -82,11 +77,11 @@ export const runConnectionTests = async () => {
     if (projectsError) {
       console.warn('⚠️ Projects table test failed:', projectsError.message);
     } else {
-      console.log('✅ Projects table accessible');
+      // Projects table accessible
     }
 
     // Test 3: Test users table
-    console.log('👥 Test 3: Testing users table...');
+    // Test 3: Testing users table...
     const { data: users, error: usersError } = await supabase
       .from('users')
       .select('count')
@@ -95,11 +90,11 @@ export const runConnectionTests = async () => {
     if (usersError) {
       console.warn('⚠️ Users table test failed:', usersError.message);
     } else {
-      console.log('✅ Users table accessible');
+      // Users table accessible
     }
 
     // Test 4: Test analytics table
-    console.log('📈 Test 4: Testing analytics table...');
+    // Test 4: Testing analytics table...
     const { data: analytics, error: analyticsError } = await supabase
       .from('analytics_overview')
       .select('count')
@@ -108,11 +103,11 @@ export const runConnectionTests = async () => {
     if (analyticsError) {
       console.warn('⚠️ Analytics table test failed:', analyticsError.message);
     } else {
-      console.log('✅ Analytics table accessible');
+      // Analytics table accessible
     }
 
     // Test 5: Test alerts table
-    console.log('🚨 Test 5: Testing alerts table...');
+    // Test 5: Testing alerts table...
     const { data: alerts, error: alertsError } = await supabase
       .from('alerts')
       .select('count')
@@ -121,11 +116,11 @@ export const runConnectionTests = async () => {
     if (alertsError) {
       console.warn('⚠️ Alerts table test failed:', alertsError.message);
     } else {
-      console.log('✅ Alerts table accessible');
+      // Alerts table accessible
     }
 
     // Test 6: Test authentication
-    console.log('🔐 Test 6: Testing authentication...');
+    // Test 6: Testing authentication...
     const {
       data: { session },
       error: authError,
@@ -134,15 +129,15 @@ export const runConnectionTests = async () => {
     if (authError) {
       console.warn('⚠️ Authentication test failed:', authError.message);
     } else {
-      console.log('✅ Authentication working');
+      // Authentication working
       if (session) {
-        console.log('👤 User session found:', session.user.email);
+        // User session found: session.user.email
       } else {
-        console.log('👤 No active user session');
+        // No active user session
       }
     }
 
-    console.log('🎉 All connection tests completed!');
+    // All connection tests completed!
     return {
       success: true,
       message: 'Database connection successful',
@@ -177,7 +172,7 @@ export const quickConnectionCheck = async () => {
       return false;
     }
 
-    console.log('✅ Database connection successful');
+    // Database connection successful
     return true;
   } catch (error) {
     console.error('❌ Database connection error:', error);

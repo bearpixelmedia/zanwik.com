@@ -75,9 +75,7 @@ const responseInterceptor = async (response, config) => {
 
   // Log performance data
   if (responseTime > 1000) {
-    console.warn(
-      `Slow API request: ${config.requestId} took ${responseTime.toFixed(2)}ms`
-    );
+    // Slow API request warning - removed console.warn for lint compliance
   }
 
   return response;
@@ -195,7 +193,7 @@ const apiCall = async (endpoint, options = {}) => {
       // Retry logic
       if (shouldRetry(error, config.retryCount)) {
         config.retryCount++;
-        console.warn(`Retrying request (${config.retryCount}/3):`, endpoint);
+        // Retrying request - removed console.warn for lint compliance
 
         // Exponential backoff
         const delay = Math.pow(2, config.retryCount) * 1000;
@@ -459,7 +457,7 @@ export const initializeWebSocket = userId => {
       );
 
       wsConnection.onopen = () => {
-        console.log('WebSocket connected');
+        // WebSocket connected - removed console.log for lint compliance
         reconnectAttempts = 0;
       };
 
@@ -478,7 +476,7 @@ export const initializeWebSocket = userId => {
               // Handle notifications
               break;
             default:
-              console.log('WebSocket message:', data);
+              // WebSocket message - removed console.log for lint compliance
           }
         } catch (error) {
           console.error('Failed to parse WebSocket message:', error);
@@ -486,7 +484,7 @@ export const initializeWebSocket = userId => {
       };
 
       wsConnection.onclose = () => {
-        console.log('WebSocket disconnected');
+        // WebSocket disconnected - removed console.log for lint compliance
         if (reconnectAttempts < MAX_RECONNECT_ATTEMPTS) {
           reconnectAttempts++;
           const delay = Math.pow(2, reconnectAttempts) * 1000;

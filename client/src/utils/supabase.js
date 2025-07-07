@@ -37,17 +37,20 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
 // Test database connection
 export const testConnection = async () => {
   try {
-    const { error } = await supabase.from('projects').select('count').limit(1);
+    const { data, error } = await supabase
+      .from('projects')
+      .select('count')
+      .limit(1);
 
     if (error) {
       console.error('Database connection test failed:', error);
       return false;
     }
 
-    console.log('✅ Successfully connected to Supabase database');
+    // Database connection test successful - removed console.log for lint compliance
     return true;
   } catch (error) {
-    console.error('Database connection error:', error);
+    console.error('Database connection test error:', error);
     return false;
   }
 };
@@ -294,7 +297,7 @@ export const db = {
           console.error('Delete project error:', error);
           throw error;
         }
-        console.log('✅ Project deleted successfully');
+        // Project deleted successfully - removed console.log for lint compliance
       } catch (error) {
         console.error('Delete project failed:', error);
         throw error;
@@ -455,7 +458,7 @@ export const db = {
           console.error('Delete user error:', error);
           throw error;
         }
-        console.log('✅ User deleted successfully');
+        // User deleted successfully - removed console.log for lint compliance
       } catch (error) {
         console.error('Delete user failed:', error);
         throw error;
@@ -501,7 +504,7 @@ export const db = {
           console.error('Acknowledge alert error:', error);
           throw error;
         }
-        console.log('✅ Alert acknowledged successfully');
+        // Alert acknowledged successfully - removed console.log for lint compliance
       } catch (error) {
         console.error('Acknowledge alert failed:', error);
         throw error;
