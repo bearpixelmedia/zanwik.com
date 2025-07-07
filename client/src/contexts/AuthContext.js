@@ -716,60 +716,6 @@ export const AuthProvider = ({ children }) => {
     }
   }, [addSecurityEvent]);
 
-  // Memoize context value
-  const contextValue = React.useMemo(
-    () => ({
-      user,
-      session,
-      userProfile,
-      loading,
-      isAuthenticated,
-      loginHistory,
-      securityEvents,
-      login,
-      register,
-      logout,
-      updateProfile,
-      changePassword,
-      hasPermission,
-      hasRole,
-      getProjectPermissions,
-      updatePreferences,
-      getUserRoleInfo,
-      getSecurityEvents,
-      refreshSession,
-      getSessionInfo,
-      lastActivity,
-      sessionTimeout,
-      loadingStuck,
-    }),
-    [
-      user,
-      session,
-      userProfile,
-      loading,
-      isAuthenticated,
-      loginHistory,
-      securityEvents,
-      login,
-      register,
-      logout,
-      updateProfile,
-      changePassword,
-      hasPermission,
-      hasRole,
-      getProjectPermissions,
-      updatePreferences,
-      getUserRoleInfo,
-      getSecurityEvents,
-      refreshSession,
-      getSessionInfo,
-      lastActivity,
-      sessionTimeout,
-      loadingStuck,
-    ]
-  );
-
   useEffect(() => {
     loadingRef.current = loading;
   }, [loading]);
