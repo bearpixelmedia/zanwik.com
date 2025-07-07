@@ -207,7 +207,7 @@ export const AuthProvider = ({ children }) => {
               console.warn(
                 'AuthContext: [initializeUser] Login history load failed:',
                 err
-              )
+              ),
             );
         } catch (err) {
           console.warn(
@@ -235,7 +235,7 @@ export const AuthProvider = ({ children }) => {
               console.warn(
                 'AuthContext: [initializeUser] Security events load failed:',
                 err
-              )
+              ),
             );
         } catch (err) {
           console.warn(

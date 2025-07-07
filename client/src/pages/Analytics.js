@@ -448,7 +448,7 @@ const Analytics = () => {
                         : selectedMetric === 'users'
                         ? d.users || 0
                         : Math.abs(d.growth || 0)
-                    )
+                    ),
                   );
                   const currentValue =
                     selectedMetric === 'revenue'

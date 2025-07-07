@@ -315,7 +315,7 @@ const Infrastructure = () => {
       ? infrastructureData.services
       : infrastructureData.services.filter(
           service => service.status === selectedService
-        );
+      );
 
   if (loading) {
     return (
