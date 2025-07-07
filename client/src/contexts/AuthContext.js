@@ -96,11 +96,31 @@ export const AuthProvider = ({ children }) => {
           profile = result.data;
         }
       } catch (err) {
-        console.warn('Profile fetch failed, using default:', err.message);
+        // If table doesn't exist or any other error, try to create user profile
+        console.warn('Profile fetch failed (table may not exist), trying to create profile:', err.message);
+        try {
+          const { data: newProfile, error: createError } = await supabase
+            .from('users')
+            .insert([{
+              id: user.id,
+              full_name: user.user_metadata?.full_name || user.email?.split('@')[0] || 'User',
+              role: 'user',
+              preferences: {},
+            }])
+            .select()
+            .single();
+          
+          if (!createError && newProfile) {
+            profile = newProfile;
+            console.log('Created new user profile successfully');
+          }
+        } catch (createErr) {
+          console.warn('Failed to create user profile, using default:', createErr.message);
+        }
         profile = null;
       }
 
-      // Always set a profile (either fetched or default)
+      // Always set a profile (either fetched, created, or default)
       setUserProfile(profile || userDefaultProfile);
       setLoading(false);
       setLoadingStuck(false);
@@ -108,8 +128,8 @@ export const AuthProvider = ({ children }) => {
       // Load additional data in background (non-blocking)
       setTimeout(() => {
         if (!mountedRef.current) return;
-
-        // Load login history
+        
+        // Load login history (only if table exists)
         supabase
           .from('login_history')
           .select('*')
@@ -123,12 +143,12 @@ export const AuthProvider = ({ children }) => {
           })
           .catch(err =>
             console.warn(
-              'AuthContext: [initializeUser] Login history load failed:',
+              'AuthContext: [initializeUser] Login history load failed (table may not exist):',
               err,
             )
           );
 
-        // Load security events
+        // Load security events (only if table exists)
         supabase
           .from('security_events')
           .select('*')
@@ -142,7 +162,7 @@ export const AuthProvider = ({ children }) => {
           })
           .catch(err =>
             console.warn(
-              'AuthContext: [initializeUser] Security events load failed:',
+              'AuthContext: [initializeUser] Security events load failed (table may not exist):',
               err,
             )
           );
@@ -180,7 +200,10 @@ export const AuthProvider = ({ children }) => {
         await supabase.from('security_events').insert([event]);
         setSecurityEvents(prev => [event, ...prev.slice(0, 19)]);
       } catch (error) {
-        console.warn('Failed to log security event:', error);
+        // Table may not exist, just log locally
+        console.warn('Failed to log security event (table may not exist):', error);
+        // Still update local state for UI consistency
+        setSecurityEvents(prev => [event, ...prev.slice(0, 19)]);
       }
     },
     [user?.id],
