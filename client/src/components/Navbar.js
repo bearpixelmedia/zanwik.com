@@ -10,30 +10,8 @@ import {
   Sun,
   Moon,
   Clock,
-  Shield,
   AlertTriangle,
   CheckCircle,
-  X,
-  RefreshCw,
-  Zap,
-  Globe,
-  BarChart3,
-  Plus,
-  Filter,
-  HelpCircle,
-  ExternalLink,
-  Mail,
-  Phone,
-  MapPin,
-  Calendar,
-  Star,
-  Eye,
-  EyeOff,
-  Lock,
-  Key,
-  Activity,
-  TrendingUp,
-  AlertCircle,
   Info,
 } from 'lucide-react';
 import { Button } from './ui/button';
@@ -102,7 +80,7 @@ const Navbar = () => {
           'Unable to connect to the primary database. Check your configuration.',
         time: '2 hours ago',
         read: false,
-        icon: AlertCircle,
+        icon: AlertTriangle,
       },
     ];
 
@@ -202,7 +180,7 @@ const Navbar = () => {
       case 'warning':
         return AlertTriangle;
       case 'error':
-        return AlertCircle;
+        return AlertTriangle;
       case 'info':
         return Info;
       default:
