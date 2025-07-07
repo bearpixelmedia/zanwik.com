@@ -34,18 +34,10 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   },
 });
 
-// Connection status monitoring
-let isConnected = false;
-let connectionRetries = 0;
-const maxRetries = 3;
-
 // Test database connection
 export const testConnection = async () => {
   try {
-    const { data, error } = await supabase
-      .from('projects')
-      .select('count')
-      .limit(1);
+    const { error } = await supabase.from('projects').select('count').limit(1);
 
     if (error) {
       console.error('Database connection test failed:', error);

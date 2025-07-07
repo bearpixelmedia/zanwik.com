@@ -409,7 +409,7 @@ export const AuthProvider = ({ children }) => {
           });
         }
       }
-    }, 10000); // Increase timeout to 10s for extra robustness
+    }, 5000); // Reduce timeout to 5s for faster recovery
 
     return () => {
       if (authListenerRef.current) {
@@ -475,6 +475,11 @@ export const AuthProvider = ({ children }) => {
     const interval = setInterval(checkSession, 60000); // Check every minute
     return () => clearInterval(interval);
   }, [isAuthenticated, lastActivity, sessionTimeout, handleSessionTimeout]);
+
+  // Debug userProfile state changes
+  useEffect(() => {
+    console.log('AuthContext: userProfile state changed:', userProfile);
+  }, [userProfile]);
 
   // Login function
   const login = useCallback(
