@@ -92,58 +92,67 @@ export const AuthProvider = ({ children }) => {
         preferences: {},
       };
 
+      // Fetch profile
       try {
+        console.log('AuthContext: [initializeUser] Fetching profile...');
         const { data: profile, error } = await supabase
           .from('profiles')
           .select('*')
           .eq('id', user.id)
           .single();
-
         if (error || !profile) {
-          console.warn('Profile not found, using default');
+          console.warn('AuthContext: [initializeUser] Profile not found, using default', error);
           setUserProfile(defaultProfile);
         } else {
           setUserProfile(profile);
         }
       } catch (error) {
-        console.warn('Profile load failed, using default:', error);
+        console.warn('AuthContext: [initializeUser] Profile load failed, using default:', error);
         setUserProfile(defaultProfile);
       }
 
       // Load additional data in background (non-blocking)
       setTimeout(() => {
         if (!mountedRef.current) return;
-
         // Load login history
-        supabase
-          .from('login_history')
-          .select('*')
-          .eq('user_id', user.id)
-          .order('created_at', { ascending: false })
-          .limit(10)
-          .then(({ data }) => {
-            if (mountedRef.current && data) {
-              setLoginHistory(data);
-            }
-          })
-          .catch(err => console.warn('Login history load failed:', err));
-
+        try {
+          console.log('AuthContext: [initializeUser] Fetching login history...');
+          supabase
+            .from('login_history')
+            .select('*')
+            .eq('user_id', user.id)
+            .order('created_at', { ascending: false })
+            .limit(10)
+            .then(({ data }) => {
+              if (mountedRef.current && data) {
+                setLoginHistory(data);
+              }
+            })
+            .catch(err => console.warn('AuthContext: [initializeUser] Login history load failed:', err));
+        } catch (err) {
+          console.warn('AuthContext: [initializeUser] Login history fetch error:', err);
+        }
         // Load security events
-        supabase
-          .from('security_events')
-          .select('*')
-          .eq('user_id', user.id)
-          .order('created_at', { ascending: false })
-          .limit(20)
-          .then(({ data }) => {
-            if (mountedRef.current && data) {
-              setSecurityEvents(data);
-            }
-          })
-          .catch(err => console.warn('Security events load failed:', err));
+        try {
+          console.log('AuthContext: [initializeUser] Fetching security events...');
+          supabase
+            .from('security_events')
+            .select('*')
+            .eq('user_id', user.id)
+            .order('created_at', { ascending: false })
+            .limit(20)
+            .then(({ data }) => {
+              if (mountedRef.current && data) {
+                setSecurityEvents(data);
+              }
+            })
+            .catch(err => console.warn('AuthContext: [initializeUser] Security events load failed:', err));
+        } catch (err) {
+          console.warn('AuthContext: [initializeUser] Security events fetch error:', err);
+        }
       }, 100);
     } catch (error) {
-      console.error('User initialization failed:', error);
+      console.error('AuthContext: [initializeUser] User initialization failed:', error);
       if (mountedRef.current) {
         setUser(null);
         setSession(null);
