@@ -75,6 +75,7 @@ export const AuthProvider = ({ children }) => {
 
   // Initialize user data
   const initializeUser = useCallback(async (user, session) => {
+    console.log('AuthContext: [initializeUser] called, mountedRef.current:', mountedRef.current);
     if (!mountedRef.current) return;
     try {
       console.log('AuthContext: [initializeUser] START', user?.email);
