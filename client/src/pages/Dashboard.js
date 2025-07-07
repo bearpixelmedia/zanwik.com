@@ -1,32 +1,23 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 import {
   TrendingUp,
-  TrendingDown,
   Users,
-  DollarSign,
   Activity,
-  AlertTriangle,
-  CheckCircle,
-  Clock,
+  DollarSign,
   ArrowUpRight,
   ArrowDownRight,
-  BarChart3,
-  PieChart,
   Calendar,
+  Clock,
+  Target,
+  Zap,
+  Shield,
+  BarChart3,
   Globe,
   Search,
   Settings,
   Plus,
-  RefreshCw,
-  Download,
-  Zap,
-  Server,
-  Database,
-  Eye,
-  Filter,
-  ExternalLink,
-  Target,
 } from 'lucide-react';
 import {
   Card,
@@ -36,7 +27,6 @@ import {
   CardDescription,
 } from '../components/ui/card';
 import { Button } from '../components/ui/button';
-import { useAuth } from '../contexts/AuthContext';
 import api from '../utils/api';
 const Dashboard = () => {
   const { user } = useAuth();
@@ -608,7 +598,7 @@ const Dashboard = () => {
                 <div className='text-right'>
                   <span
                     className={`text-xs px-2 py-1 rounded-full ${getStatusBadge(
-                      server.status
+                      server.status,
                     )}`}
                   >
                     {server.status}
@@ -688,7 +678,7 @@ const Dashboard = () => {
                 </div>
                 <span
                   className={`text-xs px-2 py-1 rounded-full ${getStatusBadge(
-                    service.status
+                    service.status,
                   )}`}
                 >
                   {service.status}

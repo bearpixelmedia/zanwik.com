@@ -1,19 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 import {
+  Shield,
   Eye,
   EyeOff,
-  Lock,
   Mail,
-  TrendingUp,
-  AlertCircle,
-  ArrowLeft,
-  Globe,
-  Users,
-  Zap,
-  Shield,
-  Key,
-  BarChart3,
+  Lock,
+  AlertTriangle,
+  CheckCircle,
 } from 'lucide-react';
 import {
   Card,
@@ -23,7 +18,16 @@ import {
   CardDescription,
 } from '../components/ui/card';
 import { Button } from '../components/ui/button';
-import { useAuth } from '../contexts/AuthContext';
+import {
+  TrendingUp,
+  ArrowLeft,
+  Globe,
+  Users,
+  Zap,
+  Key,
+  BarChart3,
+} from 'lucide-react';
+
 const Login = () => {
   // Remove excessive logging to prevent console spam
   const [email, setEmail] = useState('');
@@ -232,7 +236,7 @@ const Login = () => {
         {environmentCheck.error && (
           <div className='mb-6 p-4 bg-destructive/10 border border-destructive/20 rounded-lg'>
             <div className='flex items-center space-x-2'>
-              <AlertCircle className='h-4 w-4 text-destructive' />
+              <AlertTriangle className='h-4 w-4 text-destructive' />
               <p className='text-sm text-destructive font-medium'>
                 Configuration Error
               </p>
@@ -310,7 +314,7 @@ const Login = () => {
                 {error && (
                   <div className='p-3 bg-destructive/10 border border-destructive/20 rounded-lg'>
                     <div className='flex items-start space-x-2'>
-                      <AlertCircle className='h-4 w-4 text-destructive mt-0.5 flex-shrink-0' />
+                      <AlertTriangle className='h-4 w-4 text-destructive mt-0.5 flex-shrink-0' />
                       <p className='text-sm text-destructive'>{error}</p>
                     </div>
                   </div>
@@ -377,7 +381,7 @@ const Login = () => {
                 {error && (
                   <div className='p-3 bg-destructive/10 border border-destructive/20 rounded-lg'>
                     <div className='flex items-start space-x-2'>
-                      <AlertCircle className='h-4 w-4 text-destructive mt-0.5 flex-shrink-0' />
+                      <AlertTriangle className='h-4 w-4 text-destructive mt-0.5 flex-shrink-0' />
                       <p className='text-sm text-destructive'>{error}</p>
                     </div>
                   </div>
@@ -493,7 +497,7 @@ const Login = () => {
                 {error && (
                   <div className='p-3 bg-destructive/10 border border-destructive/20 rounded-lg'>
                     <div className='flex items-start space-x-2'>
-                      <AlertCircle className='h-4 w-4 text-destructive mt-0.5 flex-shrink-0' />
+                      <AlertTriangle className='h-4 w-4 text-destructive mt-0.5 flex-shrink-0' />
                       <p className='text-sm text-destructive'>
                         {typeof error === 'string'
                           ? error
