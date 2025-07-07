@@ -9,7 +9,7 @@ const Projects = () => {
   const [form, setForm] = useState({ name: '', status: 'planning' });
 
   useEffect(() => {
-  const fetchProjects = async () => {
+    const fetchProjects = async () => {
       setLoading(true);
       setError('');
       try {
@@ -42,7 +42,10 @@ const Projects = () => {
     <div className='max-w-2xl mx-auto p-4'>
       <div className='flex justify-between items-center mb-4'>
         <h1 className='text-2xl font-bold'>Projects</h1>
-        <button onClick={() => setShowForm(v => !v)} className='bg-primary text-white px-4 py-2 rounded'>
+        <button
+          onClick={() => setShowForm(v => !v)}
+          className='bg-primary text-white px-4 py-2 rounded'
+        >
           {showForm ? 'Cancel' : 'New Project'}
         </button>
       </div>
@@ -55,16 +58,21 @@ const Projects = () => {
             onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
             required
           />
-        <select
+          <select
             className='border px-2 py-1 rounded'
             value={form.status}
             onChange={e => setForm(f => ({ ...f, status: e.target.value }))}
-                  >
-                    <option value='planning'>Planning</option>
-                    <option value='active'>Active</option>
+          >
+            <option value='planning'>Planning</option>
+            <option value='active'>Active</option>
             <option value='completed'>Completed</option>
-                  </select>
-          <button type='submit' className='bg-green-600 text-white px-3 py-1 rounded'>Create</button>
+          </select>
+          <button
+            type='submit'
+            className='bg-green-600 text-white px-3 py-1 rounded'
+          >
+            Create
+          </button>
         </form>
       )}
       {loading ? (
@@ -85,7 +93,11 @@ const Projects = () => {
               <tr key={p.id} className='border-t'>
                 <td className='p-2'>{p.name}</td>
                 <td className='p-2'>{p.status}</td>
-                <td className='p-2'>{p.created_at ? new Date(p.created_at).toLocaleDateString() : ''}</td>
+                <td className='p-2'>
+                  {p.created_at
+                    ? new Date(p.created_at).toLocaleDateString()
+                    : ''}
+                </td>
               </tr>
             ))}
           </tbody>

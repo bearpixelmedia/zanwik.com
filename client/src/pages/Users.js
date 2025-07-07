@@ -7,18 +7,18 @@ const Users = () => {
   const [error, setError] = useState('');
 
   useEffect(() => {
-  const fetchUsers = async () => {
+    const fetchUsers = async () => {
       setLoading(true);
       setError('');
       try {
         const data = await db.users.getAll();
         setUsers(data);
-    } catch (err) {
-      setError('Failed to load users');
+      } catch (err) {
+        setError('Failed to load users');
       }
       setLoading(false);
     };
-      fetchUsers();
+    fetchUsers();
   }, []);
 
   return (
@@ -29,7 +29,7 @@ const Users = () => {
       ) : error ? (
         <div className='text-red-600'>{error}</div>
       ) : (
-        <table className='w-full border mt-2'>
+        <table className='w-full border'>
           <thead>
             <tr className='bg-gray-100'>
               <th className='p-2 text-left'>Email</th>
@@ -37,10 +37,10 @@ const Users = () => {
             </tr>
           </thead>
           <tbody>
-            {users.map(u => (
-              <tr key={u.id} className='border-t'>
-                <td className='p-2'>{u.email}</td>
-                <td className='p-2'>{u.role}</td>
+            {users.map(user => (
+              <tr key={user.id} className='border-t'>
+                <td className='p-2'>{user.email}</td>
+                <td className='p-2'>{user.role || 'user'}</td>
               </tr>
             ))}
           </tbody>

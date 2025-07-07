@@ -44,8 +44,7 @@ export const testConnection = async () => {
       return false;
     }
 
-    isConnected = true;
-    connectionRetries = 0;
+
     console.log('✅ Successfully connected to Supabase database');
     return true;
   } catch (error) {
