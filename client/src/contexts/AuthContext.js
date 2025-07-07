@@ -29,6 +29,7 @@ export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [lastActivity, setLastActivity] = useState(Date.now());
   const [sessionTimeout] = useState(30 * 60 * 1000); // 30 minutes
+  const [loadingStuck, setLoadingStuck] = useState(false);
 
   // Refs to prevent multiple initializations
   const initializingRef = useRef(false);
@@ -321,6 +322,7 @@ export const AuthProvider = ({ children }) => {
             await initializeUser(currentSession.user, currentSession);
           } finally {
             setLoading(false);
+            setLoadingStuck(false);
             console.log(
               'AuthContext: Loading set to false after user init (initAuth/finally)'
             );
@@ -328,6 +330,7 @@ export const AuthProvider = ({ children }) => {
         } else {
           setUser(null);
           setLoading(false);
+          setLoadingStuck(false);
           console.log(
             'AuthContext: No existing session found, user set to null'
           );
@@ -335,6 +338,7 @@ export const AuthProvider = ({ children }) => {
       } catch (error) {
         console.error('AuthContext: Error initializing auth:', error);
         setLoading(false);
+        setLoadingStuck(false);
       }
     };
 
@@ -358,6 +362,7 @@ export const AuthProvider = ({ children }) => {
           setIsAuthenticated(false);
         } finally {
           setLoading(false);
+          setLoadingStuck(false);
           console.log(
             'AuthContext: Loading set to false after user init (onAuthStateChange/finally)'
           );
@@ -368,6 +373,7 @@ export const AuthProvider = ({ children }) => {
         setUserProfile(null);
         setIsAuthenticated(false);
         setLoading(false);
+        setLoadingStuck(false);
         console.log(
           'AuthContext: Signed out or no session.user, user set to null'
         );
@@ -379,17 +385,20 @@ export const AuthProvider = ({ children }) => {
       }
       if (mountedRef.current) {
         setLoading(false);
+        setLoadingStuck(false);
       }
     });
 
     authListenerRef.current = subscription;
     setLoading(true); // Always set loading to true at the start
+    setLoadingStuck(false);
     initAuth();
 
     // Set up fallback timeout
     const fallbackTimeout = setTimeout(() => {
       if (mountedRef.current && loadingRef.current) {
-        console.log('AuthContext: Fallback timeout reached, stopping loading');
+        setLoadingStuck(true);
+        console.error('AuthContext: Fallback timeout reached, loading stuck!');
         console.log('AuthContext: Fallback debug:', {
           user,
           session,
@@ -409,7 +418,7 @@ export const AuthProvider = ({ children }) => {
           });
         }
       }
-    }, 5000); // Reduce timeout to 5s for faster recovery
+    }, 7000); // 7 seconds for stuck loading
 
     return () => {
       if (authListenerRef.current) {
@@ -739,6 +748,7 @@ export const AuthProvider = ({ children }) => {
       getSessionInfo,
       lastActivity,
       sessionTimeout,
+      loadingStuck,
     }),
     [
       user,
@@ -763,6 +773,7 @@ export const AuthProvider = ({ children }) => {
       getSessionInfo,
       lastActivity,
       sessionTimeout,
+      loadingStuck,
     ]
   );
 
@@ -771,6 +782,42 @@ export const AuthProvider = ({ children }) => {
   }, [loading]);
 
   return (
-    <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
+    <AuthContext.Provider
+      value={{
+        user,
+        loading,
+        session,
+        userProfile,
+        loginHistory,
+        securityEvents,
+        isAuthenticated,
+        lastActivity,
+        sessionTimeout,
+        login,
+        logout,
+        hasPermission,
+        hasRole,
+        getSessionInfo,
+        loadingStuck,
+      }}
+    >
+      {loadingStuck ? (
+        <div style={{ color: 'red', padding: 32, textAlign: 'center' }}>
+          <h2>⚠️ Authentication is taking too long</h2>
+          <p>
+            The app is stuck while checking authentication. This usually means a
+            network issue, missing environment variable, or a Supabase config problem.
+          </p>
+          <pre style={{ textAlign: 'left', margin: '1em auto', maxWidth: 600, background: '#fff0f0', padding: 16, borderRadius: 8 }}>
+            {JSON.stringify({ user, session, isAuthenticated, userProfile }, null, 2)}
+          </pre>
+          <p>
+            Please check your browser console and network tab for errors, and verify your environment variables.
+          </p>
+        </div>
+      ) : (
+        children
+      )}
+    </AuthContext.Provider>
   );
 };
