@@ -6,7 +6,7 @@ interface UserProfileProps {
 
 const UserProfile: FC<UserProfileProps> = ({}) => {
   return (
-    <div className="userprofile-container">
+    <div className='userprofile-container'>
       <h2>UserProfile</h2>
     </div>
   );

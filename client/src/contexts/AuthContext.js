@@ -124,7 +124,7 @@ export const AuthProvider = ({ children }) => {
       try {
         console.log('AuthContext: [initializeUser] Fetching profile...');
         const timeoutPromise = new Promise((_, reject) =>
-          setTimeout(() => reject(new Error('Profile fetch timed out')), 5000),
+          setTimeout(() => reject(new Error('Profile fetch timed out')), 5000)
         );
         const fetchPromise = supabase
           .from('profiles')
@@ -132,12 +132,12 @@ export const AuthProvider = ({ children }) => {
           .eq('id', user.id)
           .single();
         console.log(
-          'AuthContext: [initializeUser] Profile fetch promise created',
+          'AuthContext: [initializeUser] Profile fetch promise created'
         );
         const result = await Promise.race([fetchPromise, timeoutPromise]);
         console.log(
           'AuthContext: [initializeUser] Profile fetch completed:',
-          result,
+          result
         );
         profile = result.data;
         error = result.error;
@@ -145,7 +145,7 @@ export const AuthProvider = ({ children }) => {
         // This will catch the timeout or any thrown error
         console.warn(
           'AuthContext: [initializeUser] Profile fetch timed out or errored:',
-          err,
+          err
         );
         error = err;
         profile = null;
@@ -157,13 +157,13 @@ export const AuthProvider = ({ children }) => {
       if (error || !profile) {
         console.warn(
           'AuthContext: [initializeUser] Profile not found, using default',
-          error,
+          error
         );
         setUserProfile(defaultProfile);
       } else {
         console.log(
           'AuthContext: [initializeUser] Profile set successfully:',
-          profile,
+          profile
         );
         setUserProfile(profile);
       }
@@ -201,7 +201,7 @@ export const AuthProvider = ({ children }) => {
               console.warn(
                 'AuthContext: [initializeUser] Login history load failed:',
                 err
-              ),
+              )
             );
         } catch (err) {
           console.warn(
@@ -229,7 +229,7 @@ export const AuthProvider = ({ children }) => {
               console.warn(
                 'AuthContext: [initializeUser] Security events load failed:',
                 err
-              ),
+              )
             );
         } catch (err) {
           console.warn(
@@ -761,7 +761,7 @@ export const AuthProvider = ({ children }) => {
             {JSON.stringify(
               { user, session, isAuthenticated, userProfile },
               null,
-              2,
+              2
             )}
           </pre>
           <p>
@@ -772,12 +772,8 @@ export const AuthProvider = ({ children }) => {
       ) : userProfile && userProfile.error ? (
         <div style={{ color: 'red', padding: 32, textAlign: 'center' }}>
           <h2>⚠️ Profile Not Found</h2>
-          <p>
-            {userProfile.error}
-          </p>
-          <p>
-            Please contact support or try logging out and logging in again.
-          </p>
+          <p>{userProfile.error}</p>
+          <p>Please contact support or try logging out and logging in again.</p>
         </div>
       ) : (
         children

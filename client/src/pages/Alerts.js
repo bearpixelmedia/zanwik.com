@@ -1,9 +1,30 @@
 import React, { useEffect, useState } from 'react';
 
 const mockAlerts = [
-  { id: 1, title: 'High CPU Usage', severity: 'Warning', service: 'Web Server', time: '2 minutes ago', status: 'Active' },
-  { id: 2, title: 'Database Connection Slow', severity: 'Error', service: 'Database', time: '5 minutes ago', status: 'Resolved' },
-  { id: 3, title: 'Memory Usage High', severity: 'Warning', service: 'API Gateway', time: '10 minutes ago', status: 'Active' },
+  {
+    id: 1,
+    title: 'High CPU Usage',
+    severity: 'Warning',
+    service: 'Web Server',
+    time: '2 minutes ago',
+    status: 'Active',
+  },
+  {
+    id: 2,
+    title: 'Database Connection Slow',
+    severity: 'Error',
+    service: 'Database',
+    time: '5 minutes ago',
+    status: 'Resolved',
+  },
+  {
+    id: 3,
+    title: 'Memory Usage High',
+    severity: 'Warning',
+    service: 'API Gateway',
+    time: '10 minutes ago',
+    status: 'Active',
+  },
 ];
 
 const Alerts = () => {
@@ -20,22 +41,31 @@ const Alerts = () => {
     }, 800);
   }, []);
 
-  const getSeverityColor = (severity) => {
+  const getSeverityColor = severity => {
     switch (severity) {
-      case 'Critical': return 'text-red-600';
-      case 'Error': return 'text-orange-600';
-      case 'Warning': return 'text-yellow-600';
-      case 'Info': return 'text-blue-600';
-      default: return 'text-gray-600';
+      case 'Critical':
+        return 'text-red-600';
+      case 'Error':
+        return 'text-orange-600';
+      case 'Warning':
+        return 'text-yellow-600';
+      case 'Info':
+        return 'text-blue-600';
+      default:
+        return 'text-gray-600';
     }
   };
 
-  const getStatusColor = (status) => {
+  const getStatusColor = status => {
     switch (status) {
-      case 'Active': return 'text-red-600';
-      case 'Resolved': return 'text-green-600';
-      case 'Acknowledged': return 'text-yellow-600';
-      default: return 'text-gray-600';
+      case 'Active':
+        return 'text-red-600';
+      case 'Resolved':
+        return 'text-green-600';
+      case 'Acknowledged':
+        return 'text-yellow-600';
+      default:
+        return 'text-gray-600';
     }
   };
 
@@ -61,10 +91,14 @@ const Alerts = () => {
             {alerts.map(alert => (
               <tr key={alert.id} className='border-t'>
                 <td className='p-2'>{alert.title}</td>
-                <td className={`p-2 ${getSeverityColor(alert.severity)}`}>{alert.severity}</td>
+                <td className={`p-2 ${getSeverityColor(alert.severity)}`}>
+                  {alert.severity}
+                </td>
                 <td className='p-2'>{alert.service}</td>
                 <td className='p-2'>{alert.time}</td>
-                <td className={`p-2 ${getStatusColor(alert.status)}`}>{alert.status}</td>
+                <td className={`p-2 ${getStatusColor(alert.status)}`}>
+                  {alert.status}
+                </td>
               </tr>
             ))}
           </tbody>
@@ -74,4 +108,4 @@ const Alerts = () => {
   );
 };
 
-export default Alerts; 
+export default Alerts;

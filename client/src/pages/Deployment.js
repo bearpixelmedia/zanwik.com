@@ -6,7 +6,7 @@ const Deployment = () => {
   const [error, setError] = useState('');
 
   const handleRedeploy = async () => {
-      setLoading(true);
+    setLoading(true);
     setError('');
     try {
       // Mock redeploy

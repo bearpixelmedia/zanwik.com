@@ -13,10 +13,10 @@ export const userManagementService = {
    */
   getAll: async (params = {}) => {
     try {
-      const response = await api.get(`/userManagement`, { params });
+      const response = await api.get('/userManagement', { params });
       return response.data;
     } catch (error) {
-      console.error(`Error fetching userManagement:`, error);
+      console.error('Error fetching userManagement:', error);
       throw error;
     }
   },
@@ -26,12 +26,12 @@ export const userManagementService = {
    * @param {string} id - Item ID
    * @returns {Promise<Object>} userManagement item
    */
-  getById: async (id) => {
+  getById: async id => {
     try {
       const response = await api.get(`/userManagement/${id}`);
       return response.data;
     } catch (error) {
-      console.error(`Error fetching userManagement by ID:`, error);
+      console.error('Error fetching userManagement by ID:', error);
       throw error;
     }
   },
@@ -41,12 +41,12 @@ export const userManagementService = {
    * @param {Object} data - Item data
    * @returns {Promise<Object>} Created item
    */
-  create: async (data) => {
+  create: async data => {
     try {
-      const response = await api.post(`/userManagement`, data);
+      const response = await api.post('/userManagement', data);
       return response.data;
     } catch (error) {
-      console.error(`Error creating userManagement:`, error);
+      console.error('Error creating userManagement:', error);
       throw error;
     }
   },
@@ -62,7 +62,7 @@ export const userManagementService = {
       const response = await api.put(`/userManagement/${id}`, data);
       return response.data;
     } catch (error) {
-      console.error(`Error updating userManagement:`, error);
+      console.error('Error updating userManagement:', error);
       throw error;
     }
   },
@@ -72,11 +72,11 @@ export const userManagementService = {
    * @param {string} id - Item ID
    * @returns {Promise<void>}
    */
-  delete: async (id) => {
+  delete: async id => {
     try {
       await api.delete(`/userManagement/${id}`);
     } catch (error) {
-      console.error(`Error deleting userManagement:`, error);
+      console.error('Error deleting userManagement:', error);
       throw error;
     }
   },

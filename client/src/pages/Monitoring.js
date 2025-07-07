@@ -1,9 +1,27 @@
 import React, { useEffect, useState } from 'react';
 
 const mockMetrics = [
-  { id: 1, service: 'API Gateway', uptime: '99.9%', latency: '120ms', errors: 1 },
-  { id: 2, service: 'Postgres DB', uptime: '99.8%', latency: '90ms', errors: 0 },
-  { id: 3, service: 'Object Storage', uptime: '98.5%', latency: '200ms', errors: 3 },
+  {
+    id: 1,
+    service: 'API Gateway',
+    uptime: '99.9%',
+    latency: '120ms',
+    errors: 1,
+  },
+  {
+    id: 2,
+    service: 'Postgres DB',
+    uptime: '99.8%',
+    latency: '90ms',
+    errors: 0,
+  },
+  {
+    id: 3,
+    service: 'Object Storage',
+    uptime: '98.5%',
+    latency: '200ms',
+    errors: 3,
+  },
 ];
 
 const Monitoring = () => {
@@ -12,11 +30,11 @@ const Monitoring = () => {
   const [error, setError] = useState('');
 
   useEffect(() => {
-        setLoading(true);
+    setLoading(true);
     setError('');
     setTimeout(() => {
       setMetrics(mockMetrics);
-        setLoading(false);
+      setLoading(false);
     }, 800);
   }, []);
 
@@ -43,7 +61,13 @@ const Monitoring = () => {
                 <td className='p-2'>{m.service}</td>
                 <td className='p-2'>{m.uptime}</td>
                 <td className='p-2'>{m.latency}</td>
-                <td className={`p-2 ${m.errors > 0 ? 'text-red-600' : 'text-green-600'}`}>{m.errors}</td>
+                <td
+                  className={`p-2 ${
+                    m.errors > 0 ? 'text-red-600' : 'text-green-600'
+                  }`}
+                >
+                  {m.errors}
+                </td>
               </tr>
             ))}
           </tbody>

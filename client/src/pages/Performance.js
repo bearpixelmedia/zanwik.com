@@ -1,10 +1,34 @@
 import React, { useEffect, useState } from 'react';
 
 const mockPerformanceData = [
-  { id: 1, metric: 'Page Load Time', value: '1.2s', status: 'Good', trend: '+0.1s' },
-  { id: 2, metric: 'API Response Time', value: '120ms', status: 'Good', trend: '-10ms' },
-  { id: 3, metric: 'Database Query Time', value: '45ms', status: 'Excellent', trend: '-5ms' },
-  { id: 4, metric: 'Memory Usage', value: '67%', status: 'Warning', trend: '+5%' },
+  {
+    id: 1,
+    metric: 'Page Load Time',
+    value: '1.2s',
+    status: 'Good',
+    trend: '+0.1s',
+  },
+  {
+    id: 2,
+    metric: 'API Response Time',
+    value: '120ms',
+    status: 'Good',
+    trend: '-10ms',
+  },
+  {
+    id: 3,
+    metric: 'Database Query Time',
+    value: '45ms',
+    status: 'Excellent',
+    trend: '-5ms',
+  },
+  {
+    id: 4,
+    metric: 'Memory Usage',
+    value: '67%',
+    status: 'Warning',
+    trend: '+5%',
+  },
 ];
 
 const Performance = () => {
@@ -21,13 +45,18 @@ const Performance = () => {
     }, 800);
   }, []);
 
-  const getStatusColor = (status) => {
+  const getStatusColor = status => {
     switch (status) {
-      case 'Excellent': return 'text-green-600';
-      case 'Good': return 'text-blue-600';
-      case 'Warning': return 'text-yellow-600';
-      case 'Critical': return 'text-red-600';
-      default: return 'text-gray-600';
+      case 'Excellent':
+        return 'text-green-600';
+      case 'Good':
+        return 'text-blue-600';
+      case 'Warning':
+        return 'text-yellow-600';
+      case 'Critical':
+        return 'text-red-600';
+      default:
+        return 'text-gray-600';
     }
   };
 
@@ -53,7 +82,9 @@ const Performance = () => {
               <tr key={m.id} className='border-t'>
                 <td className='p-2'>{m.metric}</td>
                 <td className='p-2 font-medium'>{m.value}</td>
-                <td className={`p-2 ${getStatusColor(m.status)}`}>{m.status}</td>
+                <td className={`p-2 ${getStatusColor(m.status)}`}>
+                  {m.status}
+                </td>
                 <td className='p-2 text-sm text-gray-600'>{m.trend}</td>
               </tr>
             ))}
@@ -64,4 +95,4 @@ const Performance = () => {
   );
 };
 
-export default Performance; 
+export default Performance;

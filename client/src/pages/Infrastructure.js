@@ -12,7 +12,7 @@ const Infrastructure = () => {
   const [error, setError] = useState('');
 
   useEffect(() => {
-      setLoading(true);
+    setLoading(true);
     setError('');
     // Mock fetch
     setTimeout(() => {
@@ -42,7 +42,15 @@ const Infrastructure = () => {
               <tr key={r.id} className='border-t'>
                 <td className='p-2'>{r.name}</td>
                 <td className='p-2'>{r.type}</td>
-                <td className={`p-2 ${r.status === 'Healthy' ? 'text-green-600' : 'text-yellow-600'}`}>{r.status}</td>
+                <td
+                  className={`p-2 ${
+                    r.status === 'Healthy'
+                      ? 'text-green-600'
+                      : 'text-yellow-600'
+                  }`}
+                >
+                  {r.status}
+                </td>
               </tr>
             ))}
           </tbody>

@@ -36,8 +36,6 @@ const Security = lazy(() => import('./pages/Security'));
 const Performance = lazy(() => import('./pages/Performance'));
 const Alerts = lazy(() => import('./pages/Alerts'));
 
-
-
 // Enhanced Loading Component
 const LoadingScreen = ({ message = 'Loading...' }) => (
   <div className='min-h-screen bg-gradient-to-br from-background via-background to-muted flex items-center justify-center'>
@@ -312,156 +310,156 @@ const App = () => {
       <Router>
         <AnalyticsWrapper />
         <div className='App'>
-            <Routes>
-              {/* Public Routes */}
-              <Route 
-                path='/login' 
-                element={
-                  <AuthenticatedRedirect>
-                    <Login />
-                  </AuthenticatedRedirect>
-                } 
-              />
+          <Routes>
+            {/* Public Routes */}
+            <Route
+              path='/login'
+              element={
+                <AuthenticatedRedirect>
+                  <Login />
+                </AuthenticatedRedirect>
+              }
+            />
 
-              {/* Protected Routes */}
-              <Route
-                path='/'
-                element={
-                  <PrivateRoute>
-                    <AppLayout>
-                      <Dashboard />
-                    </AppLayout>
-                  </PrivateRoute>
-                }
-              />
+            {/* Protected Routes */}
+            <Route
+              path='/'
+              element={
+                <PrivateRoute>
+                  <AppLayout>
+                    <Dashboard />
+                  </AppLayout>
+                </PrivateRoute>
+              }
+            />
 
-              <Route
-                path='/dashboard'
-                element={
-                  <PrivateRoute>
-                    <AppLayout>
-                      <Dashboard />
-                    </AppLayout>
-                  </PrivateRoute>
-                }
-              />
+            <Route
+              path='/dashboard'
+              element={
+                <PrivateRoute>
+                  <AppLayout>
+                    <Dashboard />
+                  </AppLayout>
+                </PrivateRoute>
+              }
+            />
 
-              <Route
-                path='/projects'
-                element={
-                  <PrivateRoute requiredPermissions={['view_projects']}>
-                    <AppLayout>
-                      <Projects />
-                    </AppLayout>
-                  </PrivateRoute>
-                }
-              />
+            <Route
+              path='/projects'
+              element={
+                <PrivateRoute requiredPermissions={['view_projects']}>
+                  <AppLayout>
+                    <Projects />
+                  </AppLayout>
+                </PrivateRoute>
+              }
+            />
 
-              <Route
-                path='/analytics'
-                element={
-                  <PrivateRoute requiredPermissions={['view_analytics']}>
-                    <AppLayout>
-                      <Analytics />
-                    </AppLayout>
-                  </PrivateRoute>
-                }
-              />
+            <Route
+              path='/analytics'
+              element={
+                <PrivateRoute requiredPermissions={['view_analytics']}>
+                  <AppLayout>
+                    <Analytics />
+                  </AppLayout>
+                </PrivateRoute>
+              }
+            />
 
-              <Route
-                path='/infrastructure'
-                element={
-                  <PrivateRoute requiredPermissions={['view_infrastructure']}>
-                    <AppLayout>
-                      <Infrastructure />
-                    </AppLayout>
-                  </PrivateRoute>
-                }
-              />
+            <Route
+              path='/infrastructure'
+              element={
+                <PrivateRoute requiredPermissions={['view_infrastructure']}>
+                  <AppLayout>
+                    <Infrastructure />
+                  </AppLayout>
+                </PrivateRoute>
+              }
+            />
 
-              <Route
-                path='/monitoring'
-                element={
-                  <PrivateRoute requiredPermissions={['view_monitoring']}>
-                    <AppLayout>
-                      <Monitoring />
-                    </AppLayout>
-                  </PrivateRoute>
-                }
-              />
+            <Route
+              path='/monitoring'
+              element={
+                <PrivateRoute requiredPermissions={['view_monitoring']}>
+                  <AppLayout>
+                    <Monitoring />
+                  </AppLayout>
+                </PrivateRoute>
+              }
+            />
 
-              <Route
-                path='/deployment'
-                element={
-                  <PrivateRoute requiredPermissions={['deploy']}>
-                    <AppLayout>
-                      <Deployment />
-                    </AppLayout>
-                  </PrivateRoute>
-                }
-              />
+            <Route
+              path='/deployment'
+              element={
+                <PrivateRoute requiredPermissions={['deploy']}>
+                  <AppLayout>
+                    <Deployment />
+                  </AppLayout>
+                </PrivateRoute>
+              }
+            />
 
-              <Route
-                path='/users'
-                element={
-                  <PrivateRoute requiredRole='admin'>
-                    <AppLayout>
-                      <Users />
-                    </AppLayout>
-                  </PrivateRoute>
-                }
-              />
+            <Route
+              path='/users'
+              element={
+                <PrivateRoute requiredRole='admin'>
+                  <AppLayout>
+                    <Users />
+                  </AppLayout>
+                </PrivateRoute>
+              }
+            />
 
-              <Route
-                path='/settings'
-                element={
-                  <PrivateRoute>
-                    <AppLayout>
-                      <Settings />
-                    </AppLayout>
-                  </PrivateRoute>
-                }
-              />
+            <Route
+              path='/settings'
+              element={
+                <PrivateRoute>
+                  <AppLayout>
+                    <Settings />
+                  </AppLayout>
+                </PrivateRoute>
+              }
+            />
 
-              <Route
-                path='/security'
-                element={
-                  <PrivateRoute requiredPermissions={['view_security']}>
-                    <AppLayout>
-                      <Security />
-                    </AppLayout>
-                  </PrivateRoute>
-                }
-              />
+            <Route
+              path='/security'
+              element={
+                <PrivateRoute requiredPermissions={['view_security']}>
+                  <AppLayout>
+                    <Security />
+                  </AppLayout>
+                </PrivateRoute>
+              }
+            />
 
-              <Route
-                path='/performance'
-                element={
-                  <PrivateRoute requiredPermissions={['view_performance']}>
-                    <AppLayout>
-                      <Performance />
-                    </AppLayout>
-                  </PrivateRoute>
-                }
-              />
+            <Route
+              path='/performance'
+              element={
+                <PrivateRoute requiredPermissions={['view_performance']}>
+                  <AppLayout>
+                    <Performance />
+                  </AppLayout>
+                </PrivateRoute>
+              }
+            />
 
-              <Route
-                path='/alerts'
-                element={
-                  <PrivateRoute requiredPermissions={['view_alerts']}>
-                    <AppLayout>
-                      <Alerts />
-                    </AppLayout>
-                  </PrivateRoute>
-                }
-              />
+            <Route
+              path='/alerts'
+              element={
+                <PrivateRoute requiredPermissions={['view_alerts']}>
+                  <AppLayout>
+                    <Alerts />
+                  </AppLayout>
+                </PrivateRoute>
+              }
+            />
 
-              {/* 404 Route */}
-              <Route path='*' element={<Navigate to='/login' replace />} />
-            </Routes>
-          </div>
-        </Router>
-      </AuthProvider>
+            {/* 404 Route */}
+            <Route path='*' element={<Navigate to='/login' replace />} />
+          </Routes>
+        </div>
+      </Router>
+    </AuthProvider>
   );
 };
 
