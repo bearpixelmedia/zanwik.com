@@ -119,65 +119,60 @@ export const AuthProvider = ({ children }) => {
       }
 
       // Fetch profile with manual timeout
+      let profile = null;
+      let error = null;
       try {
         console.log('AuthContext: [initializeUser] Fetching profile...');
-        let profile = null;
-        let error = null;
-        try {
-          console.log(
-            'AuthContext: [initializeUser] Starting profile fetch for user ID:',
-            user.id
-          );
-          const timeoutPromise = new Promise((_, reject) =>
-            setTimeout(() => reject(new Error('Profile fetch timed out')), 5000)
-          );
-          const fetchPromise = supabase
-            .from('profiles')
-            .select('*')
-            .eq('id', user.id)
-            .single();
-          console.log(
-            'AuthContext: [initializeUser] Profile fetch promise created'
-          );
-          const result = await Promise.race([fetchPromise, timeoutPromise]);
-          console.log(
-            'AuthContext: [initializeUser] Profile fetch completed:',
-            result
-          );
-          // If fetchPromise resolves, result is { data, error }
-          // If timeoutPromise rejects, it throws and is caught below
-          profile = result.data;
-          error = result.error;
-        } catch (err) {
-          // This will catch the timeout or any thrown error
-          console.warn(
-            'AuthContext: [initializeUser] Profile fetch timed out or errored:',
-            err
-          );
-          error = err;
-          profile = null;
-        }
-        console.log('AuthContext: [initializeUser] Database connection test complete');
-        console.log('AuthContext: [initializeUser] Profile fetch result:', { profile, error });
-        if (error || !profile) {
-          console.warn(
-            'AuthContext: [initializeUser] Profile not found, using default',
-            error
-          );
-          setUserProfile(defaultProfile);
-        } else {
-          console.log(
-            'AuthContext: [initializeUser] Profile set successfully:',
-            profile
-          );
-          setUserProfile(profile);
-        }
-      } catch (error) {
+        const timeoutPromise = new Promise((_, reject) =>
+          setTimeout(() => reject(new Error('Profile fetch timed out')), 5000),
+        );
+        const fetchPromise = supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', user.id)
+          .single();
+        console.log(
+          'AuthContext: [initializeUser] Profile fetch promise created',
+        );
+        const result = await Promise.race([fetchPromise, timeoutPromise]);
+        console.log(
+          'AuthContext: [initializeUser] Profile fetch completed:',
+          result,
+        );
+        profile = result.data;
+        error = result.error;
+      } catch (err) {
+        // This will catch the timeout or any thrown error
         console.warn(
-          'AuthContext: [initializeUser] Profile load failed, using default:',
-          error
+          'AuthContext: [initializeUser] Profile fetch timed out or errored:',
+          err,
+        );
+        error = err;
+        profile = null;
+      }
+      console.log('AuthContext: [initializeUser] Profile fetch result:', {
+        profile,
+        error,
+      });
+      if (error || !profile) {
+        console.warn(
+          'AuthContext: [initializeUser] Profile not found, using default',
+          error,
         );
         setUserProfile(defaultProfile);
+      } else {
+        console.log(
+          'AuthContext: [initializeUser] Profile set successfully:',
+          profile,
+        );
+        setUserProfile(profile);
+      }
+      // If after all attempts userProfile is still null, set an error state
+      if (!profile && !error) {
+        setUserProfile({
+          ...defaultProfile,
+          error: 'Profile not found. Please contact support.',
+        });
       }
       console.log('AuthContext: [initializeUser] END', user?.email);
       console.log('AuthContext: [initializeUser] Setting loading to false');
@@ -804,13 +799,38 @@ export const AuthProvider = ({ children }) => {
           <h2>⚠️ Authentication is taking too long</h2>
           <p>
             The app is stuck while checking authentication. This usually means a
-            network issue, missing environment variable, or a Supabase config problem.
+            network issue, missing environment variable, or a Supabase config
+            problem.
           </p>
-          <pre style={{ textAlign: 'left', margin: '1em auto', maxWidth: 600, background: '#fff0f0', padding: 16, borderRadius: 8 }}>
-            {JSON.stringify({ user, session, isAuthenticated, userProfile }, null, 2)}
+          <pre
+            style={{
+              textAlign: 'left',
+              margin: '1em auto',
+              maxWidth: 600,
+              background: '#fff0f0',
+              padding: 16,
+              borderRadius: 8,
+            }}
+          >
+            {JSON.stringify(
+              { user, session, isAuthenticated, userProfile },
+              null,
+              2,
+            )}
           </pre>
           <p>
-            Please check your browser console and network tab for errors, and verify your environment variables.
+            Please check your browser console and network tab for errors, and
+            verify your environment variables.
+          </p>
+        </div>
+      ) : userProfile && userProfile.error ? (
+        <div style={{ color: 'red', padding: 32, textAlign: 'center' }}>
+          <h2>⚠️ Profile Not Found</h2>
+          <p>
+            {userProfile.error}
+          </p>
+          <p>
+            Please contact support or try logging out and logging in again.
           </p>
         </div>
       ) : (
