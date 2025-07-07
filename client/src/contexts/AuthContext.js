@@ -87,7 +87,7 @@ export const AuthProvider = ({ children }) => {
           setTimeout(() => reject(new Error('Profile fetch timed out')), 3000),
         );
         const fetchPromise = supabase
-          .from('profiles')
+          .from('users')
           .select('*')
           .eq('id', user.id)
           .single();

@@ -14,10 +14,10 @@ const Settings = () => {
     if (!user) return;
     setLoading(true);
     setError('');
-    db.profiles
+    db.users
       .getById(user.id)
       .then(data => {
-        setName(data?.name || '');
+        setName(data?.full_name || '');
       })
       .catch(() => setError('Failed to load profile'))
       .finally(() => setLoading(false));
@@ -29,7 +29,7 @@ const Settings = () => {
     setError('');
     setSuccess('');
     try {
-      await db.profiles.update(user.id, { name });
+      await db.users.update(user.id, { full_name: name });
       setSuccess('Profile updated successfully');
     } catch (err) {
       setError('Failed to update profile');
