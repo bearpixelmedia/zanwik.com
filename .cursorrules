@@ -1,5 +1,13 @@
 # Zanwik Dashboard - Cursor Rules for Efficient Development
 
+## 📋 Rule Organization
+- Main rules are in `.cursorrules`
+- Specialized rules are in `.cursor/rules/` directory
+- Component patterns: `.cursor/rules/component-patterns.mdc`
+- API patterns: `.cursor/rules/api-patterns.mdc`
+- Performance: `.cursor/rules/performance.mdc`
+- Debugging: `.cursor/rules/debugging.mdc`
+
 ## 🎯 Code Quality & Consistency
 - Always use TypeScript for new files
 - Use consistent naming: camelCase for variables, PascalCase for components
@@ -7,6 +15,8 @@
 - Use meaningful variable names, avoid abbreviations
 - Follow ESLint and Prettier rules strictly
 - Remove unused imports and variables
+- Use absolute imports when possible
+- Group imports by type (React, third-party, local)
 
 ## ⚛️ React Best Practices
 - Use functional components with hooks
@@ -23,6 +33,10 @@
 - Optimize bundle size with tree shaking
 - Use proper key props in lists
 - Avoid inline object/function creation in render
+- Implement request caching and debouncing
+- Use pagination for large datasets
+- Monitor Core Web Vitals
+- Set up performance budgets
 
 ## 🛡️ Error Handling
 - Always handle async errors with try-catch
@@ -37,6 +51,10 @@
 - Document complex business logic
 - Keep dependencies up to date
 - Use environment variables for configuration
+- Use React DevTools for debugging
+- Implement hot reloading for faster development
+- Use source maps for better debugging
+- Set up proper development environment
 
 ## 📁 File Organization
 - Group related components in folders
@@ -72,6 +90,11 @@
 - Mock external dependencies
 - Use meaningful test descriptions
 - Maintain good test coverage
+- Test error boundaries and edge cases
+- Implement integration tests for API calls
+- Use proper test isolation
+- Test accessibility features
+- Monitor test performance
 
 ## 🚀 Deployment & DevOps
 - Use environment-specific configurations

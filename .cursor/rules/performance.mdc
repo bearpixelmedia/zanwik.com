@@ -1,0 +1,66 @@
+# Performance Optimization Patterns
+
+## React Performance
+- Use React.memo for expensive components
+- Implement proper key props in lists
+- Avoid inline object/function creation
+- Use useMemo for expensive calculations
+- Use useCallback for functions passed as props
+
+## Bundle Optimization
+- Use React.lazy for code splitting
+- Implement dynamic imports
+- Optimize import statements
+- Remove unused dependencies
+- Use tree shaking effectively
+
+## API Performance
+- Implement request caching
+- Use pagination for large datasets
+- Optimize payload sizes
+- Implement request debouncing
+- Use request cancellation
+
+## State Management
+- Minimize state updates
+- Use proper state structure
+- Implement optimistic updates
+- Avoid unnecessary re-renders
+- Use context sparingly
+
+## Image Optimization
+- Use appropriate image formats
+- Implement lazy loading
+- Optimize image sizes
+- Use responsive images
+- Implement proper alt text
+
+## CSS Performance
+- Use CSS-in-JS efficiently
+- Minimize CSS bundle size
+- Use CSS custom properties
+- Implement critical CSS
+- Optimize animations
+
+## Memory Management
+- Clean up event listeners
+- Implement proper useEffect cleanup
+- Avoid memory leaks
+- Use weak references when appropriate
+- Monitor memory usage
+
+## Monitoring
+- Use performance monitoring tools
+- Track Core Web Vitals
+- Monitor bundle sizes
+- Profile application performance
+- Set up performance budgets
+
+description: Performance optimization patterns and best practices
+globs: ["**/*.js", "**/*.tsx", "**/*.jsx", "**/*.css"]
+alwaysApply: true
+---
+description:
+globs:
+alwaysApply: false
+---

@@ -1,0 +1,58 @@
+# Debugging & Troubleshooting Patterns
+
+## Console Logging
+- Use descriptive console.log messages
+- Include relevant data in logs
+- Use console.group for related logs
+- Remove debug logs before production
+
+## Error Tracking
+- Implement proper error boundaries
+- Log errors with context
+- Use error tracking services
+- Include stack traces when helpful
+
+## Performance Debugging
+- Use React DevTools Profiler
+- Monitor component re-renders
+- Check bundle size impact
+- Profile API call performance
+
+## State Debugging
+- Log state changes in development
+- Use React DevTools for state inspection
+- Check for state mutations
+- Verify state update timing
+
+## Network Debugging
+- Log API request/response data
+- Check network tab for failed requests
+- Verify authentication headers
+- Monitor request timing
+
+## Common Issues
+- Check for infinite re-renders
+- Verify useEffect dependencies
+- Ensure proper cleanup
+- Check for memory leaks
+
+## Development Tools
+- Use React DevTools
+- Enable source maps
+- Use browser dev tools
+- Implement hot reloading
+
+## Testing Debugging
+- Write meaningful test descriptions
+- Use proper test isolation
+- Mock external dependencies
+- Check test coverage
+
+description: Debugging patterns and troubleshooting strategies
+globs: ["**/*.js", "**/*.tsx", "**/*.jsx"]
+alwaysApply: false
+---
+description:
+globs:
+alwaysApply: false
+---

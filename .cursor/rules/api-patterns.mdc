@@ -1,0 +1,57 @@
+# API Integration Patterns
+
+## Request Patterns
+- Use consistent error handling for all API calls
+- Implement proper loading states during requests
+- Add retry logic for failed requests
+- Use proper HTTP status code handling
+
+## Authentication Patterns
+- Include auth tokens in request headers
+- Handle 401/403 responses appropriately
+- Implement token refresh logic
+- Secure sensitive data in requests
+
+## Response Handling
+- Validate response data structure
+- Handle different response formats
+- Implement proper error messages
+- Cache successful responses
+
+## Error Handling
+- Use try-catch blocks for async operations
+- Provide user-friendly error messages
+- Log errors for debugging
+- Implement fallback data when possible
+
+## State Management
+- Update local state after successful requests
+- Handle optimistic updates
+- Implement proper loading states
+- Manage request cancellation
+
+## Caching Strategies
+- Cache frequently accessed data
+- Implement cache invalidation
+- Use appropriate cache keys
+- Handle cache expiration
+
+## Performance
+- Implement request debouncing
+- Use request cancellation for rapid requests
+- Optimize payload sizes
+- Implement pagination for large datasets
+
+## Security
+- Validate all input data
+- Sanitize data before sending
+- Use HTTPS for all requests
+- Implement rate limiting
+
+description: API integration patterns and best practices
+globs: ["**/services/**/*.js", "**/utils/api.js", "**/hooks/**/*.js"]
+alwaysApply: true
+description:
+globs:
+alwaysApply: false
+---

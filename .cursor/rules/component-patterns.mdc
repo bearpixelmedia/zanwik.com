@@ -1,0 +1,64 @@
+# React Component Patterns
+
+## Component Creation Patterns
+- Always use TypeScript interfaces for props
+- Implement proper loading and error states
+- Use consistent component structure: imports, interface, component, export
+- Add display names for debugging
+
+## Hook Patterns
+- Create custom hooks for reusable logic
+- Use proper dependency arrays in useEffect
+- Implement cleanup functions for subscriptions
+- Use useCallback for functions passed as props
+
+## State Management Patterns
+- Use local state for component-specific data
+- Lift state up when needed by multiple components
+- Use context for global state (auth, theme, etc.)
+- Implement proper state updates with immutability
+
+## Performance Patterns
+- Use React.memo for expensive components
+- Implement proper key props in lists
+- Avoid inline object/function creation
+- Use useMemo for expensive calculations
+
+## Error Boundary Patterns
+- Wrap route components with error boundaries
+- Provide fallback UI for error states
+- Log errors for debugging
+- Handle different types of errors appropriately
+
+## Form Patterns
+- Use controlled components for form inputs
+- Implement proper validation
+- Show validation errors clearly
+- Handle form submission states
+
+## API Integration Patterns
+- Use consistent error handling
+- Implement retry logic
+- Show loading states
+- Cache responses appropriately
+
+## Accessibility Patterns
+- Use semantic HTML elements
+- Implement proper ARIA labels
+- Ensure keyboard navigation
+- Test with screen readers
+
+## Common Anti-Patterns to Avoid
+- Don't use index as key in lists
+- Don't create functions inside render
+- Don't mutate state directly
+- Don't forget cleanup in useEffect
+
+description: React component development patterns and best practices
+globs: ["**/*.tsx", "**/*.jsx"]
+alwaysApply: true
+---
+description:
+globs:
+alwaysApply: false
+---

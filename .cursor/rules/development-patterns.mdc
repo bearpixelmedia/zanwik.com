@@ -1,0 +1,64 @@
+# Development Patterns & Shortcuts
+
+## Quick Component Creation
+- Use functional components with TypeScript interfaces
+- Implement loading and error states immediately
+- Add proper prop validation
+- Include accessibility attributes
+
+## Common Hook Patterns
+- Create custom hooks for reusable logic
+- Use proper dependency arrays
+- Implement cleanup functions
+- Handle async operations correctly
+
+## State Management Quick Patterns
+- Use useState for local state
+- Use useReducer for complex state
+- Use context for global state
+- Implement proper state updates
+
+## API Call Patterns
+- Use try-catch for error handling
+- Implement loading states
+- Add retry logic
+- Cache responses appropriately
+
+## Form Handling
+- Use controlled components
+- Implement validation
+- Handle submission states
+- Show error messages
+
+## Styling Patterns
+- Use Tailwind CSS classes
+- Implement responsive design
+- Use consistent spacing
+- Follow design system
+
+## Error Handling
+- Implement error boundaries
+- Provide fallback UI
+- Log errors appropriately
+- Show user-friendly messages
+
+## Performance Quick Wins
+- Use React.memo for expensive components
+- Implement proper key props
+- Avoid inline objects/functions
+- Use useMemo and useCallback
+
+## Common Anti-Patterns
+- Don't use index as key
+- Don't create functions in render
+- Don't mutate state directly
+- Don't forget useEffect cleanup
+
+description: Quick development patterns and shortcuts for faster coding
+globs: ["**/*.js", "**/*.tsx", "**/*.jsx"]
+alwaysApply: true
+---
+description:
+globs:
+alwaysApply: false
+---
