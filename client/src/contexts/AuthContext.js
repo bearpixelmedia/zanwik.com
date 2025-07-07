@@ -100,33 +100,49 @@ export const AuthProvider = ({ children }) => {
       // Fetch profile with manual timeout
       try {
         console.log('AuthContext: [initializeUser] Fetching profile...');
-        let profile, error;
+        let profile = null;
+        let error = null;
         try {
           const timeoutPromise = new Promise((_, reject) =>
             setTimeout(() => reject(new Error('Profile fetch timed out')), 5000)
           );
-          const { data, error: supaError } = await Promise.race([
-            supabase
-              .from('profiles')
-              .select('*')
-              .eq('id', user.id)
-              .single(),
-            timeoutPromise,
-          ]);
-          profile = data;
-          error = supaError;
+          const fetchPromise = supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', user.id)
+            .single();
+          const result = await Promise.race([fetchPromise, timeoutPromise]);
+          // If fetchPromise resolves, result is { data, error }
+          // If timeoutPromise rejects, it throws and is caught below
+          profile = result.data;
+          error = result.error;
         } catch (err) {
-          console.warn('AuthContext: [initializeUser] Profile fetch timed out or errored:', err);
+          // This will catch the timeout or any thrown error
+          console.warn(
+            'AuthContext: [initializeUser] Profile fetch timed out or errored:',
+            err
+          );
           error = err;
+          profile = null;
         }
+        console.log('AuthContext: [initializeUser] Profile fetch result:', {
+          profile,
+          error
+        });
         if (error || !profile) {
-          console.warn('AuthContext: [initializeUser] Profile not found, using default', error);
+          console.warn(
+            'AuthContext: [initializeUser] Profile not found, using default',
+            error
+          );
           setUserProfile(defaultProfile);
         } else {
           setUserProfile(profile);
         }
       } catch (error) {
-        console.warn('AuthContext: [initializeUser] Profile load failed, using default:', error);
+        console.warn(
+          'AuthContext: [initializeUser] Profile load failed, using default:',
+          error
+        );
         setUserProfile(defaultProfile);
       }
       console.log('AuthContext: [initializeUser] END', user?.email);
