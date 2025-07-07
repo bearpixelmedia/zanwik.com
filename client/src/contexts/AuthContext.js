@@ -64,7 +64,7 @@ export const AuthProvider = ({ children }) => {
           setTimeout(() => reject(new Error('Profile fetch timed out')), 3000),
         );
         const fetchPromise = supabase
-          .from('users')
+          .from('profiles')
           .select('*')
           .eq('id', user.id)
           .single();
@@ -80,15 +80,17 @@ export const AuthProvider = ({ children }) => {
         );
         try {
           const { data: newProfile, error: createError } = await supabase
-            .from('users')
+            .from('profiles')
             .insert([
               {
                 id: user.id,
+                email: user.email,
                 full_name:
                   user.user_metadata?.full_name ||
                   user.email?.split('@')[0] ||
                   'User',
-                role: 'user',
+                role: 'viewer',
+                permissions: ['view_projects', 'view_analytics'],
                 preferences: {},
               },
             ])
