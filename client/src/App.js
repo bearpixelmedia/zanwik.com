@@ -32,6 +32,9 @@ const Monitoring = lazy(() => import('./pages/Monitoring'));
 const Users = lazy(() => import('./pages/Users'));
 const Settings = lazy(() => import('./pages/Settings'));
 const Deployment = lazy(() => import('./pages/Deployment'));
+const Security = lazy(() => import('./pages/Security'));
+const Performance = lazy(() => import('./pages/Performance'));
+const Alerts = lazy(() => import('./pages/Alerts'));
 
 // Error Boundary Component
 class ErrorBoundary extends React.Component {
@@ -472,6 +475,39 @@ const App = () => {
                   <PrivateRoute>
                     <AppLayout>
                       <Settings />
+                    </AppLayout>
+                  </PrivateRoute>
+                }
+              />
+
+              <Route
+                path='/security'
+                element={
+                  <PrivateRoute requiredPermissions={['view_security']}>
+                    <AppLayout>
+                      <Security />
+                    </AppLayout>
+                  </PrivateRoute>
+                }
+              />
+
+              <Route
+                path='/performance'
+                element={
+                  <PrivateRoute requiredPermissions={['view_performance']}>
+                    <AppLayout>
+                      <Performance />
+                    </AppLayout>
+                  </PrivateRoute>
+                }
+              />
+
+              <Route
+                path='/alerts'
+                element={
+                  <PrivateRoute requiredPermissions={['view_alerts']}>
+                    <AppLayout>
+                      <Alerts />
                     </AppLayout>
                   </PrivateRoute>
                 }

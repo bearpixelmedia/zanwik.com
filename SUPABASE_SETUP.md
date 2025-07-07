@@ -17,7 +17,7 @@
 
 1. Go to **Settings > API** in your Supabase dashboard
 2. Copy these values:
-   - **Project URL:** `https://your-project-id.supabase.co`
+   - **Project URL:** `https://fxzwnjmzhdynsatvakim.supabase.co`
    - **Anon Key:** Your public API key
 
 ## Step 3: Set Up Database Schema
@@ -41,9 +41,9 @@
 3. Go to **Settings > Environment Variables**
 4. Add these variables:
    - **Key:** `REACT_APP_SUPABASE_URL`
-   - **Value:** `https://your-project-id.supabase.co`
+   - **Value:** `https://fxzwnjmzhdynsatvakim.supabase.co`
    - **Key:** `REACT_APP_SUPABASE_ANON_KEY`
-   - **Value:** Your anon key from Step 2
+   - **Value:** eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ4enduam16aGR5bnNhdHZha2ltIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE1ODI4MjUsImV4cCI6MjA2NzE1ODgyNX0.l1fmDYnD8eIszoMqx2S0Cqq28fpz_rSjaim2Ke3YIow
 5. Redeploy your project
 
 ## Step 6: Test the Setup

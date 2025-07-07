@@ -1,7 +1,7 @@
 const { createClient } = require('@supabase/supabase-js');
 
-const supabaseUrl = 'https://ynssliolfybuczopjfgn.supabase.co';
-const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inluc3NsaW9sZnlidWN6b3BqZmduIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE0NzU0NDIsImV4cCI6MjA2NzA1MTQ0Mn0.gUygOntZpba9_JVvuz4I6OdOjeqz-Bz29PXoerqWb8k';
+const supabaseUrl = 'https://fxzwnjmzhdynsatvakim.supabase.co';
+const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ4enduam16aGR5bnNhdHZha2ltIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE1ODI4MjUsImV4cCI6MjA2NzE1ODgyNX0.l1fmDYnD8eIszoMqx2S0Cqq28fpz_rSjaim2Ke3YIow';
 
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
@@ -109,7 +109,7 @@ async function main() {
   await testLogin();
   
   console.log('\n📋 Manual Steps (if automated creation failed):');
-  console.log('1. Go to: https://supabase.com/dashboard/project/ynssliolfybuczopjfgn');
+  console.log('1. Go to: https://supabase.com/dashboard/project/fxzwnjmzhdynsatvakim');
   console.log('2. Navigate to: Authentication → Users');
   console.log('3. Click "Add user"');
   console.log('4. Enter:');
