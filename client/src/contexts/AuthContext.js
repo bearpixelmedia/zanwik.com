@@ -73,9 +73,9 @@ export const AuthProvider = ({ children }) => {
           profile = result.data;
         }
       } catch (err) {
-        // If table doesn't exist or any other error, try to create user profile
-        console.warn(
-          'Profile fetch failed (table may not exist), trying to create profile:',
+        // Profile doesn't exist or fetch failed, try to create user profile
+        console.log(
+          'Profile not found for user, creating new profile:',
           err.message,
         );
         try {
@@ -228,6 +228,8 @@ export const AuthProvider = ({ children }) => {
         if (currentSession?.user) {
           await initializeUser(currentSession.user);
         } else {
+          // No user logged in - this is normal
+          console.log('AuthContext: No user logged in, redirecting to login');
           setUser(null);
           setUserProfile(null);
           setIsAuthenticated(false);
