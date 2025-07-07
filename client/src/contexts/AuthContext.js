@@ -104,7 +104,7 @@ export const AuthProvider = ({ children }) => {
         let error = null;
         try {
           const timeoutPromise = new Promise((_, reject) =>
-            setTimeout(() => reject(new Error('Profile fetch timed out')), 5000)
+            setTimeout(() => reject(new Error('Profile fetch timed out')), 5000),
           );
           const fetchPromise = supabase
             .from('profiles')
@@ -120,19 +120,19 @@ export const AuthProvider = ({ children }) => {
           // This will catch the timeout or any thrown error
           console.warn(
             'AuthContext: [initializeUser] Profile fetch timed out or errored:',
-            err
+            err,
           );
           error = err;
           profile = null;
         }
         console.log('AuthContext: [initializeUser] Profile fetch result:', {
           profile,
-          error
+          error,
         });
         if (error || !profile) {
           console.warn(
             'AuthContext: [initializeUser] Profile not found, using default',
-            error
+            error,
           );
           setUserProfile(defaultProfile);
         } else {
@@ -141,7 +141,7 @@ export const AuthProvider = ({ children }) => {
       } catch (error) {
         console.warn(
           'AuthContext: [initializeUser] Profile load failed, using default:',
-          error
+          error,
         );
         setUserProfile(defaultProfile);
       }
@@ -170,7 +170,7 @@ export const AuthProvider = ({ children }) => {
               console.warn(
                 'AuthContext: [initializeUser] Login history load failed:',
                 err,
-              )
+              ),
             );
         } catch (err) {
           console.warn(
@@ -198,7 +198,7 @@ export const AuthProvider = ({ children }) => {
               console.warn(
                 'AuthContext: [initializeUser] Security events load failed:',
                 err,
-              )
+              ),
             );
         } catch (err) {
           console.warn(
@@ -208,7 +208,10 @@ export const AuthProvider = ({ children }) => {
         }
       }, 100);
     } catch (error) {
-      console.error('AuthContext: [initializeUser] User initialization failed:', error);
+      console.error(
+        'AuthContext: [initializeUser] User initialization failed:',
+        error,
+      );
       if (mountedRef.current) {
         setUser(null);
         setSession(null);
@@ -240,7 +243,7 @@ export const AuthProvider = ({ children }) => {
         console.error('Security event logging failed:', error);
       }
     },
-    [user?.id]
+    [user?.id],
   );
 
   // Get session info
@@ -269,19 +272,28 @@ export const AuthProvider = ({ children }) => {
       try {
         console.log('AuthContext: Initializing auth state');
         // Get current session
-        const { data: { session: currentSession } } = await supabase.auth.getSession();
+        const {
+          data: { session: currentSession },
+        } = await supabase.auth.getSession();
         if (currentSession?.user) {
-          console.log('AuthContext: Found existing session for user:', currentSession.user.email);
+          console.log(
+            'AuthContext: Found existing session for user:',
+            currentSession.user.email,
+          );
           try {
             await initializeUser(currentSession.user, currentSession);
           } finally {
             setLoading(false);
-            console.log('AuthContext: Loading set to false after user init (initAuth/finally)');
+            console.log(
+              'AuthContext: Loading set to false after user init (initAuth/finally)',
+            );
           }
         } else {
           setUser(null);
           setLoading(false);
-          console.log('AuthContext: No existing session found, user set to null');
+          console.log(
+            'AuthContext: No existing session found, user set to null',
+          );
         }
       } catch (error) {
         console.error('AuthContext: Error initializing auth:', error);
@@ -302,7 +314,9 @@ export const AuthProvider = ({ children }) => {
           addSecurityEvent('SIGNED_IN', 'User signed in successfully');
         } finally {
           setLoading(false);
-          console.log('AuthContext: Loading set to false after user init (onAuthStateChange/finally)');
+          console.log(
+            'AuthContext: Loading set to false after user init (onAuthStateChange/finally)',
+          );
         }
       } else if (event === 'SIGNED_OUT' || !session?.user) {
         setUser(null);
@@ -310,7 +324,9 @@ export const AuthProvider = ({ children }) => {
         setUserProfile(null);
         setIsAuthenticated(false);
         setLoading(false);
-        console.log('AuthContext: Signed out or no session.user, user set to null');
+        console.log(
+          'AuthContext: Signed out or no session.user, user set to null',
+        );
         addSecurityEvent('SIGNED_OUT', 'User signed out');
       } else if (event === 'TOKEN_REFRESHED' && session?.user) {
         setSession(session);
@@ -379,7 +395,7 @@ export const AuthProvider = ({ children }) => {
     try {
       await addSecurityEvent(
         'SESSION_TIMEOUT',
-        'Session expired due to inactivity'
+        'Session expired due to inactivity',
       );
       await supabase.auth.signOut();
     } catch (error) {
@@ -419,12 +435,12 @@ export const AuthProvider = ({ children }) => {
         console.error('Login failed:', error);
         await addSecurityEvent(
           'LOGIN_FAILED',
-          `Login failed: ${error.message}`
+          `Login failed: ${error.message}`,
         );
         throw error;
       }
     },
-    [addSecurityEvent]
+    [addSecurityEvent],
   );
 
   // Logout function
@@ -466,12 +482,12 @@ export const AuthProvider = ({ children }) => {
       } catch (error) {
         await addSecurityEvent(
           'REGISTRATION_FAILED',
-          `Registration failed: ${error.message}`
+          `Registration failed: ${error.message}`,
         );
         throw error;
       }
     },
-    [addSecurityEvent]
+    [addSecurityEvent],
   );
 
   // Update profile
@@ -485,12 +501,12 @@ export const AuthProvider = ({ children }) => {
       } catch (error) {
         await addSecurityEvent(
           'PROFILE_UPDATE_FAILED',
-          `Profile update failed: ${error.message}`
+          `Profile update failed: ${error.message}`,
         );
         throw error;
       }
     },
-    [addSecurityEvent]
+    [addSecurityEvent],
   );
 
   // Change password
@@ -506,12 +522,12 @@ export const AuthProvider = ({ children }) => {
       } catch (error) {
         await addSecurityEvent(
           'PASSWORD_CHANGE_FAILED',
-          `Password change failed: ${error.message}`
+          `Password change failed: ${error.message}`,
         );
         throw error;
       }
     },
-    [addSecurityEvent]
+    [addSecurityEvent],
   );
 
   // Permission checks
@@ -523,7 +539,7 @@ export const AuthProvider = ({ children }) => {
         userProfile.permissions?.includes(permission)
       );
     },
-    [userProfile]
+    [userProfile],
   );
 
   const hasRole = useCallback(
@@ -539,7 +555,7 @@ export const AuthProvider = ({ children }) => {
 
   // Get project permissions
   const getProjectPermissions = useCallback(
-    (projectId) => {
+    _projectId => {
       if (!userProfile) return { read: false, write: false, deploy: false, admin: false };
 
       if (userProfile.role === 'admin') {
@@ -553,7 +569,7 @@ export const AuthProvider = ({ children }) => {
         admin: userProfile.permissions?.includes('*') || userProfile.permissions?.includes('manage_projects'),
       };
     },
-    [userProfile]
+    [userProfile],
   );
 
   // Update preferences
@@ -577,17 +593,20 @@ export const AuthProvider = ({ children }) => {
           preferences: updatedPreferences,
         }));
 
-        await addSecurityEvent('PREFERENCES_UPDATED', 'User preferences updated');
+        await addSecurityEvent(
+          'PREFERENCES_UPDATED',
+          'User preferences updated',
+        );
         return { success: true };
       } catch (error) {
         await addSecurityEvent(
           'PREFERENCES_UPDATE_FAILED',
-          `Preferences update failed: ${error.message}`
+          `Preferences update failed: ${error.message}`,
         );
         throw error;
       }
     },
-    [userProfile, user?.id, addSecurityEvent]
+    [userProfile, user?.id, addSecurityEvent],
   );
 
   // Get user role info
@@ -606,18 +625,21 @@ export const AuthProvider = ({ children }) => {
     try {
       const { data, error } = await supabase.auth.refreshSession();
       if (error) throw error;
-      
+
       if (data.session) {
         setSession(data.session);
         setLastActivity(Date.now());
-        await addSecurityEvent('SESSION_REFRESHED', 'Session refreshed successfully');
+        await addSecurityEvent(
+          'SESSION_REFRESHED',
+          'Session refreshed successfully',
+        );
       }
-      
+
       return data;
     } catch (error) {
       await addSecurityEvent(
         'SESSION_REFRESH_FAILED',
-        `Session refresh failed: ${error.message}`
+        `Session refresh failed: ${error.message}`,
       );
       throw error;
     }
@@ -675,9 +697,11 @@ export const AuthProvider = ({ children }) => {
     ],
   );
 
-  useEffect(() => { loadingRef.current = loading; }, [loading]);
+  useEffect(() => {
+    loadingRef.current = loading;
+  }, [loading]);
 
   return (
     <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
   );
-};
+}; 
