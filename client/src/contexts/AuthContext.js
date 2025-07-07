@@ -197,12 +197,15 @@ export const AuthProvider = ({ children }) => {
 
   // Get session info
   const getSessionInfo = useCallback(() => {
+    const timeRemaining = sessionTimeout - (Date.now() - lastActivity);
     return {
       user,
       isAuthenticated,
       lastActivity,
       sessionTimeout,
-      timeRemaining: sessionTimeout - (Date.now() - lastActivity),
+      timeRemaining,
+      willExpireSoon: timeRemaining < 5 * 60 * 1000, // 5 minutes
+      timeLeft: timeRemaining,
     };
   }, [user, isAuthenticated, lastActivity, sessionTimeout]);
 
@@ -428,6 +431,31 @@ export const AuthProvider = ({ children }) => {
     [userProfile],
   );
 
+  // Get user role info
+  const getUserRoleInfo = useCallback(() => {
+    return {
+      role: userProfile?.role || 'viewer',
+      permissions: userProfile?.permissions || [],
+      isAdmin: userProfile?.role === 'admin',
+      isUser: userProfile?.role === 'user',
+      isViewer: userProfile?.role === 'viewer',
+    };
+  }, [userProfile]);
+
+  // Refresh session
+  const refreshSession = useCallback(async () => {
+    try {
+      const { data, error } = await supabase.auth.refreshSession();
+      if (error) throw error;
+      setLastActivity(Date.now());
+      await addSecurityEvent('SESSION_REFRESHED', 'Session refreshed manually');
+      return { success: true };
+    } catch (error) {
+      console.error('Session refresh failed:', error);
+      throw error;
+    }
+  }, [addSecurityEvent]);
+
   useEffect(() => {
     loadingRef.current = loading;
   }, [loading]);
@@ -447,7 +475,9 @@ export const AuthProvider = ({ children }) => {
         logout,
         hasPermission,
         hasRole,
+        getUserRoleInfo,
         getSessionInfo,
+        refreshSession,
         loadingStuck,
         error,
       }}

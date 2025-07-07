@@ -10,6 +10,7 @@ import { AuthProvider, useAuth } from './contexts/AuthContext';
 import Sidebar from './components/Sidebar';
 import Navbar from './components/Navbar';
 import Login from './pages/Login';
+import ErrorBoundary from './components/ErrorBoundary';
 import { AlertTriangle, Shield, BarChart3, Activity } from 'lucide-react';
 import './App.css';
 
@@ -142,7 +143,7 @@ const PrivateRoute = ({
   }
 
   // Check role requirements
-  if (requiredRole && !hasRole(requiredRole)) {
+  if (requiredRole && !hasRole([requiredRole])) {
     return (
       <div className='min-h-screen bg-background flex items-center justify-center p-4'>
         <div className='text-center space-y-6 max-w-md'>
@@ -290,11 +291,12 @@ const App = () => {
   usePerformanceMonitoring();
 
   return (
-    <AuthProvider>
-      <Router>
-        <AnalyticsWrapper />
-        <div className='App'>
-          <Routes>
+    <ErrorBoundary>
+      <AuthProvider>
+        <Router>
+          <AnalyticsWrapper />
+          <div className='App'>
+            <Routes>
             {/* Public Routes */}
             <Route
               path='/login'
@@ -311,7 +313,9 @@ const App = () => {
               element={
                 <PrivateRoute>
                   <AppLayout>
-                    <Dashboard />
+                    <ErrorBoundary>
+                      <Dashboard />
+                    </ErrorBoundary>
                   </AppLayout>
                 </PrivateRoute>
               }
@@ -322,7 +326,9 @@ const App = () => {
               element={
                 <PrivateRoute>
                   <AppLayout>
-                    <Dashboard />
+                    <ErrorBoundary>
+                      <Dashboard />
+                    </ErrorBoundary>
                   </AppLayout>
                 </PrivateRoute>
               }
@@ -444,6 +450,7 @@ const App = () => {
         </div>
       </Router>
     </AuthProvider>
+    </ErrorBoundary>
   );
 };
 
