@@ -21,38 +21,15 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userProfile, setUserProfile] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [loginHistory, setLoginHistory] = useState([]);
   const [securityEvents, setSecurityEvents] = useState([]);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [lastActivity, setLastActivity] = useState(Date.now());
   const [sessionTimeout] = useState(30 * 60 * 1000); // 30 minutes
   const [loadingStuck, setLoadingStuck] = useState(false);
   const [error, setError] = useState(null);
-
-  // Default profile for fallback
-  const _defaultProfile = {
-    id: user?.id || null,
-    email: user?.email || '',
-    role: 'viewer',
-    permissions: ['view_projects', 'view_analytics'],
-    preferences: {},
-  };
-
-  // Test database connection function
-  const _testConnection = useCallback(async () => {
-    try {
-      const { error } = await supabase
-        .from('projects')
-        .select('count')
-        .limit(1);
-      return !error;
-    } catch (err) {
-      console.warn('Database connection test failed:', err);
-      return false;
-    }
-  }, []);
 
   // Refs to prevent multiple initializations
   const initializingRef = useRef(false);
@@ -97,25 +74,36 @@ export const AuthProvider = ({ children }) => {
         }
       } catch (err) {
         // If table doesn't exist or any other error, try to create user profile
-        console.warn('Profile fetch failed (table may not exist), trying to create profile:', err.message);
+        console.warn(
+          'Profile fetch failed (table may not exist), trying to create profile:',
+          err.message,
+        );
         try {
           const { data: newProfile, error: createError } = await supabase
             .from('users')
-            .insert([{
-              id: user.id,
-              full_name: user.user_metadata?.full_name || user.email?.split('@')[0] || 'User',
-              role: 'user',
-              preferences: {},
-            }])
+            .insert([
+              {
+                id: user.id,
+                full_name:
+                  user.user_metadata?.full_name ||
+                  user.email?.split('@')[0] ||
+                  'User',
+                role: 'user',
+                preferences: {},
+              },
+            ])
             .select()
             .single();
-          
+
           if (!createError && newProfile) {
             profile = newProfile;
             console.log('Created new user profile successfully');
           }
         } catch (createErr) {
-          console.warn('Failed to create user profile, using default:', createErr.message);
+          console.warn(
+            'Failed to create user profile, using default:',
+            createErr.message,
+          );
         }
         profile = null;
       }
@@ -128,44 +116,38 @@ export const AuthProvider = ({ children }) => {
       // Load additional data in background (non-blocking)
       setTimeout(() => {
         if (!mountedRef.current) return;
-        
-        // Load login history (only if table exists)
+
+        // Load login history (only if table exists) - silent fail
         supabase
           .from('login_history')
           .select('*')
           .eq('user_id', user.id)
           .order('created_at', { ascending: false })
           .limit(10)
-          .then(({ data }) => {
-            if (mountedRef.current && data) {
+          .then(({ data, error }) => {
+            if (mountedRef.current && data && !error) {
               setLoginHistory(data);
             }
           })
-          .catch(err =>
-            console.warn(
-              'AuthContext: [initializeUser] Login history load failed (table may not exist):',
-              err,
-            )
-          );
+          .catch(() => {
+            // Table doesn't exist or other error - expected, no action needed
+          });
 
-        // Load security events (only if table exists)
+        // Load security events (only if table exists) - silent fail
         supabase
           .from('security_events')
           .select('*')
           .eq('user_id', user.id)
           .order('created_at', { ascending: false })
           .limit(20)
-          .then(({ data }) => {
-            if (mountedRef.current && data) {
+          .then(({ data, error }) => {
+            if (mountedRef.current && data && !error) {
               setSecurityEvents(data);
             }
           })
-          .catch(err =>
-            console.warn(
-              'AuthContext: [initializeUser] Security events load failed (table may not exist):',
-              err,
-            )
-          );
+          .catch(() => {
+            // Table doesn't exist or other error - expected, no action needed
+          });
       }, 100);
     } catch (error) {
       console.error('AuthContext: Error initializing user:', error);
@@ -196,14 +178,18 @@ export const AuthProvider = ({ children }) => {
         timestamp: new Date().toISOString(),
       };
 
+      // Update local state immediately for UI consistency
+      setSecurityEvents(prev => [event, ...prev.slice(0, 19)]);
+
+      // Try to save to database, but don't fail if table doesn't exist
       try {
         await supabase.from('security_events').insert([event]);
-        setSecurityEvents(prev => [event, ...prev.slice(0, 19)]);
       } catch (error) {
-        // Table may not exist, just log locally
-        console.warn('Failed to log security event (table may not exist):', error);
-        // Still update local state for UI consistency
-        setSecurityEvents(prev => [event, ...prev.slice(0, 19)]);
+        // Table may not exist, just log locally - this is expected
+        console.debug(
+          'Security event logged locally (database table may not exist):',
+          eventType,
+        );
       }
     },
     [user?.id],
@@ -222,6 +208,7 @@ export const AuthProvider = ({ children }) => {
 
   // Initialize auth state
   useEffect(() => {
+    console.log('AuthContext: Initializing auth state...');
     mountedRef.current = true;
     if (initializingRef.current) return;
     initializingRef.current = true;

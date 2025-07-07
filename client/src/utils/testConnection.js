@@ -1,5 +1,5 @@
-import { healthCheck } from './api.js';
-import { supabase, testConnection } from './supabase.js';
+import { healthCheck } from './api';
+import { supabase, testConnection } from './supabase';
 
 export const testBackendConnection = async () => {
   try {
@@ -69,7 +69,7 @@ export const runConnectionTests = async () => {
 
     // Test 2: Test projects table
     // Test 2: Testing projects table...
-    const { data: projects, error: projectsError } = await supabase
+    const { error: projectsError } = await supabase
       .from('projects')
       .select('count')
       .limit(1);
@@ -82,7 +82,7 @@ export const runConnectionTests = async () => {
 
     // Test 3: Test users table
     // Test 3: Testing users table...
-    const { data: users, error: usersError } = await supabase
+    const { error: usersError } = await supabase
       .from('users')
       .select('count')
       .limit(1);
@@ -95,8 +95,8 @@ export const runConnectionTests = async () => {
 
     // Test 4: Test analytics table
     // Test 4: Testing analytics table...
-    const { data: analytics, error: analyticsError } = await supabase
-      .from('analytics_overview')
+    const { error: analyticsError } = await supabase
+      .from('analytics')
       .select('count')
       .limit(1);
 
@@ -108,7 +108,7 @@ export const runConnectionTests = async () => {
 
     // Test 5: Test alerts table
     // Test 5: Testing alerts table...
-    const { data: alerts, error: alertsError } = await supabase
+    const { error: alertsError } = await supabase
       .from('alerts')
       .select('count')
       .limit(1);
@@ -119,19 +119,29 @@ export const runConnectionTests = async () => {
       // Alerts table accessible
     }
 
-    // Test 6: Test authentication
-    // Test 6: Testing authentication...
-    const {
-      data: { session },
-      error: authError,
-    } = await supabase.auth.getSession();
+    // Test 6: Test security events
+    // Test 6: Testing security events...
+    const { error: securityError } = await supabase
+      .from('security_events')
+      .select('count')
+      .limit(1);
+
+    if (securityError) {
+      console.warn('⚠️ Security events test failed:', securityError.message);
+    } else {
+      // Security events accessible
+    }
+
+    // Test 7: Test authentication
+    // Test 7: Testing authentication...
+    const { data: _data, error: authError } = await supabase.auth.getSession();
 
     if (authError) {
       console.warn('⚠️ Authentication test failed:', authError.message);
     } else {
       // Authentication working
-      if (session) {
-        // User session found: session.user.email
+      if (_data) {
+        // User session found: _data.user.email
       } else {
         // No active user session
       }
@@ -146,6 +156,7 @@ export const runConnectionTests = async () => {
         users: !usersError,
         analytics: !analyticsError,
         alerts: !alertsError,
+        security: !securityError,
         auth: !authError,
       },
     };

@@ -1,18 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import {
   AlertTriangle,
+  BarChart3,
   CheckCircle,
   Clock,
-  Eye,
-  EyeOff,
   Lock,
-  Mail,
   Shield,
-  User,
-  _RefreshCw,
-  _Users,
+  Zap,
 } from 'lucide-react';
 
 const PrivateRoute = ({
@@ -20,10 +15,7 @@ const PrivateRoute = ({
   requiredRole = null,
   requiredPermissions = [],
 }) => {
-  const { isAuthenticated, loading, user, userProfile, logout } = useAuth();
-  const _user = user;
-  const _location = window.location;
-  const location = useLocation();
+  const { isAuthenticated, loading, userProfile, logout } = useAuth();
   const [sessionWarning, setSessionWarning] = useState(false);
   const [sessionExpired, setSessionExpired] = useState(false);
   const [securityCheck, setSecurityCheck] = useState(false);

@@ -6,25 +6,25 @@ import {
   Navigate,
   useLocation,
 } from 'react-router-dom';
-import { AuthProvider, useAuth } from './contexts/AuthContext.js';
-import Sidebar from './components/Sidebar.js';
-import Navbar from './components/Navbar.js';
-import Login from './pages/Login.js';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
+import Sidebar from './components/Sidebar';
+import Navbar from './components/Navbar';
+import Login from './pages/Login';
 import { AlertTriangle, Shield, BarChart3, Activity } from 'lucide-react';
 import './App.css';
 
 // Lazy load pages for better performance
-const Dashboard = lazy(() => import('./pages/Dashboard.js'));
-const Projects = lazy(() => import('./pages/Projects.js'));
-const Analytics = lazy(() => import('./pages/Analytics.js'));
-const Infrastructure = lazy(() => import('./pages/Infrastructure.js'));
-const Monitoring = lazy(() => import('./pages/Monitoring.js'));
-const Users = lazy(() => import('./pages/Users.js'));
-const Settings = lazy(() => import('./pages/Settings.js'));
-const Deployment = lazy(() => import('./pages/Deployment.js'));
-const Security = lazy(() => import('./pages/Security.js'));
-const Performance = lazy(() => import('./pages/Performance.js'));
-const Alerts = lazy(() => import('./pages/Alerts.js'));
+const Dashboard = lazy(() => import('./pages/Dashboard'));
+const Projects = lazy(() => import('./pages/Projects'));
+const Analytics = lazy(() => import('./pages/Analytics'));
+const Infrastructure = lazy(() => import('./pages/Infrastructure'));
+const Monitoring = lazy(() => import('./pages/Monitoring'));
+const Users = lazy(() => import('./pages/Users'));
+const Settings = lazy(() => import('./pages/Settings'));
+const Deployment = lazy(() => import('./pages/Deployment'));
+const Security = lazy(() => import('./pages/Security'));
+const Performance = lazy(() => import('./pages/Performance'));
+const Alerts = lazy(() => import('./pages/Alerts'));
 
 // Enhanced Loading Component
 const LoadingScreen = ({ message = 'Loading...' }) => (
