@@ -1,3 +1,4 @@
+console.log('AuthContext.js loaded - DEBUG UNIQUE');
 import React, {
   createContext,
   useContext,
