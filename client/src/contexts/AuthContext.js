@@ -30,7 +30,7 @@ export const AuthProvider = ({ children }) => {
   const [lastActivity, setLastActivity] = useState(Date.now());
   const [sessionTimeout] = useState(30 * 60 * 1000); // 30 minutes
   const [loadingStuck, setLoadingStuck] = useState(false);
-  const [error, setError] = useState(null);
+  const [_error, setError] = useState(null);
 
   // Default profile for fallback
   const _defaultProfile = {
@@ -137,7 +137,7 @@ export const AuthProvider = ({ children }) => {
               console.warn(
                 'AuthContext: [initializeUser] Login history load failed:',
                 err
-              ),
+              )
             );
         } catch (err) {
           console.warn(
@@ -162,7 +162,7 @@ export const AuthProvider = ({ children }) => {
               console.warn(
                 'AuthContext: [initializeUser] Security events load failed:',
                 err
-              ),
+              )
             );
         } catch (err) {
           console.warn(

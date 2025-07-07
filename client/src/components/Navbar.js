@@ -514,7 +514,7 @@ const Navbar = () => {
                     className='w-full justify-start text-sm text-destructive hover:text-destructive'
                     onClick={logout}
                   >
-                    <LogOut className='h-4 w-4 mr-2' />, Sign Out,
+                    <LogOut className='h-4 w-4 mr-2' /> Sign Out
                   </Button>
                 </div>
               </div>
