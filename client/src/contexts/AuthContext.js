@@ -22,7 +22,6 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [session, setSession] = useState(null);
   const [userProfile, setUserProfile] = useState(null);
   const [loginHistory, setLoginHistory] = useState([]);
   const [securityEvents, setSecurityEvents] = useState([]);
@@ -270,7 +269,6 @@ export const AuthProvider = ({ children }) => {
         } catch (error) {
           console.error('AuthContext: Error in SIGNED_IN handler:', error);
           setUser(null);
-          setSession(null);
           setUserProfile(null);
           setIsAuthenticated(false);
         } finally {
@@ -279,14 +277,12 @@ export const AuthProvider = ({ children }) => {
         }
       } else if (event === 'SIGNED_OUT' || !session?.user) {
         setUser(null);
-        setSession(null);
         setUserProfile(null);
         setIsAuthenticated(false);
         setLoading(false);
         setLoadingStuck(false);
         addSecurityEvent('SIGNED_OUT', 'User signed out');
       } else if (event === 'TOKEN_REFRESHED' && session?.user) {
-        setSession(session);
         setLastActivity(Date.now());
         addSecurityEvent('TOKEN_REFRESHED', 'Session token refreshed');
       }
@@ -430,7 +426,6 @@ export const AuthProvider = ({ children }) => {
       if (error) throw error;
       if (mountedRef.current) {
         setUser(null);
-        setSession(null);
         setUserProfile(null);
         setIsAuthenticated(false);
       }
@@ -444,7 +439,6 @@ export const AuthProvider = ({ children }) => {
   // Permission checks
   const hasPermission = useCallback(
     (permission) => {
-      if (!userProfile) return false;
       return (
         userProfile.permissions?.includes('*') ||
         userProfile.permissions?.includes(permission)
@@ -455,11 +449,7 @@ export const AuthProvider = ({ children }) => {
 
   const hasRole = useCallback(
     (roles) => {
-      if (!userProfile) return false;
-      const allowedRoles = Array.isArray(roles) ? roles : [roles];
-      return (
-        allowedRoles.includes(userProfile.role) || userProfile.role === 'admin'
-      );
+      return roles.some((role) => userProfile.role === role);
     },
     [userProfile]
   );
@@ -473,7 +463,6 @@ export const AuthProvider = ({ children }) => {
       value={{
         user,
         loading,
-        session,
         userProfile,
         loginHistory,
         securityEvents,
