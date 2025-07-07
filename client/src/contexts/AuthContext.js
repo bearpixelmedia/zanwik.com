@@ -30,10 +30,10 @@ export const AuthProvider = ({ children }) => {
   const [lastActivity, setLastActivity] = useState(Date.now());
   const [sessionTimeout] = useState(30 * 60 * 1000); // 30 minutes
   const [loadingStuck, setLoadingStuck] = useState(false);
-  const [_error, setError] = useState(null);
+  const [error, setError] = useState(null);
 
   // Default profile for fallback
-  const _defaultProfile = {
+  const defaultProfile = {
     id: user?.id || null,
     email: user?.email || '',
     role: 'viewer',
@@ -62,7 +62,7 @@ export const AuthProvider = ({ children }) => {
   const loadingRef = useRef(loading);
 
   // Initialize user data
-  const initializeUser = useCallback(async user => {
+  const initializeUser = useCallback(async (user) => {
     if (!mountedRef.current) return;
     try {
       setLoading(true);
@@ -88,7 +88,7 @@ export const AuthProvider = ({ children }) => {
       let error = null;
       try {
         const timeoutPromise = new Promise((_, reject) =>
-          setTimeout(() => reject(new Error('Profile fetch timed out')), 5000)
+          setTimeout(() => reject(new Error('Profile fetch timed out')), 5000),
         );
         const fetchPromise = supabase
           .from('profiles')
@@ -133,16 +133,16 @@ export const AuthProvider = ({ children }) => {
                 setLoginHistory(data);
               }
             })
-            .catch(err =>
+            .catch((err) =>
               console.warn(
                 'AuthContext: [initializeUser] Login history load failed:',
-                err
-              )
+                err,
+              ),
             );
         } catch (err) {
           console.warn(
             'AuthContext: [initializeUser] Login history fetch error:',
-            err
+            err,
           );
         }
         // Load security events
@@ -158,16 +158,16 @@ export const AuthProvider = ({ children }) => {
                 setSecurityEvents(data);
               }
             })
-            .catch(err =>
+            .catch((err) =>
               console.warn(
                 'AuthContext: [initializeUser] Security events load failed:',
-                err
-              )
+                err,
+              ),
             );
         } catch (err) {
           console.warn(
             'AuthContext: [initializeUser] Security events fetch error:',
-            err
+            err,
           );
         }
       }, 100);
@@ -200,7 +200,7 @@ export const AuthProvider = ({ children }) => {
         timestamp: new Date().toISOString(),
       };
 
-      setSecurityEvents(prev => [event, ...prev.slice(0, 49)]);
+      setSecurityEvents((prev) => [event, ...prev.slice(0, 49)]);
 
       try {
         await supabase.from('security_events').insert([event]);
@@ -352,11 +352,11 @@ export const AuthProvider = ({ children }) => {
       'scroll',
       'touchstart',
     ];
-    events.forEach(event => document.addEventListener(event, updateActivity));
+    events.forEach((event) => document.addEventListener(event, updateActivity));
 
     return () => {
-      events.forEach(event =>
-        document.removeEventListener(event, updateActivity)
+      events.forEach((event) =>
+        document.removeEventListener(event, updateActivity),
       );
     };
   }, []);
@@ -367,7 +367,7 @@ export const AuthProvider = ({ children }) => {
     try {
       await addSecurityEvent(
         'SESSION_TIMEOUT',
-        'Session expired due to inactivity'
+        'Session expired due to inactivity',
       );
       await supabase.auth.signOut();
     } catch (error) {
@@ -414,7 +414,7 @@ export const AuthProvider = ({ children }) => {
         console.error('Login failed:', error);
         await addSecurityEvent(
           'LOGIN_FAILED',
-          `Login failed: ${error.message}`
+          `Login failed: ${error.message}`,
         );
         throw error;
       }
@@ -443,7 +443,7 @@ export const AuthProvider = ({ children }) => {
 
   // Permission checks
   const hasPermission = useCallback(
-    permission => {
+    (permission) => {
       if (!userProfile) return false;
       return (
         userProfile.permissions?.includes('*') ||
@@ -454,7 +454,7 @@ export const AuthProvider = ({ children }) => {
   );
 
   const hasRole = useCallback(
-    roles => {
+    (roles) => {
       if (!userProfile) return false;
       const allowedRoles = Array.isArray(roles) ? roles : [roles];
       return (

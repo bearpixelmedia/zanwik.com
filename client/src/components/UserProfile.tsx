@@ -4,7 +4,7 @@ interface UserProfileProps {
   // Add your props here
 }
 
-const UserProfile: FC<UserProfileProps> = ({}) => {
+const UserProfile: FC<UserProfileProps> = () => {
   return (
     <div className='userprofile-container'>
       <h2>UserProfile</h2>

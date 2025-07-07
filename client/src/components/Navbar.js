@@ -22,7 +22,6 @@ import { Button } from './ui/button';
 const Navbar = () => {
   const {
     user,
-
     logout,
     getUserRoleInfo,
     getSessionInfo,
@@ -165,7 +164,7 @@ const Navbar = () => {
 
   const markNotificationAsRead = notificationId => {
     setNotifications(prev =>
-      prev.map(n => (n.id === notificationId ? { ...n, read: true } : n)),
+      prev.map(n => (n.id === notificationId ? { ...n, read: true } : n))
     );
     setUnreadCount(prev => Math.max(0, prev - 1));
   };
@@ -531,6 +530,8 @@ const Navbar = () => {
             setIsProfileOpen(false);
             setIsNotificationsOpen(false);
           }}
+          role='presentation'
+          tabIndex={-1}
         />
       )}
     </div>

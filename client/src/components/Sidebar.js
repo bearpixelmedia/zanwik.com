@@ -390,7 +390,8 @@ const Sidebar = () => {
                       <Link
                         to={item.href}
                         className={cn(
-                          'flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 group',
+                          'flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium text-foreground transition-colors',
+                          isCollapsed ? 'justify-center' : '',
                           isActive(item.href)
                             ? 'bg-primary text-primary-foreground shadow-sm'
                             : 'text-muted-foreground hover:text-foreground hover:bg-accent'
