@@ -86,7 +86,7 @@ const Button = React.forwardRef(
       disabled,
       ...props
     },
-    ref
+    ref,
   ) => {
     const [showConfirm, setShowConfirm] = React.useState(false);
     const [isLoading, setIsLoading] = React.useState(loading);

@@ -61,7 +61,7 @@ export const AuthProvider = ({ children }) => {
   const loadingRef = useRef(loading);
 
   // Initialize user data
-  const initializeUser = useCallback(async (user) => {
+  const initializeUser = useCallback(async user => {
     if (!mountedRef.current) return;
     try {
       setLoading(true);
@@ -132,11 +132,11 @@ export const AuthProvider = ({ children }) => {
                 setLoginHistory(data);
               }
             })
-            .catch((err) =>
+            .catch(err =>
               console.warn(
                 'AuthContext: [initializeUser] Login history load failed:',
                 err,
-              ),
+              )
             );
         } catch (err) {
           console.warn(
@@ -157,11 +157,11 @@ export const AuthProvider = ({ children }) => {
                 setSecurityEvents(data);
               }
             })
-            .catch((err) =>
+            .catch(err =>
               console.warn(
                 'AuthContext: [initializeUser] Security events load failed:',
                 err,
-              ),
+              )
             );
         } catch (err) {
           console.warn(
@@ -199,7 +199,7 @@ export const AuthProvider = ({ children }) => {
         timestamp: new Date().toISOString(),
       };
 
-      setSecurityEvents((prev) => [event, ...prev.slice(0, 49)]);
+      setSecurityEvents(prev => [event, ...prev.slice(0, 49)]);
 
       try {
         await supabase.from('security_events').insert([event]);
@@ -348,10 +348,10 @@ export const AuthProvider = ({ children }) => {
       'scroll',
       'touchstart',
     ];
-    events.forEach((event) => document.addEventListener(event, updateActivity));
+    events.forEach(event => document.addEventListener(event, updateActivity));
 
     return () => {
-      events.forEach((event) =>
+      events.forEach(event =>
         document.removeEventListener(event, updateActivity),
       );
     };
@@ -438,7 +438,7 @@ export const AuthProvider = ({ children }) => {
 
   // Permission checks
   const hasPermission = useCallback(
-    (permission) => {
+    permission => {
       return (
         userProfile.permissions?.includes('*') ||
         userProfile.permissions?.includes(permission)
@@ -448,8 +448,8 @@ export const AuthProvider = ({ children }) => {
   );
 
   const hasRole = useCallback(
-    (roles) => {
-      return roles.some((role) => userProfile.role === role);
+    roles => {
+      return roles.some(role => userProfile.role === role);
     },
     [userProfile]
   );

@@ -174,7 +174,7 @@ const apiCall = async (endpoint, options = {}) => {
           errorData.message || `HTTP error! status: ${response.status}`,
           response.status,
           errorData.code,
-          errorData.details
+          errorData.details,
         );
       }
 
@@ -453,7 +453,7 @@ export const initializeWebSocket = userId => {
   const connect = () => {
     try {
       wsConnection = new WebSocket(
-        `${API_BASE_URL.replace('http', 'ws')}/ws?userId=${userId}`
+        `${API_BASE_URL.replace('http', 'ws')}/ws?userId=${userId}`,
       );
 
       wsConnection.onopen = () => {
