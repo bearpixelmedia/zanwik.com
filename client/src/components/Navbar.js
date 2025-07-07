@@ -217,7 +217,7 @@ const Navbar = () => {
             <Button
               variant='outline'
               size='sm'
-              className='flex items-center space-x-2'
+              className='flex items-center space-x-2',
             >
               <Plus className='h-4 w-4' />
               <span className='hidden sm:block'>New Project</span>
@@ -336,7 +336,7 @@ const Navbar = () => {
                   {notifications.length > 0 ? (
                     notifications.map(notification => {
                       const IconComponent = getNotificationIcon(
-                        notification.type
+                        notification.type,
                       );
                       return (
                         <div

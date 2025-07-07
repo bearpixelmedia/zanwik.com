@@ -212,7 +212,7 @@ const Sidebar = () => {
 
   const toggleFavorite = path => {
     setFavorites(prev =>
-      prev.includes(path) ? prev.filter(p => p !== path) : [...prev, path]
+      prev.includes(path) ? prev.filter(p => p !== path) : [...prev, path],
     );
   };
 
@@ -238,7 +238,7 @@ const Sidebar = () => {
       });
 
       if (filteredItems.length > 0) {
-        acc[key] = { ...section, items: filteredItems };
+        acc[key] = { ...section, items: filteredItems },
       }
 
       return acc;
@@ -248,7 +248,7 @@ const Sidebar = () => {
 
   const filteredQuickActions = quickActions.filter(
     action =>
-      !action.requiresPermission || hasPermission(action.requiresPermission)
+      !action.requiresPermission || hasPermission(action.requiresPermission),
   );
 
   return (
@@ -296,7 +296,7 @@ const Sidebar = () => {
           size='icon'
           onClick={() => setIsCollapsed(!isCollapsed)}
           className='h-8 w-8'
-          title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+          title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'},
         >
           {isCollapsed ? (
             <Menu className='h-4 w-4' />
@@ -350,7 +350,7 @@ const Sidebar = () => {
                   variant='ghost'
                   size='sm'
                   onClick={action.action}
-                  className='w-full justify-start text-xs h-8'
+                  className='w-full justify-start text-xs h-8',
                 >
                   <Icon className='h-3 w-3 mr-2' />
                   {action.name}
@@ -369,7 +369,7 @@ const Sidebar = () => {
             {!isCollapsed && (
               <button
                 onClick={() => toggleSection(sectionKey)}
-                className='flex items-center justify-between w-full text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 hover:text-foreground transition-colors'
+                className='flex items-center justify-between w-full text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 hover:text-foreground transition-colors',
               >
                 <span>{section.title}</span>
                 {expandedSections[sectionKey] ? (
@@ -386,7 +386,7 @@ const Sidebar = () => {
                 {section.items.map(item => {
                   const Icon = item.icon;
                   return (
-                    <div key={item.name} className='relative group'>
+                    <div key={item.name} className='relative group',>
                       <Link
                         to={item.href}
                         className={cn(
