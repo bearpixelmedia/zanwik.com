@@ -16,7 +16,7 @@ const cardVariants = cva(
     defaultVariants: {
       variant: 'default',
     },
-  },
+  }
 );
 
 const Card = React.forwardRef(({ className, variant, ...props }, ref) => (
@@ -42,7 +42,7 @@ const CardTitle = React.forwardRef(({ className, ...props }, ref) => (
     ref={ref}
     className={cn(
       'text-2xl font-semibold leading-none tracking-tight',
-      className,
+      className
     )}
     {...props}
   />

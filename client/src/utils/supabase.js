@@ -11,7 +11,7 @@ const supabaseAnonKey =
 // Validate environment variables
 if (!supabaseUrl || !supabaseAnonKey) {
   console.error(
-    'Missing Supabase environment variables. Please check your .env file.',
+    'Missing Supabase environment variables. Please check your .env file.'
   );
   throw new Error('Supabase configuration is incomplete');
 }

@@ -112,7 +112,7 @@ const Login = () => {
         setIsLocked(true);
         setLockoutTime(300); // 5 minutes
         setError(
-          'Too many failed login attempts. Account locked for 5 minutes.',
+          'Too many failed login attempts. Account locked for 5 minutes.'
         );
       } else {
         // Provide more helpful error messages
