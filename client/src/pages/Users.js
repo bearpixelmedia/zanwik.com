@@ -1037,7 +1037,7 @@ const Users = () => {
                         handleUpdateUserRole(
                           selectedUser.id,
                           selectedUser.role === 'admin' ? 'user' : 'admin'
-                      )
+                        )
                       }
                     >
                       <Key className='h-4 w-4 mr-2' />

@@ -65,7 +65,13 @@
     "format": "prettier --write src/**/*.{js,jsx,ts,tsx,css,md,json}",
     "format:check": "prettier --check src/**/*.{js,jsx,ts,tsx,css,md,json}",
     "type-check": "tsc --noEmit",
-    "prepare": "if [ -d .git ]; then husky install; else echo 'Skipping husky install in CI environment'; fi"
+    "prepare": "if [ -d .git ]; then husky install; else echo 'Skipping husky install in CI environment'; fi",
+    "dev:component": "node ../scripts/dev-utils.js component",
+    "dev:hook": "node ../scripts/dev-utils.js hook",
+    "dev:service": "node ../scripts/dev-utils.js service",
+    "dev:validate": "node ../scripts/dev-utils.js validate",
+    "dev:clean": "npm run lint:fix && npm run format",
+    "dev:check": "npm run lint && npm run format:check && npm run type-check"
   },
   "eslintConfig": {
     "extends": [
