@@ -41,6 +41,7 @@ import {
 import { Button } from '../components/ui/button';
 import { useAuth } from '../contexts/AuthContext';
 import api from '../utils/api';
+
 const Users = () => {
   console.log('Rendering Users');
   const { user: currentUser } = useAuth();
@@ -1048,7 +1049,7 @@ const Users = () => {
                         handleUpdateUserRole(
                           selectedUser.id,
                           selectedUser.role === 'admin' ? 'user' : 'admin'
-                      )
+                        )
                       }
                     >
                       <Key className='h-4 w-4 mr-2' />
