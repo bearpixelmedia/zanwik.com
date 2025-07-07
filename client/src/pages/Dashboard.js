@@ -609,7 +609,7 @@ const Dashboard = () => {
                 <div className='text-right'>
                   <span
                     className={`text-xs px-2 py-1 rounded-full ${getStatusBadge(
-                      server.status,
+                      server.status
                     )}`}
                   >
                     {server.status}
@@ -689,7 +689,7 @@ const Dashboard = () => {
                 </div>
                 <span
                   className={`text-xs px-2 py-1 rounded-full ${getStatusBadge(
-                    service.status,
+                    service.status
                   )}`}
                 >
                   {service.status}

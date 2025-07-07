@@ -512,7 +512,7 @@ const Settings = () => {
                         <p className='text-sm text-muted-foreground'>
                           ${sub.plan?.amount / 100}/month • Next billing:{' '}
                           {new Date(
-                            sub.current_period_end * 1000,
+                            sub.current_period_end * 1000
                           ).toLocaleDateString()}
                         </p>
                       </div>
@@ -554,7 +554,7 @@ const Settings = () => {
                         <p className='font-medium'>Invoice #{invoice.number}</p>
                         <p className='text-sm text-muted-foreground'>
                           {new Date(
-                            invoice.created * 1000,
+                            invoice.created * 1000
                           ).toLocaleDateString()}{' '}
                           • ${invoice.amount_paid / 100}
                         </p>

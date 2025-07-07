@@ -319,7 +319,7 @@ const usePerformanceMonitoring = () => {
             console.log(
               'Page load time:',
               entry.loadEventEnd - entry.loadEventStart,
-              'ms',
+              'ms'
             );
           }
         }

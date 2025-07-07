@@ -121,7 +121,7 @@ const Users = () => {
         }, {}),
         activityTrend: usersData.slice(0, 7).map((user, index) => ({
           date: new Date(
-            Date.now() - (6 - index) * 24 * 60 * 60 * 1000,
+            Date.now() - (6 - index) * 24 * 60 * 60 * 1000
           ).toLocaleDateString(),
           active: Math.floor(Math.random() * 10) + 1,
         })),
@@ -280,7 +280,7 @@ const Users = () => {
         case 'delete':
           if (
             window.confirm(
-              `Are you sure you want to delete ${selectedUsers.length} users?`,
+              `Are you sure you want to delete ${selectedUsers.length} users?`
             )
           ) {
             await Promise.all(selectedUsers.map(id => api.deleteUser(id)));
@@ -564,7 +564,7 @@ const Users = () => {
                       </span>
                     </div>
                   </div>
-                ),
+                )
               )}
             </div>
           </CardContent>
@@ -732,14 +732,14 @@ const Users = () => {
                       <div className='flex items-center space-x-2 mt-1'>
                         <span
                           className={`text-xs px-2 py-1 rounded-full ${getRoleColor(
-                            user.role,
+                            user.role
                           )}`}
                         >
                           {user.role}
                         </span>
                         <span
                           className={`text-xs px-2 py-1 rounded-full ${getStatusColor(
-                            user.status,
+                            user.status
                           )}`}
                         >
                           {user.status}
@@ -950,7 +950,7 @@ const Users = () => {
                     <span className='text-sm text-muted-foreground'>Role:</span>
                     <span
                       className={`text-sm px-2 py-1 rounded-full ${getRoleColor(
-                        selectedUser.role,
+                        selectedUser.role
                       )}`}
                     >
                       {selectedUser.role}
@@ -962,7 +962,7 @@ const Users = () => {
                     </span>
                     <span
                       className={`text-sm px-2 py-1 rounded-full ${getStatusColor(
-                        selectedUser.status,
+                        selectedUser.status
                       )}`}
                     >
                       {selectedUser.status}
@@ -1047,7 +1047,7 @@ const Users = () => {
                       onClick={() =>
                         handleUpdateUserRole(
                           selectedUser.id,
-                          selectedUser.role === 'admin' ? 'user' : 'admin',
+                          selectedUser.role === 'admin' ? 'user' : 'admin'
                         )
                       }
                     >

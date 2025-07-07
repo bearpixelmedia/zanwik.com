@@ -190,8 +190,8 @@ const Monitoring = () => {
       // Update local state to reflect the change
       setAlerts(prevAlerts =>
         prevAlerts.map(alert =>
-          alert.id === alertId ? { ...alert, status: 'acknowledged' } : alert,
-        ),
+          alert.id === alertId ? { ...alert, status: 'acknowledged' } : alert
+        )
       );
     } catch (err) {
       console.error('Failed to acknowledge alert:', err);
@@ -339,7 +339,7 @@ const Monitoring = () => {
                   <div
                     key={alert.id}
                     className={`flex items-start space-x-4 p-4 rounded-lg border ${getSeverityColor(
-                      alert.severity,
+                      alert.severity
                     )}`}
                   >
                     <div className='flex-1 min-w-0'>
@@ -373,7 +373,7 @@ const Monitoring = () => {
                         </span>
                         <span
                           className={`text-xs px-2 py-1 rounded-full ${getSeverityColor(
-                            alert.severity,
+                            alert.severity
                           )}`}
                         >
                           {alert.severity}

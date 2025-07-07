@@ -79,7 +79,7 @@ const Card = React.forwardRef(
       children,
       ...props
     },
-    ref,
+    ref
   ) => {
     const [setIsHovered] = React.useState(false);
 
@@ -95,7 +95,7 @@ const Card = React.forwardRef(
             padding,
             className,
           }),
-          interactive && 'group',
+          interactive && 'group'
         )}
         onClick={onClick}
         onMouseEnter={() => setIsHovered(true)}
@@ -117,7 +117,7 @@ Card.displayName = 'Card';
 const CardHeader = React.forwardRef(
   (
     { className, badge, badgeVariant = 'default', actions, children, ...props },
-    ref,
+    ref
   ) => {
     const getBadgeColor = () => {
       switch (badgeVariant) {
@@ -146,7 +146,7 @@ const CardHeader = React.forwardRef(
               <div
                 className={cn(
                   'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border mb-2',
-                  getBadgeColor(),
+                  getBadgeColor()
                 )}
               >
                 {badge}
@@ -170,13 +170,13 @@ const CardTitle = React.forwardRef(
       ref={ref}
       className={cn(
         'text-2xl font-semibold leading-none tracking-tight group-hover:text-primary transition-colors',
-        className,
+        className
       )}
       {...props}
     >
       {children}
     </Component>
-  ),
+  )
 );
 CardTitle.displayName = 'CardTitle';
 
@@ -186,13 +186,13 @@ const CardDescription = React.forwardRef(
       ref={ref}
       className={cn(
         'text-sm text-muted-foreground group-hover:text-foreground/80 transition-colors',
-        className,
+        className
       )}
       {...props}
     >
       {children}
     </p>
-  ),
+  )
 );
 CardDescription.displayName = 'CardDescription';
 
@@ -201,7 +201,7 @@ const CardContent = React.forwardRef(
     <div ref={ref} className={cn('p-6 pt-0', className)} {...props}>
       {children}
     </div>
-  ),
+  )
 );
 CardContent.displayName = 'CardContent';
 
@@ -214,7 +214,7 @@ const CardFooter = React.forwardRef(
     >
       {children}
     </div>
-  ),
+  )
 );
 CardFooter.displayName = 'CardFooter';
 
@@ -224,7 +224,7 @@ const InteractiveCard = React.forwardRef(
     <Card ref={ref} interactive onClick={onClick} {...props}>
       {children}
     </Card>
-  ),
+  )
 );
 InteractiveCard.displayName = 'InteractiveCard';
 
@@ -233,7 +233,7 @@ const LoadingCard = React.forwardRef(
     <Card ref={ref} loading={loading} {...props}>
       {children}
     </Card>
-  ),
+  )
 );
 LoadingCard.displayName = 'LoadingCard';
 
@@ -304,7 +304,7 @@ const MetricCard = React.forwardRef(
       children,
       ...props
     },
-    ref,
+    ref
   ) => {
     const getChangeColor = () => {
       switch (changeType) {
@@ -366,7 +366,7 @@ const ActionCard = React.forwardRef(
       children,
       ...props
     },
-    ref,
+    ref
   ) => (
     <Card ref={ref} interactive {...props}>
       <CardHeader>
@@ -390,7 +390,7 @@ const ActionCard = React.forwardRef(
         </CardFooter>
       )}
     </Card>
-  ),
+  )
 );
 ActionCard.displayName = 'ActionCard';
 

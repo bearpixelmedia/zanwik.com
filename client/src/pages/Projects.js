@@ -187,7 +187,7 @@ const Projects = () => {
       setEditingProject(projectId);
       const updatedProject = await api.updateProject(projectId, updatedData);
       setProjects(prev =>
-        prev.map(p => (p.id === projectId ? updatedProject : p)),
+        prev.map(p => (p.id === projectId ? updatedProject : p))
       );
       setShowEditModal(false);
     } catch (err) {
@@ -410,7 +410,7 @@ const Projects = () => {
                   <span className='text-sm text-muted-foreground'>Status</span>
                   <span
                     className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(
-                      project.status,
+                      project.status
                     )}`}
                   >
                     {project.status.charAt(0).toUpperCase() +
@@ -429,7 +429,7 @@ const Projects = () => {
                   <div className='w-full bg-gray-200 rounded-full h-2'>
                     <div
                       className={`h-2 rounded-full transition-all duration-300 ${getProgressColor(
-                        project.progress || 0,
+                        project.progress || 0
                       )}`}
                       style={{ width: `${project.progress || 0}%` }}
                     />

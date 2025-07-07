@@ -566,7 +566,7 @@ const Deployment = () => {
                       </h3>
                       <span
                         className={`text-xs px-2 py-1 rounded-full ${getStatusBadge(
-                          deployment.status,
+                          deployment.status
                         )}`}
                       >
                         {deployment.status}
@@ -649,7 +649,7 @@ const Deployment = () => {
                   <h3 className='font-medium'>{pipeline.name}</h3>
                   <span
                     className={`text-xs px-2 py-1 rounded-full ${getStatusBadge(
-                      pipeline.status,
+                      pipeline.status
                     )}`}
                   >
                     {pipeline.status}
@@ -705,7 +705,7 @@ const Deployment = () => {
                       ? 'completed'
                       : activity.status === 'running'
                       ? 'in-progress'
-                      : 'failed',
+                      : 'failed'
                   )}
                 </div>
                 <div className='flex-1 min-w-0'>
