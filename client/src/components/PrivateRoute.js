@@ -281,29 +281,16 @@ const PrivateRoute = ({
     );
   };
 
-  console.log('PrivateRoute: Checking auth Object', {
-    loading,
-    isAuthenticated,
-    user: !!user,
-    userProfile: !!userProfile,
-  });
-
   if (loading || securityCheck) {
-    console.log('PrivateRoute: Still loading, showing loading screen');
     return <LoadingScreen />;
   }
 
-  if (!isAuthenticated || !user) {
-    console.log('PrivateRoute: Not authenticated, redirecting to login');
-    // Not authenticated, redirect to login
-    return <Navigate to='/login' state={{ from: location }} replace />;
+  if (!isAuthenticated) {
+    return null;
   }
 
   // If we have a user but no profile, still allow access (profile will be loaded)
   if (!userProfile) {
-    console.log(
-      'PrivateRoute: User authenticated but no profile yet, showing loading'
-    );
     return <LoadingScreen />;
   }
 

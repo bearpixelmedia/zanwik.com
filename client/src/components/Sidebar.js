@@ -182,19 +182,25 @@ const Sidebar = () => {
     {
       name: 'New Project',
       icon: Plus,
-      action: () => console.log('Create new project'),
+      action: () => {
+        // Create new project - removed console.log for lint compliance
+      },
       requiresPermission: 'manage_projects',
     },
     {
       name: 'Deploy',
       icon: Rocket,
-      action: () => console.log('Deploy project'),
+      action: () => {
+        // Deploy project - removed console.log for lint compliance
+      },
       requiresPermission: 'deploy',
     },
     {
       name: 'Monitor',
-      icon: Monitor,
-      action: () => console.log('Open monitoring'),
+      icon: Activity,
+      action: () => {
+        // Open monitoring - removed console.log for lint compliance
+      },
       requiresPermission: 'view_monitoring',
     },
   ];
@@ -249,6 +255,12 @@ const Sidebar = () => {
     action =>
       !action.requiresPermission || hasPermission(action.requiresPermission)
   );
+
+  const handleSearch = e => {
+    e.preventDefault();
+    // Search functionality - removed console.log for lint compliance
+    setIsSearchOpen(false);
+  };
 
   return (
     <div

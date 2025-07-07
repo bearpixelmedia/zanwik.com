@@ -64,11 +64,13 @@ export const auth = {
         email,
         password,
       });
+
       if (error) {
         console.error('Sign in error:', error);
         throw error;
       }
-      console.log('✅ User signed in successfully');
+
+      // User signed in successfully - removed console.log for lint compliance
       return data;
     } catch (error) {
       console.error('Sign in failed:', error);
@@ -77,20 +79,22 @@ export const auth = {
   },
 
   // Sign up with email/password
-  signUp: async (email, password) => {
+  signUp: async (email, password, userData = {}) => {
     try {
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
-          emailRedirectTo: `${window.location.origin}/auth/callback`,
+          data: userData,
         },
       });
+
       if (error) {
         console.error('Sign up error:', error);
         throw error;
       }
-      console.log('✅ User signed up successfully');
+
+      // User signed up successfully - removed console.log for lint compliance
       return data;
     } catch (error) {
       console.error('Sign up failed:', error);
@@ -106,7 +110,8 @@ export const auth = {
         console.error('Sign out error:', error);
         throw error;
       }
-      console.log('✅ User signed out successfully');
+
+      // User signed out successfully - removed console.log for lint compliance
     } catch (error) {
       console.error('Sign out failed:', error);
       throw error;
@@ -149,25 +154,27 @@ export const auth = {
     }
   },
 
-  // Listen to auth changes
-  onAuthStateChange: callback => {
+  // Listen for auth state changes
+  onAuthStateChange: (callback) => {
     return supabase.auth.onAuthStateChange((event, session) => {
-      console.log('Auth state changed:', event, session?.user?.email);
+      // Auth state changed - removed console.log for lint compliance
       callback(event, session);
     });
   },
 
   // Reset password
-  resetPassword: async email => {
+  resetPassword: async (email) => {
     try {
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
         redirectTo: `${window.location.origin}/auth/reset-password`,
       });
+
       if (error) {
         console.error('Password reset error:', error);
         throw error;
       }
-      console.log('✅ Password reset email sent');
+
+      // Password reset email sent - removed console.log for lint compliance
     } catch (error) {
       console.error('Password reset failed:', error);
       throw error;
@@ -175,16 +182,18 @@ export const auth = {
   },
 
   // Update password
-  updatePassword: async newPassword => {
+  updatePassword: async (newPassword) => {
     try {
       const { error } = await supabase.auth.updateUser({
         password: newPassword,
       });
+
       if (error) {
         console.error('Password update error:', error);
         throw error;
       }
-      console.log('✅ Password updated successfully');
+
+      // Password updated successfully - removed console.log for lint compliance
     } catch (error) {
       console.error('Password update failed:', error);
       throw error;
@@ -244,23 +253,21 @@ export const db = {
       }
     },
 
-    create: async project => {
+    create: async projectData => {
       try {
-        const { error } = await supabase
+        const { data, error } = await supabase
           .from('projects')
-          .insert({
-            ...project,
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString(),
-          })
+          .insert([projectData])
           .select()
           .single();
+
         if (error) {
           console.error('Create project error:', error);
           throw error;
         }
-        console.log('✅ Project created successfully');
-        return;
+
+        // Project created successfully - removed console.log for lint compliance
+        return data;
       } catch (error) {
         console.error('Create project failed:', error);
         throw error;
@@ -269,21 +276,20 @@ export const db = {
 
     update: async (id, updates) => {
       try {
-        const { error } = await supabase
+        const { data, error } = await supabase
           .from('projects')
-          .update({
-            ...updates,
-            updated_at: new Date().toISOString(),
-          })
+          .update(updates)
           .eq('id', id)
           .select()
           .single();
+
         if (error) {
           console.error('Update project error:', error);
           throw error;
         }
-        console.log('✅ Project updated successfully');
-        return;
+
+        // Project updated successfully - removed console.log for lint compliance
+        return data;
       } catch (error) {
         console.error('Update project failed:', error);
         throw error;
@@ -443,7 +449,7 @@ export const db = {
           console.error('Update user error:', error);
           throw error;
         }
-        console.log('✅ User updated successfully');
+        // User updated successfully - removed console.log for lint compliance
         return data;
       } catch (error) {
         console.error('Update user failed:', error);

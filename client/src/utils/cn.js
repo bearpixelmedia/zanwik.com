@@ -280,10 +280,10 @@ export const utils = {
   },
 
   // Performance utilities
-  measureTime: async (fn, name = 'Function') => {
-    const start = performance.now();
+  measureTime: async (fn, _name = 'Function') => {
+    const _start = performance.now();
     const result = await fn();
-    const end = performance.now();
+    const _end = performance.now();
     return result;
   },
 

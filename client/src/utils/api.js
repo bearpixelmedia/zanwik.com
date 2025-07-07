@@ -476,7 +476,7 @@ export const initializeWebSocket = userId => {
               // Handle notifications
               break;
             default:
-              // WebSocket message - removed console.log for lint compliance
+            // WebSocket message - removed console.log for lint compliance
           }
         } catch (error) {
           console.error('Failed to parse WebSocket message:', error);

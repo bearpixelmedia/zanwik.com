@@ -159,8 +159,7 @@ const Navbar = () => {
 
   const handleSearch = e => {
     e.preventDefault();
-    // Implement search functionality
-    console.log('Searching for:', searchQuery);
+    // Implement search functionality - removed console.log for lint compliance
     setIsSearchOpen(false);
   };
 
