@@ -49,28 +49,23 @@ const Sidebar = () => {
 
   // Sample recent items
   useEffect(() => {
-    const sampleRecent = [
+    setRecentItems([
       {
-        name: 'E-commerce App',
-        type: 'project',
-        path: '/projects/1',
-        icon: FolderOpen,
+        name: 'Dashboard Overview',
+        path: '/dashboard',
+        icon: LayoutDashboard,
       },
       {
-        name: 'Analytics Dashboard',
-        type: 'page',
+        name: 'Project Analytics',
         path: '/analytics',
         icon: BarChart3,
       },
-      { name: 'User Management', type: 'page', path: '/users', icon: Users },
       {
-        name: 'Server Monitoring',
-        type: 'page',
-        path: '/monitoring',
-        icon: Monitor,
+        name: 'User Management',
+        path: '/users',
+        icon: Users,
       },
-    ];
-    setRecentItems(sampleRecent);
+    ]);
   }, []);
 
   const roleInfo = getUserRoleInfo();
@@ -248,25 +243,19 @@ const Sidebar = () => {
 
       return acc;
     },
-    {}
+    {},
   );
 
   const filteredQuickActions = quickActions.filter(
     action =>
-      !action.requiresPermission || hasPermission(action.requiresPermission)
+      !action.requiresPermission || hasPermission(action.requiresPermission),
   );
-
-  const handleSearch = e => {
-    e.preventDefault();
-    // Search functionality - removed console.log for lint compliance
-    setIsSearchOpen(false);
-  };
 
   return (
     <div
       className={cn(
         'flex flex-col h-screen bg-card border-r border-border transition-all duration-300 ease-in-out',
-        isCollapsed ? 'w-16' : 'w-64'
+        isCollapsed ? 'w-16' : 'w-64',
       )}
     >
       {/* Header */}
@@ -404,7 +393,7 @@ const Sidebar = () => {
                           'flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 group',
                           isActive(item.href)
                             ? 'bg-primary text-primary-foreground shadow-sm'
-                            : 'text-muted-foreground hover:text-foreground hover:bg-accent'
+                            : 'text-muted-foreground hover:text-foreground hover:bg-accent',
                         )}
                       >
                         <Icon
@@ -412,7 +401,7 @@ const Sidebar = () => {
                             'h-5 w-5 transition-colors',
                             isActive(item.href)
                               ? 'text-primary-foreground'
-                              : 'text-muted-foreground group-hover:text-foreground'
+                              : 'text-muted-foreground group-hover:text-foreground',
                           )}
                         />
                         {!isCollapsed && (
@@ -432,7 +421,7 @@ const Sidebar = () => {
                                     'px-2 py-0.5 text-xs rounded-full',
                                     isActive(item.href)
                                       ? 'bg-primary-foreground/20 text-primary-foreground'
-                                      : 'bg-muted text-muted-foreground'
+                                      : 'bg-muted text-muted-foreground',
                                   )}
                                 >
                                   {item.badge}
@@ -451,7 +440,7 @@ const Sidebar = () => {
                             'absolute right-2 top-1/2 transform -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity',
                             isFavorite(item.href)
                               ? 'text-yellow-500'
-                              : 'text-muted-foreground hover:text-yellow-500'
+                              : 'text-muted-foreground hover:text-yellow-500',
                           )}
                         >
                           <Star
@@ -523,7 +512,7 @@ const Sidebar = () => {
           onClick={logout}
           className={cn(
             'w-full justify-start text-muted-foreground hover:text-foreground hover:bg-accent',
-            isCollapsed && 'justify-center'
+            isCollapsed && 'justify-center',
           )}
         >
           <LogOut className='h-5 w-5' />

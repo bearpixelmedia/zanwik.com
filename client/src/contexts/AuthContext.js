@@ -30,6 +30,30 @@ export const AuthProvider = ({ children }) => {
   const [lastActivity, setLastActivity] = useState(Date.now());
   const [sessionTimeout] = useState(30 * 60 * 1000); // 30 minutes
   const [loadingStuck, setLoadingStuck] = useState(false);
+  const [error, setError] = useState(null);
+
+  // Default profile for fallback
+  const _defaultProfile = {
+    id: user?.id || null,
+    email: user?.email || '',
+    role: 'viewer',
+    permissions: ['view_projects', 'view_analytics'],
+    preferences: {},
+  };
+
+  // Test database connection function
+  const testConnection = useCallback(async () => {
+    try {
+      const { error } = await supabase
+        .from('profiles')
+        .select('count')
+        .limit(1);
+      return !error;
+    } catch (err) {
+      console.warn('Database connection test failed:', err);
+      return false;
+    }
+  }, []);
 
   // Refs to prevent multiple initializations
   const initializingRef = useRef(false);
@@ -38,7 +62,7 @@ export const AuthProvider = ({ children }) => {
   const loadingRef = useRef(loading);
 
   // Initialize user data
-  const initializeUser = useCallback(async (user, session) => {
+  const initializeUser = useCallback(async user => {
     if (!mountedRef.current) return;
     try {
       setLoading(true);
@@ -51,7 +75,7 @@ export const AuthProvider = ({ children }) => {
       }
 
       // Set default profile if database operations fail
-      const defaultProfile = {
+      const userDefaultProfile = {
         id: user.id,
         email: user.email,
         role: 'viewer',
@@ -80,14 +104,14 @@ export const AuthProvider = ({ children }) => {
         profile = null;
       }
       if (error || !profile) {
-        setUserProfile(defaultProfile);
+        setUserProfile(userDefaultProfile);
       } else {
         setUserProfile(profile);
       }
       // If after all attempts userProfile is still null, set an error state
       if (!profile && !error) {
         setUserProfile({
-          ...defaultProfile,
+          ...userDefaultProfile,
           error: 'Profile not found. Please contact support.',
         });
       }
@@ -150,7 +174,13 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       console.error('AuthContext: Error initializing user:', error);
       setError(error.message);
-      setUserProfile(defaultProfile);
+      setUserProfile({
+        id: user.id,
+        email: user.email,
+        role: 'viewer',
+        permissions: ['view_projects', 'view_analytics'],
+        preferences: {},
+      });
       setLoading(false);
       setLoadingStuck(false);
     }
@@ -211,7 +241,7 @@ export const AuthProvider = ({ children }) => {
         } = await supabase.auth.getSession();
         if (currentSession?.user) {
           try {
-            await initializeUser(currentSession.user, currentSession);
+            await initializeUser(currentSession.user);
           } finally {
             setLoading(false);
             setLoadingStuck(false);
@@ -235,7 +265,7 @@ export const AuthProvider = ({ children }) => {
       if (!mountedRef.current) return;
       if (event === 'SIGNED_IN' && session?.user) {
         try {
-          await initializeUser(session.user, session);
+          await initializeUser(session.user);
           addSecurityEvent('SIGNED_IN', 'User signed in successfully');
         } catch (error) {
           console.error('AuthContext: Error in SIGNED_IN handler:', error);

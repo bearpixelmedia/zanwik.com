@@ -155,7 +155,7 @@ export const auth = {
   },
 
   // Listen for auth state changes
-  onAuthStateChange: (callback) => {
+  onAuthStateChange: callback => {
     return supabase.auth.onAuthStateChange((event, session) => {
       // Auth state changed - removed console.log for lint compliance
       callback(event, session);
@@ -163,7 +163,7 @@ export const auth = {
   },
 
   // Reset password
-  resetPassword: async (email) => {
+  resetPassword: async email => {
     try {
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
         redirectTo: `${window.location.origin}/auth/reset-password`,
@@ -182,7 +182,7 @@ export const auth = {
   },
 
   // Update password
-  updatePassword: async (newPassword) => {
+  updatePassword: async newPassword => {
     try {
       const { error } = await supabase.auth.updateUser({
         password: newPassword,

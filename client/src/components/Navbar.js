@@ -165,7 +165,7 @@ const Navbar = () => {
 
   const markNotificationAsRead = notificationId => {
     setNotifications(prev =>
-      prev.map(n => (n.id === notificationId ? { ...n, read: true } : n))
+      prev.map(n => (n.id === notificationId ? { ...n, read: true } : n)),
     );
     setUnreadCount(prev => Math.max(0, prev - 1));
   };
@@ -514,8 +514,7 @@ const Navbar = () => {
                     className='w-full justify-start text-sm text-destructive hover:text-destructive'
                     onClick={logout}
                   >
-                    <LogOut className='h-4 w-4 mr-2' />
-                    Sign Out
+                    <LogOut className='h-4 w-4 mr-2' />, Sign Out,
                   </Button>
                 </div>
               </div>

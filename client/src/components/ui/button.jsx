@@ -140,6 +140,7 @@ const Button = React.forwardRef(
         case 'sm':
           return 'h-3 w-3';
         case 'lg':
+          return 'h-5 w-5';
         case 'xl':
           return 'h-5 w-5';
         default:
