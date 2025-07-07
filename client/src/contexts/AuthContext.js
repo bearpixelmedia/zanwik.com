@@ -157,10 +157,8 @@ export const AuthProvider = ({ children }) => {
           error = err;
           profile = null;
         }
-        console.log('AuthContext: [initializeUser] Profile fetch result:', {
-          profile,
-          error,
-        });
+        console.log('AuthContext: [initializeUser] Database connection test complete');
+        console.log('AuthContext: [initializeUser] Profile fetch result:', { profile, error });
         if (error || !profile) {
           console.warn(
             'AuthContext: [initializeUser] Profile not found, using default',
