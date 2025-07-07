@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import {
   TrendingUp,
@@ -8,16 +7,18 @@ import {
   DollarSign,
   ArrowUpRight,
   ArrowDownRight,
-  Calendar,
   Clock,
   Target,
   Zap,
-  Shield,
-  BarChart3,
-  Globe,
-  Search,
-  Settings,
-  Plus,
+  AlertTriangle,
+  CheckCircle,
+  RefreshCw,
+  Download,
+  Server,
+  Database,
+  Eye,
+  Filter,
+  ExternalLink,
 } from 'lucide-react';
 import {
   Card,
@@ -340,19 +341,6 @@ const Dashboard = () => {
         return <CheckCircle className='h-4 w-4 text-blue-500' />;
       default:
         return <AlertTriangle className='h-4 w-4 text-gray-500' />;
-    }
-  };
-
-  const getStatusColor = status => {
-    switch (status) {
-      case 'healthy':
-        return 'text-green-500';
-      case 'warning':
-        return 'text-yellow-500';
-      case 'error':
-        return 'text-red-500';
-      default:
-        return 'text-gray-500';
     }
   };
 

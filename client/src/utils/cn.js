@@ -39,7 +39,7 @@ export const utils = {
       ...options,
     };
     return new Intl.DateTimeFormat('en-US', defaultOptions).format(
-      new Date(date)
+      new Date(date),
     );
   },
 
