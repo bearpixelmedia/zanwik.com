@@ -46,7 +46,7 @@ const CardTitle = React.forwardRef(({ className, children, ...props }, ref) => (
     )}
     {...props}
   >
-    {children}
+    {children || <span className='sr-only'>(No title)</span>}
   </h2>
 ));
 CardTitle.displayName = 'CardTitle';

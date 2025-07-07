@@ -335,9 +335,7 @@ const Navbar = () => {
                 <div className='max-h-96 overflow-y-auto'>
                   {notifications.length > 0 ? (
                     notifications.map(notification => {
-                      const IconComponent = getNotificationIcon(
-                        notification.type,
-                      );
+                      const IconComponent = getNotificationIcon(notification.type);
                       return (
                         <div
                           key={notification.id}

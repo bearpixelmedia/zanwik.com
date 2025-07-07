@@ -220,7 +220,7 @@ const Button = React.forwardRef(
             rounded,
             className,
           }),
-          tooltip && 'relative'
+          tooltip && 'relative',
         )}
         ref={ref}
         disabled={disabled || isLoading}
