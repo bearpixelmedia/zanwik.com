@@ -39,7 +39,7 @@ export const AuthProvider = ({ children }) => {
 
   // Initialize user data
   const initializeUser = useCallback(async user => {
-    if (!mountedRef.current) return;
+    if (!mountedRef.current || !user) return;
     try {
       setLoading(true);
       setError(null);
@@ -225,7 +225,15 @@ export const AuthProvider = ({ children }) => {
           data: { session: currentSession },
         } = await supabase.auth.getSession();
 
+        console.log('AuthContext: Session check result:', {
+          hasSession: !!currentSession,
+          hasUser: !!currentSession?.user,
+          userId: currentSession?.user?.id,
+          userEmail: currentSession?.user?.email
+        });
+
         if (currentSession?.user) {
+          console.log('AuthContext: User found, initializing...');
           await initializeUser(currentSession.user);
         } else {
           // No user logged in - this is normal
