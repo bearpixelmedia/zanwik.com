@@ -213,114 +213,41 @@ export const AuthProvider = ({ children }) => {
 
   // Initialize auth state
   useEffect(() => {
-    console.log('AuthContext: Initializing auth state...');
-    mountedRef.current = true;
-    if (initializingRef.current) return;
-    initializingRef.current = true;
+    let mounted = true;
+    setLoading(true);
 
-    const initAuth = async () => {
-      try {
-        // Get current session
-        const {
-          data: { session: currentSession },
-        } = await supabase.auth.getSession();
-
-        console.log('AuthContext: Session check result:', {
-          hasSession: !!currentSession,
-          hasUser: !!currentSession?.user,
-          userId: currentSession?.user?.id,
-          userEmail: currentSession?.user?.email
-        });
-
-        if (currentSession?.user) {
-          console.log('AuthContext: User found, initializing...');
-          await initializeUser(currentSession.user);
+    // Always check session on mount
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (mounted) {
+        if (session?.user) {
+          initializeUser(session.user);
         } else {
-          // No user logged in - this is normal
-          console.log('AuthContext: No user logged in, redirecting to login');
           setUser(null);
           setUserProfile(null);
           setIsAuthenticated(false);
           setLoading(false);
-          setLoadingStuck(false);
         }
-      } catch (error) {
-        console.error('AuthContext: Error initializing auth:', error);
-        setUser(null);
-        setUserProfile(null);
-        setIsAuthenticated(false);
-        setLoading(false);
-        setLoadingStuck(false);
-      }
-    };
-
-    // Set up auth listener
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (event, session) => {
-      if (!mountedRef.current) return;
-
-      if (event === 'SIGNED_IN' && session?.user) {
-        try {
-          await initializeUser(session.user);
-          addSecurityEvent('SIGNED_IN', 'User signed in successfully');
-        } catch (error) {
-          console.error('AuthContext: Error in SIGNED_IN handler:', error);
-          setUser(null);
-          setUserProfile(null);
-          setIsAuthenticated(false);
-          setLoading(false);
-          setLoadingStuck(false);
-        }
-      } else if (event === 'SIGNED_OUT' || !session?.user) {
-        setUser(null);
-        setUserProfile(null);
-        setIsAuthenticated(false);
-        setLoading(false);
-        setLoadingStuck(false);
-        addSecurityEvent('SIGNED_OUT', 'User signed out');
-      } else if (event === 'TOKEN_REFRESHED' && session?.user) {
-        setLastActivity(Date.now());
-        addSecurityEvent('TOKEN_REFRESHED', 'Session token refreshed');
       }
     });
 
-    authListenerRef.current = subscription;
-    setLoading(true);
-    setLoadingStuck(false);
-    initAuth();
-
-    // Reduced fallback timeout to 5 seconds
-    const fallbackTimeout = setTimeout(() => {
-      if (mountedRef.current && loading) {
-        console.warn(
-          'AuthContext: Fallback timeout reached, forcing loading to complete',
-        );
-        setLoadingStuck(true);
+    // Listen for auth state changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (!mounted) return;
+      if (session?.user) {
+        initializeUser(session.user);
+      } else {
+        setUser(null);
+        setUserProfile(null);
+        setIsAuthenticated(false);
         setLoading(false);
-
-        // If we have a user but no profile, set a default profile
-        if (user && !userProfile) {
-          setUserProfile({
-            id: user.id,
-            email: user.email,
-            role: 'viewer',
-            permissions: ['view_projects', 'view_analytics'],
-            preferences: {},
-          });
-        }
       }
-    }, 5000); // Reduced from 7 to 5 seconds
+    });
 
     return () => {
-      if (authListenerRef.current) {
-        authListenerRef.current.unsubscribe();
-        authListenerRef.current = null;
-      }
-      clearTimeout(fallbackTimeout);
-      mountedRef.current = false;
+      mounted = false;
+      subscription?.unsubscribe();
     };
-  }, [initializeUser, addSecurityEvent]);
+  }, [initializeUser]);
 
   // Activity tracking
   useEffect(() => {
