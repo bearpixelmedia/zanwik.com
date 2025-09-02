@@ -29,6 +29,7 @@ const deploymentRoutes = require('./routes/deployment');
 const monitoringRoutes = require('./routes/monitoring');
 const userRoutes = require('./routes/users');
 const paymentRoutes = require('./routes/payments');
+const apiRoutes = require('./routes/apis');
 console.log('Routes imported successfully');
 
 // Import middleware
@@ -402,6 +403,46 @@ app.get('/test', (req, res) => {
   res.json({ message: 'Test endpoint working!' });
 });
 
+// API Directory routes - serve static HTML files
+app.get('/apis', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/apis/index.html'));
+});
+
+app.get('/apis/tools', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/apis/tools/index.html'));
+});
+
+// API Directory category routes
+app.get('/apis/category/games-comics', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/apis/category/games-comics/index.html'));
+});
+
+app.get('/apis/category/finance', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/apis/category/finance/index.html'));
+});
+
+app.get('/apis/category/weather', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/apis/category/weather/index.html'));
+});
+
+app.get('/apis/category/social', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/apis/category/social/index.html'));
+});
+
+// Individual API pages
+app.get('/apis/category/games-comics/zelda-api', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/apis/category/games-comics/zelda-api/index.html'));
+});
+
+app.get('/apis/category/social/twitter-api', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/apis/category/social/twitter-api/index.html'));
+});
+
+// Admin route - serve the React app
+app.get('/admin', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client/build/index.html'));
+});
+
 // Dashboard route - serve the React app
 app.get('/dashboard', (req, res) => {
   res.sendFile(path.join(__dirname, '../client/build/index.html'));
@@ -417,26 +458,7 @@ app.get('/login', (req, res) => {
   res.sendFile(path.join(__dirname, '../client/build/index.html'));
 });
 
-// Catch-all for other non-API routes - serve React app
-app.get('*', (req, res) => {
-  // Don't serve React app for API routes
-  if (req.path.startsWith('/api/')) {
-    return res.status(404).json({ message: 'API endpoint not found' });
-  }
-  
-  // Don't serve React app for root path (landing page)
-  if (req.path === '/') {
-    return res.status(404).json({ message: 'Route not found' });
-  }
-  
-  // Don't serve React app for static files that should be served by Express
-  if (req.path.startsWith('/static/') || req.path.startsWith('/uploads/') || req.path === '/favicon.ico' || req.path === '/asset-manifest.json') {
-    return res.status(404).json({ message: 'Static file not found' });
-  }
-  
-  // Serve React app for all other routes (SPA routing)
-  res.sendFile(path.join(__dirname, '../client/build/index.html'));
-});
+// Catch-all route will be set up after all other routes are configured
 
 console.log('Express app setup completed');
 
@@ -1278,6 +1300,10 @@ const startServer = async () => {
       console.log('Setting up payment routes...');
       app.use('/api/payments', auth, paymentRoutes);
       console.log('Payment routes setup completed');
+
+      console.log('Setting up API directory routes...');
+      app.use('/api/apis', apiRoutes);
+      console.log('API directory routes setup completed');
     } catch (error) {
       console.error('Error setting up routes:', error);
       throw error;
@@ -1298,12 +1324,28 @@ const startServer = async () => {
 
     console.log('Routes setup completed');
     
-    // 404 handler - must be last
-    console.log('Setting up 404 handler...');
-    app.use('*', (req, res) => {
-      res.status(404).json({ message: 'Route not found' });
+    // Catch-all for other non-API routes - serve React app
+    console.log('Setting up catch-all route...');
+    app.get('*', (req, res) => {
+      // Don't serve React app for API routes
+      if (req.path.startsWith('/api/')) {
+        return res.status(404).json({ message: 'API endpoint not found' });
+      }
+      
+      // Don't serve React app for root path (landing page)
+      if (req.path === '/') {
+        return res.status(404).json({ message: 'Route not found' });
+      }
+      
+      // Don't serve React app for static files that should be served by Express
+      if (req.path.startsWith('/static/') || req.path.startsWith('/uploads/') || req.path === '/favicon.ico' || req.path === '/asset-manifest.json') {
+        return res.status(404).json({ message: 'Static file not found' });
+      }
+      
+      // Serve React app for all other routes (SPA routing)
+      res.sendFile(path.join(__dirname, '../client/build/index.html'));
     });
-    console.log('404 handler setup completed');
+    console.log('Catch-all route setup completed');
     
     console.log(`Starting server on port ${PORT}...`);
     server.listen(PORT, '0.0.0.0', () => {

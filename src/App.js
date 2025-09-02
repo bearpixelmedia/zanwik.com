@@ -16,6 +16,7 @@ import Monitoring from './pages/Monitoring';
 import Users from './pages/Users';
 import Settings from './pages/Settings';
 import Login from './pages/Login';
+import Admin from './pages/Admin';
 
 // Context
 import { AuthProvider, useAuth } from './contexts/AuthContext';
@@ -38,6 +39,11 @@ function AppContent() {
     );
   }
 
+  // Check if we're on the admin route (public page)
+  if (window.location.pathname === '/admin') {
+    return <Admin />;
+  }
+
   if (!user) {
     return <Login />;
   }
@@ -50,6 +56,7 @@ function AppContent() {
       <div className="lg:pl-64">
         <main className="p-6">
           <Routes>
+            <Route path="/admin" element={<Admin />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/analytics" element={<AnalyticsPage />} />
             <Route path="/projects" element={<Projects />} />
@@ -58,7 +65,6 @@ function AppContent() {
             <Route path="/monitoring" element={<Monitoring />} />
             <Route path="/users" element={<Users />} />
             <Route path="/settings" element={<Settings />} />
-            <Route path="/" element={<Navigate to="/dashboard" replace />} />
             <Route path="*" element={<Navigate to="/dashboard" replace />} />
           </Routes>
         </main>

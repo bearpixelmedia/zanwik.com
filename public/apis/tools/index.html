@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Testing Tools - Zanwik API Directory</title>
+    <meta name="description" content="Test and compare APIs with our comprehensive testing tools. Debug, validate, and optimize your API integrations.">
+    <link rel="icon" type="image/svg+xml" href="/zanwik-icon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #1a1a1a;
+            background: #ffffff;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Header */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #000000;
+            text-decoration: none;
+            letter-spacing: -0.02em;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2.5rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #666666;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: color 0.2s ease;
+        }
+
+        .nav-links a:hover {
+            color: #000000;
+        }
+
+        .cta-button {
+            background: #000000;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            border: 1px solid #000000;
+        }
+
+        .cta-button:hover {
+            background: #ffffff;
+            color: #000000;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 140px 0 80px;
+            text-align: center;
+            background: linear-gradient(180deg, #fafafa 0%, #ffffff 100%);
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+            color: #000000;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            margin-bottom: 2.5rem;
+            color: #666666;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            font-weight: 400;
+        }
+
+        /* Tools Grid */
+        .tools-section {
+            padding: 4rem 0;
+            background: #ffffff;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #000000;
+            letter-spacing: -0.02em;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 1.1rem;
+            color: #666666;
+            margin-bottom: 3rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .tool-card {
+            background: #fafafa;
+            padding: 2.5rem;
+            border-radius: 12px;
+            border: 1px solid #e5e5e5;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border-color: #000000;
+        }
+
+        .tool-icon {
+            width: 64px;
+            height: 64px;
+            background: #000000;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .tool-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #000000;
+            font-weight: 600;
+        }
+
+        .tool-description {
+            color: #666666;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .tool-features {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+
+        .tool-features li {
+            color: #666666;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .tool-features li:before {
+            content: "✓ ";
+            color: #22c55e;
+            font-weight: bold;
+        }
+
+        .btn-primary {
+            background: #000000;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            border: 1px solid #000000;
+            display: inline-block;
+        }
+
+        .btn-primary:hover {
+            background: #ffffff;
+            color: #000000;
+        }
+
+        /* API Tester Section */
+        .tester-section {
+            padding: 4rem 0;
+            background: #fafafa;
+        }
+
+        .tester-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .tester-form {
+            background: #ffffff;
+            border: 1px solid #e5e5e5;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            align-items: end;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #000000;
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: border-color 0.2s ease;
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: #000000;
+        }
+
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+        }
+
+        .method-select {
+            background: #22c55e;
+            color: white;
+            border: none;
+            font-weight: 600;
+        }
+
+        .url-input {
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+        }
+
+        .test-result {
+            background: #ffffff;
+            border: 1px solid #e5e5e5;
+            border-radius: 12px;
+            padding: 2rem;
+            display: none;
+        }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .status-code {
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .status-200 {
+            background: #22c55e;
+            color: white;
+        }
+
+        .status-error {
+            background: #ef4444;
+            color: white;
+        }
+
+        .response-time {
+            color: #666666;
+            font-size: 0.9rem;
+        }
+
+        .result-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .result-tab {
+            padding: 0.5rem 1rem;
+            border: 1px solid #e5e5e5;
+            border-radius: 6px;
+            background: #ffffff;
+            color: #666666;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .result-tab:hover,
+        .result-tab.active {
+            background: #000000;
+            color: #ffffff;
+            border-color: #000000;
+        }
+
+        .result-content {
+            background: #f5f5f5;
+            padding: 1.5rem;
+            border-radius: 8px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.9rem;
+            white-space: pre-wrap;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .result-content.headers {
+            font-family: inherit;
+        }
+
+        /* Footer */
+        footer {
+            background: #000000;
+            color: white;
+            padding: 3rem 0 2rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .footer-section p,
+        .footer-section a {
+            color: #cccccc;
+            text-decoration: none;
+            line-height: 1.6;
+        }
+
+        .footer-section a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #333333;
+            padding-top: 2rem;
+            text-align: center;
+            color: #cccccc;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .tools-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav class="container">
+            <a href="/" class="logo">
+                <img src="/zanwik-icon.svg" alt="Zanwik" class="logo-icon">
+                Zanwik
+            </a>
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/apis">APIs</a></li>
+                <li><a href="/dashboard">Dashboard</a></li>
+                <li><a href="/dashboard" class="cta-button">Login</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>API Testing Tools</h1>
+            <p>Test, debug, and optimize your API integrations with our comprehensive suite of developer tools. Make API development faster and more reliable.</p>
+        </div>
+    </section>
+
+    <!-- Tools Grid -->
+    <section class="tools-section">
+        <div class="container">
+            <h2 class="section-title">Available Tools</h2>
+            <p class="section-subtitle">Choose the right tool for your API development needs</p>
+            <div class="tools-grid">
+                <a href="#api-tester" class="tool-card">
+                    <div class="tool-icon">🔧</div>
+                    <h3>API Tester</h3>
+                    <p class="tool-description">Test any API endpoint with our powerful testing interface. Send requests, view responses, and debug issues in real-time.</p>
+                    <ul class="tool-features">
+                        <li>Support for all HTTP methods</li>
+                        <li>Custom headers and authentication</li>
+                        <li>Request/response history</li>
+                        <li>JSON formatting and validation</li>
+                    </ul>
+                    <span class="btn-primary">Use API Tester</span>
+                </a>
+                <a href="#api-comparison" class="tool-card">
+                    <div class="tool-icon">⚖️</div>
+                    <h3>API Comparison</h3>
+                    <p class="tool-description">Compare multiple APIs side-by-side to find the best solution for your project. Analyze features, pricing, and performance.</p>
+                    <ul class="tool-features">
+                        <li>Feature comparison matrix</li>
+                        <li>Performance benchmarking</li>
+                        <li>Pricing analysis</li>
+                        <li>User reviews and ratings</li>
+                    </ul>
+                    <span class="btn-primary">Compare APIs</span>
+                </a>
+                <a href="#api-documentation" class="tool-card">
+                    <div class="tool-icon">📚</div>
+                    <h3>API Documentation</h3>
+                    <p class="tool-description">Generate beautiful, interactive API documentation from OpenAPI specs. Keep your docs up-to-date automatically.</p>
+                    <ul class="tool-features">
+                        <li>OpenAPI 3.0 support</li>
+                        <li>Interactive examples</li>
+                        <li>Code generation</li>
+                        <li>Version management</li>
+                    </ul>
+                    <span class="btn-primary">Generate Docs</span>
+                </a>
+                <a href="#api-monitoring" class="tool-card">
+                    <div class="tool-icon">📊</div>
+                    <h3>API Monitoring</h3>
+                    <p class="tool-description">Monitor your API endpoints for uptime, performance, and errors. Get alerts when issues occur.</p>
+                    <ul class="tool-features">
+                        <li>Uptime monitoring</li>
+                        <li>Performance metrics</li>
+                        <li>Error tracking</li>
+                        <li>Custom alerts</li>
+                    </ul>
+                    <span class="btn-primary">Monitor APIs</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- API Tester Section -->
+    <section class="tester-section" id="api-tester">
+        <div class="container">
+            <div class="tester-container">
+                <h2 class="section-title">API Tester</h2>
+                <p class="section-subtitle">Test any API endpoint with our powerful testing interface</p>
+                
+                <form class="tester-form" id="testerForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Method</label>
+                            <select class="form-select method-select" id="methodSelect">
+                                <option value="GET">GET</option>
+                                <option value="POST">POST</option>
+                                <option value="PUT">PUT</option>
+                                <option value="PATCH">PATCH</option>
+                                <option value="DELETE">DELETE</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">URL</label>
+                            <input type="url" class="form-input url-input" id="urlInput" placeholder="https://api.example.com/endpoint" required>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn-primary" style="width: 100%;">Send Request</button>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Headers (JSON)</label>
+                        <textarea class="form-textarea" id="headersInput" placeholder='{"Content-Type": "application/json", "Authorization": "Bearer your-token"}'></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Body (JSON)</label>
+                        <textarea class="form-textarea" id="bodyInput" placeholder='{"key": "value"}'></textarea>
+                    </div>
+                </form>
+                
+                <div class="test-result" id="testResult">
+                    <div class="result-header">
+                        <div>
+                            <h3>Response</h3>
+                            <div class="response-time" id="responseTime"></div>
+                        </div>
+                        <div class="status-code" id="statusCode">200 OK</div>
+                    </div>
+                    
+                    <div class="result-tabs">
+                        <button class="result-tab active" data-tab="body">Body</button>
+                        <button class="result-tab" data-tab="headers">Headers</button>
+                    </div>
+                    
+                    <div class="result-content" id="resultContent"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Zanwik API Directory</h3>
+                    <p>Discover, test, and integrate thousands of APIs. Find the perfect API for your project with our comprehensive directory.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Browse</h3>
+                    <p><a href="/apis">All APIs</a></p>
+                    <p><a href="/apis/category/development">Development</a></p>
+                    <p><a href="/apis/category/games-comics">Games & Comics</a></p>
+                    <p><a href="/apis/category/finance">Finance</a></p>
+                </div>
+                <div class="footer-section">
+                    <h3>Tools</h3>
+                    <p><a href="/apis/tools">API Testing</a></p>
+                    <p><a href="/apis/tools/comparison">API Comparison</a></p>
+                    <p><a href="/apis/tools/documentation">Documentation</a></p>
+                </div>
+                <div class="footer-section">
+                    <h3>Support</h3>
+                    <p><a href="/contact">Contact</a></p>
+                    <p><a href="/dashboard">Dashboard</a></p>
+                    <p><a href="/privacy">Privacy</a></p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Zanwik. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // API Tester functionality
+        document.getElementById('testerForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const method = document.getElementById('methodSelect').value;
+            const url = document.getElementById('urlInput').value;
+            const headersInput = document.getElementById('headersInput').value;
+            const bodyInput = document.getElementById('bodyInput').value;
+            const testResult = document.getElementById('testResult');
+            const statusCode = document.getElementById('statusCode');
+            const resultContent = document.getElementById('resultContent');
+            const responseTime = document.getElementById('responseTime');
+            
+            // Show loading state
+            testResult.style.display = 'block';
+            statusCode.textContent = 'Loading...';
+            resultContent.textContent = 'Making request...';
+            responseTime.textContent = '';
+            
+            const startTime = Date.now();
+            
+            try {
+                // Parse headers
+                let headers = {
+                    'Content-Type': 'application/json'
+                };
+                if (headersInput.trim()) {
+                    headers = { ...headers, ...JSON.parse(headersInput) };
+                }
+                
+                // Parse body
+                let body = null;
+                if (bodyInput.trim() && method !== 'GET') {
+                    body = JSON.parse(bodyInput);
+                }
+                
+                // Make the request
+                const response = await fetch(url, {
+                    method,
+                    headers,
+                    body: body ? JSON.stringify(body) : undefined
+                });
+                
+                const endTime = Date.now();
+                const duration = endTime - startTime;
+                
+                const responseData = await response.text();
+                let jsonData;
+                try {
+                    jsonData = JSON.parse(responseData);
+                } catch {
+                    jsonData = responseData;
+                }
+                
+                // Update UI
+                testResult.style.display = 'block';
+                statusCode.textContent = `${response.status} ${response.statusText}`;
+                statusCode.className = `status-code ${response.status >= 200 && response.status < 300 ? 'status-200' : 'status-error'}`;
+                responseTime.textContent = `Response time: ${duration}ms`;
+                
+                // Show response body by default
+                showResultTab('body');
+                resultContent.textContent = JSON.stringify(jsonData, null, 2);
+                
+                // Store response data for tab switching
+                window.lastResponse = {
+                    body: jsonData,
+                    headers: Object.fromEntries(response.headers.entries())
+                };
+                
+            } catch (error) {
+                const endTime = Date.now();
+                const duration = endTime - startTime;
+                
+                testResult.style.display = 'block';
+                statusCode.textContent = 'Error';
+                statusCode.className = 'status-code status-error';
+                responseTime.textContent = `Response time: ${duration}ms`;
+                resultContent.textContent = `Error: ${error.message}`;
+            }
+        });
+        
+        // Result tab switching
+        function showResultTab(tab) {
+            // Update tab buttons
+            document.querySelectorAll('.result-tab').forEach(t => t.classList.remove('active'));
+            document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
+            
+            // Update content
+            const resultContent = document.getElementById('resultContent');
+            if (window.lastResponse) {
+                if (tab === 'body') {
+                    resultContent.textContent = JSON.stringify(window.lastResponse.body, null, 2);
+                    resultContent.className = 'result-content';
+                } else if (tab === 'headers') {
+                    resultContent.textContent = JSON.stringify(window.lastResponse.headers, null, 2);
+                    resultContent.className = 'result-content headers';
+                }
+            }
+        }
+        
+        // Tab click handlers
+        document.querySelectorAll('.result-tab').forEach(tab => {
+            tab.addEventListener('click', function(e) {
+                e.preventDefault();
+                showResultTab(this.dataset.tab);
+            });
+        });
+        
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

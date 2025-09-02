@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music APIs - Zanwik API Directory</title>
+    <meta name="description" content="Explore 33+ music APIs including Spotify, Apple Music, Last.fm, and more music streaming services.">
+    <link rel="icon" type="image/svg+xml" href="/zanwik-icon.svg">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; line-height: 1.6; color: #1a1a1a; background: #ffffff; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+        header { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); position: fixed; top: 0; left: 0; right: 0; z-index: 1000; border-bottom: 1px solid #e5e5e5; }
+        nav { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; }
+        .logo { font-size: 1.5rem; font-weight: 700; color: #000000; text-decoration: none; display: flex; align-items: center; gap: 0.5rem; }
+        .logo-icon { width: 32px; height: 32px; }
+        .nav-links { display: flex; list-style: none; gap: 2.5rem; }
+        .nav-links a { text-decoration: none; color: #666666; font-weight: 500; font-size: 0.9rem; transition: color 0.2s ease; }
+        .nav-links a:hover { color: #000000; }
+        .cta-button { background: #000000; color: white; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 0.9rem; transition: all 0.2s ease; }
+        .cta-button:hover { background: #ffffff; color: #000000; }
+        .hero { padding: 140px 0 100px; text-align: center; background: linear-gradient(180deg, #fafafa 0%, #ffffff 100%); }
+        .hero h1 { font-size: 3.5rem; font-weight: 800; margin-bottom: 1.5rem; line-height: 1.1; letter-spacing: -0.02em; color: #000000; }
+        .hero p { font-size: 1.25rem; margin-bottom: 2.5rem; color: #666666; max-width: 600px; margin-left: auto; margin-right: auto; }
+        .apis-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 3rem; }
+        .api-card { background: #fafafa; padding: 2rem; border-radius: 12px; border: 1px solid #e5e5e5; transition: all 0.2s ease; text-decoration: none; color: inherit; }
+        .api-card:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); border-color: #000000; }
+        .api-header { display: flex; align-items: center; margin-bottom: 1rem; }
+        .api-icon { width: 40px; height: 40px; background: #000000; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-right: 1rem; color: white; font-size: 1.1rem; }
+        .api-title { font-size: 1.25rem; font-weight: 600; color: #000000; }
+        .api-description { color: #666666; line-height: 1.6; margin-bottom: 1rem; }
+        .api-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+        .api-tag { background: #e5e5e5; color: #666666; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem; font-weight: 500; }
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .nav-links { display: none; }
+            .apis-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <a href="/" class="logo">
+                <img src="/zanwik-icon.svg" alt="Zanwik" class="logo-icon">
+                Zanwik API Directory
+            </a>
+            <ul class="nav-links">
+                <li><a href="/apis">Browse APIs</a></li>
+                <li><a href="/apis/category/development">Development</a></li>
+                <li><a href="/apis/category/music">Music</a></li>
+                <li><a href="/apis/category/finance">Finance</a></li>
+                <li><a href="/admin">Admin</a></li>
+            </ul>
+            <a href="/apis" class="cta-button">Explore APIs</a>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>Music APIs</h1>
+            <p>33+ APIs for music streaming, lyrics, artist information, and audio processing services.</p>
+        </div>
+    </section>
+
+    <section class="container" style="padding: 100px 0;">
+        <div class="apis-grid">
+            <a href="#" class="api-card">
+                <div class="api-header">
+                    <div class="api-icon">🎵</div>
+                    <div class="api-title">Spotify API</div>
+                </div>
+                <div class="api-description">Access Spotify's music catalog, playlists, and user data.</div>
+                <div class="api-tags">
+                    <span class="api-tag">Streaming</span>
+                    <span class="api-tag">Music</span>
+                    <span class="api-tag">REST</span>
+                </div>
+            </a>
+
+            <a href="#" class="api-card">
+                <div class="api-header">
+                    <div class="api-icon">🍎</div>
+                    <div class="api-title">Apple Music API</div>
+                </div>
+                <div class="api-description">Integrate with Apple Music catalog and user libraries.</div>
+                <div class="api-tags">
+                    <span class="api-tag">Streaming</span>
+                    <span class="api-tag">Music</span>
+                    <span class="api-tag">REST</span>
+                </div>
+            </a>
+
+            <a href="#" class="api-card">
+                <div class="api-header">
+                    <div class="api-icon">📊</div>
+                    <div class="api-title">Last.fm API</div>
+                </div>
+                <div class="api-description">Music discovery, scrobbling, and artist information.</div>
+                <div class="api-tags">
+                    <span class="api-tag">Discovery</span>
+                    <span class="api-tag">Analytics</span>
+                    <span class="api-tag">REST</span>
+                </div>
+            </a>
+
+            <a href="#" class="api-card">
+                <div class="api-header">
+                    <div class="api-icon">🎤</div>
+                    <div class="api-title">Genius API</div>
+                </div>
+                <div class="api-description">Access song lyrics, annotations, and artist information.</div>
+                <div class="api-tags">
+                    <span class="api-tag">Lyrics</span>
+                    <span class="api-tag">Annotations</span>
+                    <span class="api-tag">REST</span>
+                </div>
+            </a>
+
+            <a href="#" class="api-card">
+                <div class="api-header">
+                    <div class="api-icon">🔊</div>
+                    <div class="api-title">SoundCloud API</div>
+                </div>
+                <div class="api-description">Upload, stream, and manage audio content on SoundCloud.</div>
+                <div class="api-tags">
+                    <span class="api-tag">Audio</span>
+                    <span class="api-tag">Upload</span>
+                    <span class="api-tag">REST</span>
+                </div>
+            </a>
+
+            <a href="#" class="api-card">
+                <div class="api-header">
+                    <div class="api-icon">🎧</div>
+                    <div class="api-title">Deezer API</div>
+                </div>
+                <div class="api-description">Access Deezer's music catalog and streaming services.</div>
+                <div class="api-tags">
+                    <span class="api-tag">Streaming</span>
+                    <span class="api-tag">Music</span>
+                    <span class="api-tag">REST</span>
+                </div>
+            </a>
+        </div>
+    </section>
+</body>
+</html>
