@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather APIs - Zanwik API Directory</title>
+    <meta name="description" content="Discover weather and climate APIs. Find APIs for weather forecasts, climate data, and environmental monitoring.">
+    <link rel="icon" type="image/svg+xml" href="/zanwik-icon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #1a1a1a;
+            background: #ffffff;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Header */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #000000;
+            text-decoration: none;
+            letter-spacing: -0.02em;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2.5rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #666666;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: color 0.2s ease;
+        }
+
+        .nav-links a:hover {
+            color: #000000;
+        }
+
+        .cta-button {
+            background: #000000;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            border: 1px solid #000000;
+        }
+
+        .cta-button:hover {
+            background: #ffffff;
+            color: #000000;
+        }
+
+        /* Breadcrumb */
+        .breadcrumb {
+            padding: 100px 0 2rem;
+            background: #fafafa;
+        }
+
+        .breadcrumb-content {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: #666666;
+        }
+
+        .breadcrumb a {
+            color: #666666;
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            color: #000000;
+        }
+
+        /* Category Header */
+        .category-header {
+            padding: 2rem 0 3rem;
+            background: #fafafa;
+        }
+
+        .category-info {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .category-icon {
+            width: 80px;
+            height: 80px;
+            background: #06b6d4;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: white;
+        }
+
+        .category-details h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: #000000;
+            letter-spacing: -0.02em;
+        }
+
+        .category-count {
+            font-size: 1.1rem;
+            color: #666666;
+            margin-bottom: 1rem;
+        }
+
+        .category-description {
+            font-size: 1.1rem;
+            color: #666666;
+            line-height: 1.7;
+        }
+
+        /* Filters */
+        .filters {
+            padding: 2rem 0;
+            background: #ffffff;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .filter-container {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            position: relative;
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.75rem 0.75rem 0.75rem 2.5rem;
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: border-color 0.2s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #06b6d4;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666666;
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .filter-tab {
+            padding: 0.5rem 1rem;
+            border: 1px solid #e5e5e5;
+            border-radius: 6px;
+            background: #ffffff;
+            color: #666666;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .filter-tab:hover,
+        .filter-tab.active {
+            background: #06b6d4;
+            color: #ffffff;
+            border-color: #06b6d4;
+        }
+
+        /* APIs Grid */
+        .apis-section {
+            padding: 3rem 0;
+            background: #ffffff;
+        }
+
+        .apis-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 2rem;
+        }
+
+        .api-card {
+            background: #ffffff;
+            border: 1px solid #e5e5e5;
+            border-radius: 12px;
+            padding: 2rem;
+            transition: all 0.2s ease;
+        }
+
+        .api-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border-color: #06b6d4;
+        }
+
+        .api-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .api-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #000000;
+            margin-bottom: 0.5rem;
+        }
+
+        .api-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: #666666;
+        }
+
+        .stars {
+            color: #fbbf24;
+        }
+
+        .api-description {
+            color: #666666;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .api-features {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .api-feature {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            color: #666666;
+        }
+
+        .api-feature.available {
+            color: #22c55e;
+        }
+
+        .api-feature.unavailable {
+            color: #ef4444;
+        }
+
+        .api-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn-primary {
+            background: #06b6d4;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            border: 1px solid #06b6d4;
+            flex: 1;
+            text-align: center;
+        }
+
+        .btn-primary:hover {
+            background: #ffffff;
+            color: #06b6d4;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #06b6d4;
+            padding: 0.75rem 1.5rem;
+            border: 1px solid #06b6d4;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            flex: 1;
+            text-align: center;
+        }
+
+        .btn-secondary:hover {
+            background: #06b6d4;
+            color: #ffffff;
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 3rem;
+        }
+
+        .pagination button {
+            padding: 0.75rem 1rem;
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
+            background: #ffffff;
+            color: #666666;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .pagination button:hover:not(:disabled) {
+            background: #06b6d4;
+            color: #ffffff;
+            border-color: #06b6d4;
+        }
+
+        .pagination button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .pagination .active {
+            background: #06b6d4;
+            color: #ffffff;
+            border-color: #06b6d4;
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: #666666;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #e5e5e5;
+            border-top: 4px solid #06b6d4;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Footer */
+        footer {
+            background: #000000;
+            color: white;
+            padding: 3rem 0 2rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .footer-section p,
+        .footer-section a {
+            color: #cccccc;
+            text-decoration: none;
+            line-height: 1.6;
+        }
+
+        .footer-section a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #333333;
+            padding-top: 2rem;
+            text-align: center;
+            color: #cccccc;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .category-info {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .category-details h1 {
+                font-size: 2rem;
+            }
+
+            .apis-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .filter-container {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-box {
+                min-width: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav class="container">
+            <a href="/" class="logo">
+                <img src="/zanwik-icon.svg" alt="Zanwik" class="logo-icon">
+                Zanwik
+            </a>
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/apis">APIs</a></li>
+                <li><a href="/dashboard">Dashboard</a></li>
+                <li><a href="/dashboard" class="cta-button">Login</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Breadcrumb -->
+    <section class="breadcrumb">
+        <div class="container">
+            <div class="breadcrumb-content">
+                <a href="/">Home</a>
+                <span>›</span>
+                <a href="/apis">APIs</a>
+                <span>›</span>
+                <span>Weather</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Category Header -->
+    <section class="category-header">
+        <div class="container">
+            <div class="category-info">
+                <div class="category-icon">🌤️</div>
+                <div class="category-details">
+                    <h1>Weather APIs</h1>
+                    <div class="category-count">35 APIs Available</div>
+                    <p class="category-description">Weather forecasts, climate data, and environmental monitoring APIs. Get accurate weather information for any location worldwide with real-time and historical data.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Filters -->
+    <section class="filters">
+        <div class="container">
+            <div class="filter-container">
+                <div class="search-box">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" class="search-input" placeholder="Search Weather APIs..." id="searchInput">
+                </div>
+                <div class="filter-tabs">
+                    <a href="#" class="filter-tab active" data-filter="all">All</a>
+                    <a href="#" class="filter-tab" data-filter="free">Free</a>
+                    <a href="#" class="filter-tab" data-filter="paid">Paid</a>
+                    <a href="#" class="filter-tab" data-filter="forecast">Forecast</a>
+                    <a href="#" class="filter-tab" data-filter="historical">Historical</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- APIs Section -->
+    <section class="apis-section">
+        <div class="container">
+            <div id="loadingIndicator" class="loading">
+                <div class="spinner"></div>
+                <p>Loading APIs...</p>
+            </div>
+            <div id="apisGrid" class="apis-grid" style="display: none;">
+                <!-- APIs will be loaded here -->
+            </div>
+            <div id="pagination" class="pagination" style="display: none;">
+                <!-- Pagination will be loaded here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Zanwik API Directory</h3>
+                    <p>Discover, test, and integrate thousands of APIs. Find the perfect API for your project with our comprehensive directory.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Browse</h3>
+                    <p><a href="/apis">All APIs</a></p>
+                    <p><a href="/apis/category/development">Development</a></p>
+                    <p><a href="/apis/category/games-comics">Games & Comics</a></p>
+                    <p><a href="/apis/category/finance">Finance</a></p>
+                </div>
+                <div class="footer-section">
+                    <h3>Tools</h3>
+                    <p><a href="/apis/tools">API Testing</a></p>
+                    <p><a href="/apis/tools/comparison">API Comparison</a></p>
+                    <p><a href="/apis/tools/documentation">Documentation</a></p>
+                </div>
+                <div class="footer-section">
+                    <h3>Support</h3>
+                    <p><a href="/contact">Contact</a></p>
+                    <p><a href="/dashboard">Dashboard</a></p>
+                    <p><a href="/privacy">Privacy</a></p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Zanwik. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Global variables
+        let currentPage = 1;
+        let currentFilter = 'all';
+        let currentSearch = '';
+        const itemsPerPage = 12;
+
+        // Load APIs on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadAPIs();
+        });
+
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            currentSearch = e.target.value;
+            currentPage = 1;
+            loadAPIs();
+        });
+
+        // Filter tabs
+        document.querySelectorAll('.filter-tab').forEach(tab => {
+            tab.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Remove active class from all tabs
+                document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+                
+                // Add active class to clicked tab
+                this.classList.add('active');
+                
+                currentFilter = this.dataset.filter;
+                currentPage = 1;
+                loadAPIs();
+            });
+        });
+
+        // Load APIs function
+        async function loadAPIs() {
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            const apisGrid = document.getElementById('apisGrid');
+            const pagination = document.getElementById('pagination');
+
+            // Show loading
+            loadingIndicator.style.display = 'block';
+            apisGrid.style.display = 'none';
+            pagination.style.display = 'none';
+
+            try {
+                // Build query parameters
+                const params = new URLSearchParams({
+                    category: 'weather',
+                    limit: itemsPerPage,
+                    offset: (currentPage - 1) * itemsPerPage
+                });
+
+                if (currentSearch) {
+                    params.append('search', currentSearch);
+                }
+
+                // Fetch APIs
+                const response = await fetch(`/api/apis/category/weather?${params}`);
+                const data = await response.json();
+
+                if (data.success) {
+                    displayAPIs(data.data.apis);
+                    displayPagination(data.data.pagination);
+                } else {
+                    throw new Error(data.error || 'Failed to load APIs');
+                }
+            } catch (error) {
+                console.error('Error loading APIs:', error);
+                apisGrid.innerHTML = '<div class="loading"><p>Error loading APIs. Please try again.</p></div>';
+            } finally {
+                loadingIndicator.style.display = 'none';
+                apisGrid.style.display = 'grid';
+            }
+        }
+
+        // Display APIs
+        function displayAPIs(apis) {
+            const apisGrid = document.getElementById('apisGrid');
+            
+            if (apis.length === 0) {
+                apisGrid.innerHTML = '<div class="loading"><p>No APIs found matching your criteria.</p></div>';
+                return;
+            }
+
+            apisGrid.innerHTML = apis.map(api => `
+                <div class="api-card">
+                    <div class="api-header">
+                        <div>
+                            <h3 class="api-name">${api.name}</h3>
+                            <div class="api-rating">
+                                <span class="stars">${'★'.repeat(Math.floor(api.rating))}${'☆'.repeat(5 - Math.floor(api.rating))}</span>
+                                <span>${api.rating} (${api.reviews} reviews)</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="api-description">${api.description}</p>
+                    <div class="api-features">
+                        <span class="api-feature ${api.features.https ? 'available' : 'unavailable'}">
+                            ${api.features.https ? '✅' : '❌'} HTTPS
+                        </span>
+                        <span class="api-feature ${api.features.cors ? 'available' : 'unavailable'}">
+                            ${api.features.cors ? '✅' : '❌'} CORS
+                        </span>
+                        <span class="api-feature ${api.features.free ? 'available' : 'unavailable'}">
+                            ${api.features.free ? '✅' : '❌'} Free
+                        </span>
+                        <span class="api-feature available">
+                            📊 ${api.features.rateLimit}
+                        </span>
+                    </div>
+                    <div class="api-actions">
+                        <a href="/apis/category/weather/${api.id}" class="btn-primary">View Details</a>
+                        <a href="#" class="btn-secondary" onclick="testAPI('${api.id}')">Test API</a>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Display pagination
+        function displayPagination(pagination) {
+            const paginationContainer = document.getElementById('pagination');
+            
+            if (pagination.total <= itemsPerPage) {
+                paginationContainer.style.display = 'none';
+                return;
+            }
+
+            const totalPages = Math.ceil(pagination.total / itemsPerPage);
+            let paginationHTML = '';
+
+            // Previous button
+            paginationHTML += `
+                <button ${currentPage === 1 ? 'disabled' : ''} onclick="changePage(${currentPage - 1})">
+                    Previous
+                </button>
+            `;
+
+            // Page numbers
+            for (let i = 1; i <= totalPages; i++) {
+                if (i === 1 || i === totalPages || (i >= currentPage - 2 && i <= currentPage + 2)) {
+                    paginationHTML += `
+                        <button class="${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">
+                            ${i}
+                        </button>
+                    `;
+                } else if (i === currentPage - 3 || i === currentPage + 3) {
+                    paginationHTML += '<span>...</span>';
+                }
+            }
+
+            // Next button
+            paginationHTML += `
+                <button ${currentPage === totalPages ? 'disabled' : ''} onclick="changePage(${currentPage + 1})">
+                    Next
+                </button>
+            `;
+
+            paginationContainer.innerHTML = paginationHTML;
+            paginationContainer.style.display = 'flex';
+        }
+
+        // Change page
+        function changePage(page) {
+            currentPage = page;
+            loadAPIs();
+        }
+
+        // Test API function
+        function testAPI(apiId) {
+            // Redirect to API testing tools page
+            window.location.href = `/apis/tools?api=${apiId}`;
+        }
+    </script>
+</body>
+</html>

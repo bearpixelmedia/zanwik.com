@@ -1,0 +1,10 @@
+{
+  "name": "zanwik-api-directory",
+  "version": "1.0.0",
+  "description": "Zanwik API Directory - Static Site",
+  "main": "index.html",
+  "scripts": {
+    "build": "echo 'Static site - no build needed'",
+    "start": "echo 'Static site - no start needed'"
+  }
+}

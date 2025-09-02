@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Zanwik API Directory - Discover & Test 1000+ APIs</title>
+    <meta name="description" content="Explore our comprehensive directory of 1000+ APIs across 18 categories. Test APIs instantly, find documentation, and integrate with confidence.">
+    <link rel="icon" type="image/svg+xml" href="/zanwik-icon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #1a1a1a;
+            background: #ffffff;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Header */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #000000;
+            text-decoration: none;
+            letter-spacing: -0.02em;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2.5rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #666666;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: color 0.2s ease;
+        }
+
+        .nav-links a:hover {
+            color: #000000;
+        }
+
+        .cta-button {
+            background: #000000;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            border: 1px solid #000000;
+        }
+
+        .cta-button:hover {
+            background: #ffffff;
+            color: #000000;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 140px 0 100px;
+            text-align: center;
+            background: linear-gradient(180deg, #fafafa 0%, #ffffff 100%);
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+            color: #000000;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            margin-bottom: 2.5rem;
+            color: #666666;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            font-weight: 400;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: #000000;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            border: 1px solid #000000;
+        }
+
+        .btn-primary:hover {
+            background: #ffffff;
+            color: #000000;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #000000;
+            padding: 1rem 2rem;
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .btn-secondary:hover {
+            background: #f5f5f5;
+            border-color: #000000;
+        }
+
+        /* Stats Section */
+        .stats {
+            padding: 60px 0;
+            background: #ffffff;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            text-align: center;
+        }
+
+        .stat-item {
+            padding: 1rem;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #000000;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            color: #666666;
+            font-weight: 500;
+        }
+
+        /* Categories Section */
+        .categories {
+            padding: 100px 0;
+            background: #ffffff;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #000000;
+            letter-spacing: -0.02em;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 1.1rem;
+            color: #666666;
+            margin-bottom: 4rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .category-card {
+            background: #fafafa;
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid #e5e5e5;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .category-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border-color: #000000;
+        }
+
+        .category-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .category-icon {
+            width: 40px;
+            height: 40px;
+            background: #000000;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            color: white;
+            font-size: 1.1rem;
+        }
+
+        .category-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #000000;
+        }
+
+        .category-count {
+            font-size: 0.9rem;
+            color: #666666;
+            margin-top: 0.5rem;
+        }
+
+        .category-description {
+            color: #666666;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .category-apis {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .api-tag {
+            background: #e5e5e5;
+            color: #666666;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 100px 0;
+            background: #fafafa;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            background: #ffffff;
+            padding: 2.5rem;
+            border-radius: 12px;
+            border: 1px solid #e5e5e5;
+            transition: all 0.2s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border-color: #000000;
+        }
+
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            background: #000000;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            color: white;
+            font-size: 1.25rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            color: #000000;
+            font-weight: 600;
+        }
+
+        .feature-card p {
+            color: #666666;
+            line-height: 1.6;
+        }
+
+        /* CTA Section */
+        .cta {
+            padding: 100px 0;
+            background: #000000;
+            color: white;
+            text-align: center;
+        }
+
+        .cta h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+        }
+
+        .cta p {
+            font-size: 1.1rem;
+            margin-bottom: 2.5rem;
+            color: #cccccc;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-white {
+            background: #ffffff;
+            color: #000000;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            border: 1px solid #ffffff;
+        }
+
+        .btn-white:hover {
+            background: #000000;
+            color: #ffffff;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #ffffff;
+            padding: 1rem 2rem;
+            border: 1px solid #ffffff;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .btn-outline:hover {
+            background: #ffffff;
+            color: #000000;
+        }
+
+        /* Footer */
+        footer {
+            background: #fafafa;
+            color: #666666;
+            padding: 3rem 0 2rem;
+            border-top: 1px solid #e5e5e5;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #000000;
+        }
+
+        .footer-section p,
+        .footer-section a {
+            color: #666666;
+            text-decoration: none;
+            line-height: 1.6;
+        }
+
+        .footer-section a:hover {
+            color: #000000;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #e5e5e5;
+            padding-top: 2rem;
+            text-align: center;
+            color: #666666;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .categories-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn-primary,
+            .btn-secondary {
+                width: 100%;
+                max-width: 300px;
+                text-align: center;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn-white,
+            .btn-outline {
+                width: 100%;
+                max-width: 300px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav class="container">
+            <a href="/" class="logo">
+                <img src="/zanwik-icon.svg" alt="Zanwik" class="logo-icon">
+                Zanwik API Directory
+            </a>
+            <ul class="nav-links">
+                <li><a href="/apis">Browse APIs</a></li>
+                <li><a href="#categories">Categories</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="/admin">Admin</a></li>
+            </ul>
+            <a href="/apis" class="cta-button">Explore APIs</a>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>Discover & Test 1000+ APIs</h1>
+            <p>Explore our comprehensive directory of APIs across 18 categories. Test APIs instantly, find documentation, and integrate with confidence.</p>
+            <div class="hero-buttons">
+                <a href="/apis" class="btn-primary">Browse APIs</a>
+                <a href="#categories" class="btn-secondary">View Categories</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">1000+</div>
+                    <div class="stat-label">APIs Available</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">18</div>
+                    <div class="stat-label">Categories</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">50M+</div>
+                    <div class="stat-label">API Calls Tested</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">24/7</div>
+                    <div class="stat-label">Available</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories Section -->
+    <section class="categories" id="categories">
+        <div class="container">
+            <h2 class="section-title">API Categories</h2>
+            <p class="section-subtitle">Explore APIs organized by category to find exactly what you need for your project.</p>
+            
+            <div class="categories-grid">
+                <a href="/apis/category/development" class="category-card">
+                    <div class="category-header">
+                        <div class="category-icon">💻</div>
+                        <div>
+                            <div class="category-title">Development</div>
+                            <div class="category-count">152 APIs</div>
+                        </div>
+                    </div>
+                    <div class="category-description">
+                        APIs for development tools, version control, CI/CD, cloud platforms, and developer services.
+                    </div>
+                    <div class="category-apis">
+                        <span class="api-tag">GitHub</span>
+                        <span class="api-tag">AWS</span>
+                        <span class="api-tag">Docker</span>
+                        <span class="api-tag">Vercel</span>
+                    </div>
+                </a>
+
+                <a href="/apis/category/games-comics" class="category-card">
+                    <div class="category-header">
+                        <div class="category-icon">🎮</div>
+                        <div>
+                            <div class="category-title">Games & Comics</div>
+                            <div class="category-count">102 APIs</div>
+                        </div>
+                    </div>
+                    <div class="category-description">
+                        Gaming APIs, comic book data, esports, streaming platforms, and entertainment services.
+                    </div>
+                    <div class="category-apis">
+                        <span class="api-tag">Steam</span>
+                        <span class="api-tag">Twitch</span>
+                        <span class="api-tag">Pokémon</span>
+                        <span class="api-tag">Marvel</span>
+                    </div>
+                </a>
+
+                <a href="/apis/category/finance" class="category-card">
+                    <div class="category-header">
+                        <div class="category-icon">💰</div>
+                        <div>
+                            <div class="category-title">Finance</div>
+                            <div class="category-count">54 APIs</div>
+                        </div>
+                    </div>
+                    <div class="category-description">
+                        Payment processing, banking, cryptocurrency, trading, and financial data services.
+                    </div>
+                    <div class="category-apis">
+                        <span class="api-tag">Stripe</span>
+                        <span class="api-tag">Coinbase</span>
+                        <span class="api-tag">PayPal</span>
+                        <span class="api-tag">Yahoo Finance</span>
+                    </div>
+                </a>
+
+                <a href="/apis/category/social" class="category-card">
+                    <div class="category-header">
+                        <div class="category-icon">📱</div>
+                        <div>
+                            <div class="category-title">Social</div>
+                            <div class="category-count">44 APIs</div>
+                        </div>
+                    </div>
+                    <div class="category-description">
+                        Social media platforms, messaging services, and community building tools.
+                    </div>
+                    <div class="category-apis">
+                        <span class="api-tag">Twitter</span>
+                        <span class="api-tag">Instagram</span>
+                        <span class="api-tag">LinkedIn</span>
+                        <span class="api-tag">Discord</span>
+                    </div>
+                </a>
+
+                <a href="/apis/category/weather" class="category-card">
+                    <div class="category-header">
+                        <div class="category-icon">🌤️</div>
+                        <div>
+                            <div class="category-title">Weather</div>
+                            <div class="category-count">33 APIs</div>
+                        </div>
+                    </div>
+                    <div class="category-description">
+                        Weather data, forecasts, climate information, and environmental monitoring.
+                    </div>
+                    <div class="category-apis">
+                        <span class="api-tag">OpenWeather</span>
+                        <span class="api-tag">AccuWeather</span>
+                        <span class="api-tag">Weather API</span>
+                        <span class="api-tag">Dark Sky</span>
+                    </div>
+                </a>
+
+                <a href="/apis/category/music" class="category-card">
+                    <div class="category-header">
+                        <div class="category-icon">🎵</div>
+                        <div>
+                            <div class="category-title">Music</div>
+                            <div class="category-count">33 APIs</div>
+                        </div>
+                    </div>
+                    <div class="category-description">
+                        Music streaming, lyrics, artist information, and audio processing services.
+                    </div>
+                    <div class="category-apis">
+                        <span class="api-tag">Spotify</span>
+                        <span class="api-tag">Apple Music</span>
+                        <span class="api-tag">Last.fm</span>
+                        <span class="api-tag">SoundCloud</span>
+                    </div>
+                </a>
+
+                <a href="/apis/category/geocoding" class="category-card">
+                    <div class="category-header">
+                        <div class="category-icon">🗺️</div>
+                        <div>
+                            <div class="category-title">Geocoding</div>
+                            <div class="category-count">98 APIs</div>
+                        </div>
+                    </div>
+                    <div class="category-description">
+                        Maps, location services, geocoding, and geographic data APIs.
+                    </div>
+                    <div class="category-apis">
+                        <span class="api-tag">Google Maps</span>
+                        <span class="api-tag">Mapbox</span>
+                        <span class="api-tag">OpenStreetMap</span>
+                        <span class="api-tag">HERE</span>
+                    </div>
+                </a>
+
+                <a href="/apis/category/government" class="category-card">
+                    <div class="category-header">
+                        <div class="category-icon">🏛️</div>
+                        <div>
+                            <div class="category-title">Government</div>
+                            <div class="category-count">88 APIs</div>
+                        </div>
+                    </div>
+                    <div class="category-description">
+                        Government data, public records, civic services, and regulatory information.
+                    </div>
+                    <div class="category-apis">
+                        <span class="api-tag">NASA</span>
+                        <span class="api-tag">Data.gov</span>
+                        <span class="api-tag">Census</span>
+                        <span class="api-tag">FBI</span>
+                    </div>
+                </a>
+
+                <a href="/apis/category/transportation" class="category-card">
+                    <div class="category-header">
+                        <div class="category-icon">🚗</div>
+                        <div>
+                            <div class="category-title">Transportation</div>
+                            <div class="category-count">73 APIs</div>
+                        </div>
+                    </div>
+                    <div class="category-description">
+                        Ride-sharing, public transit, logistics, and transportation services.
+                    </div>
+                    <div class="category-apis">
+                        <span class="api-tag">Uber</span>
+                        <span class="api-tag">Lyft</span>
+                        <span class="api-tag">Google Transit</span>
+                        <span class="api-tag">FedEx</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="container">
+            <h2 class="section-title">Why Choose Our API Directory?</h2>
+            <p class="section-subtitle">Built for developers who demand quality, reliability, and ease of use.</p>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Instant Testing</h3>
+                    <p>Test any API directly in your browser with our built-in testing tools. No setup required, just click and test.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">📚</div>
+                    <h3>Comprehensive Docs</h3>
+                    <p>Every API comes with detailed documentation, examples, and code snippets to get you started quickly.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🔍</div>
+                    <h3>Smart Search</h3>
+                    <p>Find exactly what you need with our advanced search and filtering system across all categories.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🛡️</div>
+                    <h3>Verified APIs</h3>
+                    <p>All APIs are tested and verified to ensure they work as expected and provide reliable service.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Usage Analytics</h3>
+                    <p>Track API performance, response times, and reliability metrics to make informed decisions.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🚀</div>
+                    <h3>Always Updated</h3>
+                    <p>Our directory is constantly updated with new APIs and the latest versions of existing ones.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="container">
+            <h2>Ready to Build Something Amazing?</h2>
+            <p>Join thousands of developers who trust our API directory to power their applications. Start exploring today.</p>
+            <div class="cta-buttons">
+                <a href="/apis" class="btn-white">Browse All APIs</a>
+                <a href="/admin" class="btn-outline">Admin Dashboard</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Zanwik API Directory</h3>
+                    <p>Discover, test, and integrate with 1000+ APIs across 18 categories. Built for developers, by developers.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Explore</h3>
+                    <p><a href="/apis">Browse APIs</a></p>
+                    <p><a href="#categories">Categories</a></p>
+                    <p><a href="#features">Features</a></p>
+                </div>
+                <div class="footer-section">
+                    <h3>Resources</h3>
+                    <p><a href="/admin">Admin Dashboard</a></p>
+                    <p><a href="/apis/tools">API Tools</a></p>
+                    <p><a href="#features">Documentation</a></p>
+                </div>
+                <div class="footer-section">
+                    <h3>Company</h3>
+                    <p><a href="/admin">About Us</a></p>
+                    <p><a href="/admin">Contact</a></p>
+                    <p><a href="/admin">Privacy</a></p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Zanwik API Directory. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add loading animation for category cards
+        document.addEventListener('DOMContentLoaded', function() {
+            const categoryCards = document.querySelectorAll('.category-card');
+            categoryCards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+</html>

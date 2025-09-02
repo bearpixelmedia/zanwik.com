@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social APIs - API Directory | Zanwik</title>
+    <meta name="description" content="Discover social media APIs for Twitter, Instagram, Facebook, LinkedIn, and more. Build social features into your applications.">
+    
+    <link rel="icon" type="image/svg+xml" href="/zanwik-icon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #1a1a1a;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: #666;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #667eea;
+        }
+
+        /* Main Content */
+        .main {
+            padding: 2rem 0;
+        }
+
+        .breadcrumb {
+            margin-bottom: 2rem;
+        }
+
+        .breadcrumb a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .breadcrumb a:hover {
+            color: white;
+        }
+
+        .breadcrumb span {
+            color: rgba(255, 255, 255, 0.6);
+            margin: 0 0.5rem;
+        }
+
+        .category-header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 3rem 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .category-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .category-title {
+            font-size: 3rem;
+            font-weight: 800;
+            color: #1a1a1a;
+            margin-bottom: 1rem;
+        }
+
+        .category-description {
+            font-size: 1.2rem;
+            color: #666;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+
+        .category-stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Search and Filters */
+        .search-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-bar {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            border: 2px solid #e1e5e9;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .search-btn {
+            padding: 1rem 2rem;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .search-btn:hover {
+            background: #5a6fd8;
+        }
+
+        .filters {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            background: #f8f9fa;
+            border: 1px solid #e1e5e9;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .filter-btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        /* API Grid */
+        .apis-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .api-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .api-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15);
+        }
+
+        .api-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .api-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 0.5rem;
+        }
+
+        .api-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #f8f9fa;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+
+        .stars {
+            color: #ffc107;
+        }
+
+        .api-description {
+            color: #666;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .api-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-tag {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .api-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .api-pricing {
+            font-weight: 600;
+            color: #4caf50;
+        }
+
+        .api-link {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .api-link:hover {
+            color: #5a6fd8;
+        }
+
+        /* Loading State */
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .category-title {
+                font-size: 2rem;
+            }
+
+            .category-stats {
+                gap: 2rem;
+            }
+
+            .search-bar {
+                flex-direction: column;
+            }
+
+            .apis-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav container">
+            <a href="/" class="logo">Zanwik</a>
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/apis">APIs</a></li>
+                <li><a href="/apis/tools">Tools</a></li>
+                <li><a href="/dashboard">Dashboard</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="main">
+        <div class="container">
+            <div class="breadcrumb">
+                <a href="/">Home</a>
+                <span>›</span>
+                <a href="/apis">APIs</a>
+                <span>›</span>
+                <span>Social</span>
+            </div>
+
+            <div class="category-header">
+                <div class="category-icon">📱</div>
+                <h1 class="category-title">Social APIs</h1>
+                <p class="category-description">
+                    Connect your applications with social media platforms. Access Twitter, Instagram, Facebook, LinkedIn, and other social networks through powerful APIs.
+                </p>
+                <div class="category-stats">
+                    <div class="stat">
+                        <div class="stat-number" id="apiCount">47</div>
+                        <div class="stat-label">APIs</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">4.6</div>
+                        <div class="stat-label">Avg Rating</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">2.1K</div>
+                        <div class="stat-label">Reviews</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="search-section">
+                <div class="search-bar">
+                    <input type="text" class="search-input" placeholder="Search social APIs..." id="searchInput">
+                    <button class="search-btn" onclick="searchAPIs()">Search</button>
+                </div>
+                <div class="filters">
+                    <button class="filter-btn active" onclick="filterAPIs('all')">All</button>
+                    <button class="filter-btn" onclick="filterAPIs('free')">Free</button>
+                    <button class="filter-btn" onclick="filterAPIs('paid')">Paid</button>
+                    <button class="filter-btn" onclick="filterAPIs('high-rated')">High Rated</button>
+                    <button class="filter-btn" onclick="filterAPIs('popular')">Popular</button>
+                </div>
+            </div>
+
+            <div id="loadingState" class="loading">
+                <div class="spinner"></div>
+                <p>Loading social APIs...</p>
+            </div>
+
+            <div id="apisContainer" class="apis-grid" style="display: none;">
+                <!-- APIs will be loaded here -->
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let allAPIs = [];
+        let filteredAPIs = [];
+        let currentFilter = 'all';
+
+        // Load APIs when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            loadAPIs();
+        });
+
+        async function loadAPIs() {
+            try {
+                const response = await fetch('/api/apis/category/social');
+                const data = await response.json();
+                
+                if (data.success) {
+                    allAPIs = data.data.apis;
+                    filteredAPIs = [...allAPIs];
+                    displayAPIs();
+                    updateStats();
+                } else {
+                    showError('Failed to load APIs');
+                }
+            } catch (error) {
+                console.error('Error loading APIs:', error);
+                showError('Error loading APIs. Please try again.');
+            }
+        }
+
+        function displayAPIs() {
+            const container = document.getElementById('apisContainer');
+            const loadingState = document.getElementById('loadingState');
+            
+            if (filteredAPIs.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: rgba(255,255,255,0.8); grid-column: 1/-1;">No APIs found matching your criteria.</p>';
+            } else {
+                container.innerHTML = filteredAPIs.map(api => `
+                    <div class="api-card" onclick="viewAPI('${api.id}')">
+                        <div class="api-header">
+                            <div>
+                                <h3 class="api-name">${api.name}</h3>
+                            </div>
+                            <div class="api-rating">
+                                <span class="stars">★★★★★</span>
+                                <span>${api.rating}</span>
+                            </div>
+                        </div>
+                        <p class="api-description">${api.description}</p>
+                        <div class="api-features">
+                            ${api.features.https ? '<span class="feature-tag">HTTPS</span>' : ''}
+                            ${api.features.cors ? '<span class="feature-tag">CORS</span>' : ''}
+                            ${api.features.free ? '<span class="feature-tag">Free</span>' : ''}
+                            ${api.pricing.paid ? '<span class="feature-tag">Paid Plans</span>' : ''}
+                        </div>
+                        <div class="api-footer">
+                            <span class="api-pricing">${api.pricing.free ? 'Free' : 'Paid'}</span>
+                            <a href="/apis/category/social/${api.id}" class="api-link">View Details →</a>
+                        </div>
+                    </div>
+                `).join('');
+            }
+            
+            loadingState.style.display = 'none';
+            container.style.display = 'grid';
+        }
+
+        function updateStats() {
+            document.getElementById('apiCount').textContent = allAPIs.length;
+        }
+
+        function searchAPIs() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            filteredAPIs = allAPIs.filter(api => 
+                api.name.toLowerCase().includes(searchTerm) ||
+                api.description.toLowerCase().includes(searchTerm) ||
+                api.tags.some(tag => tag.toLowerCase().includes(searchTerm))
+            );
+            displayAPIs();
+        }
+
+        function filterAPIs(filter) {
+            currentFilter = filter;
+            
+            // Update active filter button
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            switch(filter) {
+                case 'free':
+                    filteredAPIs = allAPIs.filter(api => api.pricing.free);
+                    break;
+                case 'paid':
+                    filteredAPIs = allAPIs.filter(api => api.pricing.paid);
+                    break;
+                case 'high-rated':
+                    filteredAPIs = allAPIs.filter(api => api.rating >= 4.5);
+                    break;
+                case 'popular':
+                    filteredAPIs = allAPIs.filter(api => api.reviews >= 100);
+                    break;
+                default:
+                    filteredAPIs = [...allAPIs];
+            }
+            
+            displayAPIs();
+        }
+
+        function viewAPI(apiId) {
+            window.location.href = `/apis/category/social/${apiId}`;
+        }
+
+        function showError(message) {
+            const container = document.getElementById('apisContainer');
+            const loadingState = document.getElementById('loadingState');
+            
+            loadingState.style.display = 'none';
+            container.innerHTML = `<p style="text-align: center; color: #ff6b6b; grid-column: 1/-1;">${message}</p>`;
+            container.style.display = 'grid';
+        }
+
+        // Search on Enter key
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchAPIs();
+            }
+        });
+    </script>
+</body>
+</html>

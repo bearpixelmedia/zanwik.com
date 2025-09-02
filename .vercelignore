@@ -9,3 +9,5 @@ uploads/
 .env.production
 railway.json
 Dockerfile
+package.json
+package-lock.json

@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Directory - Zanwik</title>
+    <meta name="description" content="Discover and test thousands of APIs. Find the perfect API for your project with our comprehensive directory, testing tools, and developer reviews.">
+    <link rel="icon" type="image/svg+xml" href="/zanwik-icon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #1a1a1a;
+            background: #ffffff;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Header */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #000000;
+            text-decoration: none;
+            letter-spacing: -0.02em;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2.5rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #666666;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: color 0.2s ease;
+        }
+
+        .nav-links a:hover {
+            color: #000000;
+        }
+
+        .cta-button {
+            background: #000000;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            border: 1px solid #000000;
+        }
+
+        .cta-button:hover {
+            background: #ffffff;
+            color: #000000;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 140px 0 80px;
+            text-align: center;
+            background: linear-gradient(180deg, #fafafa 0%, #ffffff 100%);
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+            color: #000000;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            margin-bottom: 2.5rem;
+            color: #666666;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            font-weight: 400;
+        }
+
+        /* Search Section */
+        .search-section {
+            padding: 2rem 0;
+            background: #ffffff;
+        }
+
+        .search-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .search-box {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            border: 2px solid #e5e5e5;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-family: inherit;
+            transition: border-color 0.2s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #000000;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666666;
+            font-size: 1.2rem;
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .filter-tab {
+            padding: 0.75rem 1.5rem;
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
+            background: #ffffff;
+            color: #666666;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .filter-tab:hover,
+        .filter-tab.active {
+            background: #000000;
+            color: #ffffff;
+            border-color: #000000;
+        }
+
+        /* Advanced Filters */
+        .advanced-filters {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            background: #f8f9fa;
+            border-radius: 12px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .filter-group label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #333333;
+        }
+
+        .filter-group select {
+            padding: 0.5rem 1rem;
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            background: white;
+            cursor: pointer;
+            transition: border-color 0.2s ease;
+        }
+
+        .filter-group select:focus {
+            outline: none;
+            border-color: #000000;
+        }
+
+        /* Stats Section */
+        .stats {
+            padding: 3rem 0;
+            background: #fafafa;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            text-align: center;
+        }
+
+        .stat-item {
+            padding: 1.5rem;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #000000;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            color: #666666;
+            font-weight: 500;
+        }
+
+        /* Categories Section */
+        .categories {
+            padding: 4rem 0;
+            background: #ffffff;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #000000;
+            letter-spacing: -0.02em;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 1.1rem;
+            color: #666666;
+            margin-bottom: 3rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .category-card {
+            background: #fafafa;
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid #e5e5e5;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .category-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border-color: #000000;
+        }
+
+        .category-icon {
+            width: 48px;
+            height: 48px;
+            background: #000000;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            color: white;
+            font-size: 1.25rem;
+        }
+
+        .category-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+            color: #000000;
+            font-weight: 600;
+        }
+
+        .category-count {
+            color: #666666;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .category-description {
+            color: #666666;
+            line-height: 1.6;
+        }
+
+        /* Featured APIs */
+        .featured {
+            padding: 4rem 0;
+            background: #fafafa;
+        }
+
+        .featured-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .api-card {
+            background: #ffffff;
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid #e5e5e5;
+            transition: all 0.2s ease;
+        }
+
+        .api-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border-color: #000000;
+        }
+
+        .api-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .api-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #000000;
+            margin-bottom: 0.5rem;
+        }
+
+        .api-category {
+            background: #f0f0f0;
+            color: #666666;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .api-description {
+            color: #666666;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .api-features {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .api-feature {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: #666666;
+        }
+
+        .api-feature.available {
+            color: #22c55e;
+        }
+
+        .api-feature.unavailable {
+            color: #ef4444;
+        }
+
+        .api-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn-primary {
+            background: #000000;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            border: 1px solid #000000;
+            flex: 1;
+            text-align: center;
+        }
+
+        .btn-primary:hover {
+            background: #ffffff;
+            color: #000000;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #000000;
+            padding: 0.75rem 1.5rem;
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            flex: 1;
+            text-align: center;
+        }
+
+        .btn-secondary:hover {
+            background: #f5f5f5;
+            border-color: #000000;
+        }
+
+        /* Footer */
+        footer {
+            background: #000000;
+            color: white;
+            padding: 3rem 0 2rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .footer-section p,
+        .footer-section a {
+            color: #cccccc;
+            text-decoration: none;
+            line-height: 1.6;
+        }
+
+        .footer-section a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #333333;
+            padding-top: 2rem;
+            text-align: center;
+            color: #cccccc;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .categories-grid,
+            .featured-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .filter-tabs {
+                justify-content: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav class="container">
+            <a href="/" class="logo">
+                <img src="/zanwik-icon.svg" alt="Zanwik" class="logo-icon">
+                Zanwik
+            </a>
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/apis">APIs</a></li>
+                <li><a href="/dashboard">Dashboard</a></li>
+                <li><a href="/dashboard" class="cta-button">Login</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>API Directory</h1>
+            <p>Discover, test, and integrate thousands of APIs. Find the perfect API for your project with our comprehensive directory, testing tools, and developer reviews.</p>
+        </div>
+    </section>
+
+    <!-- Search Section -->
+    <section class="search-section">
+        <div class="container">
+            <div class="search-container">
+                <div class="search-box">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" class="search-input" placeholder="Search APIs by name, category, or description..." id="searchInput">
+                </div>
+                <div class="filter-tabs">
+                    <a href="#" class="filter-tab active" data-category="all">All APIs</a>
+                    <a href="#" class="filter-tab" data-category="development">Development</a>
+                    <a href="#" class="filter-tab" data-category="games-comics">Games & Comics</a>
+                    <a href="#" class="filter-tab" data-category="geocoding">Geocoding</a>
+                    <a href="#" class="filter-tab" data-category="government">Government</a>
+                    <a href="#" class="filter-tab" data-category="transportation">Transportation</a>
+                    <a href="#" class="filter-tab" data-category="cryptocurrency">Cryptocurrency</a>
+                    <a href="#" class="filter-tab" data-category="finance">Finance</a>
+                    <a href="#" class="filter-tab" data-category="video">Video</a>
+                    <a href="#" class="filter-tab" data-category="social">Social</a>
+                    <a href="#" class="filter-tab" data-category="security">Security</a>
+                    <a href="#" class="filter-tab" data-category="open-data">Open Data</a>
+                    <a href="#" class="filter-tab" data-category="sports-fitness">Sports & Fitness</a>
+                    <a href="#" class="filter-tab" data-category="documents-productivity">Documents</a>
+                    <a href="#" class="filter-tab" data-category="science-math">Science & Math</a>
+                    <a href="#" class="filter-tab" data-category="weather">Weather</a>
+                    <a href="#" class="filter-tab" data-category="music">Music</a>
+                    <a href="#" class="filter-tab" data-category="health">Health</a>
+                    <a href="#" class="filter-tab" data-category="photography">Photography</a>
+                </div>
+                <div class="advanced-filters">
+                    <div class="filter-group">
+                        <label>Pricing:</label>
+                        <select id="pricingFilter">
+                            <option value="all">All</option>
+                            <option value="free">Free Only</option>
+                            <option value="paid">Paid Only</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Rating:</label>
+                        <select id="ratingFilter">
+                            <option value="all">All</option>
+                            <option value="4.5+">4.5+ Stars</option>
+                            <option value="4.0+">4.0+ Stars</option>
+                            <option value="3.5+">3.5+ Stars</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Features:</label>
+                        <select id="featuresFilter">
+                            <option value="all">All</option>
+                            <option value="https">HTTPS</option>
+                            <option value="cors">CORS</option>
+                            <option value="auth">Authentication</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">10,000+</div>
+                    <div class="stat-label">APIs Available</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">50+</div>
+                    <div class="stat-label">Categories</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">10,000+</div>
+                    <div class="stat-label">Developer Reviews</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">99.9%</div>
+                    <div class="stat-label">Uptime</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories Section -->
+    <section class="categories">
+        <div class="container">
+            <h2 class="section-title">Browse by Category</h2>
+            <p class="section-subtitle">Find APIs organized by their primary use case and industry</p>
+            <div class="categories-grid">
+                <a href="/apis/category/development" class="category-card">
+                    <div class="category-icon">💻</div>
+                    <h3>Development</h3>
+                    <div class="category-count">152 APIs</div>
+                    <p class="category-description">Tools and services for developers, including testing, deployment, and productivity APIs.</p>
+                </a>
+                <a href="/apis/category/games-comics" class="category-card">
+                    <div class="category-icon">🎮</div>
+                    <h3>Games & Comics</h3>
+                    <div class="category-count">102 APIs</div>
+                    <p class="category-description">Gaming data, character information, and comic book APIs for entertainment applications.</p>
+                </a>
+                <a href="/apis/category/finance" class="category-card">
+                    <div class="category-icon">💰</div>
+                    <h3>Finance</h3>
+                    <div class="category-count">57 APIs</div>
+                    <p class="category-description">Financial data, payment processing, and cryptocurrency APIs for fintech applications.</p>
+                </a>
+                <a href="/apis/category/social" class="category-card">
+                    <div class="category-icon">👥</div>
+                    <h3>Social</h3>
+                    <div class="category-count">47 APIs</div>
+                    <p class="category-description">Social media integration, user management, and community building APIs.</p>
+                </a>
+                <a href="/apis/category/weather" class="category-card">
+                    <div class="category-icon">🌤️</div>
+                    <h3>Weather</h3>
+                    <div class="category-count">35 APIs</div>
+                    <p class="category-description">Weather forecasts, climate data, and environmental monitoring APIs.</p>
+                </a>
+                <a href="/apis/category/music" class="category-card">
+                    <div class="category-icon">🎵</div>
+                    <h3>Music</h3>
+                    <div class="category-count">33 APIs</div>
+                    <p class="category-description">Music streaming, lyrics, and audio processing APIs for music applications.</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured APIs -->
+    <section class="featured">
+        <div class="container">
+            <h2 class="section-title">Featured APIs</h2>
+            <p class="section-subtitle">Hand-picked APIs that developers love and trust</p>
+            <div class="featured-grid">
+                <div class="api-card">
+                    <div class="api-header">
+                        <div>
+                            <h3 class="api-name">Zelda API</h3>
+                            <span class="api-category">Games & Comics</span>
+                        </div>
+                    </div>
+                    <p class="api-description">Comprehensive API for The Legend of Zelda universe, including characters, items, and quests from all games in the series.</p>
+                    <div class="api-features">
+                        <span class="api-feature available">✅ HTTPS</span>
+                        <span class="api-feature unavailable">❌ CORS</span>
+                        <span class="api-feature available">✅ Free</span>
+                    </div>
+                    <div class="api-actions">
+                        <a href="/apis/category/games-comics/zelda-api" class="btn-primary">View Details</a>
+                        <a href="#" class="btn-secondary">Test API</a>
+                    </div>
+                </div>
+                <div class="api-card">
+                    <div class="api-header">
+                        <div>
+                            <h3 class="api-name">OpenWeatherMap</h3>
+                            <span class="api-category">Weather</span>
+                        </div>
+                    </div>
+                    <p class="api-description">Global weather data API providing current weather, forecasts, and historical weather information for any location.</p>
+                    <div class="api-features">
+                        <span class="api-feature available">✅ HTTPS</span>
+                        <span class="api-feature available">✅ CORS</span>
+                        <span class="api-feature available">✅ Free Tier</span>
+                    </div>
+                    <div class="api-actions">
+                        <a href="/apis/category/weather/openweathermap" class="btn-primary">View Details</a>
+                        <a href="#" class="btn-secondary">Test API</a>
+                    </div>
+                </div>
+                <div class="api-card">
+                    <div class="api-header">
+                        <div>
+                            <h3 class="api-name">JSONPlaceholder</h3>
+                            <span class="api-category">Development</span>
+                        </div>
+                    </div>
+                    <p class="api-description">Fake REST API for testing and prototyping. Perfect for frontend developers who need mock data.</p>
+                    <div class="api-features">
+                        <span class="api-feature available">✅ HTTPS</span>
+                        <span class="api-feature available">✅ CORS</span>
+                        <span class="api-feature available">✅ Free</span>
+                    </div>
+                    <div class="api-actions">
+                        <a href="/apis/category/development/jsonplaceholder" class="btn-primary">View Details</a>
+                        <a href="#" class="btn-secondary">Test API</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Zanwik API Directory</h3>
+                    <p>Discover, test, and integrate thousands of APIs. Find the perfect API for your project with our comprehensive directory.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Browse</h3>
+                    <p><a href="/apis">All APIs</a></p>
+                    <p><a href="/apis/category/development">Development</a></p>
+                    <p><a href="/apis/category/games-comics">Games & Comics</a></p>
+                    <p><a href="/apis/category/finance">Finance</a></p>
+                </div>
+                <div class="footer-section">
+                    <h3>Tools</h3>
+                    <p><a href="/apis/tools">API Testing</a></p>
+                    <p><a href="/apis/tools/comparison">API Comparison</a></p>
+                    <p><a href="/apis/tools/documentation">Documentation</a></p>
+                </div>
+                <div class="footer-section">
+                    <h3>Support</h3>
+                    <p><a href="/contact">Contact</a></p>
+                    <p><a href="/dashboard">Dashboard</a></p>
+                    <p><a href="/privacy">Privacy</a></p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Zanwik. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Global variables for search and filtering
+        let allAPIs = [];
+        let filteredAPIs = [];
+        let currentCategory = 'all';
+
+        // Load APIs when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            loadAPIs();
+        });
+
+        async function loadAPIs() {
+            try {
+                const response = await fetch('/api/apis');
+                const data = await response.json();
+                
+                if (data.success) {
+                    allAPIs = data.data.apis;
+                    filteredAPIs = [...allAPIs];
+                    applyFilters();
+                } else {
+                    console.error('Failed to load APIs');
+                }
+            } catch (error) {
+                console.error('Error loading APIs:', error);
+            }
+        }
+
+        function applyFilters() {
+            let filtered = [...allAPIs];
+            
+            // Category filter
+            if (currentCategory !== 'all') {
+                filtered = filtered.filter(api => api.category === currentCategory);
+            }
+            
+            // Search filter
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            if (searchTerm) {
+                filtered = filtered.filter(api => 
+                    api.name.toLowerCase().includes(searchTerm) ||
+                    api.description.toLowerCase().includes(searchTerm) ||
+                    api.tags.some(tag => tag.toLowerCase().includes(searchTerm))
+                );
+            }
+            
+            // Pricing filter
+            const pricingFilter = document.getElementById('pricingFilter').value;
+            if (pricingFilter === 'free') {
+                filtered = filtered.filter(api => api.pricing.free);
+            } else if (pricingFilter === 'paid') {
+                filtered = filtered.filter(api => api.pricing.paid);
+            }
+            
+            // Rating filter
+            const ratingFilter = document.getElementById('ratingFilter').value;
+            if (ratingFilter === '4.5+') {
+                filtered = filtered.filter(api => api.rating >= 4.5);
+            } else if (ratingFilter === '4.0+') {
+                filtered = filtered.filter(api => api.rating >= 4.0);
+            } else if (ratingFilter === '3.5+') {
+                filtered = filtered.filter(api => api.rating >= 3.5);
+            }
+            
+            // Features filter
+            const featuresFilter = document.getElementById('featuresFilter').value;
+            if (featuresFilter === 'https') {
+                filtered = filtered.filter(api => api.features.https);
+            } else if (featuresFilter === 'cors') {
+                filtered = filtered.filter(api => api.features.cors);
+            } else if (featuresFilter === 'auth') {
+                filtered = filtered.filter(api => api.features.authentication !== 'none');
+            }
+            
+            filteredAPIs = filtered;
+            updateCategoryCounts();
+        }
+
+        function updateCategoryCounts() {
+            // Update category tab counts based on filtered results
+            const categories = ['all', 'development', 'games-comics', 'geocoding', 'government', 'transportation', 'cryptocurrency', 'finance', 'video', 'social', 'security', 'open-data', 'sports-fitness', 'documents-productivity', 'science-math', 'weather', 'music', 'health', 'photography'];
+            
+            categories.forEach(category => {
+                const tab = document.querySelector(`[data-category="${category}"]`);
+                if (tab) {
+                    let count = 0;
+                    if (category === 'all') {
+                        count = filteredAPIs.length;
+                    } else {
+                        count = filteredAPIs.filter(api => api.category === category).length;
+                    }
+                    tab.textContent = tab.textContent.replace(/\(\d+\)/, '') + ` (${count})`;
+                }
+            });
+        }
+
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            applyFilters();
+        });
+
+        // Filter tabs
+        document.querySelectorAll('.filter-tab').forEach(tab => {
+            tab.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Remove active class from all tabs
+                document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+                
+                // Add active class to clicked tab
+                this.classList.add('active');
+                
+                // Update current category
+                currentCategory = this.dataset.category;
+                
+                // Apply filters
+                applyFilters();
+            });
+        });
+
+        // Advanced filter event listeners
+        document.getElementById('pricingFilter').addEventListener('change', applyFilters);
+        document.getElementById('ratingFilter').addEventListener('change', applyFilters);
+        document.getElementById('featuresFilter').addEventListener('change', applyFilters);
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
