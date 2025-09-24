@@ -1,12 +1,36 @@
-import React, { useEffect } from 'react';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider } from './contexts/AuthContext';
+import HiddenLogin from './pages/HiddenLogin';
+import SecureDashboard from './pages/SecureDashboard';
 import './App.css';
 
 const App = () => {
-  useEffect(() => {
-    // Redirect to the main API directory website
-    window.location.href = 'https://money-19sseidup-byronmccluney.vercel.app';
-  }, []);
+  return (
+    <AuthProvider>
+      <Router>
+        <Routes>
+          {/* Hidden login route - no public links */}
+          <Route path="/hidden-login" element={<HiddenLogin />} />
+          
+          {/* Secure dashboard - requires authentication */}
+          <Route path="/dashboard" element={<SecureDashboard />} />
+          
+          {/* Default route - redirect to main site */}
+          <Route path="/" element={<Navigate to="/redirect" replace />} />
+          
+          {/* Redirect page */}
+          <Route path="/redirect" element={<RedirectPage />} />
+          
+          {/* Catch all - redirect to main site */}
+          <Route path="*" element={<Navigate to="/redirect" replace />} />
+        </Routes>
+      </Router>
+    </AuthProvider>
+  );
+};
 
+const RedirectPage = () => {
   return (
     <div className='min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-background via-background to-muted'>
       <div className='text-center space-y-6'>

@@ -34,6 +34,7 @@ const apiHealthRoutes = require('./routes/apiHealth');
 const businessProjectRoutes = require('./routes/businessProjects');
 const monetizationRoutes = require('./routes/monetization');
 const communityRoutes = require('./routes/community');
+const secureRoutes = require('./routes/secureRoutes');
 console.log('Routes imported successfully');
 
 // Import middleware
@@ -1311,6 +1312,9 @@ const startServer = async () => {
       app.use('/api/business-projects', businessProjectRoutes);
       app.use('/api/monetization', monetizationRoutes);
       app.use('/api/community', communityRoutes);
+      
+      // Secure routes with bot protection
+      app.use('/', secureRoutes);
       console.log('API directory routes setup completed');
     } catch (error) {
       console.error('Error setting up routes:', error);
