@@ -31,9 +31,9 @@ export const AuthProvider = ({ children }) => {
   const [loadingStuck, setLoadingStuck] = useState(false);
   const [error, setError] = useState(null);
 
-  // Refs to prevent multiple initializations
-  const initializingRef = useRef(false);
-  const authListenerRef = useRef(null);
+  // Refs to prevent multiple initializations (currently unused but kept for future use)
+  // const _initializingRef = useRef(false);
+  // const _authListenerRef = useRef(null);
   const mountedRef = useRef(true);
   const loadingRef = useRef(loading);
 
@@ -231,7 +231,9 @@ export const AuthProvider = ({ children }) => {
     });
 
     // Listen for auth state changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
       if (!mounted) return;
       if (session?.user) {
         initializeUser(session.user);
@@ -384,7 +386,7 @@ export const AuthProvider = ({ children }) => {
   // Refresh session
   const refreshSession = useCallback(async () => {
     try {
-      const { data, error } = await supabase.auth.refreshSession();
+      const { error } = await supabase.auth.refreshSession();
       if (error) throw error;
       setLastActivity(Date.now());
       await addSecurityEvent('SESSION_REFRESHED', 'Session refreshed manually');

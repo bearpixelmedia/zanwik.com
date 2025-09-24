@@ -173,10 +173,7 @@ export const runConnectionTests = async () => {
 // Quick connection check
 export const quickConnectionCheck = async () => {
   try {
-    const { data, error } = await supabase
-      .from('projects')
-      .select('count')
-      .limit(1);
+    const { error } = await supabase.from('projects').select('count').limit(1);
 
     if (error) {
       console.error('❌ Database connection failed:', error.message);

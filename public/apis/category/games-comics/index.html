@@ -636,8 +636,168 @@
             });
         });
 
+        // Sample APIs data
+        const sampleAPIs = [
+            {
+                id: 'zelda-api',
+                name: 'Zelda API',
+                description: 'Comprehensive API for The Legend of Zelda game data including characters, items, dungeons, and game information.',
+                rating: 4.8,
+                reviews: 1247,
+                features: {
+                    https: true,
+                    cors: true,
+                    free: true,
+                    rateLimit: '1000/hour'
+                }
+            },
+            {
+                id: 'pokemon-api',
+                name: 'Pokémon API',
+                description: 'Complete Pokémon database with stats, moves, abilities, and evolution chains for all generations.',
+                rating: 4.9,
+                reviews: 2156,
+                features: {
+                    https: true,
+                    cors: true,
+                    free: true,
+                    rateLimit: '5000/day'
+                }
+            },
+            {
+                id: 'steam-api',
+                name: 'Steam Web API',
+                description: 'Access Steam platform data including user profiles, game information, and community features.',
+                rating: 4.6,
+                reviews: 892,
+                features: {
+                    https: true,
+                    cors: false,
+                    free: true,
+                    rateLimit: '200/hour'
+                }
+            },
+            {
+                id: 'marvel-api',
+                name: 'Marvel Comics API',
+                description: 'Official Marvel Comics API providing access to characters, comics, stories, and events from the Marvel Universe.',
+                rating: 4.7,
+                reviews: 1563,
+                features: {
+                    https: true,
+                    cors: true,
+                    free: true,
+                    rateLimit: '3000/day'
+                }
+            },
+            {
+                id: 'dc-api',
+                name: 'DC Comics API',
+                description: 'DC Comics character and story database with detailed information about heroes, villains, and storylines.',
+                rating: 4.5,
+                reviews: 743,
+                features: {
+                    https: true,
+                    cors: true,
+                    free: false,
+                    rateLimit: '1000/day'
+                }
+            },
+            {
+                id: 'minecraft-api',
+                name: 'Minecraft API',
+                description: 'Minecraft server and player data API for server management and player statistics.',
+                rating: 4.4,
+                reviews: 567,
+                features: {
+                    https: true,
+                    cors: true,
+                    free: true,
+                    rateLimit: '500/hour'
+                }
+            },
+            {
+                id: 'fortnite-api',
+                name: 'Fortnite API',
+                description: 'Fortnite player stats, cosmetics, and game data API for tracking player progress and items.',
+                rating: 4.3,
+                reviews: 1234,
+                features: {
+                    https: true,
+                    cors: true,
+                    free: true,
+                    rateLimit: '2000/day'
+                }
+            },
+            {
+                id: 'league-of-legends-api',
+                name: 'League of Legends API',
+                description: 'Riot Games official API for League of Legends match data, champion information, and player statistics.',
+                rating: 4.8,
+                reviews: 1890,
+                features: {
+                    https: true,
+                    cors: true,
+                    free: true,
+                    rateLimit: '100/hour'
+                }
+            },
+            {
+                id: 'anime-api',
+                name: 'Anime API',
+                description: 'Comprehensive anime and manga database with character information, episodes, and ratings.',
+                rating: 4.6,
+                reviews: 987,
+                features: {
+                    https: true,
+                    cors: true,
+                    free: true,
+                    rateLimit: '3000/day'
+                }
+            },
+            {
+                id: 'twitch-api',
+                name: 'Twitch API',
+                description: 'Twitch streaming platform API for accessing stream data, user information, and game categories.',
+                rating: 4.7,
+                reviews: 1456,
+                features: {
+                    https: true,
+                    cors: true,
+                    free: true,
+                    rateLimit: '800/hour'
+                }
+            },
+            {
+                id: 'discord-api',
+                name: 'Discord API',
+                description: 'Discord bot and application API for creating interactive bots and integrating with Discord servers.',
+                rating: 4.9,
+                reviews: 2341,
+                features: {
+                    https: true,
+                    cors: true,
+                    free: true,
+                    rateLimit: '50/second'
+                }
+            },
+            {
+                id: 'valorant-api',
+                name: 'Valorant API',
+                description: 'Valorant game data API including agent information, weapon stats, and match history.',
+                rating: 4.5,
+                reviews: 678,
+                features: {
+                    https: true,
+                    cors: true,
+                    free: true,
+                    rateLimit: '100/hour'
+                }
+            }
+        ];
+
         // Load APIs function
-        async function loadAPIs() {
+        function loadAPIs() {
             const loadingIndicator = document.getElementById('loadingIndicator');
             const apisGrid = document.getElementById('apisGrid');
             const pagination = document.getElementById('pagination');
@@ -647,35 +807,61 @@
             apisGrid.style.display = 'none';
             pagination.style.display = 'none';
 
-            try {
-                // Build query parameters
-                const params = new URLSearchParams({
-                    category: 'games-comics',
-                    limit: itemsPerPage,
-                    offset: (currentPage - 1) * itemsPerPage
-                });
+            // Simulate loading delay
+            setTimeout(() => {
+                try {
+                    // Filter APIs based on search and filter
+                    let filteredAPIs = sampleAPIs;
 
-                if (currentSearch) {
-                    params.append('search', currentSearch);
+                    // Apply search filter
+                    if (currentSearch) {
+                        filteredAPIs = filteredAPIs.filter(api => 
+                            api.name.toLowerCase().includes(currentSearch.toLowerCase()) ||
+                            api.description.toLowerCase().includes(currentSearch.toLowerCase())
+                        );
+                    }
+
+                    // Apply category filter
+                    if (currentFilter !== 'all') {
+                        filteredAPIs = filteredAPIs.filter(api => {
+                            switch (currentFilter) {
+                                case 'free':
+                                    return api.features.free;
+                                case 'paid':
+                                    return !api.features.free;
+                                case 'https':
+                                    return api.features.https;
+                                case 'cors':
+                                    return api.features.cors;
+                                default:
+                                    return true;
+                            }
+                        });
+                    }
+
+                    // Calculate pagination
+                    const totalAPIs = filteredAPIs.length;
+                    const totalPages = Math.ceil(totalAPIs / itemsPerPage);
+                    const startIndex = (currentPage - 1) * itemsPerPage;
+                    const endIndex = startIndex + itemsPerPage;
+                    const paginatedAPIs = filteredAPIs.slice(startIndex, endIndex);
+
+                    // Display APIs
+                    displayAPIs(paginatedAPIs);
+                    displayPagination({
+                        total: totalAPIs,
+                        currentPage: currentPage,
+                        totalPages: totalPages
+                    });
+
+                } catch (error) {
+                    console.error('Error loading APIs:', error);
+                    apisGrid.innerHTML = '<div class="loading"><p>Error loading APIs. Please try again.</p></div>';
+                } finally {
+                    loadingIndicator.style.display = 'none';
+                    apisGrid.style.display = 'grid';
                 }
-
-                // Fetch APIs
-                const response = await fetch(`/api/apis/category/games-comics?${params}`);
-                const data = await response.json();
-
-                if (data.success) {
-                    displayAPIs(data.data.apis);
-                    displayPagination(data.data.pagination);
-                } else {
-                    throw new Error(data.error || 'Failed to load APIs');
-                }
-            } catch (error) {
-                console.error('Error loading APIs:', error);
-                apisGrid.innerHTML = '<div class="loading"><p>Error loading APIs. Please try again.</p></div>';
-            } finally {
-                loadingIndicator.style.display = 'none';
-                apisGrid.style.display = 'grid';
-            }
+            }, 500); // 500ms loading delay
         }
 
         // Display APIs
@@ -714,7 +900,7 @@
                         </span>
                     </div>
                     <div class="api-actions">
-                        <a href="/apis/category/games-comics/${api.id}" class="btn-primary">View Details</a>
+                        <a href="/apis/api-detail.html?api=${api.id}" class="btn-primary">View Details</a>
                         <a href="#" class="btn-secondary" onclick="testAPI('${api.id}')">Test API</a>
                     </div>
                 </div>

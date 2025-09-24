@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">API - Zanwik</title>
+    <meta name="description" id="page-description" content="API documentation and testing">
+    
+    <link rel="icon" type="image/svg+xml" href="/zanwik-icon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #1a1a1a;
+            background: var(--bg-gradient, linear-gradient(135deg, #667eea 0%, #764ba2 100%));
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #666;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+
+        .nav-links a:hover {
+            color: #1a1a1a;
+        }
+
+        .cta-button {
+            background: #1a1a1a;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .cta-button:hover {
+            background: #333;
+            transform: translateY(-1px);
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 2rem 0;
+        }
+
+        .breadcrumb {
+            margin-bottom: 2rem;
+        }
+
+        .breadcrumb a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .breadcrumb a:hover {
+            color: white;
+        }
+
+        .breadcrumb span {
+            color: rgba(255, 255, 255, 0.6);
+            margin: 0 0.5rem;
+        }
+
+        .api-header {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            padding: 3rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .api-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--icon-gradient, linear-gradient(135deg, #667eea, #764ba2));
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2rem;
+            color: white;
+        }
+
+        .api-title {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: var(--title-gradient, linear-gradient(135deg, #667eea, #764ba2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .api-description {
+            font-size: 1.25rem;
+            color: #666;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+            line-height: 1.7;
+        }
+
+        .api-stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            display: block;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: #1a1a1a;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #333;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.9);
+            color: #1a1a1a;
+            border: 2px solid rgba(26, 26, 26, 0.1);
+        }
+
+        .btn-secondary:hover {
+            background: white;
+            border-color: #1a1a1a;
+            transform: translateY(-2px);
+        }
+
+        /* Content Sections */
+        .content-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: #1a1a1a;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .feature-card {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border-left: 4px solid var(--accent-color, #667eea);
+        }
+
+        .feature-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #1a1a1a;
+        }
+
+        .feature-description {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .code-example {
+            background: #1a1a1a;
+            color: #e0e0e0;
+            padding: 1.5rem;
+            border-radius: 12px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        .code-example .comment {
+            color: #888;
+        }
+
+        .code-example .string {
+            color: #98c379;
+        }
+
+        .code-example .number {
+            color: #d19a66;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.2rem;
+        }
+
+        .error {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: #ff6b6b;
+            font-size: 1.2rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .api-title {
+                font-size: 2rem;
+            }
+
+            .api-stats {
+                gap: 1.5rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="container">
+            <a href="/" class="logo">
+                <img src="/zanwik-icon.svg" alt="Zanwik" class="logo-icon">
+                Zanwik API Directory
+            </a>
+            <ul class="nav-links">
+                <li><a href="/apis">Browse APIs</a></li>
+                <li><a href="/apis/tools">API Tools</a></li>
+                <li><a href="#" id="category-link">Category</a></li>
+            </ul>
+            <a href="/apis/tools" class="cta-button">Test APIs</a>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <div class="loading" id="loading">Loading API information...</div>
+            
+            <div id="content" style="display: none;">
+                <div class="breadcrumb" id="breadcrumb">
+                    <a href="/">Home</a>
+                    <span>›</span>
+                    <a href="/apis">APIs</a>
+                    <span>›</span>
+                    <a href="#" id="category-breadcrumb">Category</a>
+                    <span>›</span>
+                    <span id="api-name-breadcrumb">API Name</span>
+                </div>
+
+                <div class="api-header">
+                    <div class="api-icon" id="api-icon">🔧</div>
+                    <h1 class="api-title" id="api-title">API Name</h1>
+                    <p class="api-description" id="api-description">API description will be loaded here.</p>
+                    <div class="api-stats" id="api-stats">
+                        <!-- Stats will be populated by JavaScript -->
+                    </div>
+                    <div class="action-buttons">
+                        <a href="/apis/tools" class="btn btn-primary">Test API</a>
+                        <a href="#" id="docs-link" class="btn btn-secondary" target="_blank">View Documentation</a>
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <h2 class="section-title">Key Features</h2>
+                    <div class="features-grid" id="features-grid">
+                        <!-- Features will be populated by JavaScript -->
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <h2 class="section-title">API Endpoints</h2>
+                    <div class="code-example" id="endpoints-example">
+                        <!-- Endpoints will be populated by JavaScript -->
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <h2 class="section-title">Example Response</h2>
+                    <div class="code-example" id="response-example">
+                        <!-- Response example will be populated by JavaScript -->
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <h2 class="section-title">Use Cases</h2>
+                    <div class="features-grid" id="use-cases-grid">
+                        <!-- Use cases will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Theme configurations for different categories
+        const themes = {
+            'games-comics': {
+                bgGradient: 'linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%)',
+                iconGradient: 'linear-gradient(135deg, #ff6b6b, #ee5a24)',
+                titleGradient: 'linear-gradient(135deg, #ff6b6b, #ee5a24)',
+                accentColor: '#ff6b6b'
+            },
+            'social': {
+                bgGradient: 'linear-gradient(135deg, #E4405F 0%, #C13584 50%, #833AB4 100%)',
+                iconGradient: 'linear-gradient(135deg, #E4405F, #C13584, #833AB4)',
+                titleGradient: 'linear-gradient(135deg, #E4405F, #C13584, #833AB4)',
+                accentColor: '#E4405F'
+            },
+            'weather': {
+                bgGradient: 'linear-gradient(135deg, #74b9ff 0%, #0984e3 100%)',
+                iconGradient: 'linear-gradient(135deg, #74b9ff, #0984e3)',
+                titleGradient: 'linear-gradient(135deg, #74b9ff, #0984e3)',
+                accentColor: '#74b9ff'
+            },
+            'finance': {
+                bgGradient: 'linear-gradient(135deg, #00b894 0%, #00a085 100%)',
+                iconGradient: 'linear-gradient(135deg, #00b894, #00a085)',
+                titleGradient: 'linear-gradient(135deg, #00b894, #00a085)',
+                accentColor: '#00b894'
+            },
+            'development': {
+                bgGradient: 'linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%)',
+                iconGradient: 'linear-gradient(135deg, #6c5ce7, #a29bfe)',
+                titleGradient: 'linear-gradient(135deg, #6c5ce7, #a29bfe)',
+                accentColor: '#6c5ce7'
+            },
+            'music': {
+                bgGradient: 'linear-gradient(135deg, #fd79a8 0%, #e84393 100%)',
+                iconGradient: 'linear-gradient(135deg, #fd79a8, #e84393)',
+                titleGradient: 'linear-gradient(135deg, #fd79a8, #e84393)',
+                accentColor: '#fd79a8'
+            }
+        };
+
+        function applyTheme(category) {
+            const theme = themes[category] || themes['development'];
+            document.documentElement.style.setProperty('--bg-gradient', theme.bgGradient);
+            document.documentElement.style.setProperty('--icon-gradient', theme.iconGradient);
+            document.documentElement.style.setProperty('--title-gradient', theme.titleGradient);
+            document.documentElement.style.setProperty('--accent-color', theme.accentColor);
+        }
+
+        function populatePage(data) {
+            // Set page title and meta
+            document.getElementById('page-title').textContent = `${data.name} - ${data.categoryName} APIs | Zanwik`;
+            document.getElementById('page-description').setAttribute('content', data.description);
+            
+            // Set breadcrumb
+            document.getElementById('category-breadcrumb').textContent = data.categoryName;
+            document.getElementById('category-breadcrumb').href = `/apis/category/${data.category}`;
+            document.getElementById('api-name-breadcrumb').textContent = data.name;
+            document.getElementById('category-link').textContent = data.categoryName;
+            document.getElementById('category-link').href = `/apis/category/${data.category}`;
+            
+            // Set header content
+            document.getElementById('api-icon').textContent = data.icon;
+            document.getElementById('api-title').textContent = data.name;
+            document.getElementById('api-description').textContent = data.description;
+            document.getElementById('docs-link').href = data.documentationUrl;
+            
+            // Set stats
+            const statsContainer = document.getElementById('api-stats');
+            statsContainer.innerHTML = data.stats.map(stat => `
+                <div class="stat">
+                    <span class="stat-value">${stat.value}</span>
+                    <span class="stat-label">${stat.label}</span>
+                </div>
+            `).join('');
+            
+            // Set features
+            const featuresContainer = document.getElementById('features-grid');
+            featuresContainer.innerHTML = data.features.map(feature => `
+                <div class="feature-card">
+                    <h3 class="feature-title">${feature.title}</h3>
+                    <p class="feature-description">${feature.description}</p>
+                </div>
+            `).join('');
+            
+            // Set endpoints
+            document.getElementById('endpoints-example').innerHTML = data.endpoints;
+            
+            // Set response example
+            document.getElementById('response-example').innerHTML = data.responseExample;
+            
+            // Set use cases
+            const useCasesContainer = document.getElementById('use-cases-grid');
+            useCasesContainer.innerHTML = data.useCases.map(useCase => `
+                <div class="feature-card">
+                    <h3 class="feature-title">${useCase.title}</h3>
+                    <p class="feature-description">${useCase.description}</p>
+                </div>
+            `).join('');
+            
+            // Apply theme
+            applyTheme(data.category);
+        }
+
+        function showError(message) {
+            document.getElementById('loading').innerHTML = `<div class="error">${message}</div>`;
+        }
+
+        // Get API ID from URL
+        function getApiIdFromUrl() {
+            const path = window.location.pathname;
+            const segments = path.split('/');
+            
+            // Handle different URL patterns:
+            // /apis/category/games-comics/pokemon-api
+            // /apis/api-detail.html?api=pokemon-api
+            if (segments.includes('category') && segments.length >= 4) {
+                return segments[segments.length - 1];
+            }
+            
+            // Check for query parameter
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('api');
+        }
+
+        // Initialize page when DOM is loaded
+        document.addEventListener('DOMContentLoaded', async function() {
+            const apiId = getApiIdFromUrl();
+            
+            if (!apiId) {
+                showError('API not found. Please check the URL.');
+                return;
+            }
+
+            try {
+                // Load API data
+                const response = await fetch('/apis/data/api-data.json');
+                const data = await response.json();
+                
+                const apiData = data.apis[apiId];
+                
+                if (!apiData) {
+                    showError(`API "${apiId}" not found in our database.`);
+                    return;
+                }
+                
+                // Populate the page
+                populatePage(apiData);
+                
+                // Show content and hide loading
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('content').style.display = 'block';
+                
+            } catch (error) {
+                console.error('Error loading API data:', error);
+                showError('Failed to load API information. Please try again later.');
+            }
+        });
+    </script>
+</body>
+</html>

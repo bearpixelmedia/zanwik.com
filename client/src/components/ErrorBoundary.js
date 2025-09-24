@@ -1,33 +1,35 @@
 import React from 'react';
 
 class ErrorBoundary extends React.Component {
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
   constructor(props) {
     super(props);
     this.state = { hasError: false, error: null, errorInfo: null };
-  }
-
-  static getDerivedStateFromError(error) {
-    return { hasError: true };
   }
 
   componentDidCatch(error, errorInfo) {
     console.error('ErrorBoundary caught an error:', error, errorInfo);
     this.setState({
       error: error,
-      errorInfo: errorInfo
+      errorInfo: errorInfo,
     });
   }
 
   render() {
     if (this.state.hasError) {
       return (
-        <div style={{ 
-          padding: '20px', 
-          margin: '20px', 
-          border: '1px solid #ff0000', 
-          borderRadius: '8px',
-          backgroundColor: '#fff5f5'
-        }}>
+        <div
+          style={{
+            padding: '20px',
+            margin: '20px',
+            border: '1px solid #ff0000',
+            borderRadius: '8px',
+            backgroundColor: '#fff5f5',
+          }}
+        >
           <h2>Something went wrong.</h2>
           <details style={{ whiteSpace: 'pre-wrap' }}>
             <summary>Error Details</summary>
@@ -43,4 +45,4 @@ class ErrorBoundary extends React.Component {
   }
 }
 
-export default ErrorBoundary; 
+export default ErrorBoundary;

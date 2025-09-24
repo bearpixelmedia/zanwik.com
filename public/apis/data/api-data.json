@@ -1,0 +1,749 @@
+{
+  "apis": {
+    "pokemon-api": {
+      "id": "pokemon-api",
+      "name": "Pokemon API",
+      "category": "games-comics",
+      "categoryName": "Games & Comics",
+      "icon": "⚡",
+      "description": "Comprehensive Pokemon API providing detailed data on Pokemon, moves, abilities, types, and more from all generations of the Pokemon universe. Perfect for building Pokemon-related applications, games, and websites.",
+      "stats": [
+        { "value": "1000+", "label": "Pokemon" },
+        { "value": "800+", "label": "Moves" },
+        { "value": "300+", "label": "Abilities" },
+        { "value": "4.8", "label": "Rating" }
+      ],
+      "features": [
+        {
+          "title": "Complete Pokemon Data",
+          "description": "Access detailed information about all Pokemon including stats, types, abilities, moves, and evolution chains."
+        },
+        {
+          "title": "Move Database",
+          "description": "Comprehensive move data including power, accuracy, type, and effect descriptions for all Pokemon moves."
+        },
+        {
+          "title": "Type System",
+          "description": "Complete type effectiveness data and relationships between different Pokemon types."
+        },
+        {
+          "title": "Generation Support",
+          "description": "Data from all Pokemon generations including the latest games and regions."
+        },
+        {
+          "title": "RESTful API",
+          "description": "Clean, RESTful API design with consistent endpoints and JSON responses."
+        },
+        {
+          "title": "No Authentication",
+          "description": "Free to use with no API key required, making it perfect for development and learning."
+        }
+      ],
+      "endpoints": `<span class="comment"># Get Pokemon by name or ID</span>
+GET https://pokeapi.co/api/v2/pokemon/pikachu
+GET https://pokeapi.co/api/v2/pokemon/25
+
+<span class="comment"># Get Pokemon species data</span>
+GET https://pokeapi.co/api/v2/pokemon-species/pikachu
+
+<span class="comment"># Get move information</span>
+GET https://pokeapi.co/api/v2/move/thunderbolt
+
+<span class="comment"># Get ability data</span>
+GET https://pokeapi.co/api/v2/ability/static
+
+<span class="comment"># Get type information</span>
+GET https://pokeapi.co/api/v2/type/electric
+
+<span class="comment"># List all Pokemon (paginated)</span>
+GET https://pokeapi.co/api/v2/pokemon?limit=20&offset=0`,
+      "responseExample": `{
+  <span class="string">"id"</span>: <span class="number">25</span>,
+  <span class="string">"name"</span>: <span class="string">"pikachu"</span>,
+  <span class="string">"height"</span>: <span class="number">4</span>,
+  <span class="string">"weight"</span>: <span class="number">60</span>,
+  <span class="string">"types"</span>: [
+    {
+      <span class="string">"type"</span>: {
+        <span class="string">"name"</span>: <span class="string">"electric"</span>
+      }
+    }
+  ],
+  <span class="string">"stats"</span>: [
+    {
+      <span class="string">"base_stat"</span>: <span class="number">35</span>,
+      <span class="string">"stat"</span>: {
+        <span class="string">"name"</span>: <span class="string">"hp"</span>
+      }
+    }
+  ],
+  <span class="string">"abilities"</span>: [
+    {
+      <span class="string">"ability"</span>: {
+        <span class="string">"name"</span>: <span class="string">"static"</span>
+      }
+    }
+  ]
+}`,
+      "useCases": [
+        {
+          "title": "Pokemon Games",
+          "description": "Build Pokemon-themed games with accurate data for moves, types, and battle mechanics."
+        },
+        {
+          "title": "Educational Apps",
+          "description": "Create learning applications that teach about Pokemon types, evolution, and characteristics."
+        },
+        {
+          "title": "Data Analysis",
+          "description": "Analyze Pokemon statistics, type distributions, and competitive meta data."
+        },
+        {
+          "title": "Fan Websites",
+          "description": "Build comprehensive Pokemon fan sites with detailed information and search functionality."
+        }
+      ],
+      "documentationUrl": "https://pokeapi.co/docs/v2"
+    },
+    "steam-api": {
+      "id": "steam-api",
+      "name": "Steam API",
+      "category": "games-comics",
+      "categoryName": "Games & Comics",
+      "icon": "🎮",
+      "description": "Access Steam's comprehensive API for game data, user profiles, achievements, and store information. Perfect for building gaming applications, Steam integration, and game discovery platforms.",
+      "stats": [
+        { "value": "50,000+", "label": "Games" },
+        { "value": "120M+", "label": "Users" },
+        { "value": "4.7", "label": "Rating" }
+      ],
+      "features": [
+        {
+          "title": "Game Data",
+          "description": "Access comprehensive game information including details, screenshots, videos, and system requirements."
+        },
+        {
+          "title": "User Profiles",
+          "description": "Get user profile information, game libraries, playtime statistics, and friend lists."
+        },
+        {
+          "title": "Achievements",
+          "description": "Access achievement data, completion rates, and user achievement progress."
+        },
+        {
+          "title": "Store Data",
+          "description": "Get pricing information, discounts, reviews, and store page data for games."
+        },
+        {
+          "title": "News & Updates",
+          "description": "Access game news, updates, and community announcements."
+        },
+        {
+          "title": "Steam Workshop",
+          "description": "Access mod data, workshop items, and community-created content."
+        }
+      ],
+      "endpoints": `<span class="comment"># Get player summary</span>
+GET http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=YOUR_API_KEY&steamids=76561197960435530
+
+<span class="comment"># Get owned games</span>
+GET http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=YOUR_API_KEY&steamid=76561197960435530
+
+<span class="comment"># Get game news</span>
+GET http://api.steampowered.com/ISteamNews/GetNewsForApp/v0002/?appid=440&count=3&maxlength=300&format=json
+
+<span class="comment"># Get global achievement percentages</span>
+GET http://api.steampowered.com/ISteamUserStats/GetGlobalAchievementPercentagesForApp/v0002/?gameid=440
+
+<span class="comment"># Get player achievements</span>
+GET http://api.steampowered.com/ISteamUserStats/GetPlayerAchievements/v0001/?appid=440&key=YOUR_API_KEY&steamid=76561197960435530`,
+      "responseExample": `{
+  <span class="string">"response"</span>: {
+    <span class="string">"players"</span>: [
+      {
+        <span class="string">"steamid"</span>: <span class="string">"76561197960435530"</span>,
+        <span class="string">"personaname"</span>: <span class="string">"Robin"</span>,
+        <span class="string">"profileurl"</span>: <span class="string">"https://steamcommunity.com/id/robinwalker/"</span>,
+        <span class="string">"avatar"</span>: <span class="string">"https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/fe/fef49e7fa7e1997310d705b2a6158ff8dc1cdfeb.jpg"</span>,
+        <span class="string">"personastate"</span>: <span class="number">1</span>,
+        <span class="string">"gameextrainfo"</span>: <span class="string">"Team Fortress 2"</span>
+      }
+    ]
+  }
+}`,
+      "useCases": [
+        {
+          "title": "Gaming Communities",
+          "description": "Build communities around games with user profiles, achievements, and game libraries."
+        },
+        {
+          "title": "Game Discovery",
+          "description": "Create platforms for discovering new games based on user preferences and playtime."
+        },
+        {
+          "title": "Analytics Platforms",
+          "description": "Analyze gaming trends, popular games, and user behavior patterns."
+        },
+        {
+          "title": "Achievement Tracking",
+          "description": "Build applications to track and display user achievements across multiple games."
+        }
+      ],
+      "documentationUrl": "https://developer.valvesoftware.com/wiki/Steam_Web_API"
+    },
+    "twitter-api": {
+      "id": "twitter-api",
+      "name": "Twitter API",
+      "category": "social",
+      "categoryName": "Social",
+      "icon": "🐦",
+      "description": "Access Twitter's official API to post tweets, read timelines, manage followers, and integrate Twitter functionality into your applications.",
+      "stats": [
+        { "value": "450M+", "label": "Users" },
+        { "value": "500M+", "label": "Tweets/Day" },
+        { "value": "4.6", "label": "Rating" }
+      ],
+      "features": [
+        {
+          "title": "Tweet Management",
+          "description": "Post tweets, read timelines, and manage tweet content programmatically."
+        },
+        {
+          "title": "User Data",
+          "description": "Access user profiles, followers, following lists, and user statistics."
+        },
+        {
+          "title": "Search & Trends",
+          "description": "Search tweets, track trending topics, and analyze social media conversations."
+        },
+        {
+          "title": "Direct Messages",
+          "description": "Send and receive direct messages, manage conversations, and automate responses."
+        },
+        {
+          "title": "Media Upload",
+          "description": "Upload images, videos, and other media content to Twitter."
+        },
+        {
+          "title": "Webhooks",
+          "description": "Receive real-time notifications for mentions, follows, and other events."
+        }
+      ],
+      "endpoints": `<span class="comment"># Post a tweet</span>
+POST https://api.twitter.com/2/tweets
+Content-Type: application/json
+{
+  "text": "Hello Twitter API!"
+}
+
+<span class="comment"># Get user timeline</span>
+GET https://api.twitter.com/2/users/by/username/username/tweets
+
+<span class="comment"># Search tweets</span>
+GET https://api.twitter.com/2/tweets/search/recent?query=API
+
+<span class="comment"># Get user profile</span>
+GET https://api.twitter.com/2/users/by/username/username
+
+<span class="comment"># Get followers</span>
+GET https://api.twitter.com/2/users/id/followers
+
+<span class="comment"># Get following</span>
+GET https://api.twitter.com/2/users/id/following`,
+      "responseExample": `{
+  <span class="string">"data"</span>: {
+    <span class="string">"id"</span>: <span class="string">"1234567890123456789"</span>,
+    <span class="string">"text"</span>: <span class="string">"Hello Twitter API!"</span>,
+    <span class="string">"created_at"</span>: <span class="string">"2023-01-01T12:00:00.000Z"</span>,
+    <span class="string">"author_id"</span>: <span class="string">"9876543210987654321"</span>
+  }
+}`,
+      "useCases": [
+        {
+          "title": "Social Media Management",
+          "description": "Build tools to manage multiple Twitter accounts, schedule posts, and track engagement."
+        },
+        {
+          "title": "Analytics Dashboard",
+          "description": "Create dashboards to analyze tweet performance, follower growth, and engagement metrics."
+        },
+        {
+          "title": "Customer Service",
+          "description": "Integrate Twitter for customer support, automated responses, and issue tracking."
+        },
+        {
+          "title": "Content Aggregation",
+          "description": "Aggregate and display Twitter content from multiple sources for news and social feeds."
+        }
+      ],
+      "documentationUrl": "https://developer.twitter.com/en/docs/twitter-api"
+    },
+    "openweathermap": {
+      "id": "openweathermap",
+      "name": "OpenWeatherMap API",
+      "category": "weather",
+      "categoryName": "Weather",
+      "icon": "🌤️",
+      "description": "Comprehensive weather data API providing current conditions, forecasts, and historical weather data. Perfect for building weather applications, data analysis, and location-based services.",
+      "stats": [
+        { "value": "200,000+", "label": "Cities" },
+        { "value": "99.9%", "label": "Uptime" },
+        { "value": "4.6", "label": "Rating" }
+      ],
+      "features": [
+        {
+          "title": "Current Weather",
+          "description": "Get real-time weather conditions including temperature, humidity, wind speed, and atmospheric pressure."
+        },
+        {
+          "title": "Weather Forecasts",
+          "description": "Access 5-day and 16-day weather forecasts with detailed hourly predictions."
+        },
+        {
+          "title": "Historical Data",
+          "description": "Retrieve historical weather data for climate analysis and trend studies."
+        },
+        {
+          "title": "Weather Alerts",
+          "description": "Get severe weather alerts and warnings for specific locations."
+        },
+        {
+          "title": "Multiple Locations",
+          "description": "Query weather data for multiple cities simultaneously with bulk requests."
+        },
+        {
+          "title": "Weather Maps",
+          "description": "Access weather map layers for precipitation, temperature, and other meteorological data."
+        }
+      ],
+      "endpoints": `<span class="comment"># Current weather by city</span>
+GET https://api.openweathermap.org/data/2.5/weather?q=London&appid=YOUR_API_KEY
+
+<span class="comment"># Current weather by coordinates</span>
+GET https://api.openweathermap.org/data/2.5/weather?lat=35&lon=139&appid=YOUR_API_KEY
+
+<span class="comment"># 5-day weather forecast</span>
+GET https://api.openweathermap.org/data/2.5/forecast?q=London&appid=YOUR_API_KEY
+
+<span class="comment"># 16-day weather forecast</span>
+GET https://api.openweathermap.org/data/2.5/forecast/daily?q=London&cnt=16&appid=YOUR_API_KEY
+
+<span class="comment"># Weather alerts</span>
+GET https://api.openweathermap.org/data/2.5/onecall?lat=33.441792&lon=-94.037689&exclude=minutely&appid=YOUR_API_KEY
+
+<span class="comment"># Historical weather data</span>
+GET https://api.openweathermap.org/data/2.5/onecall/timemachine?lat=39.099724&lon=-94.578331&dt=1640995200&appid=YOUR_API_KEY`,
+      "responseExample": `{
+  <span class="string">"coord"</span>: {
+    <span class="string">"lon"</span>: <span class="number">-0.1257</span>,
+    <span class="string">"lat"</span>: <span class="number">51.5085</span>
+  },
+  <span class="string">"weather"</span>: [
+    {
+      <span class="string">"id"</span>: <span class="number">800</span>,
+      <span class="string">"main"</span>: <span class="string">"Clear"</span>,
+      <span class="string">"description"</span>: <span class="string">"clear sky"</span>,
+      <span class="string">"icon"</span>: <span class="string">"01d"</span>
+    }
+  ],
+  <span class="string">"main"</span>: {
+    <span class="string">"temp"</span>: <span class="number">282.55</span>,
+    <span class="string">"feels_like"</span>: <span class="number">281.86</span>,
+    <span class="string">"temp_min"</span>: <span class="number">280.37</span>,
+    <span class="string">"temp_max"</span>: <span class="number">284.26</span>,
+    <span class="string">"pressure"</span>: <span class="number">1023</span>,
+    <span class="string">"humidity"</span>: <span class="number">100</span>
+  },
+  <span class="string">"wind"</span>: {
+    <span class="string">"speed"</span>: <span class="number">1.06</span>,
+    <span class="string">"deg"</span>: <span class="number">0</span>
+  },
+  <span class="string">"name"</span>: <span class="string">"London"</span>
+}`,
+      "useCases": [
+        {
+          "title": "Weather Apps",
+          "description": "Build mobile and web applications that display current weather and forecasts."
+        },
+        {
+          "title": "Agriculture",
+          "description": "Help farmers make informed decisions based on weather forecasts and historical data."
+        },
+        {
+          "title": "Travel Planning",
+          "description": "Integrate weather data into travel applications for better trip planning."
+        },
+        {
+          "title": "Climate Research",
+          "description": "Access historical weather data for climate analysis and research projects."
+        }
+      ],
+      "documentationUrl": "https://openweathermap.org/api"
+    },
+    "zelda-api": {
+      "id": "zelda-api",
+      "name": "Zelda API",
+      "category": "games-comics",
+      "categoryName": "Games & Comics",
+      "icon": "🗡️",
+      "description": "Comprehensive API for The Legend of Zelda universe, including characters, items, and quests from all games in the series.",
+      "stats": [
+        { "value": "500+", "label": "Items" },
+        { "value": "100+", "label": "Characters" },
+        { "value": "50+", "label": "Games" },
+        { "value": "4.8", "label": "Rating" }
+      ],
+      "features": [
+        {
+          "title": "Character Database",
+          "description": "Access detailed information about Zelda characters, their roles, and appearances across games."
+        },
+        {
+          "title": "Item Collection",
+          "description": "Comprehensive database of weapons, tools, and items from the Zelda universe."
+        },
+        {
+          "title": "Game Data",
+          "description": "Information about all Zelda games, their stories, and gameplay mechanics."
+        },
+        {
+          "title": "Quest Information",
+          "description": "Details about quests, dungeons, and storylines from various Zelda games."
+        }
+      ],
+      "endpoints": `<span class="comment"># Get all characters</span>
+GET https://zelda.fanapis.com/api/characters
+
+<span class="comment"># Get specific character</span>
+GET https://zelda.fanapis.com/api/characters/1
+
+<span class="comment"># Get all items</span>
+GET https://zelda.fanapis.com/api/items
+
+<span class="comment"># Get all games</span>
+GET https://zelda.fanapis.com/api/games`,
+      "responseExample": `{
+  <span class="string">"data"</span>: [
+    {
+      <span class="string">"id"</span>: <span class="number">1</span>,
+      <span class="string">"name"</span>: <span class="string">"Link"</span>,
+      <span class="string">"description"</span>: <span class="string">"The Hero of Hyrule"</span>,
+      <span class="string">"appearances"</span>: [<span class="string">"The Legend of Zelda"</span>, <span class="string">"Ocarina of Time"</span>]
+    }
+  ]
+}`,
+      "useCases": [
+        {
+          "title": "Fan Websites",
+          "description": "Build comprehensive Zelda fan sites with character and item databases."
+        },
+        {
+          "title": "Gaming Guides",
+          "description": "Create walkthroughs and guides using detailed game and quest information."
+        },
+        {
+          "title": "Educational Content",
+          "description": "Build educational applications about Zelda lore and game history."
+        }
+      ],
+      "documentationUrl": "https://zelda.fanapis.com/docs"
+    },
+    "marvel-api": {
+      "id": "marvel-api",
+      "name": "Marvel API",
+      "category": "games-comics",
+      "categoryName": "Games & Comics",
+      "icon": "🦸",
+      "description": "Access Marvel's comprehensive API for character data, comics, stories, and events from the Marvel Universe.",
+      "stats": [
+        { "value": "70,000+", "label": "Characters" },
+        { "value": "30,000+", "label": "Comics" },
+        { "value": "4.8", "label": "Rating" }
+      ],
+      "features": [
+        {
+          "title": "Character Database",
+          "description": "Access detailed information about Marvel characters including powers, appearances, and storylines."
+        },
+        {
+          "title": "Comic Archives",
+          "description": "Browse Marvel's extensive comic collection with covers, creators, and publication details."
+        },
+        {
+          "title": "Story Events",
+          "description": "Access major Marvel storylines, events, and crossovers with character participation data."
+        },
+        {
+          "title": "Creator Information",
+          "description": "Get details about writers, artists, and other creators who worked on Marvel content."
+        }
+      ],
+      "endpoints": `<span class="comment"># Get characters</span>
+GET https://gateway.marvel.com/v1/public/characters?apikey=YOUR_API_KEY&hash=YOUR_HASH&ts=YOUR_TIMESTAMP
+
+<span class="comment"># Get comics</span>
+GET https://gateway.marvel.com/v1/public/comics?apikey=YOUR_API_KEY&hash=YOUR_HASH&ts=YOUR_TIMESTAMP
+
+<span class="comment"># Get events</span>
+GET https://gateway.marvel.com/v1/public/events?apikey=YOUR_API_KEY&hash=YOUR_HASH&ts=YOUR_TIMESTAMP`,
+      "responseExample": `{
+  <span class="string">"data"</span>: {
+    <span class="string">"results"</span>: [
+      {
+        <span class="string">"id"</span>: <span class="number">1011334</span>,
+        <span class="string">"name"</span>: <span class="string">"3-D Man"</span>,
+        <span class="string">"description"</span>: <span class="string">""</span>
+      }
+    ]
+  }
+}`,
+      "useCases": [
+        {
+          "title": "Fan Applications",
+          "description": "Build Marvel fan sites, character databases, and comic collection trackers."
+        },
+        {
+          "title": "Educational Tools",
+          "description": "Create educational applications about Marvel history, characters, and storylines."
+        }
+      ],
+      "documentationUrl": "https://developer.marvel.com/docs"
+    },
+    "minecraft-api": {
+      "id": "minecraft-api",
+      "name": "Minecraft API",
+      "category": "games-comics",
+      "categoryName": "Games & Comics",
+      "icon": "⛏️",
+      "description": "Access Minecraft server data, player statistics, and game information through various Minecraft APIs.",
+      "stats": [
+        { "value": "300M+", "label": "Players" },
+        { "value": "100K+", "label": "Servers" },
+        { "value": "4.6", "label": "Rating" }
+      ],
+      "features": [
+        {
+          "title": "Server Status",
+          "description": "Check server status, player count, and server information in real-time."
+        },
+        {
+          "title": "Player Data",
+          "description": "Access player statistics, achievements, and gameplay data."
+        },
+        {
+          "title": "Skin API",
+          "description": "Retrieve player skins, capes, and avatar information."
+        },
+        {
+          "title": "UUID Resolution",
+          "description": "Convert between usernames and UUIDs for player identification."
+        }
+      ],
+      "endpoints": `<span class="comment"># Get player profile</span>
+GET https://api.mojang.com/users/profiles/minecraft/Notch
+
+<span class="comment"># Get server status</span>
+GET https://api.mcsrvstat.us/2/mc.hypixel.net
+
+<span class="comment"># Get player skin</span>
+GET https://crafatar.com/skins/069a79f4-44e9-4726-a5be-fca90e38aaf5`,
+      "responseExample": `{
+  <span class="string">"id"</span>: <span class="string">"069a79f4-44e9-4726-a5be-fca90e38aaf5"</span>,
+  <span class="string">"name"</span>: <span class="string">"Notch"</span>
+}`,
+      "useCases": [
+        {
+          "title": "Server Management",
+          "description": "Build tools to monitor server status, player activity, and server performance."
+        },
+        {
+          "title": "Player Tracking",
+          "description": "Create applications to track player statistics, achievements, and gameplay history."
+        }
+      ],
+      "documentationUrl": "https://wiki.vg/Main_Page"
+    },
+    "instagram-api": {
+      "id": "instagram-api",
+      "name": "Instagram Basic Display API",
+      "category": "social",
+      "categoryName": "Social",
+      "icon": "📸",
+      "description": "Access Instagram's Basic Display API for user profile information, media content, and Instagram integration.",
+      "stats": [
+        { "value": "2B+", "label": "Users" },
+        { "value": "95M", "label": "Posts/Day" },
+        { "value": "4.4", "label": "Rating" }
+      ],
+      "features": [
+        {
+          "title": "User Profile Data",
+          "description": "Access user profile information including username, account type, and media count."
+        },
+        {
+          "title": "Media Content",
+          "description": "Retrieve user's media including photos and videos with captions and metadata."
+        },
+        {
+          "title": "OAuth Integration",
+          "description": "Secure authentication flow for accessing user data with proper permissions."
+        },
+        {
+          "title": "Media Insights",
+          "description": "Get basic insights and engagement data for user's media content."
+        }
+      ],
+      "endpoints": `<span class="comment"># Get user profile</span>
+GET https://graph.instagram.com/me?fields=id,username,account_type,media_count&access_token=ACCESS_TOKEN
+
+<span class="comment"># Get user media</span>
+GET https://graph.instagram.com/me/media?fields=id,caption,media_type,media_url,thumbnail_url,timestamp&access_token=ACCESS_TOKEN
+
+<span class="comment"># Get specific media</span>
+GET https://graph.instagram.com/MEDIA_ID?fields=id,caption,media_type,media_url,thumbnail_url,timestamp&access_token=ACCESS_TOKEN`,
+      "responseExample": `{
+  <span class="string">"id"</span>: <span class="string">"17841405793187218"</span>,
+  <span class="string">"username"</span>: <span class="string">"instagram"</span>,
+  <span class="string">"account_type"</span>: <span class="string">"BUSINESS"</span>,
+  <span class="string">"media_count"</span>: <span class="number">6</span>
+}`,
+      "useCases": [
+        {
+          "title": "Content Management",
+          "description": "Build systems to manage and display Instagram content on websites and applications."
+        },
+        {
+          "title": "Social Media Analytics",
+          "description": "Create analytics dashboards to track Instagram performance and engagement."
+        }
+      ],
+      "documentationUrl": "https://developers.facebook.com/docs/instagram-basic-display-api"
+    },
+    "facebook-api": {
+      "id": "facebook-api",
+      "name": "Facebook Graph API",
+      "category": "social",
+      "categoryName": "Social",
+      "icon": "📘",
+      "description": "Access Facebook's comprehensive Graph API for social media integration, user data, page management, and content sharing.",
+      "stats": [
+        { "value": "2.9B+", "label": "Users" },
+        { "value": "200M+", "label": "Pages" },
+        { "value": "4.5", "label": "Rating" }
+      ],
+      "features": [
+        {
+          "title": "User Data",
+          "description": "Access user profile information, friends, and social connections with proper permissions."
+        },
+        {
+          "title": "Page Management",
+          "description": "Manage Facebook pages, post content, and interact with page followers."
+        },
+        {
+          "title": "Content Sharing",
+          "description": "Share content to user timelines, pages, and groups programmatically."
+        },
+        {
+          "title": "Analytics",
+          "description": "Access page insights, post analytics, and audience demographics."
+        }
+      ],
+      "endpoints": `<span class="comment"># Get user profile</span>
+GET https://graph.facebook.com/me?fields=id,name,email&access_token=ACCESS_TOKEN
+
+<span class="comment"># Post to user timeline</span>
+POST https://graph.facebook.com/me/feed
+Content-Type: application/json
+{
+  "message": "Hello from my app!",
+  "access_token": "ACCESS_TOKEN"
+}
+
+<span class="comment"># Get page information</span>
+GET https://graph.facebook.com/PAGE_ID?fields=name,fan_count,about&access_token=PAGE_ACCESS_TOKEN`,
+      "responseExample": `{
+  <span class="string">"id"</span>: <span class="string">"123456789"</span>,
+  <span class="string">"name"</span>: <span class="string">"John Doe"</span>,
+  <span class="string">"email"</span>: <span class="string">"john@example.com"</span>
+}`,
+      "useCases": [
+        {
+          "title": "Social Login",
+          "description": "Implement Facebook login for easy user authentication and registration."
+        },
+        {
+          "title": "Content Management",
+          "description": "Build tools to manage and schedule Facebook page content and posts."
+        }
+      ],
+      "documentationUrl": "https://developers.facebook.com/docs/graph-api"
+    },
+    "weather-api": {
+      "id": "weather-api",
+      "name": "Weather API",
+      "category": "weather",
+      "categoryName": "Weather",
+      "icon": "🌤️",
+      "description": "Comprehensive weather API providing current conditions, forecasts, and historical weather data.",
+      "stats": [
+        { "value": "200,000+", "label": "Cities" },
+        { "value": "99.9%", "label": "Uptime" },
+        { "value": "4.6", "label": "Rating" }
+      ],
+      "features": [
+        {
+          "title": "Current Weather",
+          "description": "Get real-time weather conditions including temperature, humidity, wind speed, and atmospheric pressure."
+        },
+        {
+          "title": "Weather Forecasts",
+          "description": "Access 5-day and 16-day weather forecasts with detailed hourly predictions."
+        },
+        {
+          "title": "Historical Data",
+          "description": "Retrieve historical weather data for climate analysis and trend studies."
+        },
+        {
+          "title": "Weather Alerts",
+          "description": "Get severe weather alerts and warnings for specific locations."
+        }
+      ],
+      "endpoints": `<span class="comment"># Current weather by city</span>
+GET https://api.openweathermap.org/data/2.5/weather?q=London&appid=YOUR_API_KEY
+
+<span class="comment"># 5-day weather forecast</span>
+GET https://api.openweathermap.org/data/2.5/forecast?q=London&appid=YOUR_API_KEY
+
+<span class="comment"># Weather alerts</span>
+GET https://api.openweathermap.org/data/2.5/onecall?lat=33.441792&lon=-94.037689&exclude=minutely&appid=YOUR_API_KEY`,
+      "responseExample": `{
+  <span class="string">"coord"</span>: {
+    <span class="string">"lon"</span>: <span class="number">-0.1257</span>,
+    <span class="string">"lat"</span>: <span class="number">51.5085</span>
+  },
+  <span class="string">"weather"</span>: [
+    {
+      <span class="string">"main"</span>: <span class="string">"Clear"</span>,
+      <span class="string">"description"</span>: <span class="string">"clear sky"</span>
+    }
+  ],
+  <span class="string">"main"</span>: {
+    <span class="string">"temp"</span>: <span class="number">282.55</span>,
+    <span class="string">"humidity"</span>: <span class="number">100</span>
+  }
+}`,
+      "useCases": [
+        {
+          "title": "Weather Apps",
+          "description": "Build mobile and web applications that display current weather and forecasts."
+        },
+        {
+          "title": "Agriculture",
+          "description": "Help farmers make informed decisions based on weather forecasts and historical data."
+        }
+      ],
+      "documentationUrl": "https://openweathermap.org/api"
+    }
+  }
+}

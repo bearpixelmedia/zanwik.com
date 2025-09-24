@@ -636,8 +636,168 @@
             });
         });
 
+        // Sample Weather APIs data
+        const sampleAPIs = [
+            {
+                id: 'openweathermap',
+                name: 'OpenWeatherMap API',
+                description: 'Comprehensive weather data API providing current conditions, forecasts, and historical weather information.',
+                rating: 4.7,
+                reviews: 2156,
+                features: {
+                    https: true,
+                    cors: true,
+                    free: true,
+                    rateLimit: '1000/day'
+                }
+            },
+            {
+                id: 'weather-api',
+                name: 'WeatherAPI',
+                description: 'Real-time weather data and forecasts with global coverage and detailed meteorological information.',
+                rating: 4.6,
+                reviews: 1234,
+                features: {
+                    https: true,
+                    cors: true,
+                    free: true,
+                    rateLimit: '1M/month'
+                }
+            },
+            {
+                id: 'accuweather-api',
+                name: 'AccuWeather API',
+                description: 'Professional weather forecasting API with detailed forecasts and severe weather alerts.',
+                rating: 4.8,
+                reviews: 1890,
+                features: {
+                    https: true,
+                    cors: true,
+                    free: false,
+                    rateLimit: '50/day'
+                }
+            },
+            {
+                id: 'weatherbit-api',
+                name: 'Weatherbit API',
+                description: 'Weather data API with current conditions, forecasts, and historical weather data.',
+                rating: 4.5,
+                reviews: 987,
+                features: {
+                    https: true,
+                    cors: true,
+                    free: true,
+                    rateLimit: '500/day'
+                }
+            },
+            {
+                id: 'darksky-api',
+                name: 'Dark Sky API',
+                description: 'Hyperlocal weather forecasts with minute-by-minute predictions and weather alerts.',
+                rating: 4.9,
+                reviews: 3456,
+                features: {
+                    https: true,
+                    cors: true,
+                    free: false,
+                    rateLimit: '1000/day'
+                }
+            },
+            {
+                id: 'visual-crossing-api',
+                name: 'Visual Crossing API',
+                description: 'Weather data API with historical weather information and climate data analysis.',
+                rating: 4.4,
+                reviews: 567,
+                features: {
+                    https: true,
+                    cors: true,
+                    free: true,
+                    rateLimit: '1000/day'
+                }
+            },
+            {
+                id: 'aerisweather-api',
+                name: 'AerisWeather API',
+                description: 'Professional weather data API with detailed forecasts and environmental data.',
+                rating: 4.6,
+                reviews: 789,
+                features: {
+                    https: true,
+                    cors: true,
+                    free: false,
+                    rateLimit: '1000/day'
+                }
+            },
+            {
+                id: 'weatherstack-api',
+                name: 'Weatherstack API',
+                description: 'Real-time weather data API with current conditions and weather forecasts.',
+                rating: 4.5,
+                reviews: 1123,
+                features: {
+                    https: true,
+                    cors: true,
+                    free: true,
+                    rateLimit: '1000/month'
+                }
+            },
+            {
+                id: 'climacell-api',
+                name: 'ClimaCell API',
+                description: 'Hyperlocal weather intelligence API with minute-by-minute forecasts and weather insights.',
+                rating: 4.7,
+                reviews: 1456,
+                features: {
+                    https: true,
+                    cors: true,
+                    free: false,
+                    rateLimit: '1000/day'
+                }
+            },
+            {
+                id: 'meteomatics-api',
+                name: 'Meteomatics API',
+                description: 'Professional weather data API with high-resolution forecasts and climate data.',
+                rating: 4.8,
+                reviews: 678,
+                features: {
+                    https: true,
+                    cors: true,
+                    free: false,
+                    rateLimit: '1000/day'
+                }
+            },
+            {
+                id: 'weather2020-api',
+                name: 'Weather2020 API',
+                description: 'Weather data API with current conditions, forecasts, and weather alerts.',
+                rating: 4.3,
+                reviews: 234,
+                features: {
+                    https: true,
+                    cors: true,
+                    free: true,
+                    rateLimit: '500/day'
+                }
+            },
+            {
+                id: 'stormglass-api',
+                name: 'Stormglass API',
+                description: 'Marine weather API with detailed ocean and coastal weather information.',
+                rating: 4.6,
+                reviews: 456,
+                features: {
+                    https: true,
+                    cors: true,
+                    free: true,
+                    rateLimit: '50/day'
+                }
+            }
+        ];
+
         // Load APIs function
-        async function loadAPIs() {
+        function loadAPIs() {
             const loadingIndicator = document.getElementById('loadingIndicator');
             const apisGrid = document.getElementById('apisGrid');
             const pagination = document.getElementById('pagination');
@@ -647,35 +807,61 @@
             apisGrid.style.display = 'none';
             pagination.style.display = 'none';
 
-            try {
-                // Build query parameters
-                const params = new URLSearchParams({
-                    category: 'weather',
-                    limit: itemsPerPage,
-                    offset: (currentPage - 1) * itemsPerPage
-                });
+            // Simulate loading delay
+            setTimeout(() => {
+                try {
+                    // Filter APIs based on search and filter
+                    let filteredAPIs = sampleAPIs;
 
-                if (currentSearch) {
-                    params.append('search', currentSearch);
+                    // Apply search filter
+                    if (currentSearch) {
+                        filteredAPIs = filteredAPIs.filter(api => 
+                            api.name.toLowerCase().includes(currentSearch.toLowerCase()) ||
+                            api.description.toLowerCase().includes(currentSearch.toLowerCase())
+                        );
+                    }
+
+                    // Apply category filter
+                    if (currentFilter !== 'all') {
+                        filteredAPIs = filteredAPIs.filter(api => {
+                            switch (currentFilter) {
+                                case 'free':
+                                    return api.features.free;
+                                case 'paid':
+                                    return !api.features.free;
+                                case 'https':
+                                    return api.features.https;
+                                case 'cors':
+                                    return api.features.cors;
+                                default:
+                                    return true;
+                            }
+                        });
+                    }
+
+                    // Calculate pagination
+                    const totalAPIs = filteredAPIs.length;
+                    const totalPages = Math.ceil(totalAPIs / itemsPerPage);
+                    const startIndex = (currentPage - 1) * itemsPerPage;
+                    const endIndex = startIndex + itemsPerPage;
+                    const paginatedAPIs = filteredAPIs.slice(startIndex, endIndex);
+
+                    // Display APIs
+                    displayAPIs(paginatedAPIs);
+                    displayPagination({
+                        total: totalAPIs,
+                        currentPage: currentPage,
+                        totalPages: totalPages
+                    });
+
+                } catch (error) {
+                    console.error('Error loading APIs:', error);
+                    apisGrid.innerHTML = '<div class="loading"><p>Error loading APIs. Please try again.</p></div>';
+                } finally {
+                    loadingIndicator.style.display = 'none';
+                    apisGrid.style.display = 'grid';
                 }
-
-                // Fetch APIs
-                const response = await fetch(`/api/apis/category/weather?${params}`);
-                const data = await response.json();
-
-                if (data.success) {
-                    displayAPIs(data.data.apis);
-                    displayPagination(data.data.pagination);
-                } else {
-                    throw new Error(data.error || 'Failed to load APIs');
-                }
-            } catch (error) {
-                console.error('Error loading APIs:', error);
-                apisGrid.innerHTML = '<div class="loading"><p>Error loading APIs. Please try again.</p></div>';
-            } finally {
-                loadingIndicator.style.display = 'none';
-                apisGrid.style.display = 'grid';
-            }
+            }, 500); // 500ms loading delay
         }
 
         // Display APIs
@@ -714,7 +900,7 @@
                         </span>
                     </div>
                     <div class="api-actions">
-                        <a href="/apis/category/weather/${api.id}" class="btn-primary">View Details</a>
+                        <a href="/apis/api-detail.html?api=${api.id}" class="btn-primary">View Details</a>
                         <a href="#" class="btn-secondary" onclick="testAPI('${api.id}')">Test API</a>
                     </div>
                 </div>

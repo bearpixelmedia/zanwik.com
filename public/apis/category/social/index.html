@@ -438,23 +438,98 @@
             loadAPIs();
         });
 
-        async function loadAPIs() {
-            try {
-                const response = await fetch('/api/apis/category/social');
-                const data = await response.json();
-                
-                if (data.success) {
-                    allAPIs = data.data.apis;
-                    filteredAPIs = [...allAPIs];
+        // Sample social APIs data
+        const sampleAPIs = [
+            {
+                id: 'twitter-api',
+                name: 'Twitter API',
+                description: 'Access Twitter data, post tweets, and interact with the Twitter platform programmatically.',
+                rating: 4.6,
+                reviews: 2156,
+                features: {
+                    https: true, cors: true, free: true, rateLimit: '300/15min'
+                }
+            },
+            {
+                id: 'instagram-api',
+                name: 'Instagram Basic Display API',
+                description: 'Access Instagram user profile information and media content through the official API.',
+                rating: 4.4,
+                reviews: 1834,
+                features: {
+                    https: true, cors: true, free: true, rateLimit: '200/hour'
+                }
+            },
+            {
+                id: 'facebook-api',
+                name: 'Facebook Graph API',
+                description: 'Comprehensive API for accessing Facebook data, posting content, and managing pages.',
+                rating: 4.5,
+                reviews: 3245,
+                features: {
+                    https: true, cors: true, free: true, rateLimit: '200/hour'
+                }
+            },
+            {
+                id: 'linkedin-api',
+                name: 'LinkedIn API',
+                description: 'Professional networking API for accessing LinkedIn profiles, posts, and company data.',
+                rating: 4.3,
+                reviews: 1456,
+                features: {
+                    https: true, cors: true, free: true, rateLimit: '100/hour'
+                }
+            },
+            {
+                id: 'tiktok-api',
+                name: 'TikTok for Developers',
+                description: 'Access TikTok content, user data, and create engaging video experiences.',
+                rating: 4.2,
+                reviews: 987,
+                features: {
+                    https: true, cors: true, free: true, rateLimit: '1000/day'
+                }
+            },
+            {
+                id: 'reddit-api',
+                name: 'Reddit API',
+                description: 'Access Reddit posts, comments, and subreddit data for content analysis and automation.',
+                rating: 4.7,
+                reviews: 2789,
+                features: {
+                    https: true, cors: true, free: true, rateLimit: '60/minute'
+                }
+            }
+        ];
+
+        function loadAPIs() {
+            // Show loading state
+            const apiGrid = document.getElementById('apiGrid');
+            apiGrid.innerHTML = '<div class="loading">Loading APIs...</div>';
+            
+            // Simulate loading delay
+            setTimeout(() => {
+                try {
+                    let filteredAPIs = sampleAPIs;
+                    
+                    // Apply search filter
+                    const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+                    if (searchTerm) {
+                        filteredAPIs = sampleAPIs.filter(api => 
+                            api.name.toLowerCase().includes(searchTerm) ||
+                            api.description.toLowerCase().includes(searchTerm)
+                        );
+                    }
+                    
+                    allAPIs = sampleAPIs;
+                    filteredAPIs = [...filteredAPIs];
                     displayAPIs();
                     updateStats();
-                } else {
-                    showError('Failed to load APIs');
+                } catch (error) {
+                    console.error('Error loading APIs:', error);
+                    showError('Error loading APIs. Please try again.');
                 }
-            } catch (error) {
-                console.error('Error loading APIs:', error);
-                showError('Error loading APIs. Please try again.');
-            }
+            }, 500);
         }
 
         function displayAPIs() {
@@ -484,7 +559,7 @@
                         </div>
                         <div class="api-footer">
                             <span class="api-pricing">${api.pricing.free ? 'Free' : 'Paid'}</span>
-                            <a href="/apis/category/social/${api.id}" class="api-link">View Details →</a>
+                            <a href="/apis/api-detail.html?api=${api.id}" class="api-link">View Details →</a>
                         </div>
                     </div>
                 `).join('');

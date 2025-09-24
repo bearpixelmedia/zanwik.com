@@ -13,7 +13,11 @@
     "install-all": "npm install && cd client && npm install",
     "setup": "node src/setup.js",
     "deploy": "node src/deploy.js",
-    "monitor": "node src/monitor.js"
+    "monitor": "node src/monitor.js",
+    "import-apis": "node scripts/import-apis.js",
+    "import-apis:publicapis": "node -e \"require('./scripts/import-apis').importFromPublicAPIs().then(console.log)\"",
+    "import-apis:github": "node -e \"require('./scripts/import-apis').importFromGitHub().then(console.log)\"",
+    "add-premium-apis": "node scripts/add-premium-apis.js"
   },
   "keywords": [
     "dashboard",

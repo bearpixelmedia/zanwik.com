@@ -30,6 +30,10 @@ const monitoringRoutes = require('./routes/monitoring');
 const userRoutes = require('./routes/users');
 const paymentRoutes = require('./routes/payments');
 const apiRoutes = require('./routes/apis');
+const apiHealthRoutes = require('./routes/apiHealth');
+const businessProjectRoutes = require('./routes/businessProjects');
+const monetizationRoutes = require('./routes/monetization');
+const communityRoutes = require('./routes/community');
 console.log('Routes imported successfully');
 
 // Import middleware
@@ -1303,6 +1307,10 @@ const startServer = async () => {
 
       console.log('Setting up API directory routes...');
       app.use('/api/apis', apiRoutes);
+      app.use('/api/health', apiHealthRoutes);
+      app.use('/api/business-projects', businessProjectRoutes);
+      app.use('/api/monetization', monetizationRoutes);
+      app.use('/api/community', communityRoutes);
       console.log('API directory routes setup completed');
     } catch (error) {
       console.error('Error setting up routes:', error);

@@ -4,10 +4,10 @@ import { useState, useEffect } from 'react';
  * UserData - Custom hook for  user data
  * @returns {Object} Hook state and methods
  */
-export const useUserData = _userId => {
-  const [state, _setState] = useState(null);
-  const [loading, _setLoading] = useState(true);
-  const [error, _setError] = useState(null);
+export const useUserData = () => {
+  const [state] = useState(null);
+  const [loading] = useState(true);
+  const [error] = useState(null);
 
   useEffect(() => {
     // Add your hook logic here

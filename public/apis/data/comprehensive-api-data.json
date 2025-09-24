@@ -1,0 +1,589 @@
+{
+  "apis": {
+    "pokemon-api": {
+      "id": "pokemon-api",
+      "name": "Pokemon API",
+      "category": "games-comics",
+      "categoryName": "Games & Comics",
+      "icon": "⚡",
+      "description": "Comprehensive Pokemon API providing detailed data on Pokemon, moves, abilities, types, and more from all generations of the Pokemon universe.",
+      "stats": [
+        { "value": "1000+", "label": "Pokemon" },
+        { "value": "800+", "label": "Moves" },
+        { "value": "300+", "label": "Abilities" },
+        { "value": "4.8", "label": "Rating" }
+      ],
+      "features": [
+        {
+          "title": "Complete Pokemon Data",
+          "description": "Access detailed information about all Pokemon including stats, types, abilities, moves, and evolution chains."
+        },
+        {
+          "title": "Move Database",
+          "description": "Comprehensive move data including power, accuracy, type, and effect descriptions for all Pokemon moves."
+        },
+        {
+          "title": "Type System",
+          "description": "Complete type effectiveness data and relationships between different Pokemon types."
+        },
+        {
+          "title": "Generation Support",
+          "description": "Data from all Pokemon generations including the latest games and regions."
+        }
+      ],
+      "endpoints": `<span class="comment"># Get Pokemon by name or ID</span>
+GET https://pokeapi.co/api/v2/pokemon/pikachu
+GET https://pokeapi.co/api/v2/pokemon/25
+
+<span class="comment"># Get Pokemon species data</span>
+GET https://pokeapi.co/api/v2/pokemon-species/pikachu
+
+<span class="comment"># Get move information</span>
+GET https://pokeapi.co/api/v2/move/thunderbolt`,
+      "responseExample": `{
+  <span class="string">"id"</span>: <span class="number">25</span>,
+  <span class="string">"name"</span>: <span class="string">"pikachu"</span>,
+  <span class="string">"height"</span>: <span class="number">4</span>,
+  <span class="string">"weight"</span>: <span class="number">60</span>,
+  <span class="string">"types"</span>: [
+    {
+      <span class="string">"type"</span>: {
+        <span class="string">"name"</span>: <span class="string">"electric"</span>
+      }
+    }
+  ]
+}`,
+      "useCases": [
+        {
+          "title": "Pokemon Games",
+          "description": "Build Pokemon-themed games with accurate data for moves, types, and battle mechanics."
+        },
+        {
+          "title": "Educational Apps",
+          "description": "Create learning applications that teach about Pokemon types, evolution, and characteristics."
+        }
+      ],
+      "documentationUrl": "https://pokeapi.co/docs/v2"
+    },
+    "zelda-api": {
+      "id": "zelda-api",
+      "name": "Zelda API",
+      "category": "games-comics",
+      "categoryName": "Games & Comics",
+      "icon": "🗡️",
+      "description": "Comprehensive API for The Legend of Zelda universe, including characters, items, and quests from all games in the series.",
+      "stats": [
+        { "value": "500+", "label": "Characters" },
+        { "value": "200+", "label": "Items" },
+        { "value": "100+", "label": "Quests" },
+        { "value": "4.7", "label": "Rating" }
+      ],
+      "features": [
+        {
+          "title": "Character Database",
+          "description": "Access detailed information about all Zelda characters, their roles, and appearances across games."
+        },
+        {
+          "title": "Item Catalog",
+          "description": "Complete database of weapons, tools, and items from the Zelda universe."
+        }
+      ],
+      "endpoints": `<span class="comment"># Get character by name</span>
+GET https://zelda-api.apius.cc/api/character/link
+
+<span class="comment"># Get all items</span>
+GET https://zelda-api.apius.cc/api/item`,
+      "responseExample": `{
+  <span class="string">"id"</span>: <span class="number">1</span>,
+  <span class="string">"name"</span>: <span class="string">"Link"</span>,
+  <span class="string">"description"</span>: <span class="string">"The Hero of Hyrule"</span>
+}`,
+      "useCases": [
+        {
+          "title": "Zelda Games",
+          "description": "Build Zelda-themed games and applications with authentic character and item data."
+        }
+      ],
+      "documentationUrl": "https://zelda-api.apius.cc/docs"
+    },
+    "marvel-api": {
+      "id": "marvel-api",
+      "name": "Marvel API",
+      "category": "games-comics",
+      "categoryName": "Games & Comics",
+      "icon": "🦸",
+      "description": "Official Marvel Comics API providing access to characters, comics, stories, and events from the Marvel Universe.",
+      "stats": [
+        { "value": "1000+", "label": "Characters" },
+        { "value": "50,000+", "label": "Comics" },
+        { "value": "4.8", "label": "Rating" }
+      ],
+      "features": [
+        {
+          "title": "Character Database",
+          "description": "Access detailed information about Marvel characters, their powers, and comic appearances."
+        },
+        {
+          "title": "Comic Archive",
+          "description": "Browse Marvel's extensive comic book collection with metadata and cover images."
+        }
+      ],
+      "endpoints": `<span class="comment"># Get character by name</span>
+GET https://gateway.marvel.com/v1/public/characters?name=spider-man
+
+<span class="comment"># Get comics for character</span>
+GET https://gateway.marvel.com/v1/public/characters/1009610/comics`,
+      "responseExample": `{
+  <span class="string">"data"</span>: {
+    <span class="string">"results"</span>: [
+      {
+        <span class="string">"id"</span>: <span class="number">1009610</span>,
+        <span class="string">"name"</span>: <span class="string">"Spider-Man"</span>
+      }
+    ]
+  }
+}`,
+      "useCases": [
+        {
+          "title": "Comic Apps",
+          "description": "Build applications for browsing and discovering Marvel comics and characters."
+        }
+      ],
+      "documentationUrl": "https://developer.marvel.com/documentation"
+    },
+    "github-api": {
+      "id": "github-api",
+      "name": "GitHub API",
+      "category": "development",
+      "categoryName": "Development",
+      "icon": "🐙",
+      "description": "Access GitHub repositories, issues, pull requests, and user data for development tools and integrations.",
+      "stats": [
+        { "value": "100M+", "label": "Repositories" },
+        { "value": "40M+", "label": "Users" },
+        { "value": "4.9", "label": "Rating" }
+      ],
+      "features": [
+        {
+          "title": "Repository Management",
+          "description": "Access repository data, commits, branches, and pull requests."
+        },
+        {
+          "title": "User Data",
+          "description": "Get user profiles, followers, and activity information."
+        },
+        {
+          "title": "Issue Tracking",
+          "description": "Manage issues, labels, and project boards."
+        }
+      ],
+      "endpoints": `<span class="comment"># Get user repositories</span>
+GET https://api.github.com/users/username/repos
+
+<span class="comment"># Get repository issues</span>
+GET https://api.github.com/repos/owner/repo/issues`,
+      "responseExample": `{
+  <span class="string">"id"</span>: <span class="number">1</span>,
+  <span class="string">"name"</span>: <span class="string">"Hello-World"</span>,
+  <span class="string">"full_name"</span>: <span class="string">"octocat/Hello-World"</span>
+}`,
+      "useCases": [
+        {
+          "title": "Development Tools",
+          "description": "Build tools for code analysis, CI/CD, and project management."
+        }
+      ],
+      "documentationUrl": "https://docs.github.com/en/rest"
+    },
+    "jsonplaceholder": {
+      "id": "jsonplaceholder",
+      "name": "JSONPlaceholder",
+      "category": "development",
+      "categoryName": "Development",
+      "icon": "📝",
+      "description": "Fake REST API for testing and prototyping. Perfect for frontend developers who need mock data.",
+      "stats": [
+        { "value": "100", "label": "Posts" },
+        { "value": "10", "label": "Users" },
+        { "value": "4.5", "label": "Rating" }
+      ],
+      "features": [
+        {
+          "title": "Mock Data",
+          "description": "Provides realistic JSON data for posts, users, comments, and albums."
+        },
+        {
+          "title": "REST Operations",
+          "description": "Supports GET, POST, PUT, PATCH, and DELETE operations for testing."
+        }
+      ],
+      "endpoints": `<span class="comment"># Get all posts</span>
+GET https://jsonplaceholder.typicode.com/posts
+
+<span class="comment"># Get specific post</span>
+GET https://jsonplaceholder.typicode.com/posts/1`,
+      "responseExample": `{
+  <span class="string">"userId"</span>: <span class="number">1</span>,
+  <span class="string">"id"</span>: <span class="number">1</span>,
+  <span class="string">"title"</span>: <span class="string">"sunt aut facere"</span>,
+  <span class="string">"body"</span>: <span class="string">"quia et suscipit..."</span>
+}`,
+      "useCases": [
+        {
+          "title": "Prototyping",
+          "description": "Perfect for frontend developers who need mock data for testing and prototyping."
+        }
+      ],
+      "documentationUrl": "https://jsonplaceholder.typicode.com"
+    },
+    "stripe-api": {
+      "id": "stripe-api",
+      "name": "Stripe API",
+      "category": "finance",
+      "categoryName": "Finance",
+      "icon": "💳",
+      "description": "Complete payment processing platform with support for credit cards, digital wallets, and international payments.",
+      "stats": [
+        { "value": "1M+", "label": "Businesses" },
+        { "value": "99.99%", "label": "Uptime" },
+        { "value": "4.9", "label": "Rating" }
+      ],
+      "features": [
+        {
+          "title": "Payment Processing",
+          "description": "Accept credit cards, digital wallets, and bank transfers."
+        },
+        {
+          "title": "Subscription Management",
+          "description": "Handle recurring billing and subscription lifecycle."
+        }
+      ],
+      "endpoints": `<span class="comment"># Create payment intent</span>
+POST https://api.stripe.com/v1/payment_intents
+Content-Type: application/x-www-form-urlencoded
+amount=2000&currency=usd`,
+      "responseExample": `{
+  <span class="string">"id"</span>: <span class="string">"pi_1234567890"</span>,
+  <span class="string">"amount"</span>: <span class="number">2000</span>,
+  <span class="string">"currency"</span>: <span class="string">"usd"</span>
+}`,
+      "useCases": [
+        {
+          "title": "E-commerce",
+          "description": "Build online stores with secure payment processing."
+        }
+      ],
+      "documentationUrl": "https://stripe.com/docs/api"
+    },
+    "paypal-api": {
+      "id": "paypal-api",
+      "name": "PayPal API",
+      "category": "finance",
+      "categoryName": "Finance",
+      "icon": "💰",
+      "description": "PayPal's payment processing API for accepting payments, managing subscriptions, and handling refunds.",
+      "stats": [
+        { "value": "400M+", "label": "Users" },
+        { "value": "200+", "label": "Countries" },
+        { "value": "4.7", "label": "Rating" }
+      ],
+      "features": [
+        {
+          "title": "Payment Processing",
+          "description": "Accept PayPal payments, credit cards, and alternative payment methods."
+        },
+        {
+          "title": "Subscription Management",
+          "description": "Handle recurring payments and subscription billing."
+        }
+      ],
+      "endpoints": `<span class="comment"># Create payment</span>
+POST https://api.paypal.com/v1/payments/payment
+Content-Type: application/json
+{
+  "intent": "sale",
+  "payer": {"payment_method": "paypal"}
+}`,
+      "responseExample": `{
+  <span class="string">"id"</span>: <span class="string">"PAY-1234567890"</span>,
+  <span class="string">"state"</span>: <span class="string">"created"</span>,
+  <span class="string">"intent"</span>: <span class="string">"sale"</span>
+}`,
+      "useCases": [
+        {
+          "title": "E-commerce",
+          "description": "Integrate PayPal payments into online stores and applications."
+        }
+      ],
+      "documentationUrl": "https://developer.paypal.com/docs/api"
+    },
+    "spotify-api": {
+      "id": "spotify-api",
+      "name": "Spotify Web API",
+      "category": "music",
+      "categoryName": "Music",
+      "icon": "🎵",
+      "description": "Access Spotify music catalog, user playlists, and audio features for music applications.",
+      "stats": [
+        { "value": "100M+", "label": "Songs" },
+        { "value": "500M+", "label": "Users" },
+        { "value": "4.8", "label": "Rating" }
+      ],
+      "features": [
+        {
+          "title": "Music Catalog",
+          "description": "Access Spotify's vast library of songs, albums, and artists."
+        },
+        {
+          "title": "User Playlists",
+          "description": "Manage user playlists, saved tracks, and listening history."
+        }
+      ],
+      "endpoints": `<span class="comment"># Search for tracks</span>
+GET https://api.spotify.com/v1/search?q=artist:radiohead&type=track`,
+      "responseExample": `{
+  <span class="string">"tracks"</span>: {
+    <span class="string">"items"</span>: [
+      {
+        <span class="string">"name"</span>: <span class="string">"Creep"</span>,
+        <span class="string">"artists"</span>: [
+          {
+            <span class="string">"name"</span>: <span class="string">"Radiohead"</span>
+          }
+        ]
+      }
+    ]
+  }
+}`,
+      "useCases": [
+        {
+          "title": "Music Apps",
+          "description": "Build music discovery and playlist management applications."
+        }
+      ],
+      "documentationUrl": "https://developer.spotify.com/documentation/web-api"
+    },
+    "lastfm-api": {
+      "id": "lastfm-api",
+      "name": "Last.fm API",
+      "category": "music",
+      "categoryName": "Music",
+      "icon": "🎧",
+      "description": "Access Last.fm's music database, user listening history, and music recommendation data.",
+      "stats": [
+        { "value": "50M+", "label": "Users" },
+        { "value": "1B+", "label": "Scrobbles" },
+        { "value": "4.6", "label": "Rating" }
+      ],
+      "features": [
+        {
+          "title": "Music Scrobbling",
+          "description": "Track user listening habits and music preferences."
+        },
+        {
+          "title": "Music Discovery",
+          "description": "Get personalized music recommendations and similar artists."
+        }
+      ],
+      "endpoints": `<span class="comment"># Get user's top tracks</span>
+GET https://ws.audioscrobbler.com/2.0/?method=user.gettoptracks&user=username&api_key=YOUR_API_KEY
+
+<span class="comment"># Get similar artists</span>
+GET https://ws.audioscrobbler.com/2.0/?method=artist.getsimilar&artist=radiohead&api_key=YOUR_API_KEY`,
+      "responseExample": `{
+  <span class="string">"toptracks"</span>: {
+    <span class="string">"track"</span>: [
+      {
+        <span class="string">"name"</span>: <span class="string">"Creep"</span>,
+        <span class="string">"playcount"</span>: <span class="string">"1234567"</span>
+      }
+    ]
+  }
+}`,
+      "useCases": [
+        {
+          "title": "Music Analytics",
+          "description": "Build applications that analyze music listening patterns and preferences."
+        }
+      ],
+      "documentationUrl": "https://www.last.fm/api"
+    },
+    "twitter-api": {
+      "id": "twitter-api",
+      "name": "Twitter API",
+      "category": "social",
+      "categoryName": "Social",
+      "icon": "🐦",
+      "description": "Access Twitter's official API to post tweets, read timelines, manage followers, and integrate Twitter functionality.",
+      "stats": [
+        { "value": "450M+", "label": "Users" },
+        { "value": "500M+", "label": "Tweets/Day" },
+        { "value": "4.6", "label": "Rating" }
+      ],
+      "features": [
+        {
+          "title": "Tweet Management",
+          "description": "Post tweets, read timelines, and manage tweet content programmatically."
+        },
+        {
+          "title": "User Data",
+          "description": "Access user profiles, followers, following lists, and user statistics."
+        }
+      ],
+      "endpoints": `<span class="comment"># Post a tweet</span>
+POST https://api.twitter.com/2/tweets
+Content-Type: application/json
+{
+  "text": "Hello Twitter API!"
+}`,
+      "responseExample": `{
+  <span class="string">"data"</span>: {
+    <span class="string">"id"</span>: <span class="string">"1234567890123456789"</span>,
+    <span class="string">"text"</span>: <span class="string">"Hello Twitter API!"</span>
+  }
+}`,
+      "useCases": [
+        {
+          "title": "Social Media Management",
+          "description": "Build tools to manage multiple Twitter accounts, schedule posts, and track engagement."
+        }
+      ],
+      "documentationUrl": "https://developer.twitter.com/en/docs/twitter-api"
+    },
+    "instagram-api": {
+      "id": "instagram-api",
+      "name": "Instagram Basic Display API",
+      "category": "social",
+      "categoryName": "Social",
+      "icon": "📸",
+      "description": "Access Instagram user media, profile information, and basic display functionality for Instagram integration.",
+      "stats": [
+        { "value": "2B+", "label": "Users" },
+        { "value": "100M+", "label": "Photos/Day" },
+        { "value": "4.5", "label": "Rating" }
+      ],
+      "features": [
+        {
+          "title": "Media Access",
+          "description": "Access user photos and videos from their Instagram account."
+        },
+        {
+          "title": "Profile Data",
+          "description": "Get user profile information and basic statistics."
+        }
+      ],
+      "endpoints": `<span class="comment"># Get user media</span>
+GET https://graph.instagram.com/me/media?fields=id,caption,media_type,media_url&access_token=ACCESS_TOKEN
+
+<span class="comment"># Get user profile</span>
+GET https://graph.instagram.com/me?fields=id,username,account_type&access_token=ACCESS_TOKEN`,
+      "responseExample": `{
+  <span class="string">"data"</span>: [
+    {
+      <span class="string">"id"</span>: <span class="string">"1234567890"</span>,
+      <span class="string">"caption"</span>: <span class="string">"Beautiful sunset!"</span>,
+      <span class="string">"media_type"</span>: <span class="string">"IMAGE"</span>
+    }
+  ]
+}`,
+      "useCases": [
+        {
+          "title": "Social Media Apps",
+          "description": "Build applications that display Instagram content and integrate with Instagram features."
+        }
+      ],
+      "documentationUrl": "https://developers.facebook.com/docs/instagram-basic-display-api"
+    },
+    "openweathermap": {
+      "id": "openweathermap",
+      "name": "OpenWeatherMap API",
+      "category": "weather",
+      "categoryName": "Weather",
+      "icon": "🌤️",
+      "description": "Comprehensive weather data API providing current conditions, forecasts, and historical weather data.",
+      "stats": [
+        { "value": "200,000+", "label": "Cities" },
+        { "value": "99.9%", "label": "Uptime" },
+        { "value": "4.6", "label": "Rating" }
+      ],
+      "features": [
+        {
+          "title": "Current Weather",
+          "description": "Get real-time weather conditions including temperature, humidity, wind speed, and atmospheric pressure."
+        },
+        {
+          "title": "Weather Forecasts",
+          "description": "Access 5-day and 16-day weather forecasts with detailed hourly predictions."
+        }
+      ],
+      "endpoints": `<span class="comment"># Current weather by city</span>
+GET https://api.openweathermap.org/data/2.5/weather?q=London&appid=YOUR_API_KEY`,
+      "responseExample": `{
+  <span class="string">"coord"</span>: {
+    <span class="string">"lon"</span>: <span class="number">-0.1257</span>,
+    <span class="string">"lat"</span>: <span class="number">51.5085</span>
+  },
+  <span class="string">"weather"</span>: [
+    {
+      <span class="string">"main"</span>: <span class="string">"Clear"</span>,
+      <span class="string">"description"</span>: <span class="string">"clear sky"</span>
+    }
+  ]
+}`,
+      "useCases": [
+        {
+          "title": "Weather Apps",
+          "description": "Build mobile and web applications that display current weather and forecasts."
+        }
+      ],
+      "documentationUrl": "https://openweathermap.org/api"
+    },
+    "weather-api": {
+      "id": "weather-api",
+      "name": "WeatherAPI",
+      "category": "weather",
+      "categoryName": "Weather",
+      "icon": "🌦️",
+      "description": "Fast and reliable weather data API with current conditions, forecasts, and historical weather information.",
+      "stats": [
+        { "value": "1M+", "label": "Requests/Day" },
+        { "value": "99.9%", "label": "Uptime" },
+        { "value": "4.7", "label": "Rating" }
+      ],
+      "features": [
+        {
+          "title": "Real-time Weather",
+          "description": "Get current weather conditions for any location worldwide."
+        },
+        {
+          "title": "Extended Forecasts",
+          "description": "Access 3-day, 7-day, and 14-day weather forecasts."
+        }
+      ],
+      "endpoints": `<span class="comment"># Current weather</span>
+GET https://api.weatherapi.com/v1/current.json?key=YOUR_API_KEY&q=London
+
+<span class="comment"># Weather forecast</span>
+GET https://api.weatherapi.com/v1/forecast.json?key=YOUR_API_KEY&q=London&days=7`,
+      "responseExample": `{
+  <span class="string">"location"</span>: {
+    <span class="string">"name"</span>: <span class="string">"London"</span>,
+    <span class="string">"country"</span>: <span class="string">"United Kingdom"</span>
+  },
+  <span class="string">"current"</span>: {
+    <span class="string">"temp_c"</span>: <span class="number">15</span>,
+    <span class="string">"condition"</span>: {
+      <span class="string">"text"</span>: <span class="string">"Partly cloudy"</span>
+    }
+  }
+}`,
+      "useCases": [
+        {
+          "title": "Weather Services",
+          "description": "Build weather applications and integrate weather data into existing services."
+        }
+      ],
+      "documentationUrl": "https://www.weatherapi.com/docs"
+    }
+  }
+}

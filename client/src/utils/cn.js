@@ -173,10 +173,10 @@ export const utils = {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     return result
       ? {
-          r: parseInt(result[1], 16),
-          g: parseInt(result[2], 16),
-          b: parseInt(result[3], 16),
-        }
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16),
+      }
       : null;
   },
 
@@ -280,10 +280,11 @@ export const utils = {
   },
 
   // Performance utilities
-  measureTime: async (fn, _name = 'Function') => {
-    const _start = performance.now();
+  measureTime: async fn => {
+    const start = performance.now();
     const result = await fn();
-    const _end = performance.now();
+    const end = performance.now();
+    console.log(`Function took ${end - start} milliseconds`);
     return result;
   },
 

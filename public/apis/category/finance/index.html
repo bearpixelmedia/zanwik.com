@@ -636,8 +636,168 @@
             });
         });
 
+        // Sample Finance APIs data
+        const sampleAPIs = [
+            {
+                id: 'stripe-api',
+                name: 'Stripe API',
+                description: 'Complete payment processing platform with support for credit cards, digital wallets, and international payments.',
+                rating: 4.9,
+                reviews: 3456,
+                features: {
+                    https: true,
+                    cors: true,
+                    free: false,
+                    rateLimit: '100/second'
+                }
+            },
+            {
+                id: 'paypal-api',
+                name: 'PayPal API',
+                description: 'PayPal payment processing API for accepting payments, managing subscriptions, and handling refunds.',
+                rating: 4.7,
+                reviews: 2890,
+                features: {
+                    https: true,
+                    cors: true,
+                    free: false,
+                    rateLimit: '5000/hour'
+                }
+            },
+            {
+                id: 'coinbase-api',
+                name: 'Coinbase API',
+                description: 'Cryptocurrency trading and wallet API for Bitcoin, Ethereum, and other digital currencies.',
+                rating: 4.6,
+                reviews: 1234,
+                features: {
+                    https: true,
+                    cors: true,
+                    free: true,
+                    rateLimit: '10000/hour'
+                }
+            },
+            {
+                id: 'alpha-vantage-api',
+                name: 'Alpha Vantage API',
+                description: 'Real-time and historical stock market data, forex, and cryptocurrency information.',
+                rating: 4.5,
+                reviews: 1876,
+                features: {
+                    https: true,
+                    cors: true,
+                    free: true,
+                    rateLimit: '5/minute'
+                }
+            },
+            {
+                id: 'plaid-api',
+                name: 'Plaid API',
+                description: 'Bank account connection and financial data aggregation for fintech applications.',
+                rating: 4.8,
+                reviews: 2156,
+                features: {
+                    https: true,
+                    cors: true,
+                    free: false,
+                    rateLimit: '100/minute'
+                }
+            },
+            {
+                id: 'yahoo-finance-api',
+                name: 'Yahoo Finance API',
+                description: 'Stock quotes, market data, and financial news from Yahoo Finance platform.',
+                rating: 4.4,
+                reviews: 987,
+                features: {
+                    https: true,
+                    cors: true,
+                    free: true,
+                    rateLimit: '2000/hour'
+                }
+            },
+            {
+                id: 'binance-api',
+                name: 'Binance API',
+                description: 'Cryptocurrency exchange API for trading, market data, and account management.',
+                rating: 4.7,
+                reviews: 1567,
+                features: {
+                    https: true,
+                    cors: true,
+                    free: true,
+                    rateLimit: '1200/minute'
+                }
+            },
+            {
+                id: 'square-api',
+                name: 'Square API',
+                description: 'Point-of-sale and payment processing API for retail and e-commerce businesses.',
+                rating: 4.6,
+                reviews: 1123,
+                features: {
+                    https: true,
+                    cors: true,
+                    free: false,
+                    rateLimit: '500/hour'
+                }
+            },
+            {
+                id: 'quickbooks-api',
+                name: 'QuickBooks API',
+                description: 'Accounting and financial management API for small business applications.',
+                rating: 4.5,
+                reviews: 1456,
+                features: {
+                    https: true,
+                    cors: true,
+                    free: false,
+                    rateLimit: '500/hour'
+                }
+            },
+            {
+                id: 'finnhub-api',
+                name: 'Finnhub API',
+                description: 'Real-time stock market data, company information, and financial news API.',
+                rating: 4.6,
+                reviews: 789,
+                features: {
+                    https: true,
+                    cors: true,
+                    free: true,
+                    rateLimit: '60/minute'
+                }
+            },
+            {
+                id: 'twilio-api',
+                name: 'Twilio API',
+                description: 'Communication platform API for SMS, voice, and messaging services.',
+                rating: 4.8,
+                reviews: 2341,
+                features: {
+                    https: true,
+                    cors: true,
+                    free: true,
+                    rateLimit: '1000/hour'
+                }
+            },
+            {
+                id: 'sendgrid-api',
+                name: 'SendGrid API',
+                description: 'Email delivery and marketing automation API for transactional and marketing emails.',
+                rating: 4.7,
+                reviews: 1890,
+                features: {
+                    https: true,
+                    cors: true,
+                    free: true,
+                    rateLimit: '100/day'
+                }
+            }
+        ];
+
         // Load APIs function
-        async function loadAPIs() {
+        function loadAPIs() {
             const loadingIndicator = document.getElementById('loadingIndicator');
             const apisGrid = document.getElementById('apisGrid');
             const pagination = document.getElementById('pagination');
@@ -647,35 +807,61 @@
             apisGrid.style.display = 'none';
             pagination.style.display = 'none';
 
-            try {
-                // Build query parameters
-                const params = new URLSearchParams({
-                    category: 'finance',
-                    limit: itemsPerPage,
-                    offset: (currentPage - 1) * itemsPerPage
-                });
+            // Simulate loading delay
+            setTimeout(() => {
+                try {
+                    // Filter APIs based on search and filter
+                    let filteredAPIs = sampleAPIs;
 
-                if (currentSearch) {
-                    params.append('search', currentSearch);
+                    // Apply search filter
+                    if (currentSearch) {
+                        filteredAPIs = filteredAPIs.filter(api => 
+                            api.name.toLowerCase().includes(currentSearch.toLowerCase()) ||
+                            api.description.toLowerCase().includes(currentSearch.toLowerCase())
+                        );
+                    }
+
+                    // Apply category filter
+                    if (currentFilter !== 'all') {
+                        filteredAPIs = filteredAPIs.filter(api => {
+                            switch (currentFilter) {
+                                case 'free':
+                                    return api.features.free;
+                                case 'paid':
+                                    return !api.features.free;
+                                case 'https':
+                                    return api.features.https;
+                                case 'cors':
+                                    return api.features.cors;
+                                default:
+                                    return true;
+                            }
+                        });
+                    }
+
+                    // Calculate pagination
+                    const totalAPIs = filteredAPIs.length;
+                    const totalPages = Math.ceil(totalAPIs / itemsPerPage);
+                    const startIndex = (currentPage - 1) * itemsPerPage;
+                    const endIndex = startIndex + itemsPerPage;
+                    const paginatedAPIs = filteredAPIs.slice(startIndex, endIndex);
+
+                    // Display APIs
+                    displayAPIs(paginatedAPIs);
+                    displayPagination({
+                        total: totalAPIs,
+                        currentPage: currentPage,
+                        totalPages: totalPages
+                    });
+
+                } catch (error) {
+                    console.error('Error loading APIs:', error);
+                    apisGrid.innerHTML = '<div class="loading"><p>Error loading APIs. Please try again.</p></div>';
+                } finally {
+                    loadingIndicator.style.display = 'none';
+                    apisGrid.style.display = 'grid';
                 }
-
-                // Fetch APIs
-                const response = await fetch(`/api/apis/category/finance?${params}`);
-                const data = await response.json();
-
-                if (data.success) {
-                    displayAPIs(data.data.apis);
-                    displayPagination(data.data.pagination);
-                } else {
-                    throw new Error(data.error || 'Failed to load APIs');
-                }
-            } catch (error) {
-                console.error('Error loading APIs:', error);
-                apisGrid.innerHTML = '<div class="loading"><p>Error loading APIs. Please try again.</p></div>';
-            } finally {
-                loadingIndicator.style.display = 'none';
-                apisGrid.style.display = 'grid';
-            }
+            }, 500); // 500ms loading delay
         }
 
         // Display APIs
@@ -714,7 +900,7 @@
                         </span>
                     </div>
                     <div class="api-actions">
-                        <a href="/apis/category/finance/${api.id}" class="btn-primary">View Details</a>
+                        <a href="/apis/api-detail.html?api=${api.id}" class="btn-primary">View Details</a>
                         <a href="#" class="btn-secondary" onclick="testAPI('${api.id}')">Test API</a>
                     </div>
                 </div>
