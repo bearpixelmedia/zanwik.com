@@ -1,0 +1,20 @@
+{
+  "name": "zanwik-content-automation",
+  "version": "1.0.0",
+  "description": "Content marketing automation for Zanwik",
+  "main": "automation/automation.js",
+  "scripts": {
+    "generate-schedule": "node automation/automation.js",
+    "post-linkedin": "node automation/post-linkedin.js",
+    "post-twitter": "node automation/post-twitter.js",
+    "post-reddit": "node automation/post-reddit.js"
+  },
+  "dependencies": {
+    "node-cron": "^3.0.2",
+    "axios": "^1.4.0",
+    "dotenv": "^16.0.3"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  }
+}

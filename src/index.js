@@ -36,6 +36,7 @@ const monetizationRoutes = require('./routes/monetization');
 const communityRoutes = require('./routes/community');
 const secureRoutes = require('./routes/secureRoutes');
 const seoRoutes = require('./routes/seo');
+const contentMarketingRoutes = require('./routes/contentMarketing');
 console.log('Routes imported successfully');
 
 // Import middleware
@@ -1313,6 +1314,7 @@ const startServer = async () => {
       app.use('/api/business-projects', businessProjectRoutes);
       app.use('/api/monetization', monetizationRoutes);
       app.use('/api/community', communityRoutes);
+      app.use('/api/content-marketing', contentMarketingRoutes);
       
       // SEO routes (sitemap, robots.txt)
       app.use('/', seoRoutes);

@@ -3,8 +3,26 @@ import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import StructuredData from '../components/StructuredData';
 
+// Import blog post components
+import APIIntegrationGuide2024 from './blog-posts/api-integration-guide-2024';
+import Top10APIsStartup from './blog-posts/top-10-apis-startup';
+import APISecurityBestPractices from './blog-posts/api-security-best-practices';
+
 const BlogPost = () => {
   const { slug } = useParams();
+
+  // Handle new blog post components
+  const blogPostComponents = {
+    'api-integration-guide-2024': APIIntegrationGuide2024,
+    'top-10-apis-startup-should-know': Top10APIsStartup,
+    'api-security-best-practices': APISecurityBestPractices
+  };
+
+  // If it's a new blog post component, render it
+  if (blogPostComponents[slug]) {
+    const BlogPostComponent = blogPostComponents[slug];
+    return <BlogPostComponent />;
+  }
 
   // Mock blog post data - in real app, this would come from API
   const blogPosts = {

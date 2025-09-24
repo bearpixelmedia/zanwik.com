@@ -1,0 +1,83 @@
+{
+  "platforms": {
+    "linkedin": {
+      "enabled": true,
+      "postingTime": "09:00",
+      "hashtags": [
+        "#API",
+        "#WebDevelopment",
+        "#Tech",
+        "#Entrepreneurship",
+        "#Programming"
+      ]
+    },
+    "twitter": {
+      "enabled": true,
+      "postingTime": "12:00",
+      "hashtags": [
+        "#API",
+        "#WebDev",
+        "#JavaScript",
+        "#Tech"
+      ]
+    },
+    "reddit": {
+      "enabled": true,
+      "postingTime": "14:00",
+      "subreddits": [
+        "webdev",
+        "startups",
+        "programming"
+      ]
+    }
+  },
+  "content": {
+    "blogPosts": [
+      {
+        "title": "How to Integrate APIs in 2024: Complete Developer Guide",
+        "slug": "api-integration-guide-2024",
+        "category": "Tutorial",
+        "url": "https://client-g75jef1ib-byronmccluney.vercel.app/blog/api-integration-guide-2024"
+      },
+      {
+        "title": "Top 10 APIs Every Startup Should Know (With Code Examples)",
+        "slug": "top-10-apis-startup-should-know",
+        "category": "List",
+        "url": "https://client-g75jef1ib-byronmccluney.vercel.app/blog/top-10-apis-startup-should-know"
+      },
+      {
+        "title": "API Security Best Practices: Protect Your Data",
+        "slug": "api-security-best-practices",
+        "category": "Security",
+        "url": "https://client-g75jef1ib-byronmccluney.vercel.app/blog/api-security-best-practices"
+      }
+    ]
+  },
+  "schedule": {
+    "monday": {
+      "linkedin": "API Integration Guide post",
+      "twitter": "Thread starter",
+      "reddit": "r/webdev post"
+    },
+    "tuesday": {
+      "linkedin": "Top 10 APIs for Startups",
+      "twitter": "Startup APIs tweet",
+      "reddit": "r/startups post"
+    },
+    "wednesday": {
+      "linkedin": "API Security post",
+      "twitter": "Security thread",
+      "reddit": "r/programming post"
+    },
+    "thursday": {
+      "linkedin": "Combined insights",
+      "twitter": "Best practices thread",
+      "reddit": "AMA/Q&A post"
+    },
+    "friday": {
+      "linkedin": "Case study",
+      "twitter": "Weekly recap",
+      "reddit": "Community engagement"
+    }
+  }
+}
