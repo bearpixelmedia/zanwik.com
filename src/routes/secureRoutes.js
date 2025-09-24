@@ -6,7 +6,7 @@ const botProtection = require('../middleware/botProtection');
 router.use(botProtection);
 
 // Hidden login route - only accessible via direct URL
-router.get('/hidden-login', (req, res) => {
+router.get('/bpm-login', (req, res) => {
   // Additional security: Check referrer and origin
   const referrer = req.get('Referer');
   const origin = req.get('Origin');

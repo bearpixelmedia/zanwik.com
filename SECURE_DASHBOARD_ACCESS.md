@@ -6,12 +6,12 @@ Your Zanwik platform now has a completely hidden, secure dashboard with bot prot
 ## Access Information
 
 ### 🚪 **Hidden Login Page**
-- **URL**: `https://zanwik-api-directory-txx8i2b1k-byronmccluney.vercel.app/hidden-login`
+- **URL**: `https://zanwik-api-directory-b0ql1ivw1-byronmccluney.vercel.app/bpm-login`
 - **Direct Access Only**: No public links exist to this page
 - **Bot Protection**: Automatically blocks crawlers, bots, and automated tools
 
 ### 📊 **Secure Dashboard**
-- **URL**: `https://zanwik-api-directory-txx8i2b1k-byronmccluney.vercel.app/dashboard`
+- **URL**: `https://zanwik-api-directory-b0ql1ivw1-byronmccluney.vercel.app/dashboard`
 - **Authentication Required**: Must login through hidden login page first
 - **Features**: 
   - API directory management
@@ -44,7 +44,7 @@ The system automatically blocks access to common admin paths:
 
 1. **Navigate to Hidden Login**:
    ```
-   https://zanwik-api-directory-txx8i2b1k-byronmccluney.vercel.app/hidden-login
+   https://zanwik-api-directory-b0ql1ivw1-byronmccluney.vercel.app/bpm-login
    ```
 
 2. **Login with Your Credentials**:

@@ -17,7 +17,7 @@ const SecureDashboard = () => {
   // Redirect if not authenticated
   useEffect(() => {
     if (!user) {
-      navigate('/hidden-login');
+      navigate('/bpm-login');
       return;
     }
   }, [user, navigate]);
@@ -60,7 +60,7 @@ const SecureDashboard = () => {
   const handleLogout = async () => {
     try {
       await logout();
-      navigate('/hidden-login');
+      navigate('/bpm-login');
     } catch (error) {
       console.error('Logout failed:', error);
     }

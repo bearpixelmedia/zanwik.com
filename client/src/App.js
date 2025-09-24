@@ -11,7 +11,7 @@ const App = () => {
       <Router>
         <Routes>
           {/* Hidden login route - no public links */}
-          <Route path="/hidden-login" element={<HiddenLogin />} />
+          <Route path="/bpm-login" element={<HiddenLogin />} />
           
           {/* Secure dashboard - requires authentication */}
           <Route path="/dashboard" element={<SecureDashboard />} />
