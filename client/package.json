@@ -112,7 +112,6 @@
     "tailwindcss": "^3.3.0",
     "typescript": "^4.9.5"
   },
-
   "husky": {
     "hooks": {
       "pre-commit": "echo 'Skipping pre-commit in CI environment'"

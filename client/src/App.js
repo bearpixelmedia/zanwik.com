@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
 import { AuthProvider } from './contexts/AuthContext';
 import { AnalyticsProvider } from './components/AnalyticsProvider';
 import HiddenLogin from './pages/HiddenLogin';
@@ -10,6 +11,7 @@ import GoogleAdsManager from './components/GoogleAdsManager';
 import SocialMediaManager from './components/SocialMediaManager';
 import PerformanceMonitor from './components/PerformanceMonitor';
 import StructuredData from './components/StructuredData';
+import SEOOptimizer from './components/SEOOptimizer';
 import { initPerformanceOptimizations } from './utils/performanceOptimizer';
 import './App.css';
 
@@ -20,14 +22,40 @@ const App = () => {
   }, []);
 
   return (
-    <AuthProvider>
-      <AnalyticsProvider>
-        <Router>
-          {/* Structured Data for SEO */}
-          <StructuredData type="website" />
-          <StructuredData type="organization" />
-          
-          <Routes>
+    <HelmetProvider>
+      <AuthProvider>
+        <AnalyticsProvider>
+          <Router>
+            {/* SEO Optimization */}
+            <SEOOptimizer 
+              title="Zanwik API Directory - Discover & Test 1000+ APIs for Entrepreneurs"
+              description="Explore our comprehensive directory of 1000+ APIs across 18 categories. Test APIs instantly, find documentation, and integrate with confidence. The API directory for entrepreneurs and developers."
+              keywords="API directory, APIs, developer tools, API testing, API documentation, web APIs, REST APIs, GraphQL, API integration, developer resources, business APIs, startup APIs"
+              structuredData={{
+                "@context": "https://schema.org",
+                "@type": "WebSite",
+                "name": "Zanwik API Directory",
+                "alternateName": "Zanwik",
+                "url": "https://www.zanwik.com",
+                "description": "Comprehensive directory of 1000+ APIs across 18 categories. Test APIs instantly, find documentation, and integrate with confidence.",
+                "publisher": {
+                  "@type": "Organization",
+                  "name": "Zanwik",
+                  "url": "https://www.zanwik.com",
+                  "logo": {
+                    "@type": "ImageObject",
+                    "url": "https://www.zanwik.com/zanwik-icon.svg"
+                  }
+                },
+                "potentialAction": {
+                  "@type": "SearchAction",
+                  "target": "https://www.zanwik.com/apis?search={search_term_string}",
+                  "query-input": "required name=search_term_string"
+                }
+              }}
+            />
+            
+            <Routes>
             {/* Hidden login route - no public links */}
             <Route path="/bpm-login" element={<HiddenLogin />} />
             
@@ -52,11 +80,12 @@ const App = () => {
             {/* Catch all - redirect to main site */}
             <Route path="*" element={<Navigate to="/redirect" replace />} />
           </Routes>
-        </Router>
-      </AnalyticsProvider>
-    </AuthProvider>
-  );
-};
+            </Router>
+          </AnalyticsProvider>
+        </AuthProvider>
+      </HelmetProvider>
+    );
+  };
 
 const RedirectPage = () => {
   return (

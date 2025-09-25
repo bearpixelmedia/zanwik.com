@@ -19,8 +19,8 @@ router.get('/bpm-login', (req, res) => {
     });
   }
   
-  // Serve the login page
-  res.sendFile('hidden-login.html', { 
+  // Serve the React app (it will handle the routing)
+  res.sendFile('index.html', { 
     root: 'client/build',
     headers: {
       'Cache-Control': 'no-cache, no-store, must-revalidate',
@@ -42,7 +42,7 @@ router.get('/dashboard', (req, res) => {
     });
   }
   
-  // Serve the dashboard
+  // Serve the React app (it will handle the routing)
   res.sendFile('index.html', { 
     root: 'client/build',
     headers: {

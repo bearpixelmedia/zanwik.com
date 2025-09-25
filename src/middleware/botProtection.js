@@ -1,4 +1,6 @@
 const botProtection = (req, res, next) => {
+  // Bot protection re-enabled after testing
+  
   const userAgent = req.get('User-Agent') || '';
   const ip = req.ip || req.connection.remoteAddress;
   

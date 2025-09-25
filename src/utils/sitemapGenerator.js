@@ -65,6 +65,32 @@ const generateSitemap = () => {
   </url>`;
   });
 
+  // Blog pages
+  sitemap += `
+  <url>
+    <loc>${baseUrl}/blog</loc>
+    <lastmod>${currentDate}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>`;
+
+  // Individual blog posts
+  const blogPosts = [
+    'api-integration-guide-2024',
+    'top-10-apis-startup',
+    'api-security-best-practices'
+  ];
+  
+  blogPosts.forEach(post => {
+    sitemap += `
+  <url>
+    <loc>${baseUrl}/blog/${post}</loc>
+    <lastmod>${currentDate}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>`;
+  });
+
   // Static pages
   const staticPages = [
     { path: '/about', priority: '0.6', changefreq: 'monthly' },
