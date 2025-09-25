@@ -126,18 +126,20 @@ const ContentMarketingDashboard = () => {
 
   const handlePostNow = async (platform, content) => {
     try {
-      // Call the automation API
-      const response = await fetch(`/api/automation/post-${platform}`, {
+      // Call the content marketing API
+      const response = await fetch(`/api/content-marketing/post-${platform}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ content })
       });
       
-      if (response.ok) {
+      const data = await response.json();
+      
+      if (data.success) {
         alert(`Posted to ${platform} successfully!`);
         loadContentMarketingData(); // Refresh data
       } else {
-        alert(`Failed to post to ${platform}`);
+        alert(`Failed to post to ${platform}: ${data.error}`);
       }
     } catch (error) {
       console.error(`Failed to post to ${platform}:`, error);
@@ -147,18 +149,20 @@ const ContentMarketingDashboard = () => {
 
   const handleSchedulePost = async (platform, content, scheduledTime) => {
     try {
-      // Call the automation API
-      const response = await fetch(`/api/automation/schedule-${platform}`, {
+      // Call the content marketing API
+      const response = await fetch('/api/content-marketing/schedule-post', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content, scheduledTime })
+        body: JSON.stringify({ platform, content, scheduledTime })
       });
       
-      if (response.ok) {
+      const data = await response.json();
+      
+      if (data.success) {
         alert(`Scheduled post to ${platform} for ${scheduledTime}!`);
         loadContentMarketingData(); // Refresh data
       } else {
-        alert(`Failed to schedule post to ${platform}`);
+        alert(`Failed to schedule post to ${platform}: ${data.error}`);
       }
     } catch (error) {
       console.error(`Failed to schedule post to ${platform}:`, error);
