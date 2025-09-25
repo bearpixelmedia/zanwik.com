@@ -17,7 +17,15 @@
     "import-apis": "node scripts/import-apis.js",
     "import-apis:publicapis": "node -e \"require('./scripts/import-apis').importFromPublicAPIs().then(console.log)\"",
     "import-apis:github": "node -e \"require('./scripts/import-apis').importFromGitHub().then(console.log)\"",
-    "add-premium-apis": "node scripts/add-premium-apis.js"
+    "add-premium-apis": "node scripts/add-premium-apis.js",
+    "discover-apis": "node scripts/infinite-api-discovery.js",
+    "import-discovered": "node scripts/import-discovered-apis.js",
+    "monitor-health": "node scripts/api-health-monitor.js",
+    "auto-discover": "node scripts/automated-api-discovery.js start",
+    "discover-run": "node scripts/automated-api-discovery.js run",
+    "discover-stats": "node scripts/automated-api-discovery.js stats",
+    "discover-stop": "node scripts/automated-api-discovery.js stop",
+    "infinite-apis": "node scripts/infinite-api-manager.js"
   },
   "keywords": [
     "dashboard",
