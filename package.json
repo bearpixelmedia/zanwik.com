@@ -25,7 +25,11 @@
     "discover-run": "node scripts/automated-api-discovery.js run",
     "discover-stats": "node scripts/automated-api-discovery.js stats",
     "discover-stop": "node scripts/automated-api-discovery.js stop",
-    "infinite-apis": "node scripts/infinite-api-manager.js"
+    "infinite-apis": "node scripts/infinite-api-manager.js",
+    "continuous-discovery": "node scripts/continuous-api-discovery.js start",
+    "discover-now": "node scripts/continuous-api-discovery.js run",
+    "discovery-stats": "node scripts/continuous-api-discovery.js stats",
+    "stop-discovery": "node scripts/continuous-api-discovery.js stop"
   },
   "keywords": [
     "dashboard",
