@@ -8,6 +8,8 @@ import SecureDashboard from './pages/SecureDashboard';
 import Blog from './pages/Blog';
 import BlogPost from './pages/BlogPost';
 import APIDetail from './pages/APIDetail';
+import APITools from './pages/APITools';
+import APITester from './pages/APITester';
 import GoogleAdsManager from './components/GoogleAdsManager';
 import SocialMediaManager from './components/SocialMediaManager';
 import PerformanceMonitor from './components/PerformanceMonitor';
@@ -70,6 +72,8 @@ const App = () => {
             {/* API routes */}
             <Route path="/apis/api-detail.html" element={<APIDetail />} />
             <Route path="/apis/:id" element={<APIDetail />} />
+            <Route path="/apis/tools" element={<APITools />} />
+            <Route path="/tools/tester" element={<APITester />} />
             
             {/* Marketing & Analytics routes */}
             <Route path="/ads" element={<GoogleAdsManager />} />
