@@ -3,8 +3,20 @@ const router = express.Router();
 const path = require('path');
 const fs = require('fs');
 
-// Load API data
-const apisData = JSON.parse(fs.readFileSync(path.join(__dirname, '../data/apis.json'), 'utf8'));
+// Load API data with error handling
+let apisData = { apis: [], categories: {} };
+
+try {
+  const dataPath = path.join(__dirname, '../data/apis.json');
+  if (fs.existsSync(dataPath)) {
+    const rawData = fs.readFileSync(dataPath, 'utf8');
+    apisData = JSON.parse(rawData);
+  }
+} catch (error) {
+  console.error('Error loading API data:', error);
+  // Fallback to empty data structure
+  apisData = { apis: [], categories: {} };
+}
 
 // Get all categories
 router.get('/categories', (req, res) => {

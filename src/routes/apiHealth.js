@@ -10,13 +10,19 @@ const apiTestingService = require('../services/apiTestingService');
 const fs = require('fs');
 const path = require('path');
 
-// Load API data
+// Load API data with error handling
 function loadApiData() {
-  const dataPath = path.join(__dirname, '../data/apis.json');
-  if (fs.existsSync(dataPath)) {
-    return JSON.parse(fs.readFileSync(dataPath, 'utf8'));
+  try {
+    const dataPath = path.join(__dirname, '../data/apis.json');
+    if (fs.existsSync(dataPath)) {
+      const rawData = fs.readFileSync(dataPath, 'utf8');
+      return JSON.parse(rawData);
+    }
+    return { apis: {} };
+  } catch (error) {
+    console.error('Error loading API data:', error);
+    return { apis: {} };
   }
-  return { apis: {} };
 }
 
 // Get health status for all APIs

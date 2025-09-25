@@ -7,6 +7,7 @@ import HiddenLogin from './pages/HiddenLogin';
 import SecureDashboard from './pages/SecureDashboard';
 import Blog from './pages/Blog';
 import BlogPost from './pages/BlogPost';
+import APIDetail from './pages/APIDetail';
 import GoogleAdsManager from './components/GoogleAdsManager';
 import SocialMediaManager from './components/SocialMediaManager';
 import PerformanceMonitor from './components/PerformanceMonitor';
@@ -65,6 +66,10 @@ const App = () => {
             {/* Blog routes */}
             <Route path="/blog" element={<Blog />} />
             <Route path="/blog/:slug" element={<BlogPost />} />
+            
+            {/* API routes */}
+            <Route path="/apis/api-detail.html" element={<APIDetail />} />
+            <Route path="/apis/:id" element={<APIDetail />} />
             
             {/* Marketing & Analytics routes */}
             <Route path="/ads" element={<GoogleAdsManager />} />
