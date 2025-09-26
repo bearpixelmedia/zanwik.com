@@ -3,21 +3,20 @@ import { createClient } from '@supabase/supabase-js';
 // Environment variables for the new Supabase database
 const supabaseUrl =
   process.env.REACT_APP_SUPABASE_URL ||
-  'https://fxzwnjmzhdynsatvakim.supabase.co';
+  'https://your-project.supabase.co'; // Placeholder URL
 const supabaseAnonKey =
   process.env.REACT_APP_SUPABASE_ANON_KEY ||
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ4enduam16aGR5bnNhdHZha2ltIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE1ODI4MjUsImV4cCI6MjA2NzE1ODgyNX0.l1fmDYnD8eIszoMqx2S0Cqq28fpz_rSjaim2Ke3YIow';
+  'your-anon-key'; // Placeholder key
 
-// Validate environment variables
-if (!supabaseUrl || !supabaseAnonKey) {
-  console.error(
-    'Missing Supabase environment variables. Please check your .env file.',
-  );
-  throw new Error('Supabase configuration is incomplete');
-}
+// Check if Supabase is properly configured
+const isSupabaseConfigured = () => {
+  return supabaseUrl !== 'https://your-project.supabase.co' && 
+         supabaseAnonKey !== 'your-anon-key' &&
+         supabaseUrl.includes('supabase.co');
+};
 
 // Create Supabase client with enhanced configuration
-export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+export const supabase = isSupabaseConfigured() ? createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
     autoRefreshToken: true,
     persistSession: true,
@@ -32,10 +31,15 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
       'X-Client-Info': 'zanwik-dashboard',
     },
   },
-});
+}) : null;
 
 // Test database connection
 export const testConnection = async () => {
+  if (!supabase) {
+    console.warn('Supabase is not configured. Skipping connection test.');
+    return false;
+  }
+  
   try {
     const { error } = await supabase.from('projects').select('count').limit(1);
 
@@ -56,6 +60,10 @@ export const testConnection = async () => {
 export const auth = {
   // Sign in with email/password
   signIn: async (email, password) => {
+    if (!supabase) {
+      throw new Error('Supabase is not configured');
+    }
+    
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
         email,

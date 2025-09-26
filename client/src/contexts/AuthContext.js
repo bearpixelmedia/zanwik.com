@@ -216,6 +216,16 @@ export const AuthProvider = ({ children }) => {
     let mounted = true;
     setLoading(true);
 
+    // Check if Supabase is configured
+    if (!supabase) {
+      console.warn('Supabase is not configured. Running in public mode.');
+      setUser(null);
+      setUserProfile(null);
+      setIsAuthenticated(false);
+      setLoading(false);
+      return;
+    }
+
     // Always check session on mount
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (mounted) {
@@ -227,6 +237,14 @@ export const AuthProvider = ({ children }) => {
           setIsAuthenticated(false);
           setLoading(false);
         }
+      }
+    }).catch((error) => {
+      console.warn('Failed to get session:', error);
+      if (mounted) {
+        setUser(null);
+        setUserProfile(null);
+        setIsAuthenticated(false);
+        setLoading(false);
       }
     });
 
