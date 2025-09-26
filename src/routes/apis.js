@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const path = require('path');
 const fs = require('fs');
+const axios = require('axios');
 
 // Load API data with error handling
 let apisData = { apis: [], categories: {} };
@@ -227,11 +228,11 @@ router.get('/stats/overview', (req, res) => {
   }
 });
 
-// Test API endpoint (mock response for now)
+// Test specific API endpoint (real HTTP requests)
 router.post('/test/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const { endpoint, method = 'GET', params = {}, headers = {} } = req.body;
+    const { endpoint, method = 'GET', params = {}, headers = {}, body = null } = req.body;
 
     const api = apisData.apis.find(api => api.id === id);
     if (!api) {
@@ -241,36 +242,226 @@ router.post('/test/:id', async (req, res) => {
       });
     }
 
-    // For now, return a mock response
-    // In production, this would make actual API calls
-    const mockResponse = {
-      status: 200,
-      statusText: 'OK',
-      headers: {
-        'content-type': 'application/json',
-        'access-control-allow-origin': '*'
-      },
-      data: {
-        message: 'Mock API response',
-        endpoint: endpoint,
-        method: method,
-        params: params,
-        api: {
-          name: api.name,
-          baseUrl: api.baseUrl
-        },
-        note: 'This is a mock response. In production, this would make actual API calls.'
-      }
-    };
+    // Build full URL
+    let fullUrl = api.baseUrl;
+    if (endpoint) {
+      fullUrl = fullUrl.endsWith('/') ? fullUrl + endpoint : fullUrl + '/' + endpoint;
+    }
 
-    res.json({
-      success: true,
-      data: mockResponse
-    });
+    // Add query parameters for GET requests
+    if (method === 'GET' && params && Object.keys(params).length > 0) {
+      const queryString = new URLSearchParams(params).toString();
+      fullUrl += (fullUrl.includes('?') ? '&' : '?') + queryString;
+    }
+
+    // Validate URL
+    try {
+      new URL(fullUrl);
+    } catch (e) {
+      return res.status(400).json({
+        success: false,
+        error: 'Invalid API URL format'
+      });
+    }
+
+    // Make real HTTP request
+    const startTime = Date.now();
+    
+    try {
+      const config = {
+        method: method.toLowerCase(),
+        url: fullUrl,
+        headers: {
+          'User-Agent': 'Zanwik-API-Tester/1.0',
+          'Accept': 'application/json',
+          ...headers
+        },
+        timeout: 10000, // 10 second timeout
+        validateStatus: () => true // Don't throw on any status code
+      };
+
+      // Add body for non-GET requests
+      if (body && method !== 'GET') {
+        if (typeof body === 'string') {
+          try {
+            config.data = JSON.parse(body);
+            config.headers['Content-Type'] = 'application/json';
+          } catch (e) {
+            config.data = body;
+            config.headers['Content-Type'] = 'text/plain';
+          }
+        } else {
+          config.data = body;
+        }
+      }
+
+      const response = await axios(config);
+      const endTime = Date.now();
+      const responseTime = endTime - startTime;
+
+      res.json({
+        success: true,
+        data: {
+          status: response.status,
+          statusText: response.statusText,
+          headers: response.headers,
+          data: response.data,
+          responseTime: `${responseTime}ms`,
+          timestamp: new Date().toISOString(),
+          api: {
+            name: api.name,
+            baseUrl: api.baseUrl,
+            endpoint: endpoint
+          },
+          request: {
+            method: method,
+            url: fullUrl,
+            headers: config.headers,
+            params: params,
+            body: body
+          }
+        }
+      });
+    } catch (axiosError) {
+      const endTime = Date.now();
+      const responseTime = endTime - startTime;
+      
+      res.json({
+        success: false,
+        error: axiosError.message,
+        data: {
+          status: axiosError.response?.status || 'Error',
+          statusText: axiosError.response?.statusText || 'Request Failed',
+          headers: axiosError.response?.headers || {},
+          data: axiosError.response?.data || null,
+          responseTime: `${responseTime}ms`,
+          timestamp: new Date().toISOString(),
+          api: {
+            name: api.name,
+            baseUrl: api.baseUrl,
+            endpoint: endpoint
+          },
+          request: {
+            method: method,
+            url: fullUrl,
+            headers: headers,
+            params: params,
+            body: body
+          }
+        }
+      });
+    }
   } catch (error) {
     res.status(500).json({
       success: false,
-      error: 'Failed to test API endpoint'
+      error: 'Failed to test API endpoint',
+      details: error.message
+    });
+  }
+});
+
+// Test any API endpoint (real HTTP requests)
+router.post('/test', async (req, res) => {
+  try {
+    const { method = 'GET', url, headers = {}, body = null } = req.body;
+
+    if (!url) {
+      return res.status(400).json({
+        success: false,
+        error: 'URL is required'
+      });
+    }
+
+    // Validate URL
+    try {
+      new URL(url);
+    } catch (e) {
+      return res.status(400).json({
+        success: false,
+        error: 'Invalid URL format'
+      });
+    }
+
+    // Make real HTTP request
+    const startTime = Date.now();
+    
+    try {
+      const config = {
+        method: method.toLowerCase(),
+        url: url,
+        headers: {
+          'User-Agent': 'Zanwik-API-Tester/1.0',
+          'Accept': 'application/json',
+          ...headers
+        },
+        timeout: 10000, // 10 second timeout
+        validateStatus: () => true // Don't throw on any status code
+      };
+
+      // Add body for non-GET requests
+      if (body && method !== 'GET') {
+        if (typeof body === 'string') {
+          try {
+            config.data = JSON.parse(body);
+            config.headers['Content-Type'] = 'application/json';
+          } catch (e) {
+            config.data = body;
+            config.headers['Content-Type'] = 'text/plain';
+          }
+        } else {
+          config.data = body;
+        }
+      }
+
+      const response = await axios(config);
+      const endTime = Date.now();
+      const responseTime = endTime - startTime;
+
+      res.json({
+        success: true,
+        data: {
+          status: response.status,
+          statusText: response.statusText,
+          headers: response.headers,
+          data: response.data,
+          responseTime: `${responseTime}ms`,
+          timestamp: new Date().toISOString(),
+          request: {
+            method: method,
+            url: url,
+            headers: config.headers,
+            body: body
+          }
+        }
+      });
+    } catch (axiosError) {
+      const endTime = Date.now();
+      const responseTime = endTime - startTime;
+      
+      res.json({
+        success: false,
+        error: axiosError.message,
+        data: {
+          status: axiosError.response?.status || 'Error',
+          statusText: axiosError.response?.statusText || 'Request Failed',
+          headers: axiosError.response?.headers || {},
+          data: axiosError.response?.data || null,
+          responseTime: `${responseTime}ms`,
+          timestamp: new Date().toISOString(),
+          request: {
+            method: method,
+            url: url,
+            headers: headers,
+            body: body
+          }
+        }
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: 'Failed to test API endpoint',
+      details: error.message
     });
   }
 });
