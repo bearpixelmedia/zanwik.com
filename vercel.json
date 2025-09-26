@@ -2,18 +2,22 @@
   "version": 2,
   "builds": [
     {
-      "src": "src/index.js",
+      "src": "api/index.js",
       "use": "@vercel/node"
     },
     {
       "src": "client/build/**",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "public/**",
       "use": "@vercel/static"
     }
   ],
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "/src/index.js"
+      "dest": "/api/index.js"
     },
     {
       "src": "/static/(.*)",
@@ -21,7 +25,11 @@
     },
     {
       "src": "/favicon.ico",
-      "dest": "/client/build/favicon.ico"
+      "dest": "/public/favicon.ico"
+    },
+    {
+      "src": "/zanwik-icon.svg",
+      "dest": "/public/zanwik-icon.svg"
     },
     {
       "src": "/asset-manifest.json",
@@ -32,12 +40,20 @@
       "dest": "/client/build/sw.js"
     },
     {
-      "src": "/zanwik-icon.svg",
-      "dest": "/client/build/zanwik-icon.svg"
+      "src": "/dashboard",
+      "dest": "/api/index.js"
+    },
+    {
+      "src": "/admin",
+      "dest": "/api/index.js"
+    },
+    {
+      "src": "/bpm-login",
+      "dest": "/api/index.js"
     },
     {
       "src": "/(.*)",
-      "dest": "/src/index.js"
+      "dest": "/public/$1"
     }
   ]
 }
