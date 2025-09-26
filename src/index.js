@@ -1412,11 +1412,15 @@ const gracefulShutdown = async (signal) => {
 process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
 process.on('SIGINT', () => gracefulShutdown('SIGINT'));
 
-// At the very bottom, before calling startServer()
-console.log('About to call startServer()');
-startServer().catch(error => {
-  logger.error('Failed to start server:', error);
-  process.exit(1);
-});
-
-module.exports = app; 
+// For Vercel serverless functions, export the app without starting the server
+if (process.env.VERCEL) {
+  console.log('Running in Vercel serverless environment');
+  module.exports = app;
+} else {
+  // At the very bottom, before calling startServer()
+  console.log('About to call startServer()');
+  startServer().catch(error => {
+    logger.error('Failed to start server:', error);
+    process.exit(1);
+  });
+} 
