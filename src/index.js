@@ -116,7 +116,6 @@ app.use(helmet({
       scriptSrc: ["'self'", "'unsafe-inline'", "https://www.googletagmanager.com"],
       connectSrc: [
         "'self'",
-        "https://fxzwnjmzhdynsatvakim.supabase.co",
         "https://www.google-analytics.com",
         "https://analytics.google.com",
         "https://money-production-55af.up.railway.app",

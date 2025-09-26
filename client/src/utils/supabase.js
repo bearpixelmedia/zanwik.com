@@ -8,6 +8,28 @@ const supabaseAnonKey =
   process.env.REACT_APP_SUPABASE_ANON_KEY ||
   'your-anon-key'; // Placeholder key
 
+// Clear any existing authentication data
+export const clearAuthData = () => {
+  try {
+    // Clear Supabase auth data
+    localStorage.removeItem('sb-fxzwnjmzhdynsatvakim-auth-token');
+    localStorage.removeItem('supabase.auth.token');
+    localStorage.removeItem('supabase.auth.session');
+    
+    // Clear any other auth-related data
+    const keys = Object.keys(localStorage);
+    keys.forEach(key => {
+      if (key.includes('supabase') || key.includes('auth')) {
+        localStorage.removeItem(key);
+      }
+    });
+    
+    console.log('Cleared authentication data');
+  } catch (error) {
+    console.warn('Failed to clear auth data:', error);
+  }
+};
+
 // Check if Supabase is properly configured
 const isSupabaseConfigured = () => {
   return supabaseUrl !== 'https://your-project.supabase.co' && 
@@ -18,9 +40,9 @@ const isSupabaseConfigured = () => {
 // Create Supabase client with enhanced configuration
 export const supabase = isSupabaseConfigured() ? createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
-    autoRefreshToken: true,
-    persistSession: true,
-    detectSessionInUrl: true,
+    autoRefreshToken: false, // Disable auto refresh to prevent errors
+    persistSession: false,   // Disable session persistence
+    detectSessionInUrl: false, // Disable URL session detection
     flowType: 'pkce',
   },
   db: {

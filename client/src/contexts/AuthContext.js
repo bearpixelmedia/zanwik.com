@@ -7,7 +7,7 @@ import React, {
   useCallback,
   useRef,
 } from 'react';
-import { supabase } from '../utils/supabase';
+import { supabase, clearAuthData } from '../utils/supabase';
 
 const AuthContext = createContext();
 
@@ -219,6 +219,7 @@ export const AuthProvider = ({ children }) => {
     // Check if Supabase is configured
     if (!supabase) {
       console.warn('Supabase is not configured. Running in public mode.');
+      clearAuthData(); // Clear any existing auth data
       setUser(null);
       setUserProfile(null);
       setIsAuthenticated(false);
