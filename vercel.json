@@ -20,8 +20,24 @@
       "dest": "/client/build/static/$1"
     },
     {
+      "src": "/favicon.ico",
+      "dest": "/client/build/favicon.ico"
+    },
+    {
+      "src": "/asset-manifest.json",
+      "dest": "/client/build/asset-manifest.json"
+    },
+    {
+      "src": "/sw.js",
+      "dest": "/client/build/sw.js"
+    },
+    {
+      "src": "/zanwik-icon.svg",
+      "dest": "/client/build/zanwik-icon.svg"
+    },
+    {
       "src": "/(.*)",
-      "dest": "/client/build/index.html"
+      "dest": "/src/index.js"
     }
   ]
 }

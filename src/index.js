@@ -1350,17 +1350,7 @@ const startServer = async () => {
         return res.status(404).json({ message: 'API endpoint not found' });
       }
       
-      // Don't serve React app for root path (landing page)
-      if (req.path === '/') {
-        return res.status(404).json({ message: 'Route not found' });
-      }
-      
-      // Don't serve React app for static files that should be served by Express
-      if (req.path.startsWith('/static/') || req.path.startsWith('/uploads/') || req.path === '/favicon.ico' || req.path === '/asset-manifest.json') {
-        return res.status(404).json({ message: 'Static file not found' });
-      }
-      
-      // Serve React app for all other routes (SPA routing)
+      // Serve React app for all routes (SPA routing)
       res.sendFile(path.join(__dirname, '../client/build/index.html'));
     });
     console.log('Catch-all route setup completed');
