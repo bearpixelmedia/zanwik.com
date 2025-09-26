@@ -34,6 +34,42 @@ module.exports = (req, res) => {
     return;
   }
 
+  // APIs endpoint - serve real API data
+  if (req.url === '/api/apis' && req.method === 'GET') {
+    try {
+      const fs = require('fs');
+      const path = require('path');
+      
+      // Load real API data
+      const dataPath = path.join(__dirname, '../src/data/apis.json');
+      let apisData = { apis: {}, categories: {} };
+      
+      if (fs.existsSync(dataPath)) {
+        const rawData = fs.readFileSync(dataPath, 'utf8');
+        apisData = JSON.parse(rawData);
+      }
+      
+      // Convert apis object to array
+      const apisArray = apisData.apis ? Object.values(apisData.apis) : [];
+      
+      res.setHeader('Content-Type', 'application/json');
+      res.status(200).json({
+        success: true,
+        data: apisArray,
+        total: apisArray.length,
+        categories: apisData.categories
+      });
+      return;
+    } catch (error) {
+      res.setHeader('Content-Type', 'application/json');
+      res.status(500).json({
+        success: false,
+        error: 'Failed to load API data'
+      });
+      return;
+    }
+  }
+
   // Dashboard route - serve the React app
   if (req.url === '/dashboard' && (req.method === 'GET' || req.method === 'HEAD')) {
     res.setHeader('Content-Type', 'text/html');
