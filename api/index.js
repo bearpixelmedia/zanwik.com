@@ -261,8 +261,8 @@ module.exports = (req, res) => {
     return;
   }
 
-  // Admin sub-routes - serve the React app for client-side routing
-  if (req.url.startsWith('/admin/') && (req.method === 'GET' || req.method === 'HEAD')) {
+  // API category routes - serve the React app for client-side routing
+  if (req.url.startsWith('/apis/category/') && (req.method === 'GET' || req.method === 'HEAD')) {
     res.setHeader('Content-Type', 'text/html');
     res.status(200).send(`
       <!DOCTYPE html>
@@ -272,7 +272,34 @@ module.exports = (req, res) => {
           <link rel="icon" href="/zanwik-icon.svg" type="image/svg+xml"/>
           <meta name="viewport" content="width=device-width,initial-scale=1"/>
           <meta name="theme-color" content="#667eea"/>
-          <title>Zanwik Admin</title>
+          <title>Zanwik API Directory</title>
+          <link rel="preconnect" href="https://fonts.googleapis.com">
+          <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+          <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+          <script defer src="/static/js/main.9f7bf438.js"></script>
+          <link href="/static/css/main.65e988a5.css" rel="stylesheet">
+        </head>
+        <body>
+          <noscript>You need to enable JavaScript to run this app.</noscript>
+          <div id="root"></div>
+        </body>
+      </html>
+    `);
+    return;
+  }
+
+  // Individual API routes - serve the React app for client-side routing
+  if (req.url.startsWith('/apis/') && !req.url.startsWith('/apis/data/') && (req.method === 'GET' || req.method === 'HEAD')) {
+    res.setHeader('Content-Type', 'text/html');
+    res.status(200).send(`
+      <!DOCTYPE html>
+      <html lang="en">
+        <head>
+          <meta charset="utf-8"/>
+          <link rel="icon" href="/zanwik-icon.svg" type="image/svg+xml"/>
+          <meta name="viewport" content="width=device-width,initial-scale=1"/>
+          <meta name="theme-color" content="#667eea"/>
+          <title>Zanwik API Directory</title>
           <link rel="preconnect" href="https://fonts.googleapis.com">
           <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
           <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">

@@ -121,7 +121,9 @@ router.get('/category/:category', (req, res) => {
       });
     }
 
-    const categoryApis = apisData.apis.filter(api => api.category === category);
+    // Convert apis object to array
+    const apisArray = apisData.apis ? Object.values(apisData.apis) : [];
+    const categoryApis = apisArray.filter(api => api.category === category);
     const total = categoryApis.length;
     const paginatedApis = categoryApis.slice(parseInt(offset), parseInt(offset) + parseInt(limit));
 
