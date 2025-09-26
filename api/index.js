@@ -34,6 +34,83 @@ module.exports = (req, res) => {
     return;
   }
 
+  // API category endpoint - serve category data
+  if (req.url.startsWith('/api/apis/category/') && req.method === 'GET') {
+    try {
+      const fs = require('fs');
+      const path = require('path');
+      
+      // Extract category from URL
+      const urlParts = req.url.split('/');
+      const category = urlParts[urlParts.length - 1];
+      
+      // Try multiple paths for the data file
+      const possiblePaths = [
+        path.join(__dirname, '../src/data/apis.json'),
+        path.join(__dirname, '../public/apis/data/real-api-data.json'),
+        path.join(__dirname, '../apis/data/real-api-data.json')
+      ];
+      
+      let apisData = { apis: {}, categories: {} };
+      let dataLoaded = false;
+      
+      for (const dataPath of possiblePaths) {
+        if (fs.existsSync(dataPath)) {
+          const rawData = fs.readFileSync(dataPath, 'utf8');
+          apisData = JSON.parse(rawData);
+          dataLoaded = true;
+          break;
+        }
+      }
+      
+      if (!dataLoaded) {
+        res.setHeader('Content-Type', 'application/json');
+        res.status(500).json({
+          success: false,
+          error: 'Failed to load API data'
+        });
+        return;
+      }
+      
+      // Check if category exists
+      if (!apisData.categories[category]) {
+        res.setHeader('Content-Type', 'application/json');
+        res.status(404).json({
+          success: false,
+          error: 'Category not found'
+        });
+        return;
+      }
+      
+      // Convert apis object to array and filter by category
+      const apisArray = apisData.apis ? Object.values(apisData.apis) : [];
+      const categoryApis = apisArray.filter(api => api.category === category);
+      
+      res.setHeader('Content-Type', 'application/json');
+      res.status(200).json({
+        success: true,
+        data: {
+          category: apisData.categories[category],
+          apis: categoryApis,
+          pagination: {
+            total: categoryApis.length,
+            limit: 50,
+            offset: 0,
+            hasMore: false
+          }
+        }
+      });
+      return;
+    } catch (error) {
+      res.setHeader('Content-Type', 'application/json');
+      res.status(500).json({
+        success: false,
+        error: 'Failed to load category data: ' + error.message
+      });
+      return;
+    }
+  }
+
   // APIs endpoint - serve real API data
   if (req.url === '/api/apis' && req.method === 'GET') {
     try {
