@@ -38,7 +38,10 @@ router.get('/categories', (req, res) => {
 router.get('/', (req, res) => {
   try {
     const { category, search, limit = 50, offset = 0 } = req.query;
-    let filteredApis = [...apisData.apis];
+    
+    // Convert apis object to array
+    const apisArray = apisData.apis ? Object.values(apisData.apis) : [];
+    let filteredApis = [...apisArray];
 
     // Filter by category
     if (category && category !== 'all') {

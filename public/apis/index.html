@@ -614,24 +614,24 @@
     <!-- Stats Section -->
     <section class="stats">
         <div class="container">
-            <div class="stats-grid">
-                <div class="stat-item">
-                    <div class="stat-number">10,000+</div>
-                    <div class="stat-label">APIs Available</div>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-number" data-stat="total-apis">10,000+</div>
+                        <div class="stat-label">APIs Available</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" data-stat="total-categories">50+</div>
+                        <div class="stat-label">Categories</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" data-stat="total-reviews">10,000+</div>
+                        <div class="stat-label">Developer Reviews</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" data-stat="uptime">99.9%</div>
+                        <div class="stat-label">Uptime</div>
+                    </div>
                 </div>
-                <div class="stat-item">
-                    <div class="stat-number">50+</div>
-                    <div class="stat-label">Categories</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">10,000+</div>
-                    <div class="stat-label">Developer Reviews</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">99.9%</div>
-                    <div class="stat-label">Uptime</div>
-                </div>
-            </div>
         </div>
     </section>
 
@@ -641,37 +641,37 @@
             <h2 class="section-title">Browse by Category</h2>
             <p class="section-subtitle">Find APIs organized by their primary use case and industry</p>
             <div class="categories-grid">
-                <a href="/apis/category/development" class="category-card">
+                <a href="/apis/category/development" class="category-card" data-category="development">
                     <div class="category-icon">💻</div>
                     <h3>Development</h3>
                     <div class="category-count">152 APIs</div>
                     <p class="category-description">Tools and services for developers, including testing, deployment, and productivity APIs.</p>
                 </a>
-                <a href="/apis/category/games-comics" class="category-card">
+                <a href="/apis/category/games-comics" class="category-card" data-category="games-comics">
                     <div class="category-icon">🎮</div>
                     <h3>Games & Comics</h3>
                     <div class="category-count">102 APIs</div>
                     <p class="category-description">Gaming data, character information, and comic book APIs for entertainment applications.</p>
                 </a>
-                <a href="/apis/category/finance" class="category-card">
+                <a href="/apis/category/finance" class="category-card" data-category="finance">
                     <div class="category-icon">💰</div>
                     <h3>Finance</h3>
                     <div class="category-count">57 APIs</div>
                     <p class="category-description">Financial data, payment processing, and cryptocurrency APIs for fintech applications.</p>
                 </a>
-                <a href="/apis/category/social" class="category-card">
+                <a href="/apis/category/social" class="category-card" data-category="social">
                     <div class="category-icon">👥</div>
                     <h3>Social</h3>
                     <div class="category-count">47 APIs</div>
                     <p class="category-description">Social media integration, user management, and community building APIs.</p>
                 </a>
-                <a href="/apis/category/weather" class="category-card">
+                <a href="/apis/category/weather" class="category-card" data-category="weather">
                     <div class="category-icon">🌤️</div>
                     <h3>Weather</h3>
                     <div class="category-count">35 APIs</div>
                     <p class="category-description">Weather forecasts, climate data, and environmental monitoring APIs.</p>
                 </a>
-                <a href="/apis/category/music" class="category-card">
+                <a href="/apis/category/music" class="category-card" data-category="music">
                     <div class="category-icon">🎵</div>
                     <h3>Music</h3>
                     <div class="category-count">33 APIs</div>
@@ -792,28 +792,50 @@
 
         async function loadAPIs() {
             try {
-                // Load API data from centralized data file
-                const response = await fetch('/apis/data/comprehensive-api-data.json');
+                // Load real API data from the backend
+                const response = await fetch('/api/apis');
                 const data = await response.json();
                 
-                // Convert template data to directory format
-                allAPIs = Object.values(data.apis).map(api => ({
-                    id: api.id,
-                    name: api.name,
-                    description: api.description,
-                    rating: parseFloat(api.stats.find(stat => stat.label === 'Rating')?.value || '4.5'),
-                    reviews: Math.floor(Math.random() * 5000) + 100, // Generate realistic review counts
-                    category: api.category,
-                    features: {
-                        https: true,
-                        cors: true,
-                        free: true, // Most APIs have free tiers
-                        rateLimit: '1000/hour' // Default rate limit
-                    }
-                }));
+                if (data.success && data.data) {
+                    // Use real API data
+                    allAPIs = data.data.map(api => ({
+                        id: api.id,
+                        name: api.name,
+                        description: api.description,
+                        rating: parseFloat(api.rating || '4.5'),
+                        reviews: parseInt(api.reviews || '100'),
+                        category: api.category,
+                        features: {
+                            https: api.https || true,
+                            cors: api.cors || true,
+                            free: api.free || true,
+                            rateLimit: api.rateLimit || '1000/hour'
+                        }
+                    }));
+                } else {
+                    // Fallback to comprehensive data file
+                    const fallbackResponse = await fetch('/apis/data/comprehensive-api-data.json');
+                    const fallbackData = await fallbackResponse.json();
+                    
+                    allAPIs = Object.values(fallbackData.apis).map(api => ({
+                        id: api.id,
+                        name: api.name,
+                        description: api.description,
+                        rating: parseFloat(api.stats.find(stat => stat.label === 'Rating')?.value || '4.5'),
+                        reviews: Math.floor(Math.random() * 5000) + 100,
+                        category: api.category,
+                        features: {
+                            https: true,
+                            cors: true,
+                            free: true,
+                            rateLimit: '1000/hour'
+                        }
+                    }));
+                }
                 
                 filteredAPIs = [...allAPIs];
                 applyFilters();
+                updateStatistics();
             } catch (error) {
                 console.error('Error loading API data:', error);
                 // Fallback to sample data if loading fails
@@ -836,6 +858,51 @@
                 filteredAPIs = [...allAPIs];
                 applyFilters();
             }
+        }
+
+        function updateStatistics() {
+            // Update the statistics with real data
+            const totalAPIs = allAPIs.length;
+            const categories = [...new Set(allAPIs.map(api => api.category))];
+            const totalReviews = allAPIs.reduce((sum, api) => sum + api.reviews, 0);
+            
+            // Update the statistics display
+            const statsElements = {
+                totalAPIs: document.querySelector('[data-stat="total-apis"]'),
+                totalCategories: document.querySelector('[data-stat="total-categories"]'),
+                totalReviews: document.querySelector('[data-stat="total-reviews"]'),
+                uptime: document.querySelector('[data-stat="uptime"]')
+            };
+            
+            if (statsElements.totalAPIs) {
+                statsElements.totalAPIs.textContent = totalAPIs.toLocaleString();
+            }
+            if (statsElements.totalCategories) {
+                statsElements.totalCategories.textContent = categories.length;
+            }
+            if (statsElements.totalReviews) {
+                statsElements.totalReviews.textContent = totalReviews.toLocaleString();
+            }
+            if (statsElements.uptime) {
+                statsElements.uptime.textContent = '99.9%';
+            }
+            
+            // Update category counts
+            const categoryCounts = {};
+            allAPIs.forEach(api => {
+                categoryCounts[api.category] = (categoryCounts[api.category] || 0) + 1;
+            });
+            
+            // Update category display elements
+            Object.entries(categoryCounts).forEach(([category, count]) => {
+                const categoryElement = document.querySelector(`[data-category="${category}"]`);
+                if (categoryElement) {
+                    const countElement = categoryElement.querySelector('.category-count');
+                    if (countElement) {
+                        countElement.textContent = `${count} APIs`;
+                    }
+                }
+            });
         }
 
         function applyFilters() {
