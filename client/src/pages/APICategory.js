@@ -20,7 +20,7 @@ const APICategory = () => {
       setError(null);
       
       // Load category APIs
-      const response = await fetch(`/api/apis/category/${category}`);
+      const response = await fetch(`/api/category/${category}`);
       const data = await response.json();
       
       if (data.success && data.data) {

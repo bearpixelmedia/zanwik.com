@@ -440,7 +440,7 @@
 
         async function loadAPIs() {
             try {
-                const response = await fetch('/api/apis/category/social');
+                const response = await fetch('/api/category/social');
                 const data = await response.json();
                 
                 if (data.success) {

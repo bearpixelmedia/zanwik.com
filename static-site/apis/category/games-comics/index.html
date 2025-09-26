@@ -660,7 +660,12 @@
                 }
 
                 // Fetch APIs
-                const response = await fetch(`/api/apis/category/games-comics?${params}`);
+                const response = await fetch(`/api/category/games-comics?${params}`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
                 const data = await response.json();
 
                 if (data.success) {
@@ -671,11 +676,73 @@
                 }
             } catch (error) {
                 console.error('Error loading APIs:', error);
-                apisGrid.innerHTML = '<div class="loading"><p>Error loading APIs. Please try again.</p></div>';
+                
+                // Fallback to sample data if API fails
+                console.log('Falling back to sample data due to API error');
+                try {
+                    loadSampleAPIs();
+                } catch (fallbackError) {
+                    console.error('Fallback also failed:', fallbackError);
+                    apisGrid.innerHTML = `
+                        <div class="loading">
+                            <p>Error loading APIs. Please try again.</p>
+                            <p style="font-size: 0.9rem; color: #666; margin-top: 0.5rem;">
+                                Error: ${error.message || 'Unknown error'}
+                            </p>
+                        </div>
+                    `;
+                }
             } finally {
                 loadingIndicator.style.display = 'none';
                 apisGrid.style.display = 'grid';
             }
+        }
+
+        // Fallback function to load sample data
+        function loadSampleAPIs() {
+            // Filter APIs based on search and filter
+            let filteredAPIs = sampleAPIs;
+
+            // Apply search filter
+            if (currentSearch) {
+                filteredAPIs = filteredAPIs.filter(api => 
+                    api.name.toLowerCase().includes(currentSearch.toLowerCase()) ||
+                    api.description.toLowerCase().includes(currentSearch.toLowerCase())
+                );
+            }
+
+            // Apply category filter
+            if (currentFilter !== 'all') {
+                filteredAPIs = filteredAPIs.filter(api => {
+                    switch (currentFilter) {
+                        case 'free':
+                            return api.features.free;
+                        case 'paid':
+                            return !api.features.free;
+                        case 'https':
+                            return api.features.https;
+                        case 'cors':
+                            return api.features.cors;
+                        default:
+                            return true;
+                    }
+                });
+            }
+
+            // Calculate pagination
+            const totalAPIs = filteredAPIs.length;
+            const totalPages = Math.ceil(totalAPIs / itemsPerPage);
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const paginatedAPIs = filteredAPIs.slice(startIndex, endIndex);
+
+            // Display APIs
+            displayAPIs(paginatedAPIs);
+            displayPagination({
+                total: totalAPIs,
+                currentPage: currentPage,
+                totalPages: totalPages
+            });
         }
 
         // Display APIs
