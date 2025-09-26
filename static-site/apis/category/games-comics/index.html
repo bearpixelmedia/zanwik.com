@@ -660,7 +660,7 @@
                 }
 
                 // Fetch APIs
-                const response = await fetch(`/api/category/games-comics?${params}`);
+                const response = await fetch(`http://localhost:8080/api/apis/category/games-comics?${params}`);
                 
                 if (!response.ok) {
                     throw new Error(`HTTP ${response.status}: ${response.statusText}`);

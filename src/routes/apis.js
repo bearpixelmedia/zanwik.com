@@ -39,8 +39,8 @@ router.get('/', (req, res) => {
   try {
     const { category, search, limit = 50, offset = 0 } = req.query;
     
-    // Convert apis object to array
-    const apisArray = apisData.apis ? Object.values(apisData.apis) : [];
+    // Convert apis object to array (apis is already an array)
+    const apisArray = apisData.apis || [];
     let filteredApis = [...apisArray];
 
     // Filter by category
@@ -86,7 +86,7 @@ router.get('/', (req, res) => {
 router.get('/:id', (req, res) => {
   try {
     const { id } = req.params;
-    const api = apisData.apis.find(api => api.id === id);
+    const api = (apisData.apis || []).find(api => api.id === id);
 
     if (!api) {
       return res.status(404).json({
@@ -121,8 +121,8 @@ router.get('/category/:category', (req, res) => {
       });
     }
 
-    // Convert apis object to array
-    const apisArray = apisData.apis ? Object.values(apisData.apis) : [];
+    // Convert apis object to array (apis is already an array)
+    const apisArray = apisData.apis || [];
     const categoryApis = apisArray.filter(api => api.category === category);
     const total = categoryApis.length;
     const paginatedApis = categoryApis.slice(parseInt(offset), parseInt(offset) + parseInt(limit));
@@ -155,7 +155,7 @@ router.get('/search/:query', (req, res) => {
     const { limit = 50, offset = 0 } = req.query;
 
     const searchTerm = query.toLowerCase();
-    const searchResults = apisData.apis.filter(api => 
+    const searchResults = (apisData.apis || []).filter(api => 
       api.name.toLowerCase().includes(searchTerm) ||
       api.description.toLowerCase().includes(searchTerm) ||
       api.tags.some(tag => tag.toLowerCase().includes(searchTerm))
@@ -188,7 +188,7 @@ router.get('/search/:query', (req, res) => {
 // Get featured APIs
 router.get('/featured/list', (req, res) => {
   try {
-    const featuredApis = apisData.apis
+    const featuredApis = (apisData.apis || [])
       .filter(api => api.rating >= 4.0)
       .sort((a, b) => b.rating - a.rating)
       .slice(0, 6);
@@ -209,15 +209,15 @@ router.get('/featured/list', (req, res) => {
 router.get('/stats/overview', (req, res) => {
   try {
     const stats = {
-      totalApis: apisData.apis.length,
-      totalCategories: Object.keys(apisData.categories).length,
-      totalReviews: apisData.apis.reduce((sum, api) => sum + api.reviews, 0),
-      averageRating: apisData.apis.reduce((sum, api) => sum + api.rating, 0) / apisData.apis.length,
-      freeApis: apisData.apis.filter(api => api.pricing.free).length,
-      paidApis: apisData.apis.filter(api => api.pricing.paid).length,
-      categoryBreakdown: Object.keys(apisData.categories).map(category => ({
+      totalApis: (apisData.apis || []).length,
+      totalCategories: Object.keys(apisData.categories || {}).length,
+      totalReviews: (apisData.apis || []).reduce((sum, api) => sum + api.reviews, 0),
+      averageRating: (apisData.apis || []).reduce((sum, api) => sum + api.rating, 0) / (apisData.apis || []).length,
+      freeApis: (apisData.apis || []).filter(api => api.pricing.free).length,
+      paidApis: (apisData.apis || []).filter(api => api.pricing.paid).length,
+      categoryBreakdown: Object.keys(apisData.categories || {}).map(category => ({
         category,
-        count: apisData.apis.filter(api => api.category === category).length
+        count: (apisData.apis || []).filter(api => api.category === category).length
       }))
     };
 
@@ -239,7 +239,7 @@ router.post('/test/:id', async (req, res) => {
     const { id } = req.params;
     const { endpoint, method = 'GET', params = {}, headers = {}, body = null } = req.body;
 
-    const api = apisData.apis.find(api => api.id === id);
+    const api = (apisData.apis || []).find(api => api.id === id);
     if (!api) {
       return res.status(404).json({
         success: false,
