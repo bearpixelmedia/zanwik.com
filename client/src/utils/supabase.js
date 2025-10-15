@@ -2,11 +2,9 @@ import { createClient } from '@supabase/supabase-js';
 
 // Environment variables for the new Supabase database
 const supabaseUrl =
-  process.env.REACT_APP_SUPABASE_URL ||
-  'https://your-project.supabase.co'; // Placeholder URL
+  process.env.REACT_APP_SUPABASE_URL || 'https://your-project.supabase.co'; // Placeholder URL
 const supabaseAnonKey =
-  process.env.REACT_APP_SUPABASE_ANON_KEY ||
-  'your-anon-key'; // Placeholder key
+  process.env.REACT_APP_SUPABASE_ANON_KEY || 'your-anon-key'; // Placeholder key
 
 // Clear any existing authentication data
 export const clearAuthData = () => {
@@ -15,7 +13,7 @@ export const clearAuthData = () => {
     localStorage.removeItem('sb-fxzwnjmzhdynsatvakim-auth-token');
     localStorage.removeItem('supabase.auth.token');
     localStorage.removeItem('supabase.auth.session');
-    
+
     // Clear any other auth-related data
     const keys = Object.keys(localStorage);
     keys.forEach(key => {
@@ -23,7 +21,7 @@ export const clearAuthData = () => {
         localStorage.removeItem(key);
       }
     });
-    
+
     console.log('Cleared authentication data');
   } catch (error) {
     console.warn('Failed to clear auth data:', error);
@@ -32,28 +30,32 @@ export const clearAuthData = () => {
 
 // Check if Supabase is properly configured
 const isSupabaseConfigured = () => {
-  return supabaseUrl !== 'https://your-project.supabase.co' && 
-         supabaseAnonKey !== 'your-anon-key' &&
-         supabaseUrl.includes('supabase.co');
+  return (
+    supabaseUrl !== 'https://your-project.supabase.co' &&
+    supabaseAnonKey !== 'your-anon-key' &&
+    supabaseUrl.includes('supabase.co')
+  );
 };
 
 // Create Supabase client with enhanced configuration
-export const supabase = isSupabaseConfigured() ? createClient(supabaseUrl, supabaseAnonKey, {
-  auth: {
-    autoRefreshToken: false, // Disable auto refresh to prevent errors
-    persistSession: false,   // Disable session persistence
-    detectSessionInUrl: false, // Disable URL session detection
-    flowType: 'pkce',
-  },
-  db: {
-    schema: 'public',
-  },
-  global: {
-    headers: {
-      'X-Client-Info': 'zanwik-dashboard',
-    },
-  },
-}) : null;
+export const supabase = isSupabaseConfigured()
+  ? createClient(supabaseUrl, supabaseAnonKey, {
+      auth: {
+        autoRefreshToken: false, // Disable auto refresh to prevent errors
+        persistSession: false, // Disable session persistence
+        detectSessionInUrl: false, // Disable URL session detection
+        flowType: 'pkce',
+      },
+      db: {
+        schema: 'public',
+      },
+      global: {
+        headers: {
+          'X-Client-Info': 'zanwik-dashboard',
+        },
+      },
+    })
+  : null;
 
 // Test database connection
 export const testConnection = async () => {
@@ -61,7 +63,7 @@ export const testConnection = async () => {
     console.warn('Supabase is not configured. Skipping connection test.');
     return false;
   }
-  
+
   try {
     const { error } = await supabase.from('projects').select('count').limit(1);
 
@@ -85,7 +87,7 @@ export const auth = {
     if (!supabase) {
       throw new Error('Supabase is not configured');
     }
-    
+
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
         email,

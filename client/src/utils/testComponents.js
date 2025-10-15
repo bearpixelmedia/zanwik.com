@@ -7,30 +7,32 @@ export const testComponentImports = () => {
     // Test AnalyticsProvider
     const { AnalyticsProvider } = require('../components/AnalyticsProvider');
     console.log('✅ AnalyticsProvider imported successfully');
-    
+
     // Test Blog components
     const Blog = require('../pages/Blog').default;
     const BlogPost = require('../pages/BlogPost').default;
     console.log('✅ Blog components imported successfully');
-    
+
     // Test Marketing components
     const GoogleAdsManager = require('../components/GoogleAdsManager').default;
-    const SocialMediaManager = require('../components/SocialMediaManager').default;
-    const PerformanceMonitor = require('../components/PerformanceMonitor').default;
+    const SocialMediaManager =
+      require('../components/SocialMediaManager').default;
+    const PerformanceMonitor =
+      require('../components/PerformanceMonitor').default;
     console.log('✅ Marketing components imported successfully');
-    
+
     // Test Analytics utilities
     const analytics = require('./analytics');
     console.log('✅ Analytics utilities imported successfully');
-    
+
     // Test Performance utilities
     const performanceOptimizer = require('./performanceOptimizer');
     console.log('✅ Performance utilities imported successfully');
-    
+
     // Test StructuredData component
     const StructuredData = require('../components/StructuredData').default;
     console.log('✅ StructuredData component imported successfully');
-    
+
     return true;
   } catch (error) {
     console.error('❌ Component import error:', error);
@@ -42,19 +44,19 @@ export const testComponentImports = () => {
 export const testRoutes = () => {
   const routes = [
     '/bpm-login',
-    '/dashboard', 
+    '/dashboard',
     '/blog',
     '/blog/test-post',
     '/ads',
     '/social',
-    '/monitor'
+    '/monitor',
   ];
-  
+
   console.log('🔗 Available routes:');
   routes.forEach(route => {
     console.log(`  - ${route}`);
   });
-  
+
   return routes;
 };
 
@@ -62,7 +64,7 @@ export const testRoutes = () => {
 export const testAnalytics = () => {
   try {
     const analytics = require('./analytics');
-    
+
     const functions = [
       'initGA',
       'trackPageView',
@@ -82,9 +84,9 @@ export const testAnalytics = () => {
       'trackDownload',
       'trackSocialClick',
       'trackAPIHealthCheck',
-      'trackUserJourney'
+      'trackUserJourney',
     ];
-    
+
     console.log('📊 Analytics functions available:');
     functions.forEach(func => {
       if (typeof analytics[func] === 'function') {
@@ -93,7 +95,7 @@ export const testAnalytics = () => {
         console.log(`  ❌ ${func} - Missing or not a function`);
       }
     });
-    
+
     return true;
   } catch (error) {
     console.error('❌ Analytics test error:', error);
@@ -105,7 +107,7 @@ export const testAnalytics = () => {
 export const testPerformance = () => {
   try {
     const performance = require('./performanceOptimizer');
-    
+
     const functions = [
       'lazyLoadImages',
       'preloadCriticalResources',
@@ -117,9 +119,9 @@ export const testPerformance = () => {
       'optimizeImage',
       'inlineCriticalCSS',
       'performanceMonitor',
-      'initPerformanceOptimizations'
+      'initPerformanceOptimizations',
     ];
-    
+
     console.log('⚡ Performance functions available:');
     functions.forEach(func => {
       if (typeof performance[func] === 'function') {
@@ -128,7 +130,7 @@ export const testPerformance = () => {
         console.log(`  ❌ ${func} - Missing or not a function`);
       }
     });
-    
+
     return true;
   } catch (error) {
     console.error('❌ Performance test error:', error);
@@ -140,14 +142,14 @@ export const testPerformance = () => {
 export const testSEO = () => {
   try {
     const seo = require('../utils/sitemapGenerator');
-    
+
     const functions = [
       'generateSitemap',
       'generateRobotsTxt',
       'generateSitemapIndex',
-      'writeSitemapFiles'
+      'writeSitemapFiles',
     ];
-    
+
     console.log('🔍 SEO functions available:');
     functions.forEach(func => {
       if (typeof seo[func] === 'function') {
@@ -156,7 +158,7 @@ export const testSEO = () => {
         console.log(`  ❌ ${func} - Missing or not a function`);
       }
     });
-    
+
     return true;
   } catch (error) {
     console.error('❌ SEO test error:', error);
@@ -167,15 +169,15 @@ export const testSEO = () => {
 // Run all tests
 export const runAllTests = () => {
   console.log('🧪 Running component tests...\n');
-  
+
   const results = {
     components: testComponentImports(),
     routes: testRoutes(),
     analytics: testAnalytics(),
     performance: testPerformance(),
-    seo: testSEO()
+    seo: testSEO(),
   };
-  
+
   console.log('\n📋 Test Results Summary:');
   Object.entries(results).forEach(([test, result]) => {
     if (typeof result === 'boolean') {
@@ -184,13 +186,14 @@ export const runAllTests = () => {
       console.log(`  ✅ ${test} - ${result.length} items`);
     }
   });
-  
-  const allPassed = Object.values(results).every(result => 
-    typeof result === 'boolean' ? result : true
+
+  const allPassed = Object.values(results).every(result =>
+    typeof result === 'boolean' ? result : true,
   );
-  
-  console.log(`\n${allPassed ? '🎉 All tests passed!' : '⚠️ Some tests failed!'}`);
-  
+
+  console.log(
+    `\n${allPassed ? '🎉 All tests passed!' : '⚠️ Some tests failed!'}`,
+  );
   return allPassed;
 };
 
@@ -201,5 +204,5 @@ export default {
   testAnalytics,
   testPerformance,
   testSEO,
-  runAllTests
+  runAllTests,
 };

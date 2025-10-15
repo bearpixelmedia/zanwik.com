@@ -1,6 +1,5 @@
 import React from 'react';
-import { useParams } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import StructuredData from '../components/StructuredData';
 
 // Import blog post components
@@ -15,7 +14,7 @@ const BlogPost = () => {
   const blogPostComponents = {
     'api-integration-guide-2024': APIIntegrationGuide2024,
     'top-10-apis-startup-should-know': Top10APIsStartup,
-    'api-security-best-practices': APISecurityBestPractices
+    'api-security-best-practices': APISecurityBestPractices,
   };
 
   // If it's a new blog post component, render it
@@ -27,7 +26,7 @@ const BlogPost = () => {
   // Mock blog post data - in real app, this would come from API
   const blogPosts = {
     'complete-guide-api-integration-entrepreneurs': {
-      title: "The Complete Guide to API Integration for Entrepreneurs",
+      title: 'The Complete Guide to API Integration for Entrepreneurs',
       content: `
         <h2>Introduction</h2>
         <p>API integration is crucial for modern businesses. In this comprehensive guide, we'll walk you through everything you need to know about integrating APIs into your applications.</p>
@@ -88,13 +87,13 @@ const BlogPost = () => {
         <h2>Conclusion</h2>
         <p>API integration is a powerful tool for entrepreneurs. By following these guidelines, you can successfully integrate APIs into your applications and accelerate your business growth.</p>
       `,
-      date: "2024-01-15",
-      readTime: "8 min read",
-      category: "Tutorial",
-      author: "Zanwik Team"
+      date: '2024-01-15',
+      readTime: '8 min read',
+      category: 'Tutorial',
+      author: 'Zanwik Team',
     },
     'top-10-apis-startup-should-know': {
-      title: "Top 10 APIs Every Startup Should Know About",
+      title: 'Top 10 APIs Every Startup Should Know About',
       content: `
         <h2>Introduction</h2>
         <p>As a startup, choosing the right APIs can make or break your product. Here are the top 10 APIs that every startup should consider integrating.</p>
@@ -132,98 +131,112 @@ const BlogPost = () => {
         <h2>Conclusion</h2>
         <p>These APIs provide the foundation for most modern applications. Choose based on your specific needs and start integrating them into your startup's tech stack.</p>
       `,
-      date: "2024-01-12",
-      readTime: "6 min read",
-      category: "List",
-      author: "Zanwik Team"
-    }
+      date: '2024-01-12',
+      readTime: '6 min read',
+      category: 'List',
+      author: 'Zanwik Team',
+    },
   };
 
   const post = blogPosts[slug] || {
-    title: "Post Not Found",
+    title: 'Post Not Found',
     content: "<p>The blog post you're looking for doesn't exist.</p>",
-    date: "",
-    readTime: "",
-    category: "",
-    author: ""
+    date: '',
+    readTime: '',
+    category: '',
+    author: '',
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className='min-h-screen bg-gray-50'>
       {/* Structured Data for Article */}
-      <StructuredData 
-        type="article" 
+      <StructuredData
+        type='article'
         data={{
           title: post.title,
           description: post.content.replace(/<[^>]*>/g, '').substring(0, 160),
           datePublished: post.date,
           dateModified: post.date,
-          image: "https://www.zanwik.com/zanwik-icon.svg"
+          image: 'https://www.zanwik.com/zanwik-icon.svg',
         }}
       />
-      
+
       {/* Header */}
-      <div className="bg-white shadow-sm">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <nav className="mb-6">
-            <Link to="/blog" className="text-blue-600 hover:text-blue-800">
+      <div className='bg-white shadow-sm'>
+        <div className='max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8'>
+          <nav className='mb-6'>
+            <Link to='/blog' className='text-blue-600 hover:text-blue-800'>
               ← Back to Blog
             </Link>
           </nav>
-          
-          <div className="mb-6">
-            <span className="bg-blue-100 text-blue-800 text-sm font-medium px-2.5 py-0.5 rounded">
+
+          <div className='mb-6'>
+            <span className='bg-blue-100 text-blue-800 text-sm font-medium px-2.5 py-0.5 rounded'>
               {post.category}
             </span>
-            <span className="text-gray-500 text-sm ml-3">{post.readTime}</span>
+            <span className='text-gray-500 text-sm ml-3'>{post.readTime}</span>
           </div>
-          
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+
+          <h1 className='text-4xl font-bold text-gray-900 mb-4'>
             {post.title}
           </h1>
-          
-          <div className="flex items-center text-gray-600">
+
+          <div className='flex items-center text-gray-600'>
             <span>By {post.author}</span>
-            <span className="mx-2">•</span>
+            <span className='mx-2'>•</span>
             <span>{post.date}</span>
           </div>
         </div>
       </div>
 
       {/* Content */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <article 
-          className="prose prose-lg max-w-none"
+      <div className='max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12'>
+        <article
+          className='prose prose-lg max-w-none'
           dangerouslySetInnerHTML={{ __html: post.content }}
         />
-        
+
         {/* Author Bio */}
-        <div className="mt-12 bg-gray-100 rounded-lg p-6">
-          <h3 className="text-lg font-semibold mb-2">About the Author</h3>
-          <p className="text-gray-600">
-            The Zanwik team consists of experienced developers and entrepreneurs who are passionate about helping others succeed with API integration and business automation.
+        <div className='mt-12 bg-gray-100 rounded-lg p-6'>
+          <h3 className='text-lg font-semibold mb-2'>About the Author</h3>
+          <p className='text-gray-600'>
+            The Zanwik team consists of experienced developers and entrepreneurs
+            who are passionate about helping others succeed with API integration
+            and business automation.
           </p>
         </div>
-        
+
         {/* Related Posts */}
-        <div className="mt-12">
-          <h3 className="text-2xl font-bold mb-6">Related Articles</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h4 className="text-lg font-semibold mb-2">
-                <Link to="/blog/api-security-best-practices" className="hover:text-blue-600">
+        <div className='mt-12'>
+          <h3 className='text-2xl font-bold mb-6'>Related Articles</h3>
+          <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+            <div className='bg-white rounded-lg shadow-md p-6'>
+              <h4 className='text-lg font-semibold mb-2'>
+                <Link
+                  to='/blog/api-security-best-practices'
+                  className='hover:text-blue-600'
+                >
                   API Security Best Practices
                 </Link>
               </h4>
-              <p className="text-gray-600 text-sm">Essential security practices for API integration including authentication and data protection.</p>
+              <p className='text-gray-600 text-sm'>
+                Essential security practices for API integration including
+                authentication and data protection.
+              </p>
             </div>
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h4 className="text-lg font-semibold mb-2">
-                <Link to="/blog/how-to-test-apis-effectively" className="hover:text-blue-600">
+            <div className='bg-white rounded-lg shadow-md p-6'>
+              <h4 className='text-lg font-semibold mb-2'>
+                <Link
+                  to='/blog/how-to-test-apis-effectively'
+                  className='hover:text-blue-600'
+                >
                   How to Test APIs Effectively
                 </Link>
               </h4>
-              <p className="text-gray-600 text-sm">Master API testing with our comprehensive guide covering unit and integration testing.</p>
+              <p className='text-gray-600 text-sm'>
+                Master API testing with our comprehensive guide covering unit
+                and integration testing.
+              </p>
             </div>
           </div>
         </div>

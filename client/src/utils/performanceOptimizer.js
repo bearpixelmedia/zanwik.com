@@ -21,10 +21,7 @@ export const lazyLoadImages = () => {
 
 // Preload critical resources
 export const preloadCriticalResources = () => {
-  const criticalResources = [
-    '/zanwik-icon.svg',
-    '/fonts/inter.woff2'
-  ];
+  const criticalResources = ['/zanwik-icon.svg', '/fonts/inter.woff2'];
 
   criticalResources.forEach(resource => {
     const link = document.createElement('link');
@@ -46,7 +43,7 @@ const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 export const cachedApiCall = async (url, options = {}) => {
   const cacheKey = `${url}_${JSON.stringify(options)}`;
   const cached = apiCache.get(cacheKey);
-  
+
   if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
     return cached.data;
   }
@@ -54,12 +51,12 @@ export const cachedApiCall = async (url, options = {}) => {
   try {
     const response = await fetch(url, options);
     const data = await response.json();
-    
+
     apiCache.set(cacheKey, {
       data,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     });
-    
+
     return data;
   } catch (error) {
     console.error('API call failed:', error);
@@ -83,27 +80,28 @@ export const debounce = (func, wait) => {
 // Throttle function for scroll events
 export const throttle = (func, limit) => {
   let inThrottle;
-  return function() {
+  return function () {
     const args = arguments;
     const context = this;
     if (!inThrottle) {
       func.apply(context, args);
       inThrottle = true;
-      setTimeout(() => inThrottle = false, limit);
+      setTimeout(() => (inThrottle = false), limit);
     }
   };
 };
 
 // Optimize bundle size by code splitting
-export const loadComponent = (importFunc) => {
-  return React.lazy(() => importFunc());
+export const loadComponent = importFunc => {
+  return importFunc();
 };
 
 // Service Worker registration for caching
 export const registerServiceWorker = () => {
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/sw.js')
+      navigator.serviceWorker
+        .register('/sw.js')
         .then(registration => {
           console.log('SW registered: ', registration);
         })
@@ -118,7 +116,9 @@ export const registerServiceWorker = () => {
 export const optimizeImage = (src, width, height, quality = 80) => {
   // For Vercel, we can use their image optimization
   if (src.startsWith('/')) {
-    return `/_vercel/image?url=${encodeURIComponent(src)}&w=${width}&h=${height}&q=${quality}`;
+    return `/_vercel/image?url=${encodeURIComponent(
+      src,
+    )}&w=${width}&h=${height}&q=${quality}`;
   }
   return src;
 };
@@ -131,7 +131,7 @@ export const inlineCriticalCSS = () => {
     .btn { padding: 12px 24px; border: none; border-radius: 8px; cursor: pointer; }
     .btn-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
   `;
-  
+
   const style = document.createElement('style');
   style.textContent = criticalCSS;
   document.head.appendChild(style);
@@ -139,48 +139,52 @@ export const inlineCriticalCSS = () => {
 
 // Performance monitoring
 export const performanceMonitor = {
-  mark: (name) => {
+  mark: name => {
     if ('performance' in window && 'mark' in performance) {
       performance.mark(name);
     }
   },
-  
+
   measure: (name, startMark, endMark) => {
     if ('performance' in window && 'measure' in performance) {
       performance.measure(name, startMark, endMark);
     }
   },
-  
+
   getMetrics: () => {
     if ('performance' in window && 'getEntriesByType' in performance) {
       const navigation = performance.getEntriesByType('navigation')[0];
       const paint = performance.getEntriesByType('paint');
-      
+
       return {
         loadTime: navigation.loadEventEnd - navigation.loadEventStart,
-        domContentLoaded: navigation.domContentLoadedEventEnd - navigation.domContentLoadedEventStart,
+        domContentLoaded:
+          navigation.domContentLoadedEventEnd -
+          navigation.domContentLoadedEventStart,
         firstPaint: paint.find(p => p.name === 'first-paint')?.startTime,
-        firstContentfulPaint: paint.find(p => p.name === 'first-contentful-paint')?.startTime
+        firstContentfulPaint: paint.find(
+          p => p.name === 'first-contentful-paint',
+        )?.startTime,
       };
     }
     return null;
-  }
+  },
 };
 
 // Initialize performance optimizations
 export const initPerformanceOptimizations = () => {
   // Preload critical resources
   preloadCriticalResources();
-  
+
   // Inline critical CSS
   inlineCriticalCSS();
-  
+
   // Register service worker
   registerServiceWorker();
-  
+
   // Mark performance milestones
   performanceMonitor.mark('app-start');
-  
+
   // Lazy load images after initial render
   setTimeout(lazyLoadImages, 100);
 };

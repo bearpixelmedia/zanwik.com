@@ -41,7 +41,7 @@ export const AnalyticsProvider = ({ children }) => {
     trackEvent('conversion', 'Business', conversionType, value);
   };
 
-  const trackBlogView = (postTitle) => {
+  const trackBlogView = postTitle => {
     trackEvent('view_item', 'Blog', postTitle);
   };
 
@@ -108,7 +108,7 @@ export const AnalyticsProvider = ({ children }) => {
     trackDownload,
     trackSocialClick,
     trackAPIHealthCheck,
-    trackUserJourney
+    trackUserJourney,
   };
 
   return (

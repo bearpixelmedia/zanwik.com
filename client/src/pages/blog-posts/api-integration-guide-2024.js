@@ -4,93 +4,115 @@ import StructuredData from '../../components/StructuredData';
 
 const APIIntegrationGuide2024 = () => {
   const postData = {
-    title: "How to Integrate APIs in 2024: Complete Developer Guide",
-    slug: "api-integration-guide-2024",
-    date: "2024-01-20",
-    readTime: "12 min read",
-    category: "Tutorial",
-    author: "Zanwik Team"
+    title: 'How to Integrate APIs in 2024: Complete Developer Guide',
+    slug: 'api-integration-guide-2024',
+    date: '2024-01-20',
+    readTime: '12 min read',
+    category: 'Tutorial',
+    author: 'Zanwik Team',
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className='min-h-screen bg-gray-50'>
       {/* Structured Data for Article */}
-      <StructuredData 
-        type="article" 
+      <StructuredData
+        type='article'
         data={{
           title: postData.title,
-          description: "Learn how to integrate APIs in 2024 with our comprehensive developer guide. Includes authentication, error handling, testing, and best practices.",
+          description:
+            'Learn how to integrate APIs in 2024 with our comprehensive developer guide. Includes authentication, error handling, testing, and best practices.',
           datePublished: postData.date,
           dateModified: postData.date,
-          image: "https://www.zanwik.com/zanwik-icon.svg"
+          image: 'https://www.zanwik.com/zanwik-icon.svg',
         }}
       />
-      
+
       {/* Header */}
-      <div className="bg-white shadow-sm">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <nav className="mb-6">
-            <Link to="/blog" className="text-blue-600 hover:text-blue-800">
+      <div className='bg-white shadow-sm'>
+        <div className='max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8'>
+          <nav className='mb-6'>
+            <Link to='/blog' className='text-blue-600 hover:text-blue-800'>
               ← Back to Blog
             </Link>
           </nav>
-          
-          <div className="mb-6">
-            <span className="bg-blue-100 text-blue-800 text-sm font-medium px-2.5 py-0.5 rounded">
+
+          <div className='mb-6'>
+            <span className='bg-blue-100 text-blue-800 text-sm font-medium px-2.5 py-0.5 rounded'>
               {postData.category}
             </span>
-            <span className="text-gray-500 text-sm ml-3">{postData.readTime}</span>
+            <span className='text-gray-500 text-sm ml-3'>
+              {postData.readTime}
+            </span>
           </div>
-          
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+          <h1 className='text-4xl font-bold text-gray-900 mb-4'>
             {postData.title}
           </h1>
-          
-          <div className="flex items-center text-gray-600">
+
+          <div className='flex items-center text-gray-600'>
             <span>By {postData.author}</span>
-            <span className="mx-2">•</span>
+            <span className='mx-2'>•</span>
             <span>{postData.date}</span>
           </div>
         </div>
       </div>
 
       {/* Content */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <article className="prose prose-lg max-w-none">
-          <p className="text-xl text-gray-600 mb-8">
-            API integration is the backbone of modern applications. In 2024, with the rise of microservices, 
-            cloud computing, and AI-powered tools, knowing how to properly integrate APIs has become more 
-            crucial than ever. This comprehensive guide will walk you through everything you need to know.
+      <div className='max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12'>
+        <article className='prose prose-lg max-w-none'>
+          <p className='text-xl text-gray-600 mb-8'>
+            API integration is the backbone of modern applications. In 2024,
+            with the rise of microservices, cloud computing, and AI-powered
+            tools, knowing how to properly integrate APIs has become more
+            crucial than ever. This comprehensive guide will walk you through
+            everything you need to know.
           </p>
 
           <h2>Table of Contents</h2>
           <ul>
-            <li><a href="#what-is-api-integration">What is API Integration?</a></li>
-            <li><a href="#choosing-the-right-api">Choosing the Right API</a></li>
-            <li><a href="#authentication-methods">Authentication Methods</a></li>
-            <li><a href="#making-api-calls">Making API Calls</a></li>
-            <li><a href="#error-handling">Error Handling</a></li>
-            <li><a href="#testing-apis">Testing APIs</a></li>
-            <li><a href="#best-practices">Best Practices</a></li>
-            <li><a href="#common-pitfalls">Common Pitfalls to Avoid</a></li>
+            <li>
+              <a href='#what-is-api-integration'>What is API Integration?</a>
+            </li>
+            <li>
+              <a href='#choosing-the-right-api'>Choosing the Right API</a>
+            </li>
+            <li>
+              <a href='#authentication-methods'>Authentication Methods</a>
+            </li>
+            <li>
+              <a href='#making-api-calls'>Making API Calls</a>
+            </li>
+            <li>
+              <a href='#error-handling'>Error Handling</a>
+            </li>
+            <li>
+              <a href='#testing-apis'>Testing APIs</a>
+            </li>
+            <li>
+              <a href='#best-practices'>Best Practices</a>
+            </li>
+            <li>
+              <a href='#common-pitfalls'>Common Pitfalls to Avoid</a>
+            </li>
           </ul>
 
-          <h2 id="what-is-api-integration">What is API Integration?</h2>
+          <h2 id='what-is-api-integration'>What is API Integration?</h2>
           <p>
-            API integration is the process of connecting different software applications through their 
-            Application Programming Interfaces (APIs) to share data and functionality. Think of APIs as 
-            the "waiters" in a restaurant - they take your order (request) to the kitchen (server) and 
-            bring back your food (response).
+            API integration is the process of connecting different software
+            applications through their Application Programming Interfaces (APIs)
+            to share data and functionality. Think of APIs as the "waiters" in a
+            restaurant - they take your order (request) to the kitchen (server)
+            and bring back your food (response).
           </p>
 
-          <div className="bg-blue-50 border-l-4 border-blue-400 p-4 my-6">
-            <p className="text-blue-800">
-              <strong>Pro Tip:</strong> APIs allow you to leverage existing services instead of building 
-              everything from scratch, saving time and resources while focusing on your core business logic.
+          <div className='bg-blue-50 border-l-4 border-blue-400 p-4 my-6'>
+            <p className='text-blue-800'>
+              <strong>Pro Tip:</strong> APIs allow you to leverage existing
+              services instead of building everything from scratch, saving time
+              and resources while focusing on your core business logic.
             </p>
           </div>
 
-          <h2 id="choosing-the-right-api">Choosing the Right API</h2>
+          <h2 id='choosing-the-right-api'>Choosing the Right API</h2>
           <p>Before integrating any API, consider these factors:</p>
 
           <h3>1. Documentation Quality</h3>
@@ -120,22 +142,25 @@ const APIIntegrationGuide2024 = () => {
             <li>Hidden costs or overage fees</li>
           </ul>
 
-          <h2 id="authentication-methods">Authentication Methods</h2>
+          <h2 id='authentication-methods'>Authentication Methods</h2>
           <p>Most APIs require authentication. Here are the common methods:</p>
 
           <h3>1. API Keys</h3>
           <p>Simple but less secure. Include in headers or query parameters:</p>
-          <pre><code>{`// Using fetch with API key
+          <pre>
+            <code>{`// Using fetch with API key
 const response = await fetch('https://api.example.com/data', {
   headers: {
     'Authorization': 'Bearer YOUR_API_KEY',
     'Content-Type': 'application/json'
   }
-});`}</code></pre>
+});`}</code>
+          </pre>
 
           <h3>2. OAuth 2.0</h3>
           <p>More secure, industry standard. Here's a basic implementation:</p>
-          <pre><code>{`// OAuth 2.0 flow
+          <pre>
+            <code>{`// OAuth 2.0 flow
 const authUrl = 'https://api.example.com/oauth/authorize?' + 
   'client_id=YOUR_CLIENT_ID&' +
   'redirect_uri=YOUR_REDIRECT_URI&' +
@@ -147,23 +172,27 @@ const tokenResponse = await fetch('https://api.example.com/oauth/token', {
   method: 'POST',
   headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
   body: 'grant_type=authorization_code&code=' + code + '&client_id=' + clientId
-});`}</code></pre>
+});`}</code>
+          </pre>
 
           <h3>3. JWT Tokens</h3>
           <p>Self-contained tokens with expiration:</p>
-          <pre><code>{`// Using JWT token
+          <pre>
+            <code>{`// Using JWT token
 const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...';
 const response = await fetch('https://api.example.com/protected', {
   headers: {
     'Authorization': 'Bearer ' + token
   }
-});`}</code></pre>
+});`}</code>
+          </pre>
 
-          <h2 id="making-api-calls">Making API Calls</h2>
+          <h2 id='making-api-calls'>Making API Calls</h2>
           <p>Here's how to make robust API calls in different scenarios:</p>
 
           <h3>Basic GET Request</h3>
-          <pre><code>{`async function fetchUserData(userId) {
+          <pre>
+            <code>{`async function fetchUserData(userId) {
   try {
     const response = await fetch('https://api.example.com/users/' + userId + '', {
       method: 'GET',
@@ -183,10 +212,12 @@ const response = await fetch('https://api.example.com/protected', {
     console.error('Error fetching user data:', error);
     throw error;
   }
-}`}</code></pre>
+}`}</code>
+          </pre>
 
           <h3>POST Request with Data</h3>
-          <pre><code>{`async function createUser(userData) {
+          <pre>
+            <code>{`async function createUser(userData) {
   try {
     const response = await fetch('https://api.example.com/users', {
       method: 'POST',
@@ -207,12 +238,14 @@ const response = await fetch('https://api.example.com/protected', {
     console.error('Error creating user:', error);
     throw error;
   }
-}`}</code></pre>
+}`}</code>
+          </pre>
 
-          <h2 id="error-handling">Error Handling</h2>
+          <h2 id='error-handling'>Error Handling</h2>
           <p>Proper error handling is crucial for production applications:</p>
 
-          <pre><code>{`class APIError extends Error {
+          <pre>
+            <code>{`class APIError extends Error {
   constructor(message, status, response) {
     super(message);
     this.name = 'APIError';
@@ -253,13 +286,15 @@ async function apiCall(url, options = {}) {
     // Network or other errors
     throw new APIError('Network error or request failed', 0, null);
   }
-}`}</code></pre>
+}`}</code>
+          </pre>
 
-          <h2 id="testing-apis">Testing APIs</h2>
+          <h2 id='testing-apis'>Testing APIs</h2>
           <p>Always test your API integrations thoroughly:</p>
 
           <h3>Unit Testing</h3>
-          <pre><code>{`// Using Jest for testing
+          <pre>
+            <code>{`// Using Jest for testing
 describe('API Integration', () => {
   test('should fetch user data successfully', async () => {
     const mockUser = { id: 1, name: 'John Doe' };
@@ -281,25 +316,32 @@ describe('API Integration', () => {
 
     await expect(fetchUserData(999)).rejects.toThrow('HTTP 404');
   });
-});`}</code></pre>
+});`}</code>
+          </pre>
 
           <h3>Integration Testing</h3>
-          <pre><code>{`// Test with real API (use test environment)
+          <pre>
+            <code>{`// Test with real API (use test environment)
 describe('Real API Integration', () => {
   test('should work with actual API', async () => {
     const result = await fetchUserData(1);
     expect(result).toHaveProperty('id');
     expect(result).toHaveProperty('name');
   });
-});`}</code></pre>
+});`}</code>
+          </pre>
 
-          <h2 id="best-practices">Best Practices</h2>
+          <h2 id='best-practices'>Best Practices</h2>
 
           <h3>1. Use HTTPS Always</h3>
-          <p>Never make API calls over HTTP in production. Always use HTTPS to protect sensitive data.</p>
+          <p>
+            Never make API calls over HTTP in production. Always use HTTPS to
+            protect sensitive data.
+          </p>
 
           <h3>2. Implement Rate Limiting</h3>
-          <pre><code>{`class RateLimiter {
+          <pre>
+            <code>{`class RateLimiter {
   constructor(requestsPerMinute) {
     this.requests = [];
     this.limit = requestsPerMinute;
@@ -316,10 +358,12 @@ describe('Real API Integration', () => {
     
     this.requests.push(now);
   }
-}`}</code></pre>
+}`}</code>
+          </pre>
 
           <h3>3. Cache Responses When Appropriate</h3>
-          <pre><code>{`const cache = new Map();
+          <pre>
+            <code>{`const cache = new Map();
 
 async function fetchWithCache(url, ttl = 300000) { // 5 minutes
   const cached = cache.get(url);
@@ -330,10 +374,12 @@ async function fetchWithCache(url, ttl = 300000) { // 5 minutes
   const data = await apiCall(url);
   cache.set(url, { data, timestamp: Date.now() });
   return data;
-}`}</code></pre>
+}`}</code>
+          </pre>
 
           <h3>4. Use Retry Logic</h3>
-          <pre><code>{`async function apiCallWithRetry(url, options = {}, maxRetries = 3) {
+          <pre>
+            <code>{`async function apiCallWithRetry(url, options = {}, maxRetries = 3) {
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
       return await apiCall(url, options);
@@ -345,66 +391,100 @@ async function fetchWithCache(url, ttl = 300000) { // 5 minutes
       await new Promise(resolve => setTimeout(resolve, delay));
     }
   }
-}`}</code></pre>
+}`}</code>
+          </pre>
 
-          <h2 id="common-pitfalls">Common Pitfalls to Avoid</h2>
+          <h2 id='common-pitfalls'>Common Pitfalls to Avoid</h2>
 
           <h3>1. Not Handling Rate Limits</h3>
-          <p>Always implement proper rate limiting to avoid getting blocked by the API provider.</p>
+          <p>
+            Always implement proper rate limiting to avoid getting blocked by
+            the API provider.
+          </p>
 
           <h3>2. Ignoring Error Responses</h3>
-          <p>Don't just check if the response is ok - handle different error types appropriately.</p>
+          <p>
+            Don't just check if the response is ok - handle different error
+            types appropriately.
+          </p>
 
           <h3>3. Hardcoding API Keys</h3>
-          <p>Use environment variables and never commit API keys to version control.</p>
+          <p>
+            Use environment variables and never commit API keys to version
+            control.
+          </p>
 
           <h3>4. Not Testing Edge Cases</h3>
-          <p>Test what happens when the API is down, returns unexpected data, or times out.</p>
+          <p>
+            Test what happens when the API is down, returns unexpected data, or
+            times out.
+          </p>
 
           <h3>5. Forgetting About CORS</h3>
-          <p>When making requests from browsers, ensure the API supports CORS or use a proxy.</p>
+          <p>
+            When making requests from browsers, ensure the API supports CORS or
+            use a proxy.
+          </p>
 
           <h2>Conclusion</h2>
           <p>
-            API integration is a skill that improves with practice. Start with simple integrations, 
-            follow these best practices, and gradually work your way up to more complex scenarios. 
-            Remember to always prioritize security, error handling, and testing.
+            API integration is a skill that improves with practice. Start with
+            simple integrations, follow these best practices, and gradually work
+            your way up to more complex scenarios. Remember to always prioritize
+            security, error handling, and testing.
           </p>
 
           <p>
-            For more API integration resources and a comprehensive directory of APIs, visit our 
-            <Link to="/apis" className="text-blue-600 hover:text-blue-800">API Directory</Link>.
+            For more API integration resources and a comprehensive directory of
+            APIs, visit our
+            <Link to='/apis' className='text-blue-600 hover:text-blue-800'>
+              API Directory
+            </Link>
+            .
           </p>
         </article>
 
         {/* Author Bio */}
-        <div className="mt-12 bg-gray-100 rounded-lg p-6">
-          <h3 className="text-lg font-semibold mb-2">About the Author</h3>
-          <p className="text-gray-600">
-            The Zanwik team consists of experienced developers and entrepreneurs who are passionate 
-            about helping others succeed with API integration and business automation.
+        <div className='mt-12 bg-gray-100 rounded-lg p-6'>
+          <h3 className='text-lg font-semibold mb-2'>About the Author</h3>
+          <p className='text-gray-600'>
+            The Zanwik team consists of experienced developers and entrepreneurs
+            who are passionate about helping others succeed with API integration
+            and business automation.
           </p>
         </div>
 
         {/* Related Posts */}
-        <div className="mt-12">
-          <h3 className="text-2xl font-bold mb-6">Related Articles</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h4 className="text-lg font-semibold mb-2">
-                <Link to="/blog/top-10-apis-startup-should-know" className="hover:text-blue-600">
+        <div className='mt-12'>
+          <h3 className='text-2xl font-bold mb-6'>Related Articles</h3>
+          <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+            <div className='bg-white rounded-lg shadow-md p-6'>
+              <h4 className='text-lg font-semibold mb-2'>
+                <Link
+                  to='/blog/top-10-apis-startup-should-know'
+                  className='hover:text-blue-600'
+                >
                   Top 10 APIs Every Startup Should Know
                 </Link>
               </h4>
-              <p className="text-gray-600 text-sm">Discover the essential APIs that can accelerate your startup's growth.</p>
+              <p className='text-gray-600 text-sm'>
+                Discover the essential APIs that can accelerate your startup's
+                growth.
+              </p>
             </div>
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h4 className="text-lg font-semibold mb-2">
-                <Link to="/blog/api-security-best-practices" className="hover:text-blue-600">
+            <div className='bg-white rounded-lg shadow-md p-6'>
+              <h4 className='text-lg font-semibold mb-2'>
+                <Link
+                  to='/blog/api-security-best-practices'
+                  className='hover:text-blue-600'
+                >
                   API Security Best Practices
                 </Link>
               </h4>
-              <p className="text-gray-600 text-sm">Essential security practices for API integration and data protection.</p>
+              <p className='text-gray-600 text-sm'>
+                Essential security practices for API integration and data
+                protection.
+              </p>
             </div>
           </div>
         </div>

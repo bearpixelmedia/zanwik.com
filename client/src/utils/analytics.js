@@ -12,7 +12,7 @@ export const initGA = () => {
 };
 
 // Track page views
-export const trackPageView = (url) => {
+export const trackPageView = url => {
   if (typeof window !== 'undefined' && window.gtag) {
     window.gtag('config', GA_TRACKING_ID, {
       page_path: url,
@@ -52,7 +52,7 @@ export const trackConversion = (conversionType, value) => {
 };
 
 // Track blog engagement
-export const trackBlogView = (postTitle) => {
+export const trackBlogView = postTitle => {
   trackEvent('view_item', 'Blog', postTitle);
 };
 
@@ -72,7 +72,12 @@ export const trackDashboardAccess = () => {
 };
 
 // Enhanced ecommerce tracking
-export const trackPurchase = (transactionId, value, currency = 'USD', items = []) => {
+export const trackPurchase = (
+  transactionId,
+  value,
+  currency = 'USD',
+  items = [],
+) => {
   if (typeof window !== 'undefined' && window.gtag) {
     window.gtag('event', 'purchase', {
       transaction_id: transactionId,
@@ -109,7 +114,7 @@ export const trackError = (error, fatal = false) => {
 };
 
 // User properties
-export const setUserProperties = (properties) => {
+export const setUserProperties = properties => {
   if (typeof window !== 'undefined' && window.gtag) {
     window.gtag('config', GA_TRACKING_ID, {
       custom_map: properties,
@@ -118,12 +123,12 @@ export const setUserProperties = (properties) => {
 };
 
 // Track scroll depth
-export const trackScrollDepth = (depth) => {
+export const trackScrollDepth = depth => {
   trackEvent('scroll', 'Engagement', `${depth}%`);
 };
 
 // Track time on page
-export const trackTimeOnPage = (timeInSeconds) => {
+export const trackTimeOnPage = timeInSeconds => {
   trackEvent('timing', 'Engagement', 'time_on_page', timeInSeconds);
 };
 
@@ -159,37 +164,41 @@ export const trackUserJourney = (step, details) => {
 export const initAnalytics = () => {
   // Initialize GA
   initGA();
-  
+
   // Track initial page view
   trackPageView(window.location.pathname);
-  
+
   // Set up scroll tracking
   let maxScroll = 0;
   const trackScroll = () => {
-    const scrollPercent = Math.round((window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100);
+    const scrollPercent = Math.round(
+      (window.scrollY / (document.body.scrollHeight - window.innerHeight)) *
+        100,
+    );
     if (scrollPercent > maxScroll) {
       maxScroll = scrollPercent;
-      if (maxScroll % 25 === 0) { // Track at 25%, 50%, 75%, 100%
+      if (maxScroll % 25 === 0) {
+        // Track at 25%, 50%, 75%, 100%
         trackScrollDepth(maxScroll);
       }
     }
   };
-  
+
   window.addEventListener('scroll', trackScroll);
-  
+
   // Track time on page
   const startTime = Date.now();
   window.addEventListener('beforeunload', () => {
     const timeOnPage = Math.round((Date.now() - startTime) / 1000);
     trackTimeOnPage(timeOnPage);
   });
-  
+
   // Track errors
-  window.addEventListener('error', (event) => {
+  window.addEventListener('error', event => {
     trackError(event.error?.message || 'Unknown error', false);
   });
-  
-  window.addEventListener('unhandledrejection', (event) => {
+
+  window.addEventListener('unhandledrejection', event => {
     trackError(event.reason?.message || 'Unhandled promise rejection', false);
   });
 };
@@ -217,5 +226,5 @@ export default {
   trackDownload,
   trackSocialClick,
   trackAPIHealthCheck,
-  trackUserJourney
+  trackUserJourney,
 };

@@ -228,26 +228,29 @@ export const AuthProvider = ({ children }) => {
     }
 
     // Always check session on mount
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (mounted) {
-        if (session?.user) {
-          initializeUser(session.user);
-        } else {
+    supabase.auth
+      .getSession()
+      .then(({ data: { session } }) => {
+        if (mounted) {
+          if (session?.user) {
+            initializeUser(session.user);
+          } else {
+            setUser(null);
+            setUserProfile(null);
+            setIsAuthenticated(false);
+            setLoading(false);
+          }
+        }
+      })
+      .catch(error => {
+        console.warn('Failed to get session:', error);
+        if (mounted) {
           setUser(null);
           setUserProfile(null);
           setIsAuthenticated(false);
           setLoading(false);
         }
-      }
-    }).catch((error) => {
-      console.warn('Failed to get session:', error);
-      if (mounted) {
-        setUser(null);
-        setUserProfile(null);
-        setIsAuthenticated(false);
-        setLoading(false);
-      }
-    });
+      });
 
     // Listen for auth state changes
     const {

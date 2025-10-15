@@ -52,6 +52,7 @@ module.exports = {
     'jsx-a11y/role-supports-aria-props': 'error',
     'jsx-a11y/click-events-have-key-events': 'warn',
     'jsx-a11y/no-static-element-interactions': 'warn',
+    'jsx-a11y/label-has-associated-control': 'warn',
 
     // TypeScript rules
     '@typescript-eslint/no-unused-vars': [
@@ -68,6 +69,7 @@ module.exports = {
 
     // General rules
     'no-console': 'warn',
+    'no-unused-vars': 'off',
     'no-debugger': 'error',
     'no-alert': 'warn',
     'no-var': 'error',
@@ -87,7 +89,7 @@ module.exports = {
     'comma-dangle': ['error', 'always-multiline'],
     semi: ['error', 'always'],
     quotes: ['error', 'single', { avoidEscape: true }],
-    indent: ['error', 2, { SwitchCase: 1 }],
+    indent: 'off',
     'object-curly-spacing': ['error', 'always'],
     'array-bracket-spacing': ['error', 'never'],
     'comma-spacing': ['error', { before: false, after: true }],

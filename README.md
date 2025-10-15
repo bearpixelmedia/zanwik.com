@@ -136,6 +136,15 @@ The Umbrella Dashboard provides centralized management for:
    npm run dev
    ```
 
+## Docs
+
+- Quick start: [QUICK_START_GUIDE.md](QUICK_START_GUIDE.md)
+- Frontend setup: [client/README.md](client/README.md)
+- Deployment guide: [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md)
+- Production checklist: [PRODUCTION_READINESS_CHECKLIST.md](PRODUCTION_READINESS_CHECKLIST.md)
+- Supabase setup: [SUPABASE_SETUP.md](SUPABASE_SETUP.md)
+- Railway deploy: [RAILWAY_DEPLOYMENT.md](RAILWAY_DEPLOYMENT.md)
+
 ## Configuration
 
 ### Environment Variables
