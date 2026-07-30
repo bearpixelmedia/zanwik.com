@@ -1,7 +1,7 @@
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'
+const BASE = process.env.NEXT_PUBLIC_API_URL || '/api'
 
 async function fetchAPI(endpoint: string) {
-  const res = await fetch(`${API_BASE}${endpoint}`)
+  const res = await fetch(`${BASE}${endpoint}`)
   if (!res.ok) throw new Error(`API error: ${res.status}`)
   return res.json()
 }
@@ -19,7 +19,7 @@ export function getReviews(product?: string) {
 }
 export function getResources() { return fetchAPI('/resources') }
 export function submitLead(data: Record<string, string>) {
-  return fetch(`${API_BASE}/leads`, {
+  return fetch(`${BASE}/leads`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data)
