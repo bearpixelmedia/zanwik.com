@@ -1,82 +1,31 @@
-# Zanwik — B2B Software Reviews & Recommendations
+# Zanwik.com
 
-A comprehensive software discovery platform helping businesses find the right tools through unbiased reviews, expert advice, and personalized recommendations.
+Marketing site for Zanwik — mirrored 1:1 from [Krastor](https://www.krastor.com/) (layout, pages, copy, and structure), hosted on the zanwik.com domain with Zanwik branding.
 
-## Tech Stack
+## Stack
 
-- **Frontend:** Next.js 14, React 18, TypeScript, Tailwind CSS
-- **Backend:** Node.js, Express, TypeScript
-- **Database:** MongoDB with Mongoose
-- **Auth:** JWT-based authentication
+- **Next.js 14** (App Router) — catch-all route serves pre-rendered HTML
+- **Static mirror** of 322 Krastor pages under `frontend/content/mirror/`
+- **Assets** under `frontend/public/assets-kr/` (CSS/fonts/JS from source; `/_next` renamed to avoid Next build collisions)
+- Deploy: **Vercel** (`frontend/vercel.json`)
 
-## Getting Started
-
-### Prerequisites
-
-- Node.js 18+
-- MongoDB (local or Atlas)
-
-### Installation
+## Local development
 
 ```bash
-# Install dependencies
-cd frontend && npm install
-cd ../backend && npm install
-
-# Copy environment files
-cp frontend/.env.example frontend/.env.local
-cp backend/.env.example backend/.env
-
-# Edit .env files with your configuration
+cd frontend
+npm install
+npm run dev
 ```
 
-### Database
+Open http://localhost:3000
 
-```bash
-cd backend
-npm run seed   # Seed the database with sample data
-```
+## Branding notes
 
-### Development
+- Domain / canonical / titles use **Zanwik** / **zanwik.com**
+- Product route `/krastorm` and product name **Krastorm** kept from source
+- External Cal.com booking still points at `cal.com/krastor/intro` (third-party; update when Zanwik has its own event)
+- Client-side Next.js RSC hydration was stripped from mirrored HTML (static full-page navigation). Visual CSS/layout match source; some JS-only interactions (client components) may differ until rebuilt natively
 
-```bash
-# Terminal 1 - Backend
-cd backend && npm run dev
+## Source
 
-# Terminal 2 - Frontend
-cd frontend && npm run dev
-```
-
-Visit `http://localhost:3000`
-
-## Project Structure
-
-```
-zanwik.com/
-├── frontend/          # Next.js application
-│   ├── src/
-│   │   ├── app/       # Pages (App Router)
-│   │   ├── components/ # Reusable components
-│   │   ├── lib/       # API client & mock data
-│   │   └── types/     # TypeScript types
-│   └── ...
-├── backend/           # Express API
-│   ├── src/
-│   │   ├── models/    # Mongoose schemas
-│   │   ├── routes/    # API route handlers
-│   │   ├── middleware/ # Auth middleware
-│   │   └── config/    # Database config
-│   └── ...
-├── blog/              # Blog content
-├── docs/              # Documentation
-└── vendor/            # Vendor resources
-```
-
-## Features
-
-- Browse 100,000+ software products across categories
-- Read and write user reviews with ratings
-- Personalized software recommendations
-- Vendor lead generation program
-- Resource center with guides and reports
-- Responsive design for all devices
+Mirrored from https://www.krastor.com/ sitemap (322 URLs) on 2026-11-04.
