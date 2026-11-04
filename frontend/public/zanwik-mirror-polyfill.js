@@ -1,7 +1,7 @@
 /**
- * Zanwik static-mirror polyfill
- * Restores hero canvas, scroll reveals, Services mega-menu, FAQ accordion,
- * and full-page navigation without Next.js client hydration.
+ * Zanwik static-mirror polyfill (iter 3)
+ * Ports Krastor's icosahedron hero canvas, Services mega-menu, mobile drawer,
+ * FAQ accordion, scroll reveals, and card tilt — without Next hydration.
  */
 (function () {
   "use strict";
@@ -15,9 +15,9 @@
       var a = e.target && e.target.closest ? e.target.closest("a[href]") : null;
       if (!a) return;
       if (a.hasAttribute("download")) return;
+      if (a.dataset.zanwikNoNav === "1") return;
       var href = a.getAttribute("href") || "";
       if (!href || href.charAt(0) !== "/" || href.indexOf("//") === 0) return;
-      if (href.charAt(0) === "#") return;
       e.preventDefault();
       window.location.href = href;
     },
@@ -47,7 +47,6 @@
     );
     nodes.forEach(function (el, idx) {
       var rect = el.getBoundingClientRect();
-      // Only first viewport band shows immediately; rest animate on scroll
       if (rect.top < window.innerHeight * 0.72 && rect.bottom > 0) {
         el.style.transitionDelay = Math.min(idx * 40, 280) + "ms";
         el.classList.add("is-visible");
@@ -57,10 +56,75 @@
     });
   }
 
-  /* ---------- Hero particle network canvas ---------- */
+  /* ---------- Hero: Krastor icosahedron canvas (ported) ---------- */
   function setupHeroCanvas() {
+    var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     var canvases = document.querySelectorAll("canvas.pointer-events-none");
     if (!canvases.length) return;
+
+    // Golden-ratio icosahedron unit vertices (same as Krastor source)
+    var PHI = 1.61803398875;
+    var verts = [
+      [-1, PHI, 0],
+      [1, PHI, 0],
+      [-1, -PHI, 0],
+      [1, -PHI, 0],
+      [0, -1, PHI],
+      [0, 1, PHI],
+      [0, -1, -PHI],
+      [0, 1, -PHI],
+      [PHI, 0, -1],
+      [PHI, 0, 1],
+      [-PHI, 0, -1],
+      [-PHI, 0, 1],
+    ].map(function (v) {
+      var len = Math.hypot(v[0], v[1], v[2]);
+      return [v[0] / len, v[1] / len, v[2] / len];
+    });
+
+    var edges = [];
+    for (var e = 0; e < verts.length; e++) {
+      for (var f = e + 1; f < verts.length; f++) {
+        if (
+          Math.hypot(
+            verts[e][0] - verts[f][0],
+            verts[e][1] - verts[f][1],
+            verts[e][2] - verts[f][2]
+          ) < 1.2
+        ) {
+          edges.push([e, f]);
+        }
+      }
+    }
+
+    function rotateY(p, ay) {
+      var x = p[0],
+        y = p[1],
+        z = p[2];
+      var c = Math.cos(ay),
+        s = Math.sin(ay);
+      var nz = z * c - x * s;
+      var nx = z * s + x * c;
+      return [nx, y, nz];
+    }
+    function rotateX(p, ax) {
+      var x = p[0],
+        y = p[1],
+        z = p[2];
+      var c = Math.cos(ax),
+        s = Math.sin(ax);
+      var ny = y * c - z * s;
+      var nz = y * s + z * c;
+      return [x, ny, nz];
+    }
+    function project(p, scale, cx, cy, size) {
+      var r = 2.4 / (3 + p[2] * scale);
+      return {
+        sx: cx + p[0] * scale * size * r,
+        sy: cy - p[1] * scale * size * r,
+        depth: p[2],
+      };
+    }
 
     canvases.forEach(function (canvas) {
       if (canvas.dataset.zanwikNet === "1") return;
@@ -71,143 +135,230 @@
       var ctx = canvas.getContext("2d");
       if (!ctx) return;
 
-      var nodes = [];
+      var w = 1,
+        h = 1,
+        dpr = 1;
+      var angle = 0.4;
       var raf = 0;
       var running = true;
-      var dpr = Math.min(window.devicePixelRatio || 1, 2);
+      var last = performance.now();
 
       function resize() {
-        var w = parent ? parent.clientWidth : canvas.clientWidth;
-        var h = parent ? parent.clientHeight : canvas.clientHeight;
-        if (!w || !h) {
-          w = canvas.clientWidth || 640;
-          h = canvas.clientHeight || 720;
-        }
+        var box = parent
+          ? parent.getBoundingClientRect()
+          : canvas.getBoundingClientRect();
+        dpr = Math.min(window.devicePixelRatio || 1, 2);
+        w = Math.max(1, box.width);
+        h = Math.max(1, box.height);
         canvas.width = Math.floor(w * dpr);
         canvas.height = Math.floor(h * dpr);
         canvas.style.width = w + "px";
         canvas.style.height = h + "px";
-        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-        seed(w, h);
       }
 
-      function seed(w, h) {
-        // Geometric mesh density closer to Krastor's wireframe network
-        var cols = Math.max(6, Math.floor(w / 70));
-        var rows = Math.max(7, Math.floor(h / 70));
-        nodes = [];
-        var i, j, x, y, jitter;
-        for (j = 0; j <= rows; j++) {
-          for (i = 0; i <= cols; i++) {
-            jitter = 18;
-            x = (i / cols) * w + (Math.random() - 0.5) * jitter;
-            y = (j / rows) * h + (Math.random() - 0.5) * jitter;
-            nodes.push({
-              x: x,
-              y: y,
-              ox: x,
-              oy: y,
-              phase: Math.random() * Math.PI * 2,
-              amp: 6 + Math.random() * 10,
-              speed: 0.008 + Math.random() * 0.012,
-              r: 1.6 + Math.random() * 1.2,
-              neighbors: [],
+      function draw(a) {
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        ctx.clearRect(0, 0, w, h);
+        var cx = 0.5 * w;
+        var cy = 0.5 * h;
+        var size = 0.34 * Math.min(w, h);
+
+        var layers = [
+          {
+            scale: 1,
+            ax: 0.45 * a,
+            ay: a,
+            color: [193, 120, 50],
+            node: true,
+            lw: 1.1,
+            op: 0.9,
+          },
+          {
+            scale: 0.58,
+            ax: -(0.7 * a),
+            ay: -(1.25 * a),
+            color: [232, 168, 76],
+            node: false,
+            lw: 0.8,
+            op: 0.5,
+          },
+        ];
+
+        layers.forEach(function (layer) {
+          var projected = verts.map(function (v) {
+            var r = rotateX(rotateY(v, layer.ay), layer.ax);
+            return project(r, layer.scale, cx, cy, size);
+          });
+          edges.forEach(function (edge) {
+            var A = projected[edge[0]];
+            var B = projected[edge[1]];
+            var depth = (A.depth + B.depth) / 2;
+            var r = (depth + 1) / 2;
+            var alpha = (0.12 + 0.78 * r) * layer.op;
+            ctx.strokeStyle =
+              "rgba(" +
+              layer.color[0] +
+              "," +
+              layer.color[1] +
+              "," +
+              layer.color[2] +
+              "," +
+              alpha.toFixed(3) +
+              ")";
+            ctx.lineWidth = layer.lw * (0.6 + 0.9 * r);
+            ctx.beginPath();
+            ctx.moveTo(A.sx, A.sy);
+            ctx.lineTo(B.sx, B.sy);
+            ctx.stroke();
+          });
+          if (layer.node) {
+            projected.forEach(function (p) {
+              var e = (p.depth + 1) / 2;
+              ctx.fillStyle =
+                "rgba(245,240,232," + (0.25 + 0.7 * e).toFixed(3) + ")";
+              ctx.beginPath();
+              ctx.arc(p.sx, p.sy, 1.4 + 2.6 * e, 0, Math.PI * 2);
+              ctx.fill();
             });
           }
-        }
-        // link each node to nearest 3–5 neighbors for polygonal mesh
-        for (i = 0; i < nodes.length; i++) {
-          var dists = [];
-          for (j = 0; j < nodes.length; j++) {
-            if (i === j) continue;
-            var dx = nodes[i].ox - nodes[j].ox;
-            var dy = nodes[i].oy - nodes[j].oy;
-            dists.push({ j: j, d: dx * dx + dy * dy });
-          }
-          dists.sort(function (a, b) {
-            return a.d - b.d;
-          });
-          nodes[i].neighbors = dists.slice(0, 4).map(function (d) {
-            return d.j;
-          });
-        }
+        });
       }
 
-      function step() {
-        if (!running) return;
-        var w = canvas.clientWidth;
-        var h = canvas.clientHeight;
-        ctx.clearRect(0, 0, w, h);
-
-        var g = ctx.createRadialGradient(
-          w * 0.62,
-          h * 0.38,
-          20,
-          w * 0.55,
-          h * 0.45,
-          Math.max(w, h) * 0.75
-        );
-        g.addColorStop(0, "rgba(193,120,50,0.16)");
-        g.addColorStop(1, "rgba(193,120,50,0)");
-        ctx.fillStyle = g;
-        ctx.fillRect(0, 0, w, h);
-
-        var i, a, b, n, t;
-        t = performance.now() * 0.001;
-
-        for (i = 0; i < nodes.length; i++) {
-          a = nodes[i];
-          a.x = a.ox + Math.sin(t * a.speed * 60 + a.phase) * a.amp;
-          a.y = a.oy + Math.cos(t * a.speed * 50 + a.phase * 1.3) * a.amp * 0.85;
-        }
-
-        // mesh edges
-        ctx.lineWidth = 1.1;
-        for (i = 0; i < nodes.length; i++) {
-          a = nodes[i];
-          for (n = 0; n < a.neighbors.length; n++) {
-            if (a.neighbors[n] <= i) continue;
-            b = nodes[a.neighbors[n]];
-            var dx = a.x - b.x;
-            var dy = a.y - b.y;
-            var dist = Math.sqrt(dx * dx + dy * dy);
-            var alpha = Math.max(0.08, 0.55 - dist / 280);
-            ctx.beginPath();
-            ctx.strokeStyle = "rgba(217,138,69," + alpha + ")";
-            ctx.moveTo(a.x, a.y);
-            ctx.lineTo(b.x, b.y);
-            ctx.stroke();
-          }
-        }
-
-        for (i = 0; i < nodes.length; i++) {
-          a = nodes[i];
-          ctx.beginPath();
-          ctx.fillStyle = "rgba(250,248,243,0.92)";
-          ctx.arc(a.x, a.y, a.r, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.beginPath();
-          ctx.fillStyle = "rgba(193,120,50,0.28)";
-          ctx.arc(a.x, a.y, a.r * 2.8, 0, Math.PI * 2);
-          ctx.fill();
-        }
-
-        raf = requestAnimationFrame(step);
+      function frame(now) {
+        var dt = Math.min(0.05, (now - last) / 1000);
+        last = now;
+        angle += 0.22 * dt;
+        draw(angle);
+        if (running && !reduced) raf = requestAnimationFrame(frame);
       }
 
       resize();
-      step();
-      window.addEventListener("resize", resize);
-      document.addEventListener("visibilitychange", function () {
-        if (document.hidden) {
-          running = false;
-          cancelAnimationFrame(raf);
-        } else if (!running) {
-          running = true;
-          step();
-        }
+      draw(angle);
+      if (!reduced) raf = requestAnimationFrame(frame);
+
+      var io = new IntersectionObserver(
+        function (entries) {
+          var hit = entries[0];
+          if (!hit) return;
+          if (hit.isIntersecting && !reduced) {
+            if (!running) {
+              running = true;
+              last = performance.now();
+              raf = requestAnimationFrame(frame);
+            }
+          } else {
+            running = false;
+            cancelAnimationFrame(raf);
+          }
+        },
+        { threshold: 0.01 }
+      );
+      io.observe(canvas);
+      window.addEventListener("resize", function () {
+        resize();
+        draw(angle);
       });
     });
+  }
+
+  /* ---------- Shared mega-menu link data (from Krastor source) ---------- */
+  var START = [
+    {
+      href: "/diagnostic",
+      title: "Free Diagnostic",
+      blurb: "30 minutes. Find what's costing you most",
+    },
+    {
+      href: "/assess",
+      title: "AI Readiness Assessment",
+      blurb: "See where your business stands today",
+    },
+    {
+      href: "/services/strategy",
+      title: "Strategy & Roadmap",
+      blurb: "What to fix first, and what it's worth",
+    },
+    {
+      href: "/services/advisory",
+      title: "AI Advisory",
+      blurb: "What to use, what to skip, how your team adopts it",
+    },
+  ];
+  var BUILD = [
+    {
+      href: "/services/operations",
+      title: "Automate the Busywork",
+      blurb: "Follow-up, quotes, invoicing, scheduling",
+    },
+    {
+      href: "/services/technology",
+      title: "Connect Your Systems",
+      blurb: "One source of truth, custom software",
+    },
+    {
+      href: "/services/ai-architecture",
+      title: "AI Agents",
+      blurb: "Agents that do the work, a person approves",
+    },
+    {
+      href: "/services/consolidation",
+      title: "Cut Tool Sprawl",
+      blurb: "Fewer tools, lower cost",
+    },
+    {
+      href: "/services/enablement",
+      title: "Train Your Team",
+      blurb: "So the tools actually get used",
+    },
+    {
+      href: "/services/product-engineering",
+      title: "Product Engineering",
+      blurb: "A new product or revenue line, built",
+    },
+  ];
+  var STAY = [
+    {
+      href: "/services/embedded-partnership",
+      title: "We Keep It Running",
+      blurb: "Monthly monitoring, fixes, and improvements",
+    },
+    {
+      href: "/services/command-center",
+      title: "See It All in One Place",
+      blurb: "Every system and agent on one screen",
+    },
+    {
+      href: "/services/token-governance",
+      title: "Control AI Costs",
+      blurb: "What AI costs and who's using it",
+    },
+    {
+      href: "/services/on-prem",
+      title: "Private AI",
+      blurb: "AI on your own hardware, data stays put",
+    },
+    {
+      href: "/services/transactions",
+      title: "Deals & Exit Readiness",
+      blurb: "Raising, buying, or selling: systems due diligence",
+    },
+  ];
+  var WORK = [
+    { href: "/work/building-materials-manufacturer", title: "Building Materials" },
+    { href: "/work/custom-cabin-builder", title: "Custom Cabin Builder" },
+    { href: "/work/rv-park-operator", title: "RV Park Operator" },
+  ];
+
+  function itemHtml(item) {
+    return (
+      '<a class="item" href="' +
+      item.href +
+      '"><strong>' +
+      item.title +
+      "</strong><span>" +
+      item.blurb +
+      "</span></a>"
+    );
   }
 
   /* ---------- Services mega-menu ---------- */
@@ -231,24 +382,22 @@
       "<strong>The Zanwik Blueprint</strong>",
       "<span>Start here: a fixed-fee plan you own, from $1,500</span>",
       "</a>",
-      '<div class="col-label start">Start</div>',
-      '<div class="col-label build">Build</div>',
-      '<div class="col-label stay">Stay / Run</div>',
-      '<a class="item" href="/assess" style="grid-column:1">AI Readiness Assessment</a>',
-      '<a class="item" href="/diagnostic" style="grid-column:1">Free Diagnostic</a>',
-      '<a class="item" href="/services/strategy" style="grid-column:1">Strategy &amp; Roadmap</a>',
-      '<a class="item" href="/services/operations" style="grid-column:2;grid-row:3">Automate the Busywork</a>',
-      '<a class="item" href="/services/ai-architecture" style="grid-column:2">AI Agents</a>',
-      '<a class="item" href="/services/technology" style="grid-column:2">Connect Your Systems</a>',
-      '<a class="item" href="/services/enablement" style="grid-column:2">Train Your Team</a>',
-      '<a class="item" href="/services/consolidation" style="grid-column:2">Cut Tool Sprawl</a>',
-      '<a class="item" href="/services/product-engineering" style="grid-column:2">Product Engineering</a>',
-      '<a class="item" href="/services/embedded-partnership" style="grid-column:3;grid-row:3">We Keep It Running</a>',
-      '<a class="item" href="/services/command-center" style="grid-column:3">See It All in One Place</a>',
-      '<a class="item" href="/services/token-governance" style="grid-column:3">Control AI Costs</a>',
-      '<a class="item" href="/services/on-prem" style="grid-column:3">Private AI</a>',
-      '<a class="item" href="/services/transactions" style="grid-column:3">Deals &amp; Exit Readiness</a>',
-      '<a class="item" href="/services/advisory" style="grid-column:3">AI Advisory</a>',
+      '<div class="menu-cols">',
+      '<div class="col"><div class="col-label">Start</div>' +
+        START.map(itemHtml).join("") +
+        "</div>",
+      '<div class="col"><div class="col-label">Build</div>' +
+        BUILD.map(itemHtml).join("") +
+        "</div>",
+      '<div class="col"><div class="col-label">Stay / Run</div>' +
+        STAY.map(itemHtml).join("") +
+        "</div>",
+      "</div>",
+      '<div class="work-row"><span class="col-label">Selected work</span>' +
+        WORK.map(function (w) {
+          return '<a class="work" href="' + w.href + '">' + w.title + "</a>";
+        }).join("") +
+        "</div>",
       '<a class="all-link" href="/services">All services →</a>',
     ].join("");
     wrap.appendChild(menu);
@@ -267,11 +416,86 @@
       if (menu.classList.contains("open")) close();
       else open();
     });
+    wrap.addEventListener("mouseenter", open);
+    wrap.addEventListener("mouseleave", close);
     document.addEventListener("click", function (e) {
       if (!wrap.contains(e.target)) close();
     });
     document.addEventListener("keydown", function (e) {
       if (e.key === "Escape") close();
+    });
+  }
+
+  /* ---------- Mobile nav drawer ---------- */
+  function setupMobileNav() {
+    var btn = document.querySelector('button[aria-label="Toggle menu"]');
+    if (!btn) return;
+    var existing = document.getElementById("zanwik-mobile-nav");
+    if (existing) existing.remove();
+
+    var drawer = document.createElement("div");
+    drawer.id = "zanwik-mobile-nav";
+    drawer.setAttribute("role", "dialog");
+    drawer.setAttribute("aria-label", "Site menu");
+    drawer.innerHTML = [
+      '<div class="zanwik-mobile-backdrop" data-close="1"></div>',
+      '<nav class="zanwik-mobile-panel">',
+      '<div class="zanwik-mobile-head"><span>Menu</span>',
+      '<button type="button" class="zanwik-mobile-close" aria-label="Close menu">×</button></div>',
+      '<a href="/about">About</a>',
+      '<a href="/blueprint">Pricing</a>',
+      '<a href="/insights">Insights</a>',
+      '<a href="/services">All services</a>',
+      '<p class="zanwik-mobile-label">Start</p>',
+      START.map(function (i) {
+        return '<a href="' + i.href + '">' + i.title + "</a>";
+      }).join(""),
+      '<p class="zanwik-mobile-label">Build</p>',
+      BUILD.map(function (i) {
+        return '<a href="' + i.href + '">' + i.title + "</a>";
+      }).join(""),
+      '<p class="zanwik-mobile-label">Stay / Run</p>',
+      STAY.map(function (i) {
+        return '<a href="' + i.href + '">' + i.title + "</a>";
+      }).join(""),
+      '<div class="zanwik-mobile-cta">',
+      '<a class="primary" href="/assess">Take the assessment</a>',
+      '<a class="ghost" href="https://cal.com/krastor/intro" target="_blank" rel="noreferrer">Book a Discovery Call</a>',
+      "</div>",
+      "</nav>",
+    ].join("");
+    document.body.appendChild(drawer);
+
+    var bars = btn.querySelectorAll("span");
+
+    function setOpen(open) {
+      drawer.classList.toggle("open", open);
+      btn.setAttribute("aria-expanded", open ? "true" : "false");
+      document.documentElement.classList.toggle("zanwik-nav-open", open);
+      if (bars[0])
+        bars[0].style.transform = open
+          ? "translateY(8px) rotate(45deg)"
+          : "";
+      if (bars[1]) bars[1].style.opacity = open ? "0" : "1";
+      if (bars[2])
+        bars[2].style.transform = open
+          ? "translateY(-8px) rotate(-45deg)"
+          : "";
+    }
+
+    btn.addEventListener("click", function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      setOpen(!drawer.classList.contains("open"));
+    });
+    drawer.querySelector(".zanwik-mobile-close").addEventListener("click", function () {
+      setOpen(false);
+    });
+    drawer.querySelector(".zanwik-mobile-backdrop").addEventListener("click", function () {
+      setOpen(false);
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") setOpen(false);
     });
   }
 
@@ -324,11 +548,36 @@
     });
   }
 
+  /* ---------- Card tilt / micro-motion ---------- */
+  function setupTilt() {
+    var cards = document.querySelectorAll(
+      ".depth-card-light, .depth-card, a.group.rounded-2xl"
+    );
+    cards.forEach(function (card) {
+      card.classList.add("zanwik-tilt");
+      card.addEventListener("pointermove", function (e) {
+        var r = card.getBoundingClientRect();
+        var px = (e.clientX - r.left) / r.width - 0.5;
+        var py = (e.clientY - r.top) / r.height - 0.5;
+        card.style.setProperty("--rx", (-py * 6).toFixed(2) + "deg");
+        card.style.setProperty("--ry", (px * 8).toFixed(2) + "deg");
+        card.classList.add("is-tilting");
+      });
+      card.addEventListener("pointerleave", function () {
+        card.style.setProperty("--rx", "0deg");
+        card.style.setProperty("--ry", "0deg");
+        card.classList.remove("is-tilting");
+      });
+    });
+  }
+
   function boot() {
     setupReveals();
     setupHeroCanvas();
     setupServicesMenu();
+    setupMobileNav();
     setupFaq();
+    setupTilt();
   }
 
   if (document.readyState === "loading") {

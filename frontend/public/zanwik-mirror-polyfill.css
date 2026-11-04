@@ -1,6 +1,6 @@
-/* Zanwik static-mirror polyfills — motion, menu, accordion, cards */
+/* Zanwik static-mirror polyfills (iter 3) */
 
-/* Scroll reveals: start hidden only when JS is active; polyfill adds .is-visible */
+/* Scroll reveals */
 .js-motion .reveal {
   opacity: 0;
   transform: translateY(16px);
@@ -24,7 +24,7 @@
   transform: scale(1) translateY(0);
 }
 
-/* Force marquees / hero entrance even if OS prefers-reduced-motion in preview VMs */
+/* Marquee + hero entrance (preview VMs often have reduced-motion) */
 .marquee-outer {
   width: max-content;
   animation: zanwik-marquee 38s linear infinite !important;
@@ -40,7 +40,6 @@
     transform: translate(-50%);
   }
 }
-
 .animate-hero-in {
   animation: 1s cubic-bezier(0.16, 1, 0.3, 1) both zanwik-hero-in !important;
 }
@@ -64,7 +63,7 @@
   }
 }
 
-/* Card hover lift for industry / service cards */
+/* Card hover + tilt */
 .depth-card-light,
 .depth-card {
   transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1),
@@ -75,14 +74,22 @@
   transform: translateY(-4px);
 }
 a.group.rounded-2xl {
-  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1),
-    border-color 0.3s, box-shadow 0.45s;
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s,
+    box-shadow 0.45s;
 }
 a.group.rounded-2xl:hover {
   transform: translateY(-3px);
 }
+.zanwik-tilt {
+  transform-style: preserve-3d;
+  will-change: transform;
+  transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s;
+}
+.zanwik-tilt.is-tilting {
+  transform: perspective(1200px) rotateX(var(--rx, 0deg))
+    rotateY(var(--ry, 0deg)) translateY(-3px);
+}
 
-/* Hero canvas container */
 .zanwik-hero-canvas-wrap canvas {
   display: block;
   width: 100%;
@@ -95,25 +102,22 @@ a.group.rounded-2xl:hover {
   top: calc(100% + 0.35rem);
   left: 0;
   z-index: 80;
-  width: min(42rem, 92vw);
-  padding: 1.1rem 1.25rem 1.25rem;
+  width: min(46rem, 94vw);
+  padding: 1rem 1.15rem 1.15rem;
   border-radius: 0.85rem;
   background: #121212;
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
   display: none;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 0.35rem 1.25rem;
 }
 #zanwik-services-menu.open {
-  display: grid;
+  display: block;
 }
 #zanwik-services-menu .blueprint-callout {
-  grid-column: 1 / -1;
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
-  margin-bottom: 0.55rem;
+  gap: 0.2rem;
+  margin-bottom: 0.85rem;
   padding: 0.85rem 1rem;
   border-radius: 0.65rem;
   background: rgba(193, 120, 50, 0.12);
@@ -122,7 +126,6 @@ a.group.rounded-2xl:hover {
 }
 #zanwik-services-menu .blueprint-callout strong {
   color: #faf8f3;
-  font-family: inherit;
   font-size: 0.95rem;
   font-weight: 700;
 }
@@ -131,41 +134,62 @@ a.group.rounded-2xl:hover {
   font-size: 0.8rem;
   line-height: 1.4;
 }
+#zanwik-services-menu .menu-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0.75rem 1.1rem;
+}
 #zanwik-services-menu .col-label {
-  grid-column: span 1;
-  margin-top: 0.4rem;
   font-size: 0.65rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: #c17832;
   font-weight: 600;
-}
-#zanwik-services-menu .col-label.start {
-  grid-column: 1;
-}
-#zanwik-services-menu .col-label.build {
-  grid-column: 2;
-  grid-row: 2;
-}
-#zanwik-services-menu .col-label.stay {
-  grid-column: 3;
-  grid-row: 2;
+  margin-bottom: 0.35rem;
 }
 #zanwik-services-menu a.item {
-  color: rgba(250, 248, 243, 0.78);
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
   text-decoration: none;
-  font-size: 0.84rem;
-  padding: 0.28rem 0;
-  line-height: 1.35;
+  padding: 0.4rem 0;
+  color: rgba(250, 248, 243, 0.88);
 }
-#zanwik-services-menu a.item:hover {
+#zanwik-services-menu a.item strong {
+  font-size: 0.84rem;
+  font-weight: 600;
+}
+#zanwik-services-menu a.item span {
+  font-size: 0.72rem;
+  line-height: 1.35;
+  color: rgba(250, 248, 243, 0.5);
+}
+#zanwik-services-menu a.item:hover strong {
+  color: #fff;
+}
+#zanwik-services-menu .work-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.85rem;
+  margin-top: 0.85rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+#zanwik-services-menu .work-row .col-label {
+  margin: 0;
+}
+#zanwik-services-menu a.work {
+  color: rgba(250, 248, 243, 0.7);
+  font-size: 0.8rem;
+  text-decoration: none;
+}
+#zanwik-services-menu a.work:hover {
   color: #fff;
 }
 #zanwik-services-menu .all-link {
-  grid-column: 1 / -1;
-  margin-top: 0.65rem;
-  padding-top: 0.65rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: inline-block;
+  margin-top: 0.75rem;
   color: #d98a45;
   font-size: 0.85rem;
   text-decoration: none;
@@ -205,4 +229,117 @@ a.group.rounded-2xl:hover {
 }
 .zanwik-faq-item.is-open > h3::after {
   transform: rotate(180deg);
+}
+
+/* Mobile nav drawer */
+html.zanwik-nav-open,
+html.zanwik-nav-open body {
+  overflow: hidden;
+}
+#zanwik-mobile-nav {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+  visibility: hidden;
+}
+#zanwik-mobile-nav.open {
+  pointer-events: auto;
+  visibility: visible;
+}
+.zanwik-mobile-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+#zanwik-mobile-nav.open .zanwik-mobile-backdrop {
+  opacity: 1;
+}
+.zanwik-mobile-panel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: min(22rem, 88vw);
+  background: #0f0f0f;
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 1rem 1.15rem 2rem;
+  overflow-y: auto;
+  transform: translateX(105%);
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+#zanwik-mobile-nav.open .zanwik-mobile-panel {
+  transform: translateX(0);
+}
+.zanwik-mobile-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+  color: rgba(250, 248, 243, 0.7);
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.zanwik-mobile-close {
+  background: transparent;
+  border: 0;
+  color: #faf8f3;
+  font-size: 1.6rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0.25rem 0.4rem;
+}
+.zanwik-mobile-panel > a {
+  color: rgba(250, 248, 243, 0.88);
+  text-decoration: none;
+  font-size: 0.95rem;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+.zanwik-mobile-panel > a:hover {
+  color: #fff;
+}
+.zanwik-mobile-label {
+  margin: 0.85rem 0 0.2rem;
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #c17832;
+  font-weight: 600;
+}
+.zanwik-mobile-cta {
+  margin-top: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+.zanwik-mobile-cta .primary {
+  display: block;
+  text-align: center;
+  background: #c17832;
+  color: #fff !important;
+  border-radius: 999px;
+  padding: 0.7rem 1rem;
+  font-weight: 600;
+  border: 0 !important;
+}
+.zanwik-mobile-cta .ghost {
+  display: block;
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  color: rgba(250, 248, 243, 0.85) !important;
+  border-radius: 999px;
+  padding: 0.7rem 1rem;
+}
+
+@media (min-width: 1024px) {
+  #zanwik-mobile-nav {
+    display: none !important;
+  }
 }
