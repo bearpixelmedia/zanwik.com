@@ -1,6 +1,6 @@
 # Zanwik: full site text
 
-> Every public page on https://www.zanwik.com, as plain text. Curated overview: https://www.zanwik.com/llms.txt. Zanwik is an AI-native business transformation firm for businesses with 11 to 500 employees. We build AI into how a business actually runs, then keep it running, checked by people, and under the owner's control. Based in Clyde, North Carolina, serving businesses across the South, with featured markets in western North Carolina, Upstate South Carolina and Charlotte. Contact: greyson@zanwik.com | Take the assessment: https://www.zanwik.com/assess
+> Every public page on https://www.zanwik.com, as plain text. Curated overview: https://www.zanwik.com/llms.txt. Zanwik helps Southeast mid-market operators (11–500 employees) turn expensive handoffs into supervised AI workflows: Map the leak, wire the fix into tools you already pay for, prove it in dollars, and keep a Run Desk on it. Western North Carolina roots; Southeast coverage. Free Ops Check, fixed-fee Ops Spec from $1,500, optional Run Desk. Contact: byron@zanwik.com · (828) 989-3682 | Ops Check: https://www.zanwik.com/assess
 
 # Homepage
 
