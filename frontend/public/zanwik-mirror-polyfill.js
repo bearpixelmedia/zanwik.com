@@ -1017,6 +1017,106 @@
       });
   }
 
+  /* ---------- Sticky "On this page" scroll spy (Krastor SectionIndex) ---------- */
+  function setupSectionIndex() {
+    var nav = document.querySelector('nav[aria-label="On this page"]');
+    if (!nav) return;
+    var links = Array.prototype.slice.call(nav.querySelectorAll('a[href^="#"]'));
+    if (!links.length) return;
+
+    var ACTIVE =
+      "shrink-0 rounded-full border px-3.5 py-1.5 text-xs font-medium transition-colors border-copper bg-copper text-warmwhite";
+    var INACTIVE =
+      "shrink-0 rounded-full border px-3.5 py-1.5 text-xs font-medium transition-colors border-steel/20 text-steel hover:border-copper hover:text-ink";
+
+    var items = links
+      .map(function (a) {
+        var id = (a.getAttribute("href") || "").replace(/^#/, "");
+        return id ? { id: id, el: a } : null;
+      })
+      .filter(Boolean);
+
+    var current = "";
+    var raf = 0;
+
+    function setActive(id) {
+      if (id === current) return;
+      current = id;
+      items.forEach(function (item) {
+        var on = item.id === id;
+        item.el.className = on ? ACTIVE : INACTIVE;
+        if (on) item.el.setAttribute("aria-current", "true");
+        else item.el.removeAttribute("aria-current");
+      });
+      // Keep active pill visible in horizontal scroller
+      var active = items.find(function (item) {
+        return item.id === id;
+      });
+      if (active && active.el.scrollIntoView) {
+        try {
+          active.el.scrollIntoView({
+            behavior: "smooth",
+            inline: "center",
+            block: "nearest",
+          });
+        } catch (e) {
+          /* ignore */
+        }
+      }
+    }
+
+    function update() {
+      raf = 0;
+      // Krastor: last section whose top is at or above 160px
+      var activeId = items[0] ? items[0].id : "";
+      for (var i = 0; i < items.length; i++) {
+        var section = document.getElementById(items[i].id);
+        if (section && section.getBoundingClientRect().top <= 160) {
+          activeId = items[i].id;
+        }
+      }
+      setActive(activeId);
+    }
+
+    function onScroll() {
+      if (!raf) raf = requestAnimationFrame(update);
+    }
+
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+  }
+
+  /* ---------- Header solidifies after 24px scroll (Krastor Nav) ---------- */
+  function setupHeaderScroll() {
+    var header = document.querySelector("header.fixed");
+    if (!header) return;
+
+    var SCROLLED =
+      "fixed inset-x-0 top-0 z-50 transition-colors duration-300 bg-charcoal/90 backdrop-blur-xl border-b border-steel/20";
+    var TOP =
+      "fixed inset-x-0 top-0 z-50 transition-colors duration-300 bg-transparent";
+
+    // Preserve non-layout classes that may differ; only toggle bg/border/blur
+    function apply(scrolled) {
+      header.classList.toggle("zanwik-header-scrolled", scrolled);
+      // Prefer className swap matching Krastor when header is the standard shell
+      if (
+        header.className.indexOf("fixed inset-x-0 top-0 z-50") !== -1 &&
+        header.className.indexOf("transition-colors") !== -1
+      ) {
+        header.className = scrolled ? SCROLLED : TOP;
+      }
+    }
+
+    function update() {
+      apply(window.scrollY > 24);
+    }
+
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+  }
+
   function boot() {
     setupReveals();
     setupHeroCanvas();
@@ -1026,6 +1126,8 @@
     setupTilt();
     setupCalculator();
     setupAssessQuiz();
+    setupSectionIndex();
+    setupHeaderScroll();
   }
 
   if (document.readyState === "loading") {

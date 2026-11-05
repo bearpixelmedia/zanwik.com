@@ -443,3 +443,23 @@ h3 {
 .border-copper\/40 {
   border-color: color-mix(in srgb, var(--accent) 40%, transparent) !important;
 }
+
+/* Sticky section pills: active uses accent (remapped --copper) */
+nav[aria-label="On this page"] a[aria-current="true"] {
+  background-color: var(--accent) !important;
+  border-color: var(--accent) !important;
+  color: #fff !important;
+}
+nav[aria-label="On this page"] a:not([aria-current="true"]):hover {
+  border-color: var(--accent) !important;
+  color: var(--text) !important;
+}
+
+/* Header scrolled solid ink */
+header.zanwik-header-scrolled,
+header.bg-charcoal\/90 {
+  background-color: color-mix(in srgb, var(--bg) 90%, transparent) !important;
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-bottom: 1px solid color-mix(in srgb, var(--muted) 25%, transparent);
+}
