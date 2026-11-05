@@ -1,0 +1,465 @@
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap");
+
+/* Zanwik static-mirror polyfills (iter 3) */
+
+/* Scroll reveals */
+.js-motion .reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: var(--reveal-delay, 0s);
+}
+.js-motion .reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.js-motion .reveal-scale {
+  opacity: 0;
+  transform: scale(0.98) translateY(12px);
+  transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: var(--reveal-delay, 0s);
+}
+.js-motion .reveal-scale.is-visible {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+}
+
+/* Marquee + hero entrance (preview VMs often have reduced-motion) */
+.marquee-outer {
+  width: max-content;
+  animation: zanwik-marquee 38s linear infinite !important;
+}
+.marquee-outer:hover {
+  animation-play-state: paused;
+}
+@keyframes zanwik-marquee {
+  0% {
+    transform: translate(0);
+  }
+  to {
+    transform: translate(-50%);
+  }
+}
+.animate-hero-in {
+  animation: 1s cubic-bezier(0.16, 1, 0.3, 1) both zanwik-hero-in !important;
+}
+.animate-hero-sub {
+  animation: 1s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both zanwik-hero-in !important;
+}
+.animate-hero-cta {
+  animation: 1s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both zanwik-hero-in !important;
+}
+.animate-hero-meta {
+  animation: 1s cubic-bezier(0.16, 1, 0.3, 1) 0.45s both zanwik-hero-in !important;
+}
+@keyframes zanwik-hero-in {
+  0% {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Card hover + tilt */
+.depth-card-light,
+.depth-card {
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.45s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s;
+}
+.depth-card-light:hover,
+.depth-card:hover {
+  transform: translateY(-4px);
+}
+a.group.rounded-2xl {
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s,
+    box-shadow 0.45s;
+}
+a.group.rounded-2xl:hover {
+  transform: translateY(-3px);
+}
+.zanwik-tilt {
+  transform-style: preserve-3d;
+  will-change: transform;
+  transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s;
+}
+.zanwik-tilt.is-tilting {
+  transform: perspective(1200px) rotateX(var(--rx, 0deg))
+    rotateY(var(--ry, 0deg)) translateY(-3px);
+}
+
+.zanwik-hero-canvas-wrap canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Services mega-menu */
+#zanwik-services-menu {
+  position: absolute;
+  top: calc(100% + 0.35rem);
+  left: 0;
+  z-index: 80;
+  width: min(46rem, 94vw);
+  padding: 1rem 1.15rem 1.15rem;
+  border-radius: 0.85rem;
+  background: #121212;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+  display: none;
+}
+#zanwik-services-menu.open {
+  display: block;
+}
+#zanwik-services-menu .blueprint-callout {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  margin-bottom: 0.85rem;
+  padding: 0.85rem 1rem;
+  border-radius: 0.65rem;
+  background: rgba(193, 120, 50, 0.12);
+  border: 1px solid rgba(193, 120, 50, 0.35);
+  text-decoration: none;
+}
+#zanwik-services-menu .blueprint-callout strong {
+  color: #faf8f3;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+#zanwik-services-menu .blueprint-callout span {
+  color: rgba(250, 248, 243, 0.7);
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+#zanwik-services-menu .menu-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0.75rem 1.1rem;
+}
+#zanwik-services-menu .col-label {
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #c17832;
+  font-weight: 600;
+  margin-bottom: 0.35rem;
+}
+#zanwik-services-menu a.item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  text-decoration: none;
+  padding: 0.4rem 0;
+  color: rgba(250, 248, 243, 0.88);
+}
+#zanwik-services-menu a.item strong {
+  font-size: 0.84rem;
+  font-weight: 600;
+}
+#zanwik-services-menu a.item span {
+  font-size: 0.72rem;
+  line-height: 1.35;
+  color: rgba(250, 248, 243, 0.5);
+}
+#zanwik-services-menu a.item:hover strong {
+  color: #fff;
+}
+#zanwik-services-menu .work-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.85rem;
+  margin-top: 0.85rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+#zanwik-services-menu .work-row .col-label {
+  margin: 0;
+}
+#zanwik-services-menu a.work {
+  color: rgba(250, 248, 243, 0.7);
+  font-size: 0.8rem;
+  text-decoration: none;
+}
+#zanwik-services-menu a.work:hover {
+  color: #fff;
+}
+#zanwik-services-menu .all-link {
+  display: inline-block;
+  margin-top: 0.75rem;
+  color: #d98a45;
+  font-size: 0.85rem;
+  text-decoration: none;
+  font-weight: 600;
+}
+#zanwik-services-menu .all-link:hover {
+  color: #f0b06a;
+}
+
+/* FAQ accordion */
+.zanwik-faq-item > p {
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  margin-top: 0 !important;
+  transition: max-height 0.35s ease, opacity 0.28s ease, margin-top 0.28s ease;
+}
+.zanwik-faq-item.is-open > p {
+  max-height: 28rem;
+  opacity: 1;
+  margin-top: 0.75rem !important;
+}
+.zanwik-faq-item > h3 {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  user-select: none;
+}
+.zanwik-faq-item > h3::after {
+  content: "▾";
+  font-size: 0.75rem;
+  color: #c17832;
+  transition: transform 0.25s ease;
+  flex-shrink: 0;
+}
+.zanwik-faq-item.is-open > h3::after {
+  transform: rotate(180deg);
+}
+
+/* Mobile nav drawer */
+html.zanwik-nav-open,
+html.zanwik-nav-open body {
+  overflow: hidden;
+}
+#zanwik-mobile-nav {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+  visibility: hidden;
+}
+#zanwik-mobile-nav.open {
+  pointer-events: auto;
+  visibility: visible;
+}
+.zanwik-mobile-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+#zanwik-mobile-nav.open .zanwik-mobile-backdrop {
+  opacity: 1;
+}
+.zanwik-mobile-panel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: min(22rem, 88vw);
+  background: #0f0f0f;
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 1rem 1.15rem 2rem;
+  overflow-y: auto;
+  transform: translateX(105%);
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+#zanwik-mobile-nav.open .zanwik-mobile-panel {
+  transform: translateX(0);
+}
+.zanwik-mobile-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+  color: rgba(250, 248, 243, 0.7);
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.zanwik-mobile-close {
+  background: transparent;
+  border: 0;
+  color: #faf8f3;
+  font-size: 1.6rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0.25rem 0.4rem;
+}
+.zanwik-mobile-panel > a {
+  color: rgba(250, 248, 243, 0.88);
+  text-decoration: none;
+  font-size: 0.95rem;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+.zanwik-mobile-panel > a:hover {
+  color: #fff;
+}
+.zanwik-mobile-label {
+  margin: 0.85rem 0 0.2rem;
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #c17832;
+  font-weight: 600;
+}
+.zanwik-mobile-cta {
+  margin-top: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+.zanwik-mobile-cta .primary {
+  display: block;
+  text-align: center;
+  background: #c17832;
+  color: #fff !important;
+  border-radius: 999px;
+  padding: 0.7rem 1rem;
+  font-weight: 600;
+  border: 0 !important;
+}
+.zanwik-mobile-cta .ghost {
+  display: block;
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  color: rgba(250, 248, 243, 0.85) !important;
+  border-radius: 999px;
+  padding: 0.7rem 1rem;
+}
+
+@media (min-width: 1024px) {
+  #zanwik-mobile-nav {
+    display: none !important;
+  }
+}
+
+/* ========== Zanwik color system: Ink Navy + Signal Teal ========== */
+
+:root {
+  --bg: #0b1220;
+  --surface: #151d2e;
+  --bg-light: #eef2f6;
+  --surface-light: #f7f9fc;
+  --text: #0e1726;
+  --text-on-dark: #f3f6fa;
+  --muted: #5b6b7c;
+  --muted-on-dark: #9aa8b8;
+  --accent: #0f8a7a;
+  --accent-2: #1aa6c1;
+  --accent-hover: #0c7265;
+  --border: #c5d0dc;
+  --border-on-dark: rgba(243, 246, 250, 0.12);
+
+  /* Remap Krastor Tailwind theme vars → Zanwik */
+  --charcoal: var(--bg);
+  --charcoal-2: var(--surface);
+  --charcoal-3: #0a101a;
+  --steel: var(--muted);
+  --copper: var(--accent);
+  --amber: var(--accent-2);
+  --copper-bright: #14a090;
+  --copper-deep: var(--accent-hover);
+  --cream: var(--bg-light);
+  --warmwhite: var(--surface-light);
+  --ink: var(--text);
+  --steel-line: rgba(91, 107, 124, 0.25);
+  --copper-soft: rgba(15, 138, 122, 0.12);
+
+  --font-display: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-inter: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+}
+
+html,
+body {
+  font-family: var(--font-sans) !important;
+}
+
+.font-display,
+h1,
+h2,
+h3 {
+  font-family: var(--font-display) !important;
+  letter-spacing: -0.02em;
+}
+
+.eyebrow,
+[class*="tracking-[0.2em]"],
+[class*="tracking-\[0.18em\]"],
+[class*="tracking-wider"] {
+  color: var(--accent) !important;
+}
+
+/* Polyfill chrome that hardcoded copper */
+.zanwik-mobile-cta .primary {
+  background: var(--accent) !important;
+  color: #fff !important;
+}
+.zanwik-mobile-cta .ghost {
+  color: var(--text-on-dark) !important;
+  border-color: var(--border-on-dark) !important;
+}
+
+/* Soften cream→mist and copper→teal on common surfaces */
+.bg-cream {
+  background-color: var(--bg-light) !important;
+}
+.bg-warmwhite {
+  background-color: var(--surface-light) !important;
+}
+.bg-charcoal {
+  background-color: var(--bg) !important;
+}
+.bg-copper,
+.hover\:bg-amber:hover,
+.hover\:bg-copper:hover {
+  background-color: var(--accent) !important;
+}
+.hover\:bg-amber:hover {
+  background-color: var(--accent-hover) !important;
+}
+.text-copper {
+  color: var(--accent) !important;
+}
+.text-amber {
+  color: var(--accent-2) !important;
+}
+.border-copper,
+.border-copper\/20,
+.border-copper\/30,
+.border-copper\/40 {
+  border-color: color-mix(in srgb, var(--accent) 40%, transparent) !important;
+}
+
+/* Sticky section pills: active uses accent (remapped --copper) */
+nav[aria-label="On this page"] a[aria-current="true"] {
+  background-color: var(--accent) !important;
+  border-color: var(--accent) !important;
+  color: #fff !important;
+}
+nav[aria-label="On this page"] a:not([aria-current="true"]):hover {
+  border-color: var(--accent) !important;
+  color: var(--text) !important;
+}
+
+/* Header scrolled solid ink */
+header.zanwik-header-scrolled,
+header.bg-charcoal\/90 {
+  background-color: color-mix(in srgb, var(--bg) 90%, transparent) !important;
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-bottom: 1px solid color-mix(in srgb, var(--muted) 25%, transparent);
+}

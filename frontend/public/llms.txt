@@ -1,0 +1,93 @@
+# Zanwik
+
+> Zanwik is an AI-native business transformation firm for businesses with 11 to 500
+> employees. We build AI into how a business actually runs, then keep it running, checked
+> by people, and under the owner's control. We own the architecture. The client owns
+> the tools and the accounts they run on. Based in Clyde, North Carolina, serving
+> businesses across the South (Census South region), remote first with on-site work when a project calls for it. Focus markets: every
+> state in the South.
+
+Zanwik is not a marketing or search-marketing agency. We do not sell content, ads, brand, or
+reputation work. We are not a software reseller: every tool subscription is paid by the client
+directly to the vendor.
+
+## What Zanwik does
+
+Most businesses have tried AI, but few have it doing real work. Zanwik designs, builds, and
+runs the automation, AI agents, and connected systems that take routine work off a team, with
+a person approving the decisions that matter. Every engagement follows three steps:
+
+1. Start: the free readiness assessment (a few questions, score emailed) shows where the business stands and the one gap to fix first.
+2. Build: automation, AI agents, and connected systems that take that work over.
+3. Stay: a monthly retainer to monitor, fix, and improve what was built, and keep AI costs,
+   data, and access under the owner's control.
+
+Typical work: lead follow-up and intake, quotes and proposals, invoicing and payments,
+scheduling and booking, reporting, connecting CRM, accounting, booking, and job data into one
+source of truth, controlling AI spend, and private AI on the client's own hardware.
+
+## Proof from live engagements
+
+- **9 at launch.** Models in the launch lineup of a custom cabin builder's online configurator — 7 designable today — priced live, running since April 2026.
+- **235 of 237.** Search-indexed pages carried over intact when we rebuilt a manufacturer's site and systems.
+- **~9,000.** Verified contacts migrated to a new email platform for a specialty manufacturer, from a list the client estimated at 15,000.
+
+## Where Zanwik works
+
+Zanwik is based in Clyde, North Carolina 28721 and works with businesses across the South:
+North Carolina, South Carolina, Georgia, Tennessee, Florida, Alabama, Mississippi, Virginia, West Virginia, Kentucky, Louisiana, Arkansas, Texas, Oklahoma, Maryland, Delaware, and the District of Columbia. We work with businesses across the South remotely, from first call to launch, and we're glad to come on site when a project calls for it.
+
+State guides:
+
+- [North Carolina](https://www.zanwik.com/ai-automation/north-carolina): Charlotte, Raleigh, Durham, Greensboro, Winston-Salem, Asheville, Wilmington, Fayetteville
+- [South Carolina](https://www.zanwik.com/ai-automation/south-carolina): Charleston, Columbia, Greenville, Spartanburg, Myrtle Beach
+- [Tennessee](https://www.zanwik.com/ai-automation/tennessee): Nashville, Memphis, Knoxville, Chattanooga
+- [Georgia](https://www.zanwik.com/ai-automation/georgia): Atlanta, Savannah, Augusta, Athens, Macon
+- [Florida](https://www.zanwik.com/ai-automation/florida): Miami, Tampa, Orlando, Jacksonville, Tallahassee, Fort Lauderdale
+- [Mississippi](https://www.zanwik.com/ai-automation/mississippi): Jackson, Oxford, Tupelo, Hattiesburg, Gulfport, Biloxi
+- City guides: [Charlotte](https://www.zanwik.com/ai-automation/north-carolina/charlotte), [Greenville](https://www.zanwik.com/ai-automation/south-carolina/greenville). All locations: https://www.zanwik.com/ai-automation
+- Any city or town in these states, not just the cities listed, plus the rest of the South and the wider United States.
+
+## Start
+
+- [Free AI Diagnostic](https://www.zanwik.com/diagnostic): A free 30-minute call. We map the operation, find what's costing the business the most, and send a written assessment whether the business hires Zanwik or not.
+- [AI Readiness Assessment](https://www.zanwik.com/assess): A free readiness assessment. A few questions, and the score is emailed.
+- [AI Strategy & Roadmap](https://www.zanwik.com/services/strategy): What to fix first, what it's worth, and a phased roadmap with every phase priced and scoped.
+- [The Zanwik Blueprint](https://www.zanwik.com/blueprint): A fixed-fee plan the client owns, from $1,500.
+
+## Build
+
+- [Company Brain](https://www.zanwik.com/services): Everything your company knows, in one place your systems can use. Your SOPs, your past jobs, your policies, your records, pulled together into one private knowledge layer. Your team asks it questions and gets answers with the source attached, and every agent we build draws on the same knowledge instead of guessing.
+- [AI Workflow Automation](https://www.zanwik.com/services/operations): Automates follow-up, quotes, invoicing, scheduling, and intake. A person approves what matters.
+- [Systems Integration & Custom Software](https://www.zanwik.com/services/technology): Connects CRM, accounting, booking, and job data into one source of truth; custom software where off-the-shelf falls short.
+- [AI Agents for Business](https://www.zanwik.com/services/ai-architecture): Agents that handle whole tasks across a company's tools, with human approval steps. Built so the AI model can be switched without starting over.
+- [Software Consolidation](https://www.zanwik.com/services/consolidation): Audits the software a business pays for, then cuts, replaces, and combines it.
+- [AI Training for Teams](https://www.zanwik.com/services/enablement): Role-based training and an AI use policy built around real workflows.
+
+## Stay
+
+- [Managed AI Services](https://www.zanwik.com/services/embedded-partnership): Monthly monitoring, fixes, and improvements to the systems Zanwik built, reported in dollars.
+- [Business & AI Operations Dashboard](https://www.zanwik.com/services/command-center): One screen showing every system and AI agent, what it did, and what it cost.
+- [AI Cost Control](https://www.zanwik.com/services/token-governance): Tracking, limits, and routing for a team's AI spend.
+- [Private AI Deployment](https://www.zanwik.com/services/on-prem): AI on hardware the client owns; data never leaves the building.
+
+## Specialized work
+
+- [Product & Venture Engineering](https://www.zanwik.com/services/product-engineering): Designing and launching a new AI-powered product or revenue line.
+- [Transactions & Exit Readiness](https://www.zanwik.com/services/transactions): Getting systems and data ready for due diligence when raising, buying, or selling.
+
+## About
+
+- [About](https://www.zanwik.com/about): Who Zanwik is. Founded by Greyson Jones.
+- [How We Work](https://www.zanwik.com/how-we-work): The engagement model.
+- [Our Work](https://www.zanwik.com/work): Anonymized case studies from real engagements.
+- [Industries](https://www.zanwik.com/industries): Manufacturing, construction and trades, hospitality, real estate, professional services, retail, distribution, and more.
+- [Insights](https://www.zanwik.com/insights): Plain answers about putting AI to work in a real business.
+
+## Contact
+
+- Email: greyson@zanwik.com
+- Phone: (828) 550-8886 (Mon-Thu 8 AM-6 PM, Fri 8 AM-4 PM ET)
+- Google Maps listing: https://www.google.com/maps?cid=17247655392559715421
+- Take the assessment: https://www.zanwik.com/assess
+- [Full content reference](https://www.zanwik.com/llms-full.txt): the complete Zanwik service catalog and article index for AI assistants.

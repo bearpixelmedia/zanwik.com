@@ -1,0 +1,7 @@
+# Zanwik (mirrored from Krastor structure)
+User-Agent: *
+Allow: /
+Disallow: /api/
+
+Host: https://www.zanwik.com
+Sitemap: https://www.zanwik.com/sitemap.xml

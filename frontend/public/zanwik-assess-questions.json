@@ -1,0 +1,370 @@
+[
+  {
+    "id": 1,
+    "dimension": "foundation",
+    "text": "Is your customer and lead data in one connected system, or scattered across different places?",
+    "options": [
+      {
+        "label": "Scattered: spreadsheets, inboxes, and tools that don't talk to each other",
+        "points": 0
+      },
+      {
+        "label": "Partially in a CRM but with major gaps and a lot of manual entry",
+        "points": 1
+      },
+      {
+        "label": "Mostly in one system with some workarounds",
+        "points": 2
+      },
+      {
+        "label": "One connected system: clean data, automated intake, reliable records",
+        "points": 3
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "dimension": "foundation",
+    "text": "How would you describe your website and digital front door?",
+    "options": [
+      {
+        "label": "Outdated or missing: doesn't reflect what we actually do",
+        "points": 0
+      },
+      {
+        "label": "Basic presence, but no real way to capture or convert leads",
+        "points": 1
+      },
+      {
+        "label": "Functional: drives some leads, mostly manual follow-up after that",
+        "points": 2
+      },
+      {
+        "label": "Optimized: structured intake, tracking in place, automated response",
+        "points": 3
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "dimension": "foundation",
+    "text": "How consistent and usable is the data you collect from customers, jobs, or transactions?",
+    "options": [
+      {
+        "label": "Inconsistent: different formats, missing fields, hard to act on",
+        "points": 0
+      },
+      {
+        "label": "Mostly collected but not standardized or easy to search",
+        "points": 1
+      },
+      {
+        "label": "Reasonably clean in our main system, some gaps remain",
+        "points": 2
+      },
+      {
+        "label": "Structured, complete, and reliable enough to build real systems on top of",
+        "points": 3
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "dimension": "generative",
+    "text": "Is your team using AI to draft, summarize, or generate content as part of actual daily work?",
+    "options": [
+      {
+        "label": "No: nobody uses AI tools in any structured way",
+        "points": 0
+      },
+      {
+        "label": "A few people experiment on their own, no shared approach or regular use",
+        "points": 1
+      },
+      {
+        "label": "Several people use AI regularly to draft emails, quotes, or summaries, with some shared practices",
+        "points": 2
+      },
+      {
+        "label": "Team-wide: AI is woven into real workflows across multiple roles, consistently producing output",
+        "points": 3
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "dimension": "generative",
+    "text": "How is AI being used to answer questions or pull information from your own documents, calls, or data?",
+    "options": [
+      {
+        "label": "It isn't: we look things up the old way or rely on memory",
+        "points": 0
+      },
+      {
+        "label": "Some people use generic AI tools, but not with our actual business information",
+        "points": 1
+      },
+      {
+        "label": "We summarize calls or look things up with AI occasionally, but it is not a standard practice",
+        "points": 2
+      },
+      {
+        "label": "AI can answer from our own docs, call recordings, or CRM: it is part of how we work",
+        "points": 3
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "dimension": "generative",
+    "text": "When a proposal, email to a client, or internal report needs to be produced, what does that look like?",
+    "options": [
+      {
+        "label": "Written from scratch every time, by hand, by one person",
+        "points": 0
+      },
+      {
+        "label": "Some templates exist, but it still takes significant manual effort",
+        "points": 1
+      },
+      {
+        "label": "AI helps draft it, a person reviews and adjusts, time is meaningfully cut",
+        "points": 2
+      },
+      {
+        "label": "AI produces a strong first draft from our context and templates; review takes minutes not hours",
+        "points": 3
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "dimension": "autonomous",
+    "text": "If a lead comes in at 10pm, what happens to it by the time your team starts work the next morning?",
+    "options": [
+      {
+        "label": "It sits until someone manually follows up, often the next day or later",
+        "points": 0
+      },
+      {
+        "label": "An auto-reply goes out, but nothing else happens until a person picks it up",
+        "points": 1
+      },
+      {
+        "label": "The lead is responded to automatically and added to a follow-up sequence, no human needed overnight",
+        "points": 2
+      },
+      {
+        "label": "The lead is qualified, routed, and booked: a human only touches it if it needs a judgment call",
+        "points": 3
+      }
+    ]
+  },
+  {
+    "id": 8,
+    "dimension": "autonomous",
+    "text": "Are there business events -- like a signed contract, a completed job, or a payment received -- that automatically trigger the next step without anyone having to remember to do it?",
+    "options": [
+      {
+        "label": "No: every next step requires a person to notice and act",
+        "points": 0
+      },
+      {
+        "label": "Maybe one or two simple automations like a reminder email, but most handoffs are manual",
+        "points": 1
+      },
+      {
+        "label": "Several automations run without human input, though some handoffs still require a person to close the loop",
+        "points": 2
+      },
+      {
+        "label": "Yes: meaningful business processes run end-to-end without a human in the loop",
+        "points": 3
+      }
+    ]
+  },
+  {
+    "id": 9,
+    "dimension": "autonomous",
+    "text": "How much repetitive, manually-executed work still consumes your team's hours each week?",
+    "options": [
+      {
+        "label": "Most of our time: nearly everything is done by hand",
+        "points": 0
+      },
+      {
+        "label": "Significant: we have identified the bottlenecks but have not fixed them",
+        "points": 1
+      },
+      {
+        "label": "Some: we automated the obvious things, a few stubborn manual steps remain",
+        "points": 2
+      },
+      {
+        "label": "Minimal: we have systematically removed the repetitive work from our team's plates",
+        "points": 3
+      }
+    ]
+  },
+  {
+    "id": 10,
+    "dimension": "agentic",
+    "text": "Do you have any systems that can receive a goal, figure out the steps, and take multi-step actions across tools -- with human approval for the big calls?",
+    "options": [
+      {
+        "label": "No: all multi-step work requires a person to orchestrate each step",
+        "points": 0
+      },
+      {
+        "label": "We use some AI tools in sequence, but a person is connecting the dots between each one",
+        "points": 1
+      },
+      {
+        "label": "One or two workflows operate semi-autonomously: an agent does the steps, a human reviews before anything commits",
+        "points": 2
+      },
+      {
+        "label": "Yes: goal-driven agents handle complex multi-step work with guardrails and human approval gates built in",
+        "points": 3
+      }
+    ]
+  },
+  {
+    "id": 11,
+    "dimension": "agentic",
+    "text": "Do you have visibility -- a dashboard or command center -- showing what your AI systems are doing, what they decided, and where they stopped for a human?",
+    "options": [
+      {
+        "label": "No: we have no real-time view into what automated systems are doing",
+        "points": 0
+      },
+      {
+        "label": "We can check logs after the fact, but there is no live visibility",
+        "points": 1
+      },
+      {
+        "label": "Some visibility exists for specific systems, but no unified view",
+        "points": 2
+      },
+      {
+        "label": "Yes: we have a command-center view showing agent activity, decisions, and escalations in real time",
+        "points": 3
+      }
+    ]
+  },
+  {
+    "id": 12,
+    "dimension": "agentic",
+    "text": "When your automated systems hit an edge case they weren't built for, what happens?",
+    "options": [
+      {
+        "label": "They fail silently or do nothing: someone discovers it later",
+        "points": 0
+      },
+      {
+        "label": "We get an error or notification, but there is no structured escalation",
+        "points": 1
+      },
+      {
+        "label": "The system flags it and holds until a human decides, most of the time",
+        "points": 2
+      },
+      {
+        "label": "Guardrails route it to a human with context: the agent hands off cleanly and resumes after approval",
+        "points": 3
+      }
+    ]
+  },
+  {
+    "id": 13,
+    "dimension": "governance",
+    "text": "Do you know what AI tools your team is using, what they cost, and what data they can access?",
+    "options": [
+      {
+        "label": "No: employees use whatever they find, we have no inventory or oversight",
+        "points": 0
+      },
+      {
+        "label": "Informal awareness: we know roughly what is being used but nothing is tracked or reviewed",
+        "points": 1
+      },
+      {
+        "label": "We have a list of approved tools and a rough sense of spend, but it is not systematically reviewed",
+        "points": 2
+      },
+      {
+        "label": "Yes: documented tool inventory, per-seat costs tracked, data access policies in place and reviewed regularly",
+        "points": 3
+      }
+    ]
+  },
+  {
+    "id": 14,
+    "dimension": "governance",
+    "text": "Do you have guardrails around what AI can do with sensitive information -- customer data, financial records, confidential communications?",
+    "options": [
+      {
+        "label": "No guardrails: AI tools have access to whatever they can reach",
+        "points": 0
+      },
+      {
+        "label": "We try to be careful but there is no written policy or enforced limit",
+        "points": 1
+      },
+      {
+        "label": "Some guidelines exist, not consistently enforced or audited",
+        "points": 2
+      },
+      {
+        "label": "Clear policy, enforced access controls, outputs audited regularly",
+        "points": 3
+      }
+    ]
+  },
+  {
+    "id": 15,
+    "dimension": "ownership",
+    "text": "Is there a specific person in your organization accountable for your AI roadmap and results?",
+    "options": [
+      {
+        "label": "No one: AI is everyone's side project and no one's responsibility",
+        "points": 0
+      },
+      {
+        "label": "It comes up in leadership conversations, but no one formally owns it",
+        "points": 1
+      },
+      {
+        "label": "Someone informally owns it, no defined outcomes or reporting",
+        "points": 2
+      },
+      {
+        "label": "A named person or team owns AI adoption with defined outcomes they are measured on",
+        "points": 3
+      }
+    ]
+  },
+  {
+    "id": 16,
+    "dimension": "ownership",
+    "text": "Do you have a sequenced plan for where AI gets deployed next -- and is it tied to real business outcomes?",
+    "options": [
+      {
+        "label": "No plan: we act on whatever someone reads or suggests",
+        "points": 0
+      },
+      {
+        "label": "General direction but no specific sequence or prioritization",
+        "points": 1
+      },
+      {
+        "label": "A rough roadmap exists, but it has not been validated against ROI or re-sequenced recently",
+        "points": 2
+      },
+      {
+        "label": "A prioritized roadmap tied to business outcomes, reviewed quarterly, with clear next steps",
+        "points": 3
+      }
+    ]
+  }
+]
