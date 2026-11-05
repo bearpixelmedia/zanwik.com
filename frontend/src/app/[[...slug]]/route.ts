@@ -52,7 +52,13 @@ export async function GET(
   }
 
   try {
-    const html = await readFile(resolved, "utf8");
+    let html = await readFile(resolved, "utf8");
+    // Site-wide voice entry: discrete Talk control → /talk composer overlay.
+    const voiceInject =
+      '<script defer src="/zanwik-voice-fab.js"></script>\n';
+    if (html.includes("</body>") && !html.includes("zanwik-voice-fab.js")) {
+      html = html.replace("</body>", `${voiceInject}</body>`);
+    }
     return new NextResponse(html, {
       status: 200,
       headers: {

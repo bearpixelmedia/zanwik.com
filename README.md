@@ -14,10 +14,22 @@ Marketing site for Zanwik — mirrored 1:1 from [Krastor](https://www.krastor.co
 ```bash
 cd frontend
 npm install
+cp .env.example .env.local   # then set XAI_API_KEY
 npm run dev
 ```
 
 Open http://localhost:3000
+
+### Grok voice mode
+
+Duplex speech-to-speech uses `grok-voice-latest` via ephemeral tokens (long-lived `XAI_API_KEY` stays on the server).
+
+1. Set **`XAI_API_KEY`** in `.env.local` (local) or Vercel Project → Settings → Environment Variables (Production + Preview).
+2. Site-wide: **Talk to Zanwik** (bottom-right) opens the composer overlay.
+3. Direct page: `/talk` (or `/talk?embed=1` inside the overlay).
+4. Dev logging: client POSTs to `/api/voice/log` → `frontend/.voice-logs/<sessionId>.ndjson` (gitignored). In production the sink is off unless `VOICE_LOG=1`.
+
+Never put `XAI_API_KEY` in `NEXT_PUBLIC_*` or client code.
 
 ## Branding notes
 
