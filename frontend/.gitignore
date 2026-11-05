@@ -1,7 +1,10 @@
 .vercel
-.env*
+.env
+.env.local
+.env.*.local
 node_modules
 .next
 out
-.vercel
-.env*
+.voice-logs/
+tsconfig.tsbuildinfo
+*.tsbuildinfo
