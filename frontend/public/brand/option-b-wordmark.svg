@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 48" role="img" aria-label="Zanwik">
+  <rect x="0" y="4" width="40" height="40" rx="8" fill="#0F8A7A"/>
+  <path d="M9 12h22v4.2L16.2 31.8H31V36H9v-4.2L22.8 16.2H9V12z" fill="#0B1220"/>
+  <text x="52" y="33" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif" font-size="28" font-weight="800" letter-spacing="-0.04em" fill="#F8FAFC">ZANWIK</text>
+</svg>
