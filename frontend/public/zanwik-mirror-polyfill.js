@@ -168,7 +168,7 @@
             scale: 1,
             ax: 0.45 * a,
             ay: a,
-            color: [193, 120, 50],
+            color: [15, 138, 122],
             node: true,
             lw: 1.1,
             op: 0.9,
@@ -177,7 +177,7 @@
             scale: 0.58,
             ax: -(0.7 * a),
             ay: -(1.25 * a),
-            color: [232, 168, 76],
+            color: [26, 166, 193],
             node: false,
             lw: 0.8,
             op: 0.5,
@@ -215,7 +215,7 @@
             projected.forEach(function (p) {
               var e = (p.depth + 1) / 2;
               ctx.fillStyle =
-                "rgba(245,240,232," + (0.25 + 0.7 * e).toFixed(3) + ")";
+                "rgba(243,246,250," + (0.25 + 0.7 * e).toFixed(3) + ")";
               ctx.beginPath();
               ctx.arc(p.sx, p.sy, 1.4 + 2.6 * e, 0, Math.PI * 2);
               ctx.fill();
@@ -379,7 +379,7 @@
     menu.id = "zanwik-services-menu";
     menu.innerHTML = [
       '<a class="blueprint-callout" href="/blueprint">',
-      "<strong>The Zanwik Blueprint</strong>",
+      "<strong>The Zanwik Ops Spec</strong>",
       "<span>Start here: a fixed-fee plan you own, from $1,500</span>",
       "</a>",
       '<div class="menu-cols">',
@@ -460,7 +460,7 @@
       }).join(""),
       '<div class="zanwik-mobile-cta">',
       '<a class="primary" href="/assess">Take the assessment</a>',
-      '<a class="ghost" href="https://cal.com/krastor/intro" target="_blank" rel="noreferrer">Book a Discovery Call</a>',
+      '<a class="ghost" href="mailto:byron@zanwik.com" target="_blank" rel="noreferrer">Book a Discovery Call</a>',
       "</div>",
       "</nav>",
     ].join("");
@@ -903,7 +903,7 @@
           '<p class="mt-3 text-sm leading-relaxed text-steel">Based on ' +
           QUESTIONS.length +
           " questions across six operating dimensions. On the live site this is emailed with a per-dimension breakdown; this mirror shows the local score only.</p>" +
-          '<a class="mt-5 inline-flex rounded-full bg-copper px-5 py-2.5 text-sm font-medium text-warmwhite" href="/blueprint">See the Blueprint</a>' +
+          '<a class="mt-5 inline-flex rounded-full bg-copper px-5 py-2.5 text-sm font-medium text-warmwhite" href="/blueprint">See the Ops Spec</a>' +
           "</div>";
         if (backBtn) {
           backBtn.disabled = false;
