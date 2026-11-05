@@ -1,4 +1,4 @@
-# Zanwik Krastor mirror — Next.js 14 preview
+# Zanwik site — Next.js 14 preview
 FROM node:20-alpine AS deps
 WORKDIR /app
 COPY package.json package-lock.json ./

@@ -1,4 +1,5 @@
-# Zanwik (mirrored from Krastor structure)
+# Zanwik — https://www.zanwik.com
+# Contact: Byron McCluney · byron@zanwik.com · 828-989-3682
 User-Agent: *
 Allow: /
 Disallow: /api/

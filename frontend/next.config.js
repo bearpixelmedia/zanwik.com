@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Mirrored Krastor pages are served from content/mirror via catch-all route.
+  // Static mirrored pages are served from content/mirror via catch-all route.
   // Static assets live under public/assets-kr (renamed from /_next to avoid collisions).
   images: {
     remotePatterns: [{ protocol: "https", hostname: "**" }],
