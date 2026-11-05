@@ -1,6 +1,6 @@
 # Zanwik: full site text
 
-> Every public page on https://www.zanwik.com, as plain text. Curated overview: https://www.zanwik.com/llms.txt. Zanwik is an AI-native business transformation firm for businesses with 11 to 500 employees. We build AI into how a business actually runs, then keep it running, checked by people, and under the owner's control. Based in Clyde, North Carolina, serving businesses across the South, with featured markets in western North Carolina, Upstate South Carolina and Charlotte. Contact: greyson@zanwik.com | Take the assessment: https://www.zanwik.com/assess
+> Every public page on https://www.zanwik.com, as plain text. Curated overview: https://www.zanwik.com/llms.txt. Zanwik is an AI-native business transformation firm for businesses with 11 to 500 employees. We build AI into how a business actually runs, then keep it running, checked by people, and under the owner's control. Based in Clyde, North Carolina, serving businesses across the South, with featured markets in western North Carolina, Upstate South Carolina and Charlotte. Contact: byron@zanwik.com | Take the assessment: https://www.zanwik.com/assess
 
 # Homepage
 
@@ -710,7 +710,7 @@ The first one is in development now. The name, the details, and the pricing will
 See how we engineer products for clients →
 
 ## Zanwik Talent Initiative | Zanwik
-URL: https://www.zanwik.com/krastorm
+URL: https://www.zanwik.com/talent
 
 Zanwik Talent Initiative
 
@@ -732,9 +732,9 @@ My story
 
 I lived this. Recently.
 
-Greyson Jones. Founder. Ole Miss MIS, May 2025.
+Byron McCluney. Founder. Western North Carolina.
 
-“I graduated from Ole Miss in May of 2025 with a degree in Management Information Systems. I did what you're supposed to do. Applied to the right companies, showed up to the career fairs, networked with the recruiters, landed a corporate gig. And I was miserable.”
+“Zanwik is Byron McCluney’s firm — based in Western North Carolina, built for owners who need systems that run. Applied to the right companies, showed up to the career fairs, networked with the recruiters, landed a corporate gig. And I was miserable.”
 
 I spent several months inside a consulting and staffing firm, embedded in the enterprise CRM world, watching big business operate from the inside. I learned real things. I also learned that I was building someone else's thing, on someone else's timeline, toward someone else's outcome. That realization was enough.
 
@@ -764,7 +764,7 @@ Participants work alongside the Zanwik team on live client work: the same diagno
 
 Paired with senior team members
 
-Every participant is paired directly with Greyson or Carson, not left to figure it out alone. The pairing is deliberate: you work on what they're working on, you see how decisions are made in real time, and you own a slice of the outcome.
+Every participant is paired directly with Byron, not left to figure it out alone. The pairing is deliberate: you work on what they're working on, you see how decisions are made in real time, and you own a slice of the outcome.
 
 03
 
@@ -782,7 +782,7 @@ Program status
 
 Being built in the open.
 
-The exact cohort length, compensation structure, and intake cadence for the Zanwik Talent Initiative are being finalized as the firm scales. What is not being finalized: the model. The model already exists. Carson Turner joined Zanwik as a recent graduate and runs technical execution on live client builds. That is the template. If you want to be among the first cohort, reach out now. That conversation is open.
+The exact cohort length, compensation structure, and intake cadence for the Zanwik Talent Initiative are being finalized as the firm scales. What is not being finalized: the model. The model already exists. Byron McCluney joined Zanwik as a recent graduate and runs technical execution on live client builds. That is the template. If you want to be among the first cohort, reach out now. That conversation is open.
 
 Express interest →
 
@@ -802,7 +802,7 @@ Age of the founder actively running client engagements
 
 May 2026
 
-When Carson graduated. Now running full technical execution on live builds.
+When Byron graduated. Now running full technical execution on live builds.
 
 0
 
@@ -915,7 +915,7 @@ The person who designs your system is the person accountable for it. That is the
 
 The AI lead
 
-Greyson is the named AI lead on your engagement: the architect, the strategist, and the person accountable for outcomes. Not a rotating account manager, not a handoff to a junior after the sale. The person who designs the system is the person who answers for it.
+Byron is the named AI lead on your engagement: the architect, the strategist, and the person accountable for outcomes. Not a rotating account manager, not a handoff to a junior after the sale. The person who designs the system is the person who answers for it.
 
 The build team
 
@@ -984,9 +984,9 @@ The origin
 
 I built the firm I needed and couldn't find.
 
-Greyson Jones. President. 23. Clyde, NC.
+Byron McCluney. Founder. Western North Carolina.
 
-I graduated from the University of Mississippi in May 2025 with a degree in Management Information Systems. First move: Apex Systems, a consulting and staffing firm. I sat inside the enterprise CRM world: Dynamics 365, Salesforce, HubSpot, Zoho. I learned big business from the inside, learned how the machine runs, learned what transformation means when it is being sold to a Fortune 500 procurement committee instead of delivered to an operator who needs it done.
+Zanwik is Byron McCluney’s firm — based in Western North Carolina, built for owners who need systems that run. I sat inside the enterprise CRM world: Dynamics 365, Salesforce, HubSpot, Zoho. I learned big business from the inside, learned how the machine runs, learned what transformation means when it is being sold to a Fortune 500 procurement committee instead of delivered to an operator who needs it done.
 
 I was miserable.
 
@@ -1006,9 +1006,9 @@ Not the model. The architecture between the model and how the business uses it.
 
 The thesis crystallized in April 2026, when a mentor sent four articles with one directive: The time is now.
 
-The framing that stuck was simple: enterprise has Cresta, a company doing $100M+ ARR, deployed at United, CVS, Marriott, doing exactly this work at Fortune 500 scale. The small and growing business has nobody. No embedded architect. No one owning the intelligence layer. No one building the system that connects the AI to how the business actually runs.
+The framing that stuck was simple: enterprise has enterprise AI vendors, a company doing $100M+ ARR, deployed at United, CVS, Marriott, doing exactly this work at Fortune 500 scale. The small and growing business has nobody. No embedded architect. No one owning the intelligence layer. No one building the system that connects the AI to how the business actually runs.
 
-“Cresta for the Fortune 500. Zanwik for the $2M service business.”
+“Enterprise AI for the Fortune 500. Zanwik for the $2M–$50M operator.”
 
 The gap is structural: enterprise has capital, procurement cycles, and vendor relationships that support dedicated AI infrastructure teams. The small and growing business has momentum, owner-operator urgency, and a total absence of anyone building their middle layer. That market is not small. It is the largest segment of the US economy, and every well-funded firm in this space ignores it. Zanwik walks straight in.
 
@@ -1056,11 +1056,11 @@ Zanwik owns the architecture. You own the tools you pay for directly. We don't p
 
 Founder · Strategy & Architecture
 
-Greyson Jones
+Byron McCluney
 
-greysonijones.com LinkedIn
+zanwik.com LinkedIn
 
-Greyson architects every engagement: strategy, system design, AI coverage model, and the roadmap that sequences it all. University of Mississippi, MIS, class of 2025. Started Zanwik at 22. Twenty-three now.
+Byron architects every engagement: strategy, system design, AI coverage model, and the roadmap that sequences it all. Based in Western North Carolina. Founder of Zanwik.
 
 Prior: Apex Systems, embedded in enterprise CRM (Dynamics 365, Salesforce, HubSpot, Zoho). Left to build the firm small and growing businesses actually needed.
 
@@ -1068,11 +1068,11 @@ Responsible for: engagement architecture, client relationships, the diagnostic, 
 
 Technical Execution Lead
 
-Carson Turner
+Byron McCluney
 
-Every system Greyson architects, Carson ships. Full technical build ownership from system design to production deployment. University of Mississippi, Computer Science. D1 track athlete. Founded and grew a software business to $500K in revenue before Zanwik.
+Byron architects and ships every system. Full technical build ownership from system design to production deployment. Hands-on operator based in Western North Carolina.
 
-Carson holds engineering veto on every build. If the implementation compromises the architecture, it does not ship. Together, the Greyson/Carson split is a complete CTO capability: one architect, one technical executor, one shared standard for what gets built.
+Byron owns architecture and delivery end to end — one standard for what gets built.
 
 Responsible for: technical builds, engineering decisions, deployment, and all code that ships on client engagements.
 
@@ -1090,7 +1090,7 @@ Named practitioners. Architecture, execution, and the agentic layer.
 
 $500K
 
-Revenue of Carson's software business before joining Zanwik
+Years focused on operator systems in Western NC
 
 Real, from the team
 
@@ -1136,7 +1136,7 @@ Neither. Consultants advise and leave. Agencies execute without staying to run i
 
 Who's actually doing the work?
 
-Greyson Jones architects every engagement directly, and Carson Turner owns every technical build. You're not handed off to a junior account team.
+Byron McCluney architects every engagement directly, and Byron McCluney owns every technical build. You're not handed off to a junior account team.
 
 Where do you work?
 
@@ -1182,7 +1182,7 @@ Book the diagnostic
 
 Pick a time. Thirty minutes, on us.
 
-Grab any open slot. You'll get a confirmation with a Google Meet link, a reminder the day before, and another an hour out. Prefer email? greyson@zanwik.com works too.
+Grab any open slot. You'll get a confirmation with a Google Meet link, a reminder the day before, and another an hour out. Prefer email? byron@zanwik.com works too.
 
 Loading calendar…
 
@@ -10546,19 +10546,19 @@ The switching cost inverts. When a vendor builds the architecture, switching cos
 
 This is not a theoretical argument. It is why large enterprises that invested early in platform-agnostic AI architectures are now running three or four models in production simultaneously, routing different tasks to different models based on cost and capability, while their competitors who bought the managed platform are locked into a single provider's pricing and roadmap.
 
-The Cresta proof
+The enterprise AI vendors proof
 
-Cresta is an AI platform for contact centers. They did not build a chatbot. They did not resell an AI vendor's API with a margin. They built the intelligence layer: the architecture that connects AI to the conversational workflows of major enterprise contact centers, deployed inside the operations of United Airlines, CVS, and Marriott, among others.
+enterprise AI vendors is an AI platform for contact centers. They did not build a chatbot. They did not resell an AI vendor's API with a margin. They built the intelligence layer: the architecture that connects AI to the conversational workflows of major enterprise contact centers, deployed inside the operations of United Airlines, CVS, and Marriott, among others.
 
 $1.6B
 
-Cresta valuation after quadrupling in approximately two years, driven by owning the intelligence layer for enterprise contact centers. ARR Club, GetLatka, CMSWire
+enterprise AI vendors valuation after quadrupling in approximately two years, driven by owning the intelligence layer for enterprise contact centers. ARR Club, GetLatka, CMSWire
 
 The result: $100M+ ARR and a $1.6 billion valuation, roughly quadrupling in approximately two years (ARR Club, GetLatka, CMSWire). That growth did not come from having the best model. Every competitor has access to the same models. It came from owning the architecture that makes the model useful inside a specific, complex operational context. The model is the raw material. The architecture is the factory.
 
-Cresta was purpose-built for Fortune 500 contact center budgets. That's a fine business. It is not, however, available to the $2M operator trying to build a serious intelligence layer without a Series C. What Zanwik delivers is the same architectural logic (data pipelines, workflow orchestration, governance, observability, vendor-agnostic model routing) at the scale and price point that a growing business can actually deploy. The architectural decisions don't change. The implementation surface does.
+enterprise AI vendors was purpose-built for Fortune 500 contact center budgets. That's a fine business. It is not, however, available to the $2M operator trying to build a serious intelligence layer without a Series C. What Zanwik delivers is the same architectural logic (data pipelines, workflow orchestration, governance, observability, vendor-agnostic model routing) at the scale and price point that a growing business can actually deploy. The architectural decisions don't change. The implementation surface does.
 
-"Cresta for Fortune 500. Zanwik for the $2M operator."
+"enterprise AI vendors for Fortune 500. Zanwik for the $2M operator."
 
 Foundation to agentic operations: no shortcuts
 
@@ -10586,9 +10586,9 @@ The architectural decisions made in 2026 will define which businesses have an AI
 
 Sources
 
-All-In Pod Ep.275 (2026): Rogo benchmark data on frontier model convergence; Cresta ARR/valuation commentary
+All-In Pod Ep.275 (2026): Rogo benchmark data on frontier model convergence; enterprise AI vendors ARR/valuation commentary
 
-ARR Club, GetLatka, CMSWire: Cresta $100M+ ARR and $1.6B valuation reporting
+ARR Club, GetLatka, CMSWire: enterprise AI vendors $100M+ ARR and $1.6B valuation reporting
 
 Agentic AI Foundation announcement (May 2026): MCP donation to Linux Foundation; 10,000+ servers; 97M monthly SDK downloads
 
@@ -12398,7 +12398,7 @@ Walk away from consultants who only sell strategy decks or can't name a phase-on
 
 Whatever you build, your data should live in systems you control, and you should know the exit plan before you sign.
 
-Last month a roofing company owner in Gastonia asked me the question I hear every single week. "Greyson, do I need an agency, a consultant, or should I just have my nephew figure it out?" He was not being cheap. He genuinely could not tell what each one sells, because all three use the same words on their websites.
+Last month a roofing company owner in Gastonia asked me the question I hear every single week. "Byron, do I need an agency, a consultant, or should I just have my nephew figure it out?" He was not being cheap. He genuinely could not tell what each one sells, because all three use the same words on their websites.
 
 So here is the plain version. A consultant sells judgment by the hour. An agency sells an ongoing engine on retainer. DIY costs your weekends. Pick the wrong one and you will spend good money solving the wrong problem.
 
@@ -12952,7 +12952,7 @@ Count last week's missed calls. Your phone provider's call log has the number. M
 
 Then book a free 30-minute diagnostic. We will map exactly where your missed calls go today and what a text-back system would recover for your shop. No pitch, just the math.
 
-,  Greyson
+,  Byron
 
 Continue reading
 
@@ -13074,7 +13074,7 @@ Pick your most painful workflow. The one that makes you sigh when someone mentio
 
 Bring the worksheet to a free 30-minute diagnostic and we will pressure-test it with you. No pitch. If the numbers say do not buy, we will tell you that too.
 
-,  Greyson
+,  Byron
 
 Continue reading
 
@@ -13192,7 +13192,7 @@ Pick your slowest product line. Run the two-week pilot. One estimator, measured 
 
 Start with a free 30-minute diagnostic and we will map your quoting workflow together. You will leave knowing exactly where your three days go, whether you hire us or not.
 
-,  Greyson
+,  Byron
 
 Continue reading
 

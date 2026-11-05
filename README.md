@@ -1,12 +1,12 @@
 # Zanwik.com
 
-Marketing site for Zanwik — mirrored 1:1 from [Krastor](https://www.krastor.com/) (layout, pages, copy, and structure), hosted on the zanwik.com domain with Zanwik branding.
+Marketing site for **Zanwik** (Byron McCluney · byron@zanwik.com · 828-989-3682).
 
 ## Stack
 
 - **Next.js 14** (App Router) — catch-all route serves pre-rendered HTML
-- **Static mirror** of 322 Krastor pages under `frontend/content/mirror/`
-- **Assets** under `frontend/public/assets-kr/` (CSS/fonts/JS from source; `/_next` renamed to avoid Next build collisions)
+- **Static pages** under `frontend/content/mirror/`
+- **Assets** under `frontend/public/assets-kr/` (CSS/fonts/JS; `/_next` renamed to avoid Next build collisions)
 - Deploy: **Vercel** (`frontend/vercel.json`)
 
 ## Local development
@@ -19,13 +19,13 @@ npm run dev
 
 Open http://localhost:3000
 
-## Branding notes
+## Branding / contacts
 
-- Domain / canonical / titles use **Zanwik** / **zanwik.com**
-- Product route `/krastorm` and product name **Krastorm** kept from source
-- External Cal.com booking still points at `cal.com/krastor/intro` (third-party; update when Zanwik has its own event)
-- Client-side Next.js RSC hydration was stripped from mirrored HTML (static full-page navigation). Visual CSS/layout match source; some JS-only interactions (client components) may differ until rebuilt natively
+- Public contact is **Byron McCluney only** — `byron@zanwik.com`, `828-989-3682`
+- Booking CTAs use `mailto:byron@zanwik.com` until a Zanwik Cal.com event exists
+- Product routes use Zanwik names (e.g. `/talent`, `/insights/the-zanwik-method`)
+- Client-side Next.js RSC hydration was stripped from mirrored HTML (static full-page navigation)
 
-## Source
+## Provenance
 
-Mirrored from https://www.krastor.com/ sitemap (322 URLs) on 2026-11-04.
+Page structure was originally mirrored from an external reference site inventory (2026-11-04). User-facing copy, contacts, and people are Zanwik / Byron only — do not reintroduce third-party staff names or booking links.
