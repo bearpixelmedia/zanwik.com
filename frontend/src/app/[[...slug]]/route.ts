@@ -2,6 +2,7 @@ import { readdirSync, statSync } from "fs";
 import { readFile } from "fs/promises";
 import path from "path";
 import { NextRequest, NextResponse } from "next/server";
+import { enhanceSeoHtml } from "@/lib/seoEnhance";
 
 export const dynamic = "force-static";
 export const dynamicParams = false;
@@ -52,7 +53,8 @@ export async function GET(
   }
 
   try {
-    const html = await readFile(resolved, "utf8");
+    const raw = await readFile(resolved, "utf8");
+    const html = enhanceSeoHtml(raw, context.params.slug);
     return new NextResponse(html, {
       status: 200,
       headers: {

@@ -1,5 +1,41 @@
-# Zanwik (mirrored from Krastor structure)
+# Zanwik
+# AI crawlers are welcome. Machine-readable site text for assistants:
+# https://www.zanwik.com/llms.txt
+# https://www.zanwik.com/llms-full.txt
+
 User-Agent: *
+Allow: /
+Disallow: /api/
+
+User-Agent: GPTBot
+Allow: /
+Disallow: /api/
+
+User-Agent: ChatGPT-User
+Allow: /
+Disallow: /api/
+
+User-Agent: ClaudeBot
+Allow: /
+Disallow: /api/
+
+User-Agent: Claude-Web
+Allow: /
+Disallow: /api/
+
+User-Agent: anthropic-ai
+Allow: /
+Disallow: /api/
+
+User-Agent: Google-Extended
+Allow: /
+Disallow: /api/
+
+User-Agent: PerplexityBot
+Allow: /
+Disallow: /api/
+
+User-Agent: Applebot-Extended
 Allow: /
 Disallow: /api/
 
