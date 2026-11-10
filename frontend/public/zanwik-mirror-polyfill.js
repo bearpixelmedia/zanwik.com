@@ -1,6 +1,6 @@
 /**
  * Zanwik static-mirror polyfill (iter 3)
- * Ports Krastor's icosahedron hero canvas, Services mega-menu, mobile drawer,
+ * Ports Zanwik's icosahedron hero canvas, Services mega-menu, mobile drawer,
  * FAQ accordion, scroll reveals, and card tilt — without Next hydration.
  */
 (function () {
@@ -56,13 +56,13 @@
     });
   }
 
-  /* ---------- Hero: Krastor icosahedron canvas (ported) ---------- */
+  /* ---------- Hero: Zanwik icosahedron canvas (ported) ---------- */
   function setupHeroCanvas() {
     var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     var canvases = document.querySelectorAll("canvas.pointer-events-none");
     if (!canvases.length) return;
 
-    // Golden-ratio icosahedron unit vertices (same as Krastor source)
+    // Golden-ratio icosahedron unit vertices (same as Zanwik source)
     var PHI = 1.61803398875;
     var verts = [
       [-1, PHI, 0],
@@ -261,7 +261,7 @@
     });
   }
 
-  /* ---------- Shared mega-menu link data (from Krastor source) ---------- */
+  /* ---------- Shared mega-menu link data (from Zanwik source) ---------- */
   var START = [
     {
       href: "/diagnostic",
@@ -1017,7 +1017,7 @@
       });
   }
 
-  /* ---------- Sticky "On this page" scroll spy (Krastor SectionIndex) ---------- */
+  /* ---------- Sticky "On this page" scroll spy (Zanwik SectionIndex) ---------- */
   function setupSectionIndex() {
     var nav = document.querySelector('nav[aria-label="On this page"]');
     if (!nav) return;
@@ -1067,7 +1067,7 @@
 
     function update() {
       raf = 0;
-      // Krastor: last section whose top is at or above 160px
+      // Zanwik: last section whose top is at or above 160px
       var activeId = items[0] ? items[0].id : "";
       for (var i = 0; i < items.length; i++) {
         var section = document.getElementById(items[i].id);
@@ -1087,7 +1087,7 @@
     window.addEventListener("resize", onScroll);
   }
 
-  /* ---------- Header solidifies after 24px scroll (Krastor Nav) ---------- */
+  /* ---------- Header solidifies after 24px scroll (Zanwik Nav) ---------- */
   function setupHeaderScroll() {
     var header = document.querySelector("header.fixed");
     if (!header) return;
@@ -1100,7 +1100,7 @@
     // Preserve non-layout classes that may differ; only toggle bg/border/blur
     function apply(scrolled) {
       header.classList.toggle("zanwik-header-scrolled", scrolled);
-      // Prefer className swap matching Krastor when header is the standard shell
+      // Prefer className swap matching Zanwik when header is the standard shell
       if (
         header.className.indexOf("fixed inset-x-0 top-0 z-50") !== -1 &&
         header.className.indexOf("transition-colors") !== -1

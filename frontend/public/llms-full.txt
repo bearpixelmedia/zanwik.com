@@ -1,6 +1,6 @@
 # Zanwik: full site text
 
-> Every public page on https://www.zanwik.com, as plain text. Curated overview: https://www.zanwik.com/llms.txt. Zanwik is an AI-native business transformation firm for businesses with 11 to 500 employees. We build AI into how a business actually runs, then keep it running, checked by people, and under the owner's control. Based in Clyde, North Carolina, serving businesses across the South, with featured markets in western North Carolina, Upstate South Carolina and Charlotte. Contact: greyson@zanwik.com | Take the assessment: https://www.zanwik.com/assess
+> Every public page on https://www.zanwik.com, as plain text. Curated overview: https://www.zanwik.com/llms.txt. Zanwik is an AI-native business transformation firm for businesses with 11 to 500 employees. We build AI into how a business actually runs, then keep it running, checked by people, and under the owner's control. Based in Clyde, North Carolina, serving businesses across the South, with featured markets in western North Carolina, Upstate South Carolina and Charlotte. Contact: byron@zanwik.com | Take the assessment: https://www.zanwik.com/assess
 
 # Homepage
 
@@ -710,7 +710,7 @@ The first one is in development now. The name, the details, and the pricing will
 See how we engineer products for clients →
 
 ## Zanwik Talent Initiative | Zanwik
-URL: https://www.zanwik.com/krastorm
+URL: https://www.zanwik.com/talent-initiative
 
 Zanwik Talent Initiative
 
@@ -732,7 +732,7 @@ My story
 
 I lived this. Recently.
 
-Greyson Jones. Founder. Ole Miss MIS, May 2025.
+Byron. Founder. Ole Miss MIS, May 2025.
 
 “I graduated from Ole Miss in May of 2025 with a degree in Management Information Systems. I did what you're supposed to do. Applied to the right companies, showed up to the career fairs, networked with the recruiters, landed a corporate gig. And I was miserable.”
 
@@ -764,7 +764,7 @@ Participants work alongside the Zanwik team on live client work: the same diagno
 
 Paired with senior team members
 
-Every participant is paired directly with Greyson or Carson, not left to figure it out alone. The pairing is deliberate: you work on what they're working on, you see how decisions are made in real time, and you own a slice of the outcome.
+Every participant is paired directly with Byron or Carson, not left to figure it out alone. The pairing is deliberate: you work on what they're working on, you see how decisions are made in real time, and you own a slice of the outcome.
 
 03
 
@@ -915,7 +915,7 @@ The person who designs your system is the person accountable for it. That is the
 
 The AI lead
 
-Greyson is the named AI lead on your engagement: the architect, the strategist, and the person accountable for outcomes. Not a rotating account manager, not a handoff to a junior after the sale. The person who designs the system is the person who answers for it.
+Byron is the named AI lead on your engagement: the architect, the strategist, and the person accountable for outcomes. Not a rotating account manager, not a handoff to a junior after the sale. The person who designs the system is the person who answers for it.
 
 The build team
 
@@ -984,7 +984,7 @@ The origin
 
 I built the firm I needed and couldn't find.
 
-Greyson Jones. President. 23. Clyde, NC.
+Byron. President. 23. Clyde, NC.
 
 I graduated from the University of Mississippi in May 2025 with a degree in Management Information Systems. First move: Apex Systems, a consulting and staffing firm. I sat inside the enterprise CRM world: Dynamics 365, Salesforce, HubSpot, Zoho. I learned big business from the inside, learned how the machine runs, learned what transformation means when it is being sold to a Fortune 500 procurement committee instead of delivered to an operator who needs it done.
 
@@ -1056,11 +1056,11 @@ Zanwik owns the architecture. You own the tools you pay for directly. We don't p
 
 Founder · Strategy & Architecture
 
-Greyson Jones
+Byron
 
-greysonijones.com LinkedIn
+zanwik.com LinkedIn
 
-Greyson architects every engagement: strategy, system design, AI coverage model, and the roadmap that sequences it all. University of Mississippi, MIS, class of 2025. Started Zanwik at 22. Twenty-three now.
+Byron architects every engagement: strategy, system design, AI coverage model, and the roadmap that sequences it all. University of Mississippi, MIS, class of 2025. Started Zanwik at 22. Twenty-three now.
 
 Prior: Apex Systems, embedded in enterprise CRM (Dynamics 365, Salesforce, HubSpot, Zoho). Left to build the firm small and growing businesses actually needed.
 
@@ -1070,9 +1070,9 @@ Technical Execution Lead
 
 Carson Turner
 
-Every system Greyson architects, Carson ships. Full technical build ownership from system design to production deployment. University of Mississippi, Computer Science. D1 track athlete. Founded and grew a software business to $500K in revenue before Zanwik.
+Every system Byron architects, Carson ships. Full technical build ownership from system design to production deployment. University of Mississippi, Computer Science. D1 track athlete. Founded and grew a software business to $500K in revenue before Zanwik.
 
-Carson holds engineering veto on every build. If the implementation compromises the architecture, it does not ship. Together, the Greyson/Carson split is a complete CTO capability: one architect, one technical executor, one shared standard for what gets built.
+Carson holds engineering veto on every build. If the implementation compromises the architecture, it does not ship. Together, the Byron/Carson split is a complete CTO capability: one architect, one technical executor, one shared standard for what gets built.
 
 Responsible for: technical builds, engineering decisions, deployment, and all code that ships on client engagements.
 
@@ -1136,7 +1136,7 @@ Neither. Consultants advise and leave. Agencies execute without staying to run i
 
 Who's actually doing the work?
 
-Greyson Jones architects every engagement directly, and Carson Turner owns every technical build. You're not handed off to a junior account team.
+Byron architects every engagement directly, and Carson Turner owns every technical build. You're not handed off to a junior account team.
 
 Where do you work?
 
@@ -1182,7 +1182,7 @@ Book the diagnostic
 
 Pick a time. Thirty minutes, on us.
 
-Grab any open slot. You'll get a confirmation with a Google Meet link, a reminder the day before, and another an hour out. Prefer email? greyson@zanwik.com works too.
+Grab any open slot. You'll get a confirmation with a Google Meet link, a reminder the day before, and another an hour out. Prefer email? byron@zanwik.com works too.
 
 Loading calendar…
 
@@ -12398,7 +12398,7 @@ Walk away from consultants who only sell strategy decks or can't name a phase-on
 
 Whatever you build, your data should live in systems you control, and you should know the exit plan before you sign.
 
-Last month a roofing company owner in Gastonia asked me the question I hear every single week. "Greyson, do I need an agency, a consultant, or should I just have my nephew figure it out?" He was not being cheap. He genuinely could not tell what each one sells, because all three use the same words on their websites.
+Last month a roofing company owner in Gastonia asked me the question I hear every single week. "Byron, do I need an agency, a consultant, or should I just have my nephew figure it out?" He was not being cheap. He genuinely could not tell what each one sells, because all three use the same words on their websites.
 
 So here is the plain version. A consultant sells judgment by the hour. An agency sells an ongoing engine on retainer. DIY costs your weekends. Pick the wrong one and you will spend good money solving the wrong problem.
 
@@ -12952,7 +12952,7 @@ Count last week's missed calls. Your phone provider's call log has the number. M
 
 Then book a free 30-minute diagnostic. We will map exactly where your missed calls go today and what a text-back system would recover for your shop. No pitch, just the math.
 
-,  Greyson
+,  Byron
 
 Continue reading
 
@@ -13074,7 +13074,7 @@ Pick your most painful workflow. The one that makes you sigh when someone mentio
 
 Bring the worksheet to a free 30-minute diagnostic and we will pressure-test it with you. No pitch. If the numbers say do not buy, we will tell you that too.
 
-,  Greyson
+,  Byron
 
 Continue reading
 
@@ -13192,7 +13192,7 @@ Pick your slowest product line. Run the two-week pilot. One estimator, measured 
 
 Start with a free 30-minute diagnostic and we will map your quoting workflow together. You will leave knowing exactly where your three days go, whether you hire us or not.
 
-,  Greyson
+,  Byron
 
 Continue reading
 
