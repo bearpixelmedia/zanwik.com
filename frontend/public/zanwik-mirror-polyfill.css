@@ -464,13 +464,16 @@ header.bg-charcoal\/90 {
   border-bottom: 1px solid color-mix(in srgb, var(--muted) 25%, transparent);
 }
 
-/* Header Z monogram: one-shot two-tone draw on load (v0.2.3) */
+/* Header Z monogram: noticeable two-tone draw on load + hover replay (v0.2.5)
+   Root cause of "not animated": v0.2.3 started at 0.04s and finished in ~1.1s
+   on a 28px mark, so the draw was usually over before the header was noticed.
+   No hydration remount (static mirror, polyfill JS does not replace the SVG). */
 .zanwik-mark,
 header a[aria-label="Zanwik home"] > svg {
   overflow: visible;
   transform-box: fill-box;
   transform-origin: center;
-  animation: zanwik-mark-settle 0.4s cubic-bezier(0.16, 1, 0.3, 1) 1s both;
+  animation: zanwik-mark-settle 0.5s cubic-bezier(0.16, 1, 0.3, 1) 2.5s both;
 }
 
 .zanwik-mark path,
@@ -478,29 +481,33 @@ header a[aria-label="Zanwik home"] > svg path {
   stroke-dasharray: 100;
   stroke-dashoffset: 100;
   animation-name: zanwik-mark-draw;
-  animation-fill-mode: forwards;
+  animation-fill-mode: both;
   animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+/* 0.5s pause (paths stay hidden via fill-mode: both), then sequential draw */
 .zanwik-mark path:nth-of-type(1),
 header a[aria-label="Zanwik home"] > svg path:nth-of-type(1) {
-  animation-duration: 0.38s;
-  animation-delay: 0.04s;
+  animation-duration: 0.6s;
+  animation-delay: 0.5s;
 }
 
 .zanwik-mark path:nth-of-type(2),
 header a[aria-label="Zanwik home"] > svg path:nth-of-type(2) {
-  animation-duration: 0.48s;
-  animation-delay: 0.3s;
+  animation-duration: 0.8s;
+  animation-delay: 1.1s;
 }
 
 .zanwik-mark path:nth-of-type(3),
 header a[aria-label="Zanwik home"] > svg path:nth-of-type(3) {
-  animation-duration: 0.38s;
-  animation-delay: 0.66s;
+  animation-duration: 0.6s;
+  animation-delay: 1.9s;
 }
 
 @keyframes zanwik-mark-draw {
+  from {
+    stroke-dashoffset: 100;
+  }
   to {
     stroke-dashoffset: 0;
   }
@@ -509,22 +516,124 @@ header a[aria-label="Zanwik home"] > svg path:nth-of-type(3) {
 @keyframes zanwik-mark-settle {
   0% {
     transform: scale(1);
+    filter: drop-shadow(0 0 0 transparent);
   }
-  45% {
-    transform: scale(1.04);
+  40% {
+    transform: scale(1.12);
+    filter: drop-shadow(0 0 6px #0f8a7a) drop-shadow(0 0 2px #0f8a7a);
   }
   100% {
     transform: scale(1);
+    filter: drop-shadow(0 0 0 transparent);
+  }
+}
+
+/* Replay the same draw on hover/focus (new animation names so it retriggers). */
+header a[aria-label="Zanwik home"]:hover .zanwik-mark,
+header a[aria-label="Zanwik home"]:focus-visible .zanwik-mark,
+header a[aria-label="Zanwik home"]:hover > svg,
+header a[aria-label="Zanwik home"]:focus-visible > svg {
+  animation-name: zanwik-mark-settle-replay;
+  animation-duration: 0.5s;
+  animation-delay: 2s;
+  animation-fill-mode: both;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+header a[aria-label="Zanwik home"]:hover .zanwik-mark path,
+header a[aria-label="Zanwik home"]:focus-visible .zanwik-mark path,
+header a[aria-label="Zanwik home"]:hover > svg path,
+header a[aria-label="Zanwik home"]:focus-visible > svg path {
+  animation-name: zanwik-mark-draw-replay;
+  animation-fill-mode: both;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+header a[aria-label="Zanwik home"]:hover .zanwik-mark path:nth-of-type(1),
+header a[aria-label="Zanwik home"]:focus-visible .zanwik-mark path:nth-of-type(1),
+header a[aria-label="Zanwik home"]:hover > svg path:nth-of-type(1),
+header a[aria-label="Zanwik home"]:focus-visible > svg path:nth-of-type(1) {
+  animation-duration: 0.6s;
+  animation-delay: 0s;
+}
+
+header a[aria-label="Zanwik home"]:hover .zanwik-mark path:nth-of-type(2),
+header a[aria-label="Zanwik home"]:focus-visible .zanwik-mark path:nth-of-type(2),
+header a[aria-label="Zanwik home"]:hover > svg path:nth-of-type(2),
+header a[aria-label="Zanwik home"]:focus-visible > svg path:nth-of-type(2) {
+  animation-duration: 0.8s;
+  animation-delay: 0.6s;
+}
+
+header a[aria-label="Zanwik home"]:hover .zanwik-mark path:nth-of-type(3),
+header a[aria-label="Zanwik home"]:focus-visible .zanwik-mark path:nth-of-type(3),
+header a[aria-label="Zanwik home"]:hover > svg path:nth-of-type(3),
+header a[aria-label="Zanwik home"]:focus-visible > svg path:nth-of-type(3) {
+  animation-duration: 0.6s;
+  animation-delay: 1.4s;
+}
+
+@keyframes zanwik-mark-draw-replay {
+  from {
+    stroke-dashoffset: 100;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes zanwik-mark-settle-replay {
+  0% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 0 transparent);
+  }
+  40% {
+    transform: scale(1.12);
+    filter: drop-shadow(0 0 6px #0f8a7a) drop-shadow(0 0 2px #0f8a7a);
+  }
+  100% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 0 transparent);
+  }
+}
+
+@keyframes zanwik-mark-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes zanwik-mark-fade-replay {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .zanwik-mark,
+  header a[aria-label="Zanwik home"] > svg {
+    animation: zanwik-mark-fade 0.6s ease both !important;
+    filter: none !important;
+    transform: none !important;
+  }
   .zanwik-mark path,
-  header a[aria-label="Zanwik home"] > svg,
   header a[aria-label="Zanwik home"] > svg path {
     animation: none !important;
     stroke-dashoffset: 0 !important;
-    transform: none !important;
+  }
+  header a[aria-label="Zanwik home"]:hover .zanwik-mark,
+  header a[aria-label="Zanwik home"]:focus-visible .zanwik-mark,
+  header a[aria-label="Zanwik home"]:hover > svg,
+  header a[aria-label="Zanwik home"]:focus-visible > svg {
+    animation-name: zanwik-mark-fade-replay !important;
+    animation-duration: 0.6s !important;
+    animation-delay: 0s !important;
+    animation-fill-mode: both !important;
   }
 }
