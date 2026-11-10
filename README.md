@@ -1,6 +1,6 @@
 # Zanwik.com
 
-Marketing site for Zanwik, an AI consulting and implementation firm. Version **0.2.5**.
+Marketing site for Zanwik, an AI consulting and implementation firm. Version **0.2.6**.
 
 ## Stack
 
@@ -11,7 +11,7 @@ Marketing site for Zanwik, an AI consulting and implementation firm. Version **0
 
 ## Version
 
-**0.2.5**
+**0.2.6**
 
 ## Local development
 

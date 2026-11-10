@@ -460,7 +460,7 @@
       }).join(""),
       '<div class="zanwik-mobile-cta">',
       '<a class="primary" href="/assess">Take the assessment</a>',
-      '<a class="ghost" href="mailto:byron@zanwik.com" target="_blank" rel="noreferrer">Book a Discovery Call</a>',
+      '<a class="ghost" href="mailto:leads@zanwik.com?subject=' + encodeURIComponent("[Lead] Zanwik – Contact") + '" target="_blank" rel="noreferrer">Book a Discovery Call</a>',
       "</div>",
       "</nav>",
     ].join("");
@@ -1117,7 +1117,95 @@
     window.addEventListener("scroll", update, { passive: true });
   }
 
+  var LEAD_TO = "leads@zanwik.com";
+  var SITE_VERSION = "v0.2.6";
+
+  function leadMailto(formName, body) {
+    var href =
+      "mailto:" +
+      LEAD_TO +
+      "?subject=" +
+      encodeURIComponent("[Lead] Zanwik – " + formName);
+    if (body) href += "&body=" + encodeURIComponent(body);
+    return href;
+  }
+
+  function rewriteLeadMailtos() {
+    document.querySelectorAll('a[href^="mailto:"]').forEach(function (a) {
+      var href = a.getAttribute("href") || "";
+      if (!/mailto:byron@zanwik\.com/i.test(href)) return;
+      var name = "Contact";
+      if (/Diagnostic/i.test(href)) name = "Diagnostic";
+      else if (/Early access/i.test(href)) name = "Early access";
+      a.setAttribute("href", leadMailto(name));
+    });
+  }
+
+  function setupNewsletterMailto() {
+    var orig = window.fetch;
+    if (typeof orig === "function") {
+      window.fetch = function (input, init) {
+        var url = typeof input === "string" ? input : (input && input.url) || "";
+        if (String(url).indexOf("/api/subscribe") !== -1) {
+          var email = "";
+          try {
+            if (init && typeof init.body === "string") {
+              var parsed = JSON.parse(init.body);
+              email = (parsed && parsed.email) || "";
+            }
+          } catch (err) {}
+          window.location.href = leadMailto(
+            "Newsletter",
+            email ? "Email: " + email : ""
+          );
+          return Promise.resolve(
+            new Response(JSON.stringify({ ok: true, mode: "mailto" }), {
+              status: 200,
+              headers: { "Content-Type": "application/json" },
+            })
+          );
+        }
+        return orig.apply(this, arguments);
+      };
+    }
+    document.addEventListener(
+      "submit",
+      function (e) {
+        var form = e.target;
+        if (!form || !form.getAttribute) return;
+        var action = form.getAttribute("action") || form.action || "";
+        if (String(action).indexOf("/api/subscribe") === -1) return;
+        e.preventDefault();
+        var input = form.querySelector('input[type="email"], input[name="email"]');
+        var email = input ? input.value : "";
+        window.location.href = leadMailto(
+          "Newsletter",
+          email ? "Email: " + email : ""
+        );
+      },
+      true
+    );
+  }
+
+  function stampSiteVersion() {
+    if (document.getElementById("zanwik-site-version")) return;
+    var el = document.createElement("p");
+    el.id = "zanwik-site-version";
+    el.textContent = "Site " + SITE_VERSION;
+    el.setAttribute(
+      "style",
+      "text-align:center;font-size:12px;opacity:.65;margin:8px 0 16px;"
+    );
+    var footer = document.querySelector("footer");
+    if (footer) footer.appendChild(el);
+    else document.body.appendChild(el);
+  }
+
+  setupNewsletterMailto();
+
   function boot() {
+    rewriteLeadMailtos();
+    stampSiteVersion();
     setupReveals();
     setupHeroCanvas();
     setupServicesMenu();
