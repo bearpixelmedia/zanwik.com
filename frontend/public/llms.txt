@@ -78,7 +78,7 @@ State guides:
 
 ## About
 
-- [About](https://www.zanwik.com/about): Who Zanwik is. Founded by Greyson Jones.
+- [About](https://www.zanwik.com/about): Who Zanwik is. Founded by Byron.
 - [How We Work](https://www.zanwik.com/how-we-work): The engagement model.
 - [Our Work](https://www.zanwik.com/work): Anonymized case studies from real engagements.
 - [Industries](https://www.zanwik.com/industries): Manufacturing, construction and trades, hospitality, real estate, professional services, retail, distribution, and more.
@@ -86,8 +86,8 @@ State guides:
 
 ## Contact
 
-- Email: greyson@zanwik.com
+- Email: byron@zanwik.com
 - Phone: (828) 550-8886 (Mon-Thu 8 AM-6 PM, Fri 8 AM-4 PM ET)
-- Google Maps listing: https://www.google.com/maps?cid=17247655392559715421
+- Google Maps listing: https://www.zanwik.com
 - Take the assessment: https://www.zanwik.com/assess
 - [Full content reference](https://www.zanwik.com/llms-full.txt): the complete Zanwik service catalog and article index for AI assistants.

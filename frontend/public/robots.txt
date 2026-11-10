@@ -1,4 +1,4 @@
-# Zanwik (mirrored from Krastor structure)
+# Zanwik.com
 User-Agent: *
 Allow: /
 Disallow: /api/

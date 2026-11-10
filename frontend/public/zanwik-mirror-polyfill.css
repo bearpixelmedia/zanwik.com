@@ -363,7 +363,7 @@ html.zanwik-nav-open body {
   --border: #c5d0dc;
   --border-on-dark: rgba(243, 246, 250, 0.12);
 
-  /* Remap Krastor Tailwind theme vars → Zanwik */
+  /* Remap Zanwik Tailwind theme vars → Zanwik */
   --charcoal: var(--bg);
   --charcoal-2: var(--surface);
   --charcoal-3: #0a101a;
